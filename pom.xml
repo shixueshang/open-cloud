@@ -88,6 +88,9 @@
         <maven-assembly-plugin.version>3.1.0</maven-assembly-plugin.version>
         <spring-boot.version>2.0.8.RELEASE</spring-boot.version>
         <spring-cloud.version>Finchley.SR2</spring-cloud.version>
+        <spring-security-oauth2.version>2.3.4.RELEASE</spring-security-oauth2.version>
+        <com.google.zxing.version>3.1.0</com.google.zxing.version>
+        <jjwt.version>0.9.1</jjwt.version>
 
         <alibaba.cloud.version>0.2.1.RELEASE</alibaba.cloud.version>
         <alibaba.fastjson.version>1.2.37</alibaba.fastjson.version>
