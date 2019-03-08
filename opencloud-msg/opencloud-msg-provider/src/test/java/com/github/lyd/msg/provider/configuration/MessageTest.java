@@ -1,8 +1,7 @@
 package com.github.lyd.msg.provider.configuration;
 
-import com.alibaba.fastjson.JSONObject;
 import com.github.lyd.common.test.BaseTest;
-import com.github.lyd.msg.provider.service.MessageSender;
+import com.github.lyd.msg.provider.service.MessageService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,28 +14,11 @@ import java.util.HashMap;
  */
 public class MessageTest extends BaseTest {
     @Autowired
-    private MessageSender messageSender;
-
-    @Test
-    public void delayMsg() throws Exception {
-        JSONObject msg = new JSONObject();
-        msg.put("content", "延迟消息");
-        messageSender.send(msg.toJSONString(), 10 * 10000);
-        System.out.println("发送成功");
-        Thread.sleep(500000);
-    }
+    private MessageService messageSender;
 
     @Test
     public void httpNotify() throws Exception {
-        messageSender.sendHttp("http://www.baidu.com/notity/callback", "order_pay", new HashMap<>());
-        System.out.println("发送成功");
-        Thread.sleep(500000);
-    }
-
-
-    @Test
-    public void retryHttpNotify() throws Exception {
-        messageSender.sendHttp("73513fabfe3b4b9d8ae5f50fb96b00b8");
+        messageSender.httpNotify("http://www.baidu.com/notity/callback", "order_pay", new HashMap<>());
         System.out.println("发送成功");
         Thread.sleep(500000);
     }

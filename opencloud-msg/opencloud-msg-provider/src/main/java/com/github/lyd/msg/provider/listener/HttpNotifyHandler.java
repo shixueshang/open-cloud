@@ -2,11 +2,11 @@ package com.github.lyd.msg.provider.listener;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.lyd.common.http.OpenRestTemplate;
-import com.github.lyd.msg.client.constants.MessageConstants;
 import com.github.lyd.msg.client.dto.HttpNotification;
 import com.github.lyd.msg.client.entity.MessageHttpNotifyLogs;
+import com.github.lyd.msg.provider.configuration.RabbitConfiguration;
 import com.github.lyd.msg.provider.service.HttpNotifyLogsService;
-import com.github.lyd.msg.provider.service.MessageSender;
+import com.github.lyd.msg.provider.service.MessageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
@@ -26,7 +26,7 @@ import java.util.Map;
  * @author liuyadu
  */
 @Configuration
-public class MessageHandler {
+public class HttpNotifyHandler {
     private Logger logger = LoggerFactory.getLogger(getClass());
     /**
      * 返回结果
@@ -35,7 +35,7 @@ public class MessageHandler {
     @Autowired
     private OpenRestTemplate restTemplate;
     @Autowired
-    private MessageSender messageSender;
+    private MessageService messageSender;
     @Autowired
     private HttpNotifyLogsService httpNotifyLogsService;
     /**
@@ -54,19 +54,15 @@ public class MessageHandler {
             15 * 60 * 60 * 1000
     });
 
-    @RabbitListener(queues = MessageConstants.QUEUE_MSG)
-    public void handleMessage(Message message) {
+    @RabbitListener(queues = RabbitConfiguration.HTTP_NOTIFY_QUEUE)
+    public void onMessage(Message message) {
         try {
-            String type = message.getMessageProperties().getType();
             String msgId = message.getMessageProperties().getMessageId();
             String receivedMsg = new String(message.getBody(), "UTF-8");
-            logger.info("===================");
-            logger.info("onMessage: type = {}, body = {}", type, receivedMsg);
+            logger.debug("onMessage:{}", message);
             // 处理 http通知消息
-            if (MessageConstants.HTTP_NOTIFY_TYPE.equals(type)) {
-                HttpNotification notification = JSONObject.parseObject(receivedMsg, HttpNotification.class);
-                httpHandler(msgId, message, notification);
-            }
+            HttpNotification notification = JSONObject.parseObject(receivedMsg, HttpNotification.class);
+            httpHandler(msgId, message, notification);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -81,10 +77,9 @@ public class MessageHandler {
         // 默认延迟时间
         String originalExpiration = "";
         if (headers != null) {
-            List<Map<String, Object>> xDeath = (List<Map<String, Object>>) headers.get("x-death");
-            if (xDeath != null && !xDeath.isEmpty()) {
-                Map<String, Object> entrys = xDeath.get(0);
-                originalExpiration = entrys.get("original-expiration").toString();
+            Object times = headers.get("delay-times");
+            if (times != null && !"0".equals(times)) {
+                originalExpiration = times.toString();
             }
         }
         String httpResult = "";
@@ -152,7 +147,7 @@ public class MessageHandler {
         if (next != null) {
             // 下次延迟时间
             logger.info("current ={} next ={}", originalExpiration, next);
-            messageSender.send(msgId, JSONObject.toJSONString(notification), MessageConstants.HTTP_NOTIFY_TYPE, next);
+            messageSender.delay(RabbitConfiguration.HTTP_NOTIFY_QUEUE_RK, msgId, JSONObject.toJSONString(notification), next);
             return next;
         } else {
             // 最后一次

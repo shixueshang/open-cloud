@@ -6,11 +6,13 @@ import com.github.lyd.msg.client.dto.EmailNotification;
 import com.github.lyd.msg.client.dto.HttpNotification;
 import com.github.lyd.msg.client.dto.SmsNotification;
 import com.github.lyd.msg.provider.dispatcher.NotificationDispatcher;
-import com.github.lyd.msg.provider.service.MessageSender;
+import com.github.lyd.msg.provider.service.MessageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**
  * @author woodev
@@ -22,7 +24,7 @@ public class NotificationController implements NotificationRemoteService {
     @Autowired
     private NotificationDispatcher dispatcher;
     @Autowired
-    private MessageSender messageSender;
+    private MessageService messageSender;
 
     @ApiOperation("短信通知")
     @PostMapping("/notification/send/sms")
@@ -63,10 +65,10 @@ public class NotificationController implements NotificationRemoteService {
     @PostMapping("/notification/send/http")
     @Override
     public ResultBody<String> sendHttp(
-            @RequestBody HttpNotification notification
+           @Valid @RequestBody HttpNotification notification
     ) {
         try {
-            messageSender.sendHttp(notification.getUrl(), notification.getType(), notification.getData());
+            messageSender.httpNotify(notification.getUrl(), notification.getType(), notification.getData());
             return ResultBody.success("");
         } catch (Exception e) {
             return ResultBody.failed(e.getMessage());

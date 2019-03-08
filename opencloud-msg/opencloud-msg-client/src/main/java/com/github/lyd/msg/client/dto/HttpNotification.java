@@ -2,6 +2,7 @@ package com.github.lyd.msg.client.dto;
 
 import com.google.common.collect.Maps;
 
+import javax.validation.constraints.NotNull;
 import java.util.Map;
 
 /**
@@ -14,6 +15,7 @@ public class HttpNotification extends Notification {
     /**
      * 通知路径
      */
+    @NotNull(message = "通知路径不能为空")
     private String url;
     /**
      * 请求内容
