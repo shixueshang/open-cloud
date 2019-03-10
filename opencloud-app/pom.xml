@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>app</artifactId>
+    <artifactId>opencloud-app</artifactId>
     <packaging>pom</packaging>
     <modules>
         <module>opencloud-admin-provider</module>
