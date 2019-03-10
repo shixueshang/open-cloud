@@ -193,10 +193,10 @@ CREATE TABLE `system_app` (
 INSERT INTO `system_app` VALUES ('gateway', '123456', '微服务开放平台', 'ApiGateway', '', 'server', '微服务开放平台', '', 'http://www.baidu.com', 'http://localhost:8888/login,http://localhost:8888/webjars/springfox-swagger-ui/o2c.html', '0', 'platform', '2018-11-12 17:48:45', '2019-01-10 22:22:46', '1', '1');
 
 -- ----------------------------
--- Table structure for system_gateway_rate_limit
+-- Table structure for system_access_rate_limit
 -- ----------------------------
-DROP TABLE IF EXISTS `system_gateway_rate_limit`;
-CREATE TABLE `system_gateway_rate_limit` (
+DROP TABLE IF EXISTS `system_access_rate_limit`;
+CREATE TABLE `system_access_rate_limit` (
                                            `id` bigint(20) NOT NULL,
                                            `limit` bigint(11) NOT NULL DEFAULT '0' COMMENT '限制数量',
                                            `interval` bigint(11) NOT NULL DEFAULT '1' COMMENT '时间间隔(秒)',
@@ -209,14 +209,14 @@ CREATE TABLE `system_gateway_rate_limit` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='网关流量限制';
 
 -- ----------------------------
--- Records of system_gateway_rate_limit
+-- Records of system_access_rate_limit
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for system_gateway_route
+-- Table structure for system_access_route
 -- ----------------------------
-DROP TABLE IF EXISTS `system_gateway_route`;
-CREATE TABLE `system_gateway_route` (
+DROP TABLE IF EXISTS `system_access_route`;
+CREATE TABLE `system_access_route` (
                                       `id` bigint(20) NOT NULL,
                                       `route_id` varchar(100) DEFAULT NULL COMMENT '路由ID',
                                       `path` varchar(255) DEFAULT NULL COMMENT '路径',
@@ -230,7 +230,7 @@ CREATE TABLE `system_gateway_route` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='网关动态路由';
 
 -- ----------------------------
--- Records of system_gateway_route
+-- Records of system_access_route
 -- ----------------------------
 
 -- ----------------------------

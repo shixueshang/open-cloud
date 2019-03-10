@@ -1,10 +1,11 @@
 package com.github.lyd.auth.provider.configuration;
 
+import com.github.lyd.auth.client.config.SocialOAuth2ClientProperties;
 import com.github.lyd.auth.client.constants.AuthConstants;
-import com.github.lyd.auth.client.entity.ThirdPartyAuthProperties;
 import com.github.lyd.auth.provider.exception.Oauth2WebResponseExceptionTranslator;
 import com.github.lyd.common.security.OpenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.approval.ApprovalStore;
 import org.springframework.security.oauth2.provider.approval.JdbcApprovalStore;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
@@ -34,7 +36,7 @@ import javax.sql.DataSource;
  */
 @Configuration
 @EnableAuthorizationServer
-@EnableConfigurationProperties(ThirdPartyAuthProperties.class)
+@EnableConfigurationProperties(SocialOAuth2ClientProperties.class)
 public class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -45,6 +47,9 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Autowired
     private RedisConnectionFactory redisConnectionFactory;
 
+    @Autowired
+    @Qualifier(value = "clientDetailsServiceImpl")
+    private ClientDetailsService customClientDetailsService;
     /**
      * 客户端store
      *
@@ -90,7 +95,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.withClientDetails(clientDetailsService());
+        clients.withClientDetails(customClientDetailsService);
     }
 
     @Override

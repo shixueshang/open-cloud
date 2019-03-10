@@ -1,5 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.github.lyd.autoconfigure.AutoConfiguration,\
-  com.github.lyd.autoconfigure.CorsAutoConfiguration,\
   com.github.lyd.autoconfigure.FeignAutoConfiguration,\
   com.github.lyd.autoconfigure.MqAutoConfiguration,\
   com.github.lyd.autoconfigure.SwaggerAutoConfiguration,\

@@ -5,19 +5,12 @@ package com.github.lyd.common.constants;
  */
 public class AuthorityConstants {
     /**
-     * 超级角色
+     * 超级管理员
      */
-    public final static String SUPER_ROLE = "superAdmin";
-    /**
-     * 超级权限
-     */
-    public final static String SUPER_ROLE_AUTHORITY = "ROLE_superAdmin";
+    public final static String ROOT = "admin";
+
     /**
      * 端点监控权限标识
      */
-    public final static String AUTHORITY_ACTUATOR = "ROLE_actuator,USER_actuator,APP_actuator";
-    /**
-     * 所有权限
-     */
-    public final static String AUTHORITY_ALL = "ROLE_all,USER_all,APP_all";
+    public final static String AUTHORITY_ACTUATOR = "actuator";
 }

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.lyd.base.provider.mapper.BaseAuthorityMapper">
+  <resultMap id="BaseResultMap" type="com.github.lyd.base.client.model.entity.BaseAuthority">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="authority_id" jdbcType="BIGINT" property="authorityId" />
+    <result column="authority" jdbcType="VARCHAR" property="authority" />
+    <result column="menu_id" jdbcType="BIGINT" property="menuId" />
+    <result column="api_id" jdbcType="BIGINT" property="apiId" />
+    <result column="operation_id" jdbcType="BIGINT" property="operationId" />
+    <result column="status" property="status" jdbcType="TINYINT"/>
+    <result column="service_id" jdbcType="VARCHAR" property="serviceId" />
+  </resultMap>
+
+  <resultMap id="BaseAuthorityDto" type="com.github.lyd.base.client.model.BaseAuthorityDto">
+    <result column="authority_id" jdbcType="BIGINT" property="authorityId" />
+    <result column="authority" jdbcType="VARCHAR" property="authority" />
+    <result column="expire_time" jdbcType="TIMESTAMP" property="expireTime" />
+    <result column="service_id" jdbcType="VARCHAR" property="serviceId" />
+    <association column="menu_id" property="menu" select="com.github.lyd.base.provider.mapper.BaseResourceMenuMapper.selectByPrimaryKey"></association>
+    <association column="api_id" property="api" select="com.github.lyd.base.provider.mapper.BaseResourceApiMapper.selectByPrimaryKey"></association>
+    <association column="operation_id" property="operation" select="com.github.lyd.base.provider.mapper.BaseResourceOperationMapper.selectByPrimaryKey"></association>
+  </resultMap>
+
+  <select id="selectBaseAuthorityDto" resultMap="BaseAuthorityDto">
+      select * from base_authority
+      where status = 1
+      <if test="type!=null and type==1">
+        and api_id is null
+      </if>
+      <if test="type!=null and type==2">
+         and api_id is not null
+          <if test="serviceId!=null">
+            and
+          </if>
+      </if>
+  </select>
+
+</mapper>

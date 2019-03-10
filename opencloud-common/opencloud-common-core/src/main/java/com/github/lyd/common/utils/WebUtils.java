@@ -12,8 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
+import java.net.*;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -158,9 +157,9 @@ public class WebUtils {
      * 设置客户端缓存过期时间 的Header.
      */
     public static void setExpiresHeader(HttpServletResponse response, long expiresSeconds) {
-        // Http 1.0 header, set dto fix expires date.
+        // Http 1.0 header, set model fix expires date.
         response.setDateHeader(HttpHeaders.EXPIRES, System.currentTimeMillis() + expiresSeconds * 1000);
-        // Http 1.1 header, set dto time after now.
+        // Http 1.1 header, set model time after now.
         response.setHeader(HttpHeaders.CACHE_CONTROL, "private, max-age=" + expiresSeconds);
     }
 
@@ -392,6 +391,32 @@ public class WebUtils {
     }
 
     /**
+     * 获取本地Ip4地址
+     *
+     * @return
+     */
+    public static final String getLocalIpAddress() {
+        String ipString = "";
+        try {
+            Enumeration<NetworkInterface> allNetInterfaces = NetworkInterface.getNetworkInterfaces();
+            InetAddress ip = null;
+            while (allNetInterfaces.hasMoreElements()) {
+                NetworkInterface netInterface = (NetworkInterface) allNetInterfaces.nextElement();
+                Enumeration<InetAddress> addresses = netInterface.getInetAddresses();
+                while (addresses.hasMoreElements()) {
+                    ip = (InetAddress) addresses.nextElement();
+                    if (ip != null && ip instanceof Inet4Address && !ip.getHostAddress().equals("127.0.0.1")) {
+                        return ip.getHostAddress();
+                    }
+                }
+            }
+        } catch (Exception e) {
+
+        }
+        return ipString;
+    }
+
+    /**
      * 判断访问URI是否是静态文件请求
      *
      * @throws Exception
@@ -422,7 +447,7 @@ public class WebUtils {
     public static void writeJson(HttpServletResponse response, String string, String type) {
         try {
             // CORS setting
-            response.setHeader("Access-Control-Allow-Origin", "*");
+            response.setHeader("OpenAccess-Control-Allow-Origin", "*");
             response.setContentType(type);
             response.setCharacterEncoding("utf-8");
             response.getWriter().print(string);
@@ -451,8 +476,7 @@ public class WebUtils {
         }
     }
 
-    public static Map<String, String> getHttpHeaders() {
-        HttpServletRequest request = getHttpServletRequest();
+    public static Map<String, String> getHttpHeaders(HttpServletRequest request) {
         Map<String, String> map = new LinkedHashMap<>();
         if (request != null) {
             Enumeration<String> enumeration = request.getHeaderNames();

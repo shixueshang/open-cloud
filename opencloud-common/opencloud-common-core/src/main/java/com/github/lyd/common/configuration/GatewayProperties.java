@@ -12,6 +12,15 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "opencloud.gateway")
 public class GatewayProperties {
     /**
+     * 是否开启签名验证
+     */
+    private Boolean checkSign = true;
+    /**
+     * 是否开启动态访问控制
+     */
+    private Boolean accessControl = true;
+
+    /**
      * 网关客户端Id
      */
     private String clientId;
@@ -27,14 +36,6 @@ public class GatewayProperties {
      * 认证范围
      */
     private String scope;
-    /**
-     * 数字验签,仅网关服务有效,生产环境必须开启
-     */
-    private Boolean enabledValidateSign = true;
-    /**
-     * 动态权限验证,仅网关服务有效,生产环境必须开启
-     */
-    private Boolean enabledValidateAccess = true;
     /**
      * 获取token
      */
@@ -52,6 +53,21 @@ public class GatewayProperties {
      */
     private String userInfoUri;
 
+    public Boolean getCheckSign() {
+        return checkSign;
+    }
+
+    public void setCheckSign(Boolean checkSign) {
+        this.checkSign = checkSign;
+    }
+
+    public Boolean getAccessControl() {
+        return accessControl;
+    }
+
+    public void setAccessControl(Boolean accessControl) {
+        this.accessControl = accessControl;
+    }
 
     public String getClientId() {
         return clientId;
@@ -83,22 +99,6 @@ public class GatewayProperties {
 
     public void setScope(String scope) {
         this.scope = scope;
-    }
-
-    public Boolean getEnabledValidateSign() {
-        return enabledValidateSign;
-    }
-
-    public void setEnabledValidateSign(Boolean enabledValidateSign) {
-        this.enabledValidateSign = enabledValidateSign;
-    }
-
-    public Boolean getEnabledValidateAccess() {
-        return enabledValidateAccess;
-    }
-
-    public void setEnabledValidateAccess(Boolean enabledValidateAccess) {
-        this.enabledValidateAccess = enabledValidateAccess;
     }
 
     public String getAccessTokenUri() {
@@ -133,6 +133,8 @@ public class GatewayProperties {
         this.userInfoUri = userInfoUri;
     }
 
+
+
     @Override
     public String toString() {
         return "GatewayProperties{" +
@@ -140,12 +142,12 @@ public class GatewayProperties {
                 ", clientSecret='" + clientSecret + '\'' +
                 ", serverAddr='" + serverAddr + '\'' +
                 ", scope='" + scope + '\'' +
-                ", enabledValidateSign=" + enabledValidateSign +
+                ", checkSign=" + checkSign +
+                ", accessControl=" + accessControl +
                 ", accessTokenUri='" + accessTokenUri + '\'' +
                 ", userAuthorizationUri='" + userAuthorizationUri + '\'' +
                 ", tokenInfoUri='" + tokenInfoUri + '\'' +
                 ", userInfoUri='" + userInfoUri + '\'' +
-                ", enabledValidateAccess=" + enabledValidateAccess +
                 '}';
     }
 }

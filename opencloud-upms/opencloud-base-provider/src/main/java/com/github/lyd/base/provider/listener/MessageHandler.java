@@ -1,10 +1,9 @@
 package com.github.lyd.base.provider.listener;
 
-import com.github.lyd.base.client.constants.BaseConstants;
-import com.github.lyd.base.client.entity.SystemAccessLogs;
-import com.github.lyd.base.client.entity.SystemApi;
-import com.github.lyd.base.provider.mapper.SystemAccessLogsMapper;
-import com.github.lyd.base.provider.service.SystemApiService;
+import com.github.lyd.base.client.model.entity.GatewayAccessLogs;
+import com.github.lyd.base.client.model.entity.BaseResourceApi;
+import com.github.lyd.base.provider.mapper.GatewayLogsMapper;
+import com.github.lyd.base.provider.service.BaseResourceApiService;
 import com.github.lyd.common.constants.MqConstants;
 import com.github.lyd.common.http.OpenRestTemplate;
 import com.github.lyd.common.utils.BeanConvertUtils;
@@ -26,11 +25,11 @@ import java.util.Map;
 @Slf4j
 public class MessageHandler {
     @Autowired
-    private SystemApiService apiService;
+    private BaseResourceApiService baseResourceApiService;
     @Autowired
-    private OpenRestTemplate openRestTemplate;
+    private GatewayLogsMapper gatewayLogsMapper;
     @Autowired
-    private SystemAccessLogsMapper systemAccessLogsMapper;
+    private OpenRestTemplate restTemplate;
 
     /**
      * 接收API资源扫描消息
@@ -44,25 +43,27 @@ public class MessageHandler {
                 log.info("【apiResourceQueue监听到消息】" + list.toString());
                 for (Map map : list) {
                     try {
-                        SystemApi api = BeanConvertUtils.mapToObject(map, SystemApi.class);
-                        SystemApi save = apiService.getApi(api.getApiCode(), api.getServiceId());
+                        BaseResourceApi api = BeanConvertUtils.mapToObject(map, BaseResourceApi.class);
+                        BaseResourceApi save = baseResourceApiService.getApi(api.getApiCode(), api.getServiceId());
                         if (save == null) {
-                            api.setIsPersist(BaseConstants.ENABLED);
-                            apiService.addApi(api);
+                            api.setIsOpen(0);
+                            api.setIsAuth(0);
+                            api.setIsPersist(0);
+                            baseResourceApiService.addApi(api);
                         } else {
+                            api.setIsOpen(null);
                             api.setApiId(save.getApiId());
-                            apiService.updateApi(api);
+                            baseResourceApiService.updateApi(api);
                         }
                     } catch (Exception e) {
+                        e.printStackTrace();
                         log.error("添加资源error:", e.getMessage());
                     }
                 }
-
-                // 重新刷新网关
-                openRestTemplate.refreshGateway();
+                restTemplate.refreshGateway();
             }
-        }catch (Exception e){
-            log.error("error:",e);
+        } catch (Exception e) {
+            log.error("error:", e);
         }
     }
 
@@ -75,13 +76,21 @@ public class MessageHandler {
     public void accessLogsQueue(@Payload Map access) {
         try {
             if (access != null) {
-                SystemAccessLogs accessLogs = BeanConvertUtils.mapToObject(access, SystemAccessLogs.class);
-                if (accessLogs != null) {
-                    systemAccessLogsMapper.insertSelective(accessLogs);
+                GatewayAccessLogs gatewayAccessLogs = BeanConvertUtils.mapToObject(access, GatewayAccessLogs.class);
+                if (gatewayAccessLogs != null) {
+                    if ("insert".equals(access.get("save"))) {
+                        gatewayLogsMapper.insertSelective(gatewayAccessLogs);
+                    } else {
+                        GatewayAccessLogs logs = gatewayLogsMapper.selectByPrimaryKey(gatewayAccessLogs.getAccessId());
+                        if (logs != null) {
+                            gatewayAccessLogs.setUseTime(gatewayAccessLogs.getResponseTime().getTime() - logs.getRequestTime().getTime());
+                            gatewayLogsMapper.updateByPrimaryKeySelective(gatewayAccessLogs);
+                        }
+                    }
                 }
             }
-        }catch (Exception e){
-            log.error("error:",e);
+        } catch (Exception e) {
+            log.error("error:", e);
         }
     }
 }

@@ -41,27 +41,28 @@
 open-cloud
 ├── docs
     ├── bin           -- 执行脚本  
-    ├── generator     -- 代码生成器  
+    ├── generator     -- mapper生成器  
     ├── sql           -- sql文件  
-├── opencloud-common  -- 公共模块
-     ├── opencloud-common-core    -- 提供微服务相关依赖包、工具类、统一全局异常解析
-     ├── opencloud-common-autoconfigure -- SpringBoot自动配置类
-     ├── opencloud-common-starter       -- SpringBoot自动扫描启动配置
-├── opencloud-gateway 
-     ├── opencloud-gateway-client    -- 开放API网关(对外接口)
-     ├── opencloud-gateway-provider  -- 开放API网关(资源服务器)(port = 8888)  
-├── opencloud-upms
-     ├── opencloud-base-client    -- 基础服务(对外接口)
-     ├── opencloud-base-provider  -- 基础服务(资源服务器)(port = 8233)  
-     ├── opencloud-auth-client    -- 认证服务(对外接口)
-     ├── opencloud-auth-provider  -- 认证服务(认证授权器)(资源服务器)(port = 8211)  
+├── opencloud-common  -- 公共依赖模块
+    ├── opencloud-common-core    -- 提供微服务相关依赖包、工具类、统一全局异常解析
+    ├── opencloud-common-starter       -- SpringBoot自动扫描模块
+├── opencloud-gateway  -- API网关模块
+    ├── opencloud-gateway-client    -- API网关接口
+    ├── opencloud-gateway-provider  -- API网关(port = 8888)  
+├── opencloud-upms    -- 认证、基础服务模块
+    ├── opencloud-base-client    -- 基础服务接口
+    ├── opencloud-base-provider  -- 基础服务(port = 8233)  
+    ├── opencloud-auth-client    -- 认证服务接口
+    ├── opencloud-auth-provider  -- 认证服务(port = 8211)  
 ├── opencloud-zipkin  -- 链路追踪 
-├── opencloud-msg     -- 待开发...  
-      ├── opencloud-msg-client    -- 消息服务(对外接口)
-      ├── opencloud-msg-provider  -- 消息服务(资源服务器)(port = 8266)  
-├── opencloud-acms    -- 待开发...  
-      ├── opencloud-acms-client   -- APP内容管理(对外接口)
-      ├── opencloud-acms-provider -- APP内容管理(资源服务器) (port = 8255)
+├── opencloud-msg     -- 消息模块（完善中...）  
+    ├── opencloud-msg-client    -- 消息服务接口
+    ├── opencloud-msg-provider  -- 消息服务(port = 8266)  
+├── opencloud-bpm    -- 业务流程模块...  
+    ├── opencloud-bpm-client   -- 工作流接口
+    ├── opencloud-bpm-provider -- 工作流服务(port = 8255)
+├── opencloud-app    -- 应用服务演示模块
+    ├── opencloud-admin-provider  -- 运营后台服务(port = 8301)  
 ```
 
 #### 部署

@@ -64,17 +64,20 @@ public class AnnotationScan implements ApplicationListener<ApplicationReadyEvent
                 prefix = aClass.getAnnotation(RequestMapping.class).value()[0];
             }
             Method[] methods = aClass.getMethods();
-            for (Method m : methods) {
-                String path = getPath(m);
+            for (Method method : methods) {
+                String path = getPath(method);
+                String requestMethod = getRequestMethod(method);
                 if (StringUtils.isBlank(path)) {
                     continue;
                 }
                 //api 资源
-                String code = m.getName();
+                String code = method.getDeclaringClass().getName()+"."+method.getName();
                 String name = "";
                 String desc = "";
-                if (m.isAnnotationPresent(ApiOperation.class)) {
-                    ApiOperation operation = m.getAnnotation(ApiOperation.class);
+                List<Map> policies = Lists.newArrayList();
+                boolean isOpen = false;
+                if (method.isAnnotationPresent(ApiOperation.class)) {
+                    ApiOperation operation = method.getAnnotation(ApiOperation.class);
                     name = operation.value();
                     desc = operation.notes();
                 }
@@ -87,13 +90,15 @@ public class AnnotationScan implements ApplicationListener<ApplicationReadyEvent
                     desc = name;
                 }
                 path = prefix + path;
-                Map<String, Object> api = Maps.newHashMap();
-                api.put("apiCode", code);
-                api.put("apiName", name);
-                api.put("serviceId", serviceId);
-                api.put("path", path);
-                api.put("apiDesc", desc);
-                list.add(api);
+                Map<String, Object> resource = Maps.newHashMap();
+                resource.put("apiCode", code);
+                resource.put("apiName", name);
+                resource.put("serviceId", serviceId);
+                resource.put("path", path);
+                resource.put("apiDesc", desc);
+                resource.put("isOpen", isOpen);
+                resource.put("requestMethod",requestMethod);
+                list.add(resource);
             }
         }
         if (amqpTemplate != null) {
@@ -101,6 +106,8 @@ public class AnnotationScan implements ApplicationListener<ApplicationReadyEvent
             amqpTemplate.convertAndSend(MqConstants.QUEUE_SCAN_API_RESOURCE, list);
         }
     }
+
+
 
     private String getPath(Method method) {
         StringBuilder path = new StringBuilder();
@@ -116,5 +123,30 @@ public class AnnotationScan implements ApplicationListener<ApplicationReadyEvent
             path.append(method.getAnnotation(DeleteMapping.class).value()[0]);
         }
         return path.toString();
+    }
+
+    private String getRequestMethod(Method method) {
+        StringBuilder requestMethod = new StringBuilder();
+        if (method.isAnnotationPresent(GetMapping.class)) {
+            requestMethod.append("get");
+        } else if (method.isAnnotationPresent(PostMapping.class)) {
+            requestMethod.append("post");
+        } else if (method.isAnnotationPresent(RequestMapping.class)) {
+             RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
+             if(requestMapping.method()!=null && requestMapping.method().length>0){
+                 for (RequestMethod m: requestMapping.method()) {
+                     requestMethod.append(m.name().toLowerCase()).append(",");
+                 }
+                 requestMethod.deleteCharAt(requestMethod.length()-1);
+             }else {
+                 requestMethod.append("get").append(",").append("post");
+             }
+
+        } else if (method.isAnnotationPresent(PutMapping.class)) {
+            requestMethod.append("put");
+        } else if (method.isAnnotationPresent(DeleteMapping.class)) {
+            requestMethod.append("delete");
+        }
+        return requestMethod.toString();
     }
 }

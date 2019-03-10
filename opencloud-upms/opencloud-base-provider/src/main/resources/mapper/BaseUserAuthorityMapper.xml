@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.lyd.base.provider.mapper.BaseUserAuthorityMapper">
+    <resultMap id="BaseResultMap" type="com.github.lyd.base.client.model.entity.BaseUserAuthority">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <result column="authority_id" jdbcType="BIGINT" property="authorityId"/>
+        <result column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="expire_time" jdbcType="TIMESTAMP" property="expireTime"/>
+    </resultMap>
+
+    <select id="selectUserGrantedAuthority"
+            resultType="com.github.lyd.common.security.OpenGrantedAuthority">
+        SELECT
+            a.authority_id,
+            a.authority,
+            up.expire_time as expireTime,
+            a.serviceId,
+            'user' as owner
+        FROM
+            base_user_authority AS up
+                LEFT JOIN base_authority AS a ON up.authority_id = a.authority_id
+        WHERE
+            up.user_id = #{userId}
+            and  a.status = 1
+    </select>
+
+    <select id="selectUserGrantedAuthorityDto"
+            resultMap="com.github.lyd.base.provider.mapper.BaseAuthorityMapper.BaseAuthorityDto">
+        SELECT
+        a.*,
+        up.expire_time as expireTime
+        FROM
+        base_user_authority AS up
+        LEFT JOIN base_authority AS a ON up.authority_id = a.authority_id
+        LEFT JOIN base_user AS u ON up.user_id = u.user_id
+        WHERE
+        up.user_id = #{userId}
+        and  a.status = 1
+    </select>
+</mapper>

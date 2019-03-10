@@ -30,23 +30,23 @@ public class UserController {
     @Autowired
     private GiteeAuthServiceImpl giteeAuthService;
     /**
-     * 平台登录信息
+     * 获取用户基础信息
      * @return
      */
-    @ApiOperation(value = "平台登录信息")
+    @ApiOperation(value = "获取用户基础信息")
     @GetMapping("/user")
-    public ResultBody userProfile() {
-        return ResultBody.success(OpenHelper.getUserProfile());
+    public ResultBody getUserProfile() {
+        return ResultBody.success(OpenHelper.getAuthUser());
     }
 
     /**
-     * 登录配置
+     * 获取第三方登录配置
      * @return
      */
-    @ApiOperation(value = "第三方登录配置")
-    @GetMapping("/login/config")
+    @ApiOperation(value = "获取第三方登录配置")
+    @GetMapping("/thirdParty/config")
     @ResponseBody
-    public ResultBody loginConfig() {
+    public ResultBody getThirdPartyConfig() {
         Map<String, String> map = Maps.newHashMap();
         map.put("qq", qqAuthService.getAuthorizationUrl());
         map.put("wechat", wechatAuthService.getAuthorizationUrl());

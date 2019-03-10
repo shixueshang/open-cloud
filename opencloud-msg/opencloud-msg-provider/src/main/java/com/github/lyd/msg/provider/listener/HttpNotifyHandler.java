@@ -2,11 +2,11 @@ package com.github.lyd.msg.provider.listener;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.lyd.common.http.OpenRestTemplate;
-import com.github.lyd.msg.client.dto.HttpNotification;
-import com.github.lyd.msg.client.entity.MessageHttpNotifyLogs;
+import com.github.lyd.msg.client.model.HttpNotify;
+import com.github.lyd.msg.client.model.entity.NotifyHttpLogs;
 import com.github.lyd.msg.provider.configuration.RabbitConfiguration;
-import com.github.lyd.msg.provider.service.HttpNotifyLogsService;
-import com.github.lyd.msg.provider.service.MessageService;
+import com.github.lyd.msg.provider.service.DelayMessageService;
+import com.github.lyd.msg.provider.service.NotifyHttpLogsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
@@ -35,9 +35,9 @@ public class HttpNotifyHandler {
     @Autowired
     private OpenRestTemplate restTemplate;
     @Autowired
-    private MessageService messageSender;
+    private DelayMessageService messageSender;
     @Autowired
-    private HttpNotifyLogsService httpNotifyLogsService;
+    private NotifyHttpLogsService httpNotifyLogsService;
     /**
      * 首次是即时推送，重试通知时间间隔为 5s、10s、2min、5min、10min、30min、1h、2h、6h、15h，直到你正确回复状态 200 并且返回 success 或者超过最大重发次数 或者超过最大重发次数
      */
@@ -61,7 +61,7 @@ public class HttpNotifyHandler {
             String receivedMsg = new String(message.getBody(), "UTF-8");
             logger.debug("onMessage:{}", message);
             // 处理 http通知消息
-            HttpNotification notification = JSONObject.parseObject(receivedMsg, HttpNotification.class);
+            HttpNotify notification = JSONObject.parseObject(receivedMsg, HttpNotify.class);
             httpHandler(msgId, message, notification);
         } catch (Exception e) {
             e.printStackTrace();
@@ -72,7 +72,7 @@ public class HttpNotifyHandler {
     /**
      * 处理http消息通知
      */
-    protected void httpHandler(String msgId, Message message, HttpNotification notification) throws Exception {
+    protected void httpHandler(String msgId, Message message, HttpNotify notification) throws Exception {
         Map<String, Object> headers = message.getMessageProperties().getHeaders();
         // 默认延迟时间
         String originalExpiration = "";
@@ -88,7 +88,7 @@ public class HttpNotifyHandler {
         } catch (Exception e) {
             logger.error("http error:", e);
         }
-        MessageHttpNotifyLogs log = new MessageHttpNotifyLogs();
+        NotifyHttpLogs log = new NotifyHttpLogs();
         log.setMsgId(msgId);
         log.setUrl(notification.getUrl());
         log.setType(notification.getType());
@@ -142,7 +142,7 @@ public class HttpNotifyHandler {
      *
      * @param originalExpiration
      */
-    protected Integer retry(String msgId, HttpNotification notification, String originalExpiration) throws Exception {
+    protected Integer retry(String msgId, HttpNotify notification, String originalExpiration) throws Exception {
         Integer next = getNext(originalExpiration);
         if (next != null) {
             // 下次延迟时间
@@ -161,11 +161,11 @@ public class HttpNotifyHandler {
      *
      * @param log
      */
-    protected void addLog(MessageHttpNotifyLogs log) {
+    protected void addLog(NotifyHttpLogs log) {
         if (log == null || StringUtils.isEmpty(log.getMsgId())) {
             return;
         }
-        MessageHttpNotifyLogs saved = httpNotifyLogsService.getLog(log.getMsgId());
+        NotifyHttpLogs saved = httpNotifyLogsService.getLog(log.getMsgId());
         if (saved == null) {
             log.setCreateTime(new Date());
             log.setUpdateTime(log.getCreateTime());
@@ -178,7 +178,7 @@ public class HttpNotifyHandler {
      *
      * @param log
      */
-    protected void modifyLog(MessageHttpNotifyLogs log) {
+    protected void modifyLog(NotifyHttpLogs log) {
         if (log == null || StringUtils.isEmpty(log.getMsgId())) {
             return;
         }

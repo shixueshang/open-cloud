@@ -1,0 +1,101 @@
+package com.github.lyd.base.provider.service;
+
+import com.github.lyd.base.client.model.entity.BaseResourceApi;
+import com.github.lyd.common.model.PageList;
+import com.github.lyd.common.model.PageParams;
+
+import java.util.List;
+
+/**
+ * 接口资源管理
+ */
+public interface BaseResourceApiService {
+    /**
+     * 分页查询
+     *
+     * @param pageParams
+     * @param keyword
+     * @return
+     */
+    PageList<BaseResourceApi> findListPage(PageParams pageParams, String keyword);
+
+    /**
+     * 查询列表
+     * @param keyword
+     * @return
+     */
+    PageList<BaseResourceApi> findAllList(String keyword);
+
+    /**
+     * 根据主键获取接口
+     *
+     * @param apiId
+     * @return
+     */
+    BaseResourceApi getApi(Long apiId);
+
+
+    /**
+     * 检查接口编码是否存在
+     *
+     * @param apiCode
+     * @return
+     */
+    Boolean isExist(String apiCode,String serviceId);
+
+    /**
+     * 添加接口
+     *
+     * @param api
+     * @return
+     */
+    Long addApi(BaseResourceApi api);
+
+    /**
+     * 修改接口
+     *
+     * @param api
+     * @return
+     */
+    void updateApi(BaseResourceApi api);
+
+    /**
+     * 查询接口
+     *
+     * @param apiCode
+     * @param serviceId
+     * @return
+     */
+    BaseResourceApi getApi(String apiCode, String serviceId);
+
+    /**
+     * 更新启用禁用
+     *
+     * @param apiId
+     * @param status
+     * @return
+     */
+    void updateStatus(Long apiId, Integer status);
+
+    /**
+     * 移除接口
+     *
+     * @param apiId
+     * @return
+     */
+    void removeApi(Long apiId);
+
+    /**
+     * 根据编码查询ID
+     * @param codes
+     * @return
+     */
+     List<String> findIdsByCodes(String...codes);
+
+    /**
+     * 获取数量
+     * @param baseResourceApi
+     * @return
+     */
+    int getCount(BaseResourceApi baseResourceApi);
+}

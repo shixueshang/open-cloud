@@ -2,7 +2,7 @@ package com.github.lyd.auth.provider.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.lyd.auth.client.constants.AuthConstants;
-import com.github.lyd.auth.provider.service.feign.SystemAccountClient;
+import com.github.lyd.auth.provider.service.feign.BaseUserAccountRestRemoteService;
 import com.github.lyd.auth.provider.service.impl.GiteeAuthServiceImpl;
 import com.github.lyd.auth.provider.service.impl.QQAuthServiceImpl;
 import com.github.lyd.auth.provider.service.impl.WechatAuthServiceImpl;
@@ -38,19 +38,18 @@ import java.util.Map;
 public class IndexController {
     @Autowired
     private JdbcClientDetailsService clientDetailsService;
-
+    @Autowired
+    private OpenRestTemplate openRestTemplate;
+    @Autowired
+    private GatewayProperties gatewayProperties;
+    @Autowired
+    private BaseUserAccountRestRemoteService systemAccountClient;
     @Autowired
     private QQAuthServiceImpl qqAuthService;
     @Autowired
     private GiteeAuthServiceImpl giteeAuthService;
     @Autowired
     private WechatAuthServiceImpl wechatAuthService;
-    @Autowired
-    private OpenRestTemplate openRestTemplate;
-    @Autowired
-    private GatewayProperties gatewayProperties;
-    @Autowired
-    private SystemAccountClient systemAccountClient;
 
     /**
      * 欢迎页
@@ -73,7 +72,35 @@ public class IndexController {
     }
 
     /**
-     * QQ微信第三方登录回调
+     * 确认授权页
+     * @param request
+     * @param session
+     * @param model
+     * @return
+     */
+    @RequestMapping("/confirm_access")
+    public String confirm_access(HttpServletRequest request, HttpSession session, Map model) {
+        Map<String, String> scopes = (Map<String, String>) (model.containsKey("scopes") ? model.get("scopes") : request.getAttribute("scopes"));
+        List<String> scopeList = new ArrayList<String>();
+        for (String scope : scopes.keySet()) {
+            scopeList.add(scope);
+        }
+        model.put("scopeList", scopeList);
+        Object auth = session.getAttribute("authorizationRequest");
+        if (auth != null) {
+            try {
+                AuthorizationRequest authorizationRequest = (AuthorizationRequest) auth;
+                ClientDetails clientDetails = clientDetailsService.loadClientByClientId(authorizationRequest.getClientId());
+                model.put("app", clientDetails.getAdditionalInformation());
+            } catch (Exception e) {
+
+            }
+        }
+        return "confirm_access";
+    }
+
+    /**
+     * QQ第三方登录回调
      *
      * @param code code
      * @return
@@ -85,7 +112,7 @@ public class IndexController {
         if (accessToken != null) {
             String openId = qqAuthService.getOpenId(token);
             if (openId != null) {
-                systemAccountClient.accountRegister(openId, openId, AuthConstants.LOGIN_QQ);
+                systemAccountClient.registerThirdPartyAccount(openId, openId, AuthConstants.LOGIN_QQ);
                 token = getToken(openId, openId, AuthConstants.LOGIN_QQ, headers);
             }
         }
@@ -105,7 +132,7 @@ public class IndexController {
         if (accessToken != null) {
             String openId = wechatAuthService.getOpenId(token);
             if (openId != null) {
-                systemAccountClient.accountRegister(openId, openId, AuthConstants.LOGIN_WECHAT);
+                systemAccountClient.registerThirdPartyAccount(openId, openId, AuthConstants.LOGIN_WECHAT);
                 token = getToken(openId, openId, AuthConstants.LOGIN_WECHAT, headers);
             }
         }
@@ -127,7 +154,7 @@ public class IndexController {
             JSONObject userInfo = giteeAuthService.getUserInfo(accessToken, null);
             String openId = userInfo.getString("id");
             if (openId != null) {
-                systemAccountClient.accountRegister(openId, openId, AuthConstants.LOGIN_GITEE);
+                systemAccountClient.registerThirdPartyAccount(openId, openId, AuthConstants.LOGIN_GITEE);
                 token = getToken(openId, openId, AuthConstants.LOGIN_GITEE, headers);
             }
         }
@@ -135,6 +162,14 @@ public class IndexController {
     }
 
 
+    /**
+     * 第三方登录获取token
+     * @param userName
+     * @param password
+     * @param type
+     * @param headers
+     * @return
+     */
     private String getToken(String userName, String password, String type, HttpHeaders headers) {
         // 使用oauth2密码模式登录.
         MultiValueMap<String, Object> postParameters = new LinkedMultiValueMap<>();
@@ -157,25 +192,6 @@ public class IndexController {
         return null;
     }
 
-    @RequestMapping("/confirm_access")
-    public String confirm_access(HttpServletRequest request, HttpSession session, Map model) {
-        Map<String, String> scopes = (Map<String, String>) (model.containsKey("scopes") ? model.get("scopes") : request.getAttribute("scopes"));
-        List<String> scopeList = new ArrayList<String>();
-        for (String scope : scopes.keySet()) {
-            scopeList.add(scope);
-        }
-        model.put("scopeList", scopeList);
-        Object auth = session.getAttribute("authorizationRequest");
-        if (auth != null) {
-            try {
-                AuthorizationRequest authorizationRequest = (AuthorizationRequest) auth;
-                ClientDetails clientDetails = clientDetailsService.loadClientByClientId(authorizationRequest.getClientId());
-                model.put("app", clientDetails.getAdditionalInformation());
-            } catch (Exception e) {
 
-            }
-        }
-        return "confirm_access";
-    }
 
 }

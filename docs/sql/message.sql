@@ -18,8 +18,8 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 -- Table structure for message_http_notify_logs
 -- ----------------------------
-DROP TABLE IF EXISTS `message_http_notify_logs`;
-CREATE TABLE `message_http_notify_logs` (
+DROP TABLE IF EXISTS `message_http_logs`;
+CREATE TABLE `message_http_logs` (
   `msg_id` varchar(50) NOT NULL,
   `retry_nums` decimal(8,0) NOT NULL COMMENT '重试次数',
   `total_nums` decimal(8,0) DEFAULT NULL COMMENT '通知总次数',

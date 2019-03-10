@@ -13,7 +13,7 @@
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
-            <artifactId>opencloud-common-autoconfigure</artifactId>
+            <artifactId>opencloud-common-core</artifactId>
             <groupId>com.github.lyd</groupId>
             <version>${opencloud.common.version}</version>
         </dependency>

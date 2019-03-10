@@ -13,10 +13,10 @@
         <module>opencloud-common</module>
         <module>opencloud-gateway</module>
         <module>opencloud-upms</module>
-        <module>opencloud-acms</module>
         <module>opencloud-msg</module>
         <module>opencloud-zipkin</module>
         <module>opencloud-bpm</module>
+        <module>opencloud-app</module>
     </modules>
     <!-- 环境 -->
     <profiles>
@@ -28,13 +28,12 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <profile.name>dev</profile.name>
                 <!--配置中心地址-->
                 <config.server-addr>127.0.0.1:8848</config.server-addr>
                 <!--服务发现地址-->
                 <discovery.server-addr>127.0.0.1:8848</discovery.server-addr>
-                <!--认证授权地址-->
-                <auth.server-addr>http://localhost:8211</auth.server-addr>
+                <!--配置中心命名空间,这里必须使用ID，不能使用名称-->
+                <config.namespace>42d35097-230a-4e57-8f8d-0fe7e221e4ab</config.namespace>
                 <!--网关服务地址-->
                 <gateway.server-addr>http://localhost:8888</gateway.server-addr>
                 <!-- 站点地址 -->
@@ -45,13 +44,12 @@
         <profile>
             <id>test</id>
             <properties>
-                <profile.name>test</profile.name>
                 <!--配置中心地址-->
                 <config.server-addr>172.17.207.82:8848</config.server-addr>
                 <!--服务发现地址-->
                 <discovery.server-addr>172.17.207.82:8848</discovery.server-addr>
-                <!--认证授权地址-->
-                <auth.server-addr>http://39.106.187.125:8211</auth.server-addr>
+                <!--配置中心命名空间,这里必须使用ID，不能使用名称-->
+                <config.namespace>42d35097-230a-4e57-8f8d-0fe7e221e4ab</config.namespace>
                 <!--网关服务地址-->
                 <gateway.server-addr>http://39.106.187.125:8888</gateway.server-addr>
                 <!-- 站点地址 -->
@@ -62,13 +60,12 @@
         <profile>
             <id>online</id>
             <properties>
-                <profile.name>online</profile.name>
                 <!--配置中心地址-->
                 <config.server-addr>127.0.0.1:8848</config.server-addr>
                 <!--服务发现地址-->
                 <discovery.server-addr>127.0.0.1:8848</discovery.server-addr>
-                <!--认证授权地址-->
-                <auth.server-addr>http://localhost:8211</auth.server-addr>
+                <!--配置中心命名空间,这里必须使用ID，不能使用名称 生产环境不指定,使用默认的public空间-->
+                <namespace></namespace>
                 <!--网关服务地址-->
                 <gateway.server-addr>http://localhost:8888</gateway.server-addr>
                 <!-- 站点地址 -->
@@ -113,7 +110,6 @@
         <opencloud.base-client.version>0.2.0-SNAPSHOT</opencloud.base-client.version>
         <opencloud.auth-client.version>0.2.0-SNAPSHOT</opencloud.auth-client.version>
         <opencloud.gateway-client.version>0.2.0-SNAPSHOT</opencloud.gateway-client.version>
-        <opencloud.acms-client.version>0.2.0-SNAPSHOT</opencloud.acms-client.version>
         <opencloud.msg-client.version>0.2.0-SNAPSHOT</opencloud.msg-client.version>
         <opencloud.bpm-client.version>0.2.0-SNAPSHOT</opencloud.bpm-client.version>
     </properties>
