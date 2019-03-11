@@ -42,7 +42,8 @@ CREATE TABLE `base_app` (
 -- ----------------------------
 -- Records of base_app
 -- ----------------------------
-INSERT INTO `base_app` VALUES ('gateway', '123456', '微服务开放平台', 'OpenCloud', '', 'server', '微服务开放平台', '', 'http://www.baidu.com', 'http://localhost:8888/login,http://localhost:8888/webjars/springfox-swagger-ui/o2c.html', '0', 'platform', '2018-11-12 17:48:45', '2019-01-10 22:22:46', '1', '1');
+INSERT INTO `base_app` VALUES ('1552274783265', '2cde1eaa60fe4af1987f94caa13f29a2', '开放平台资源服务器', 'OpenCloudResourceServer', '', 'server', '开放平台资源服务器', '', 'http://www.baidu.com', 'http://localhost:8888/login,http://localhost:8888/webjars/springfox-swagger-ui/o2c.html', '0', 'platform', '2018-11-12 17:48:45', '2019-01-10 22:22:46', '1', '1');
+INSERT INTO `base_app` VALUES ('1552294656514', '74a02bade18a42388c3127751b96e1f7', '开放平台管理后台', 'OpenAdmin', '', 'pc', '开放平台管理后台', '', 'http://www.baidu.com', 'http://localhost:8080/login/callback', '0', 'platform', '2018-11-12 17:48:45', '2019-01-10 22:22:46', '1', '1');
 
 -- ----------------------------
 -- Table structure for base_app_authority
@@ -368,6 +369,7 @@ CREATE TABLE `gateway_ip_limit` (
   `policy_id` bigint(20) NOT NULL COMMENT '策略ID',
   `policy_name` varchar(100) NOT NULL COMMENT '策略名称',
   `policy_type` tinyint(3) NOT NULL DEFAULT '1' COMMENT '策略类型:0-拒绝/黑名单 1-允许/白名单',
+  `ip_address` varchar(255) NOT NULL COMMENT 'ip地址/IP段:多个用,隔开,最多10个',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime NOT NULL COMMENT '最近一次修改时间',
   PRIMARY KEY (`policy_id`)
@@ -384,7 +386,6 @@ DROP TABLE IF EXISTS `gateway_ip_limit_api`;
 CREATE TABLE `gateway_ip_limit_api` (
   `policy_id` bigint(20) NOT NULL COMMENT '策略ID',
   `api_id` bigint(20) NOT NULL COMMENT '接口资源ID',
-  `ip_address` varchar(255) NOT NULL COMMENT 'ip地址/IP段:多个用,隔开,最多20个',
   KEY `policy_id` (`policy_id`) USING BTREE,
   KEY `api_id` (`api_id`) USING BTREE,
   CONSTRAINT `gateway_ip_limit_api_ibfk_1` FOREIGN KEY (`policy_id`) REFERENCES `gateway_ip_limit` (`policy_id`),
@@ -474,10 +475,11 @@ CREATE TABLE `gateway_route` (
   `path` varchar(255) DEFAULT NULL COMMENT '路径',
   `service_id` varchar(255) DEFAULT NULL COMMENT '服务ID',
   `url` varchar(255) DEFAULT NULL COMMENT '完整地址',
-  `strip_prefix` tinyint(1) DEFAULT '1' COMMENT '忽略前缀',
-  `retryable` tinyint(1) DEFAULT '0' COMMENT '0-不重试 1-重试',
+  `strip_prefix` tinyint(3) NOT NULL DEFAULT '1' COMMENT '忽略前缀',
+  `retryable` tinyint(3) NOT NULL DEFAULT '0' COMMENT '0-不重试 1-重试',
   `status` tinyint(3) NOT NULL DEFAULT '1' COMMENT '状态:0-无效 1-有效',
   `route_desc` varchar(255) DEFAULT NULL,
+  `is_persist` tinyint(3) NOT NULL DEFAULT '0' COMMENT '保留数据0-否 1-是 不允许删除',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='开放网关-路由';
 
@@ -507,108 +509,3 @@ CREATE TABLE `notify_http_logs` (
 -- Records of notify_http_logs
 -- ----------------------------
 
--- ----------------------------
--- Table structure for oauth_access_token
--- ----------------------------
-DROP TABLE IF EXISTS `oauth_access_token`;
-CREATE TABLE `oauth_access_token` (
-  `token_id` varchar(256) DEFAULT NULL,
-  `token` blob,
-  `authentication_id` varchar(128) NOT NULL,
-  `user_name` varchar(256) DEFAULT NULL,
-  `client_id` varchar(256) DEFAULT NULL,
-  `authentication` blob,
-  `refresh_token` varchar(256) DEFAULT NULL,
-  PRIMARY KEY (`authentication_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='oauth2访问令牌';
-
--- ----------------------------
--- Records of oauth_access_token
--- ----------------------------
-
--- ----------------------------
--- Table structure for oauth_approvals
--- ----------------------------
-DROP TABLE IF EXISTS `oauth_approvals`;
-CREATE TABLE `oauth_approvals` (
-  `userId` varchar(256) DEFAULT NULL,
-  `clientId` varchar(256) DEFAULT NULL,
-  `scope` varchar(256) DEFAULT NULL,
-  `status` varchar(10) DEFAULT NULL,
-  `expiresAt` datetime DEFAULT NULL,
-  `lastModifiedAt` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='oauth2已授权客户端';
-
--- ----------------------------
--- Records of oauth_approvals
--- ----------------------------
-INSERT INTO `oauth_approvals` VALUES ('admin', 'gateway', 'userProfile', 'APPROVED', '2019-02-10 20:51:59', '2019-01-10 20:51:59');
-
--- ----------------------------
--- Table structure for oauth_client_details
--- ----------------------------
-DROP TABLE IF EXISTS `oauth_client_details`;
-CREATE TABLE `oauth_client_details` (
-  `client_id` varchar(128) NOT NULL,
-  `client_secret` varchar(256) DEFAULT NULL,
-  `resource_ids` varchar(256) DEFAULT NULL,
-  `scope` varchar(1024) DEFAULT NULL,
-  `authorized_grant_types` varchar(256) DEFAULT NULL,
-  `web_server_redirect_uri` varchar(256) DEFAULT NULL,
-  `authorities` varchar(2048) DEFAULT NULL,
-  `access_token_validity` int(11) DEFAULT NULL,
-  `refresh_token_validity` int(11) DEFAULT NULL,
-  `additional_information` varchar(4096) DEFAULT NULL,
-  `autoapprove` varchar(256) DEFAULT NULL,
-  PRIMARY KEY (`client_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='oauth2客户端信息';
-
--- ----------------------------
--- Records of oauth_client_details
--- ----------------------------
-INSERT INTO `oauth_client_details` VALUES ('gateway', '$2a$10$jIgCsWeTRrWXw7Cf6p26Yu5lP9WLnXbwTEPAmy4vPMuByx3tJGjsK', '', 'userProfile', 'refresh_token,password,client_credentials,authorization_code', 'http://localhost:8888/login,http://localhost:8888/webjars/springfox-swagger-ui/o2c.html', 'all', '43200', '604800', '{\"website\":\"http://www.baidu.com\",\"appName\":\"开放云平台\",\"updateTime\":1547130166355,\"userId\":0,\"appOs\":\"\",\"redirectUrls\":\"http://localhost:8888/login,http://localhost:8888/webjars/springfox-swagger-ui/o2c.html\",\"appIcon\":\"\",\"appType\":\"server\",\"appDesc\":\"开放云平台\",\"appId\":\"gateway\",\"appNameEn\":\"ApiGateway\",\"userType\":\"platform\",\"status\":1}', '');
-
--- ----------------------------
--- Table structure for oauth_client_token
--- ----------------------------
-DROP TABLE IF EXISTS `oauth_client_token`;
-CREATE TABLE `oauth_client_token` (
-  `token_id` varchar(256) DEFAULT NULL,
-  `token` blob,
-  `authentication_id` varchar(128) NOT NULL,
-  `user_name` varchar(256) DEFAULT NULL,
-  `client_id` varchar(256) DEFAULT NULL,
-  PRIMARY KEY (`authentication_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='oauth2客户端令牌';
-
--- ----------------------------
--- Records of oauth_client_token
--- ----------------------------
-
--- ----------------------------
--- Table structure for oauth_code
--- ----------------------------
-DROP TABLE IF EXISTS `oauth_code`;
-CREATE TABLE `oauth_code` (
-  `code` varchar(256) DEFAULT NULL,
-  `authentication` blob
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='oauth2授权码';
-
--- ----------------------------
--- Records of oauth_code
--- ----------------------------
-
--- ----------------------------
--- Table structure for oauth_refresh_token
--- ----------------------------
-DROP TABLE IF EXISTS `oauth_refresh_token`;
-CREATE TABLE `oauth_refresh_token` (
-  `token_id` varchar(256) DEFAULT NULL,
-  `token` blob,
-  `authentication` blob
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='oauth2刷新令牌';
-
--- ----------------------------
--- Records of oauth_refresh_token
--- ----------------------------
-SET FOREIGN_KEY_CHECKS=1;

@@ -1,22 +1,19 @@
 package com.github.lyd.gateway.provider.configuration;
 
-import com.github.lyd.common.configuration.GatewayProperties;
+import com.github.lyd.common.configuration.CommonProperties;
 import com.github.lyd.common.constants.AuthorityConstants;
 import com.github.lyd.common.exception.OpenAccessDeniedHandler;
 import com.github.lyd.common.exception.OpenAuthenticationEntryPoint;
 import com.github.lyd.common.model.ResultBody;
 import com.github.lyd.common.security.OpenHelper;
-import com.github.lyd.common.utils.ReflectionUtils;
 import com.github.lyd.common.utils.WebUtils;
 import com.github.lyd.gateway.provider.filter.SignatureFilter;
-import com.github.lyd.gateway.provider.locator.AccessLocator;
 import com.github.lyd.gateway.provider.service.feign.BaseAppRemoteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.access.expression.SecurityExpressionHandler;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
@@ -46,22 +43,18 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     @Autowired
     private ResourceServerProperties properties;
     @Autowired
-    private AccessLocator accessLocator;
+    private ApiGatewayProperties apiGatewayProperties;
     @Autowired
-    private GatewayProperties gatewayProperties;
+    private CommonProperties commonProperties;
     @Autowired
     private BaseAppRemoteService systemAppClient;
     @Autowired
     private RestTemplate restTemplate;
 
-    SecurityExpressionHandler securityExpressionHandler;
-
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
         // 构建远程获取token,这里是为了支持自定义用户信息转换器
         resources.tokenServices(OpenHelper.buildRemoteTokenServices(properties));
-        // 反射获取
-        securityExpressionHandler = (SecurityExpressionHandler) ReflectionUtils.getFieldValue(resources, "expressionHandler");
     }
 
     @Override
@@ -79,11 +72,11 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                         "/auth/oauth/**").permitAll()
                 // 匹配监控权限actuator可执行远程端点
                 .requestMatchers(EndpointRequest.toAnyEndpoint()).hasAnyAuthority(AuthorityConstants.AUTHORITY_ACTUATOR)
-                // 自定义动态权限拦截,使用已经默认的FilterSecurityInterceptor对象,可以兼容默认表达式鉴权
-                .anyRequest().access("@accessProcessor.access(request,authentication)")
+                // 动态访问控制
+                .anyRequest().access("@accessControl.access(request,authentication)")
                 .anyRequest().authenticated()
                 // SSO退出
-                .and().logout().logoutSuccessHandler(new SsoLogoutSuccessHandler(gatewayProperties.getServerAddr() + "/auth/logout", restTemplate))
+                .and().logout().logoutSuccessHandler(new SsoLogoutSuccessHandler(commonProperties.getApiServerAddr() + "/auth/logout", restTemplate))
                 .and()
                 //认证鉴权错误处理,为了统一异常处理。每个资源服务器都应该加上。
                 .exceptionHandling()
@@ -93,7 +86,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .csrf().disable();
 
         // 增加签名验证过滤器
-        http.addFilterAfter(new SignatureFilter(systemAppClient, gatewayProperties), AbstractPreAuthenticatedProcessingFilter.class);
+        http.addFilterAfter(new SignatureFilter(systemAppClient, apiGatewayProperties), AbstractPreAuthenticatedProcessingFilter.class);
     }
 
     static class SsoLogoutSuccessHandler implements LogoutSuccessHandler {

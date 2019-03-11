@@ -59,7 +59,7 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
     /**
      * 获取所有可用权限
      *
-     * @param type      = null 查询全部  type = 1 获取菜单和操作 type = 2 获取API
+     * @param type = null 查询全部  type = 1 获取菜单和操作 type = 2 获取API
      * @param serviceId
      * @return
      */

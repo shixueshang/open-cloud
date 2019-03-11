@@ -1,7 +1,7 @@
 package com.github.lyd.gateway.provider.locator;
 
-import com.github.lyd.base.client.model.entity.GatewayRoute;
-import com.github.lyd.gateway.provider.service.feign.GatewayRouteRemoteService;
+import com.github.lyd.gateway.client.model.entity.GatewayRoute;
+import com.github.lyd.gateway.provider.service.GatewayRouteService;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -24,14 +24,14 @@ import java.util.Map;
 @Slf4j
 public class ZuulRouteLocator extends SimpleRouteLocator {
 
-    private GatewayRouteRemoteService gatewayRouteClient;
+    private GatewayRouteService gatewayRouteService;
     private ZuulProperties properties;
     private List<GatewayRoute> routeList;
 
-    public ZuulRouteLocator(String servletPath, ZuulProperties properties, GatewayRouteRemoteService gatewayRouteClient) {
+    public ZuulRouteLocator(String servletPath, ZuulProperties properties, GatewayRouteService gatewayRouteService) {
         super(servletPath, properties);
         this.properties = properties;
-        this.gatewayRouteClient = gatewayRouteClient;
+        this.gatewayRouteService = gatewayRouteService;
     }
 
     /**
@@ -79,7 +79,7 @@ public class ZuulRouteLocator extends SimpleRouteLocator {
     public Map<String, ZuulRoute> loadRouteWithDb() {
         Map<String, ZuulProperties.ZuulRoute> routes = Maps.newLinkedHashMap();
         try {
-            routeList = gatewayRouteClient.getRouteList().getData();
+            routeList = gatewayRouteService.findRouteList().getList();
             if (routeList != null && routeList.size() > 0) {
                 for (GatewayRoute result : routeList) {
                     if (StringUtils.isEmpty(result.getPath())) {

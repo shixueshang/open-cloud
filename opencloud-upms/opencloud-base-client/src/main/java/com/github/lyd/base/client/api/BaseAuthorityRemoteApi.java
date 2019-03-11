@@ -22,8 +22,8 @@ public interface BaseAuthorityRemoteApi {
      */
     @GetMapping("/authority/list")
     ResultBody<List<BaseAuthorityDto>> getAuthorityList(
-            @RequestParam(value = "type") Integer type,
-            @RequestParam(value = "serviceId") String serviceId);
+            @RequestParam(value = "type",required = false) Integer type,
+            @RequestParam(value = "serviceId",required = false) String serviceId);
 
     /**
      * 获取应用已分配接口权限

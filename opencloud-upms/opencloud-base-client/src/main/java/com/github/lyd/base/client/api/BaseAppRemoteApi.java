@@ -17,6 +17,6 @@ public interface BaseAppRemoteApi {
      * @return
      */
     @GetMapping("/app/{appId}")
-    ResultBody<BaseApp> getApplication(@PathVariable("appId") String appId);
+    ResultBody<BaseApp> getApp(@PathVariable("appId") String appId);
 
 }

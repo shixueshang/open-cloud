@@ -24,7 +24,7 @@
     <association column="operation_id" property="operation" select="com.github.lyd.base.provider.mapper.BaseResourceOperationMapper.selectByPrimaryKey"></association>
   </resultMap>
 
-  <select id="selectBaseAuthorityDto" resultMap="BaseAuthorityDto">
+  <select id="selectBaseAuthorityDto" parameterType="Map" resultMap="BaseAuthorityDto">
       select * from base_authority
       where status = 1
       <if test="type!=null and type==1">

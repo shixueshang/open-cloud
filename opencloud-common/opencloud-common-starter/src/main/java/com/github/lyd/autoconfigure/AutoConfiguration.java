@@ -1,7 +1,7 @@
 package com.github.lyd.autoconfigure;
 
 import com.github.lyd.common.annotation.AnnotationScan;
-import com.github.lyd.common.configuration.GatewayProperties;
+import com.github.lyd.common.configuration.CommonProperties;
 import com.github.lyd.common.configuration.IdGenProperties;
 import com.github.lyd.common.exception.OpenExceptionHandler;
 import com.github.lyd.common.gen.SnowflakeIdGenerator;
@@ -23,7 +23,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
  */
 @Slf4j
 @Configuration
-@EnableConfigurationProperties({GatewayProperties.class, IdGenProperties.class})
+@EnableConfigurationProperties({CommonProperties.class, IdGenProperties.class})
 public class AutoConfiguration {
 
     /**
@@ -97,13 +97,13 @@ public class AutoConfiguration {
     /**
      * 自定义Oauth2请求类
      *
-     * @param gatewayProperties
+     * @param commonProperties
      * @return
      */
     @Bean
     @ConditionalOnMissingBean(OpenRestTemplate.class)
-    public OpenRestTemplate openRestTemplate(GatewayProperties gatewayProperties) {
-        OpenRestTemplate restTemplate = new OpenRestTemplate(gatewayProperties);
+    public OpenRestTemplate openRestTemplate(CommonProperties commonProperties) {
+        OpenRestTemplate restTemplate = new OpenRestTemplate(commonProperties);
         log.info("初始化自定义请求工具类:{}", restTemplate);
         return restTemplate;
     }

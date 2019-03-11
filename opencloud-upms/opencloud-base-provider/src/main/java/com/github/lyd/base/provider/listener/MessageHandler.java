@@ -1,8 +1,6 @@
 package com.github.lyd.base.provider.listener;
 
-import com.github.lyd.base.client.model.entity.GatewayAccessLogs;
 import com.github.lyd.base.client.model.entity.BaseResourceApi;
-import com.github.lyd.base.provider.mapper.GatewayLogsMapper;
 import com.github.lyd.base.provider.service.BaseResourceApiService;
 import com.github.lyd.common.constants.MqConstants;
 import com.github.lyd.common.http.OpenRestTemplate;
@@ -26,8 +24,6 @@ import java.util.Map;
 public class MessageHandler {
     @Autowired
     private BaseResourceApiService baseResourceApiService;
-    @Autowired
-    private GatewayLogsMapper gatewayLogsMapper;
     @Autowired
     private OpenRestTemplate restTemplate;
 
@@ -61,33 +57,6 @@ public class MessageHandler {
                     }
                 }
                 restTemplate.refreshGateway();
-            }
-        } catch (Exception e) {
-            log.error("error:", e);
-        }
-    }
-
-    /**
-     * 接收访问日志
-     *
-     * @param access
-     */
-    @RabbitListener(queues = MqConstants.QUEUE_ACCESS_LOGS)
-    public void accessLogsQueue(@Payload Map access) {
-        try {
-            if (access != null) {
-                GatewayAccessLogs gatewayAccessLogs = BeanConvertUtils.mapToObject(access, GatewayAccessLogs.class);
-                if (gatewayAccessLogs != null) {
-                    if ("insert".equals(access.get("save"))) {
-                        gatewayLogsMapper.insertSelective(gatewayAccessLogs);
-                    } else {
-                        GatewayAccessLogs logs = gatewayLogsMapper.selectByPrimaryKey(gatewayAccessLogs.getAccessId());
-                        if (logs != null) {
-                            gatewayAccessLogs.setUseTime(gatewayAccessLogs.getResponseTime().getTime() - logs.getRequestTime().getTime());
-                            gatewayLogsMapper.updateByPrimaryKeySelective(gatewayAccessLogs);
-                        }
-                    }
-                }
             }
         } catch (Exception e) {
             log.error("error:", e);

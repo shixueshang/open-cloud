@@ -4,10 +4,9 @@ import com.github.lyd.base.client.model.entity.BaseResourceApi;
 import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.model.PageParams;
 
-import java.util.List;
-
 /**
  * 接口资源管理
+ * @author liuyadu
  */
 public interface BaseResourceApiService {
     /**
@@ -69,15 +68,6 @@ public interface BaseResourceApiService {
     BaseResourceApi getApi(String apiCode, String serviceId);
 
     /**
-     * 更新启用禁用
-     *
-     * @param apiId
-     * @param status
-     * @return
-     */
-    void updateStatus(Long apiId, Integer status);
-
-    /**
      * 移除接口
      *
      * @param apiId
@@ -85,12 +75,6 @@ public interface BaseResourceApiService {
      */
     void removeApi(Long apiId);
 
-    /**
-     * 根据编码查询ID
-     * @param codes
-     * @return
-     */
-     List<String> findIdsByCodes(String...codes);
 
     /**
      * 获取数量

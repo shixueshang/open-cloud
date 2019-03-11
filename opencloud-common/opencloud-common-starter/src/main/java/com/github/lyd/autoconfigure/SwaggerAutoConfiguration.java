@@ -66,7 +66,7 @@ public class SwaggerAutoConfiguration {
     /**
      * 构建全局参数
      * 这里主要针对网关服务外部访问数字验签所需参数
-     * 只在网关服务开启{opencloud.gateway.enabled-validate-sign=true}时生效.
+     * 只在网关服务开启{opencloud.resource-server.enabled-validate-sign=true}时生效.
      * 未开启,可以不填写
      *
      * @return

@@ -1,15 +1,15 @@
 package com.github.lyd.gateway.provider.filter;
 
 import com.github.lyd.base.client.model.entity.BaseApp;
-import com.github.lyd.common.configuration.GatewayProperties;
 import com.github.lyd.common.exception.OpenSignatureDeniedHandler;
 import com.github.lyd.common.exception.OpenSignatureException;
 import com.github.lyd.common.exception.SignatureDeniedHandler;
 import com.github.lyd.common.model.ResultBody;
-import com.github.lyd.common.security.OpenHelper;
 import com.github.lyd.common.security.OpenAuthUser;
+import com.github.lyd.common.security.OpenHelper;
 import com.github.lyd.common.utils.SignatureUtils;
 import com.github.lyd.common.utils.WebUtils;
+import com.github.lyd.gateway.provider.configuration.ApiGatewayProperties;
 import com.github.lyd.gateway.provider.service.feign.BaseAppRemoteService;
 import com.google.common.collect.Lists;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -35,7 +35,7 @@ import java.util.Map;
 public class SignatureFilter implements Filter {
     private SignatureDeniedHandler signatureDeniedHandler;
     private BaseAppRemoteService systemAppClient;
-    private GatewayProperties gatewayProperties;
+    private ApiGatewayProperties apiGatewayProperties;
     /**
      * 忽略签名
      */
@@ -44,9 +44,9 @@ public class SignatureFilter implements Filter {
             "/**/logout/**"
     );
 
-    public SignatureFilter(BaseAppRemoteService systemAppClient, GatewayProperties gatewayProperties) {
+    public SignatureFilter(BaseAppRemoteService systemAppClient, ApiGatewayProperties apiGatewayProperties) {
         this.systemAppClient = systemAppClient;
-        this.gatewayProperties = gatewayProperties;
+        this.apiGatewayProperties = apiGatewayProperties;
         this.signatureDeniedHandler = new OpenSignatureDeniedHandler();
     }
 
@@ -79,7 +79,7 @@ public class SignatureFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         OpenAuthUser auth = OpenHelper.getAuthUser();
-        if (isAuthenticated() && gatewayProperties.getCheckSign() && !notSign(request)) {
+        if (isAuthenticated() && apiGatewayProperties.getCheckSign() && !notSign(request)) {
             try {
                 //开始验证签名
                 String appId = auth.getAuthAppId();
@@ -88,7 +88,7 @@ public class SignatureFilter implements Filter {
                     // 验证请求参数
                     SignatureUtils.validateParams(params);
                     // 获取客户端信息
-                    ResultBody<BaseApp> result = systemAppClient.getApplication(appId);
+                    ResultBody<BaseApp> result = systemAppClient.getApp(appId);
                     BaseApp app = result.getData();
                     if (app == null) {
                         throw new OpenSignatureException("clientId无效");

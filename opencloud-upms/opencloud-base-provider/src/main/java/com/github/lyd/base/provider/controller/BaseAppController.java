@@ -40,8 +40,8 @@ public class BaseAppController implements BaseAppRemoteApi {
             @ApiImplicitParam(name = "limit", value = "显示条数:最大999", paramType = "form"),
             @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
     })
-    @PostMapping("/application")
-    public ResultBody<PageList<BaseApp>> getApplicationList(
+    @PostMapping("/app")
+    public ResultBody<PageList<BaseApp>> getAppList(
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit,
             @RequestParam(name = "keyword", required = false) String keyword
@@ -60,9 +60,9 @@ public class BaseAppController implements BaseAppRemoteApi {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "appId", value = "应用ID", defaultValue = "1", required = true, paramType = "path"),
     })
-    @GetMapping("/application/{appId}")
+    @GetMapping("/app/{appId}")
     @Override
-    public ResultBody<BaseApp> getApplication(
+    public ResultBody<BaseApp> getApp(
             @PathVariable("appId") String appId
     ) {
         BaseApp appInfo = baseAppService.getAppInfo(appId);
@@ -79,8 +79,8 @@ public class BaseAppController implements BaseAppRemoteApi {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "appId", value = "应用ID", defaultValue = "1", required = true, paramType = "path"),
     })
-    @GetMapping("/application/dev/{appId}")
-    public ResultBody<BaseClientDetailsDto> getApplicationDevInfo(
+    @GetMapping("/app/dev/{appId}")
+    public ResultBody<BaseClientDetailsDto> getAppDevInfo(
             @PathVariable("appId") String appId
     ) {
         BaseAppDto appInfo = baseAppService.getAppWithClientInfo(appId);
@@ -128,8 +128,8 @@ public class BaseAppController implements BaseAppRemoteApi {
             @ApiImplicitParam(name = "accessTokenValidity", value = "令牌有效期(秒)", required = true, paramType = "form"),
             @ApiImplicitParam(name = "refreshTokenValidity", value = "刷新令牌有效期(秒)", required = true, paramType = "form")
     })
-    @PostMapping("/application/add")
-    public ResultBody<String> addApplication(
+    @PostMapping("/app/add")
+    public ResultBody<String> addApp(
             @RequestParam(value = "appName") String appName,
             @RequestParam(value = "appNameEn") String appNameEn,
             @RequestParam(value = "appType") String appType,
@@ -209,8 +209,8 @@ public class BaseAppController implements BaseAppRemoteApi {
             @ApiImplicitParam(name = "accessTokenValidity", value = "令牌有效期(秒)", required = true, paramType = "form"),
             @ApiImplicitParam(name = "refreshTokenValidity", value = "刷新令牌有效期(秒)", required = true, paramType = "form")
     })
-    @PostMapping("/application/update")
-    public ResultBody updateApplication(
+    @PostMapping("/app/update")
+    public ResultBody updateApp(
             @RequestParam("appId") String appId,
             @RequestParam(value = "appName") String appName,
             @RequestParam(value = "appNameEn") String appNameEn,
@@ -262,8 +262,8 @@ public class BaseAppController implements BaseAppRemoteApi {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "appId", value = "应用Id", required = true, paramType = "form"),
     })
-    @PostMapping("/application/reset")
-    public ResultBody<String> resetApplicationSecret(
+    @PostMapping("/app/reset")
+    public ResultBody<String> resetAppSecret(
             @RequestParam("appId") String appId
     ) {
         String result = baseAppService.restSecret(appId);
@@ -281,8 +281,8 @@ public class BaseAppController implements BaseAppRemoteApi {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "appId", value = "应用Id", required = true, paramType = "form"),
     })
-    @PostMapping("/application/remove")
-    public ResultBody removeApplication(
+    @PostMapping("/app/remove")
+    public ResultBody removeApp(
             @RequestParam("appId") String appId
     ) {
         baseAppService.removeApp(appId);

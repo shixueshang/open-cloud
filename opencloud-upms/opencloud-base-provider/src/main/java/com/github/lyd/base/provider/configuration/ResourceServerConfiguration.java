@@ -43,9 +43,9 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 // 内部调用直接放行
                 .antMatchers(
                         "/account/login",
-                        "/account/register",
+                        "/account/register/thirdParty",
                         "/account/logs/add",
-                        "/grant/access/list",
+                        "/authority/list",
                         "/app/{appId}").permitAll()
                 .anyRequest().authenticated()
                 .and()

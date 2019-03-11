@@ -7,17 +7,15 @@ import com.github.lyd.base.client.model.entity.BaseApp;
 import com.github.lyd.base.provider.mapper.BaseAppMapper;
 import com.github.lyd.base.provider.service.BaseAppService;
 import com.github.lyd.base.provider.service.BaseAuthorityService;
-import com.github.lyd.base.provider.service.BaseResourceApiService;
 import com.github.lyd.base.provider.service.feign.ClientDetailsClientRemote;
-import com.github.lyd.common.configuration.GatewayProperties;
+import com.github.lyd.common.configuration.CommonProperties;
 import com.github.lyd.common.exception.OpenAlertException;
-import com.github.lyd.common.gen.SnowflakeIdGenerator;
 import com.github.lyd.common.mapper.ExampleBuilder;
 import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.model.PageParams;
 import com.github.lyd.common.model.ResultBody;
+import com.github.lyd.common.security.OpenGrantedAuthority;
 import com.github.lyd.common.utils.RandomValueUtils;
-import com.github.lyd.common.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,13 +42,9 @@ public class BaseAppServiceImpl implements BaseAppService {
     @Autowired
     private ClientDetailsClientRemote clientDetailsClient;
     @Autowired
-    private SnowflakeIdGenerator idGenerator;
-    @Autowired
-    private BaseResourceApiService baseResourceApiService;
+    private CommonProperties commonProperties;
     @Autowired
     private BaseAuthorityService baseAuthorityService;
-    @Autowired
-    private GatewayProperties gatewayProperties;
 
     /**
      * 查询应用列表
@@ -109,23 +103,21 @@ public class BaseAppServiceImpl implements BaseAppService {
      */
     @Override
     public String addAppInfo(BaseAppDto app) {
-        String clientId = String.valueOf(idGenerator.nextId());
+        String clientId = String.valueOf(System.currentTimeMillis());
         String clientSecret = RandomValueUtils.uuid();
         app.setAppId(clientId);
         app.setAppSecret(clientSecret);
         app.setCreateTime(new Date());
         app.setUpdateTime(app.getCreateTime());
         if (app.getIsPersist() == null) {
-            app.setIsPersist(BaseConstants.DISABLED);
+            app.setIsPersist(0);
         }
         baseAppMapper.insertSelective(app);
         String clientInfoJson = JSONObject.toJSONString(app);
         // 功能授权
-        if(StringUtils.isNotBlank(app.getAuthorities())){
-            app.setAuthorities(grantAccess(app.getAppId(), app.getAuthorities().split(",")));
-        }
+        app.setAuthorities(getAuthoritie(app.getAppId()));
         // 保持客户端信息
-        ResultBody<Boolean> resp = clientDetailsClient.addClient(clientId, clientSecret, BaseConstants.DEFAULT_OAUTH2_GRANT_TYPES, "", app.getRedirectUrls(), app.getScopes(), app.getResourceIds(), app.getAuthorities(),app.getaccessTokenValidity(),app.getrefreshTokenValidity(), clientInfoJson);
+        ResultBody<Boolean> resp = clientDetailsClient.addClient(clientId, clientSecret, BaseConstants.DEFAULT_OAUTH2_GRANT_TYPES, "", app.getRedirectUrls(), app.getScopes(), app.getResourceIds(), app.getAuthorities(), app.getaccessTokenValidity(), app.getrefreshTokenValidity(), clientInfoJson);
         if (!resp.isOk()) {
             // 回滚事物
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -149,10 +141,10 @@ public class BaseAppServiceImpl implements BaseAppService {
         appInfo.setUpdateTime(new Date());
         int result = baseAppMapper.updateByPrimaryKeySelective(appInfo);
         String clientInfoJson = JSONObject.toJSONString(appInfo);
-        // 功能授权
-        app.setAuthorities(grantAccess(app.getAppId(), app.getAuthorities().split(",")));
+        // 更新应用权限
+        app.setAuthorities(getAuthoritie(app.getAppId()));
         // 修改客户端信息
-        ResultBody<Boolean> resp = clientDetailsClient.updateClient(app.getAppId(), app.getGrantTypes(), "", app.getRedirectUrls(), app.getScopes(), app.getResourceIds(), app.getAuthorities(),app.getaccessTokenValidity(),app.getrefreshTokenValidity(), clientInfoJson);
+        ResultBody<Boolean> resp = clientDetailsClient.updateClient(app.getAppId(), app.getGrantTypes(), "", app.getRedirectUrls(), app.getScopes(), app.getResourceIds(), app.getAuthorities(), app.getaccessTokenValidity(), app.getrefreshTokenValidity(), clientInfoJson);
         if (!resp.isOk()) {
             // 手动事物回滚
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -167,7 +159,7 @@ public class BaseAppServiceImpl implements BaseAppService {
      */
     @Override
     public String restSecret(String appId) {
-        if (gatewayProperties.getClientId().equals(appId)) {
+        if (commonProperties.getClientId().equals(appId)) {
             throw new OpenAlertException(String.format("保留数据,不允许修改"));
         }
         BaseApp appInfo = getAppInfo(appId);
@@ -203,8 +195,6 @@ public class BaseAppServiceImpl implements BaseAppService {
             throw new OpenAlertException(String.format("保留数据,不允许删除"));
         }
         baseAppMapper.deleteByPrimaryKey(appInfo.getAppId());
-     /*   // 移除授权
-        baseAuthorityService.removeAuthority(appInfo.getAppId(), AuthorityConstants.AUTHORITY_APP, null);*/
         ResultBody<Boolean> resp = clientDetailsClient.removeClinet(appInfo.getAppId());
         if (!resp.isOk()) {
             // 回滚事物
@@ -212,18 +202,16 @@ public class BaseAppServiceImpl implements BaseAppService {
         }
     }
 
-    /**
-     * 授权功能
-     *
-     * @param appId    应用ID
-     * @param apiCodes api编码
-     * @return authorities 授权后的权限标识
-     */
-    @Override
-    public String grantAccess(String appId, String... apiCodes) {
-      /*  List<String> apiIds = baseResourceApiService.findIdsByCodes(apiCodes);
-        return baseAuthorityService.addAuthority(appId, AuthorityConstants.AUTHORITY_APP, BaseConstants.RESOURCE_TYPE_API, apiIds.toArray(new String[apiIds.size()]));*/
-      return null;
+    private String getAuthoritie(String appId) {
+        StringBuffer sbf = new StringBuffer("");
+        List<OpenGrantedAuthority> authorities = baseAuthorityService.findAppGrantedAuthority(appId);
+        if (authorities != null && authorities.size() > 0) {
+            for (OpenGrantedAuthority authority : authorities
+                    ) {
+                sbf.append(authority.getAuthority()).append(",");
+            }
+            sbf.deleteCharAt(sbf.length() - 1);
+        }
+        return sbf.toString();
     }
-
 }

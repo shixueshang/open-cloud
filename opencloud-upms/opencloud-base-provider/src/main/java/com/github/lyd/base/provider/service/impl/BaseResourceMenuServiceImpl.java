@@ -144,20 +144,24 @@ public class BaseResourceMenuServiceImpl implements BaseResourceMenuService {
         BaseResourceOperation browse = new BaseResourceOperation();
         browse.setMenuId(menu.getMenuId());
         browse.setOperationCode(menu.getMenuCode()+"Browse");
+        browse.setOperationName("浏览");
         browse.setIsPersist(1);
         browse.setStatus(1);
         BaseResourceOperation create = new BaseResourceOperation();
         create.setMenuId(menu.getMenuId());
         create.setOperationCode(menu.getMenuCode()+"Create");
+        create.setOperationName("创建");
         create.setIsPersist(1);
         create.setStatus(1);
         BaseResourceOperation edit = new BaseResourceOperation();
         edit.setMenuId(menu.getMenuId());
         edit.setOperationCode(menu.getMenuCode()+"Edit");
+        edit.setOperationName("编辑");
         edit.setIsPersist(1);
         edit.setStatus(1);
         BaseResourceOperation remove = new BaseResourceOperation();
         remove.setMenuId(menu.getMenuId());
+        remove.setOperationName("删除");
         remove.setOperationCode(menu.getMenuCode()+"Remove");
         remove.setIsPersist(1);
         remove.setStatus(1);
@@ -201,8 +205,8 @@ public class BaseResourceMenuServiceImpl implements BaseResourceMenuService {
         }
         menu.setUpdateTime(new Date());
         baseResourceMenuMapper.updateByPrimaryKeySelective(menu);
-        // 同步授权表里的信息
-       // baseAuthorityService.updateAuthority(BaseConstants.RESOURCE_TYPE_MENU, menu.getMenuId());
+        // 同步权限表里的信息
+        baseAuthorityService.saveOrUpdateAuthority(menu.getMenuId(), ResourceType.menu);
     }
 
     /**
@@ -219,7 +223,7 @@ public class BaseResourceMenuServiceImpl implements BaseResourceMenuService {
         menu.setStatus(status);
         menu.setUpdateTime(new Date());
         baseResourceMenuMapper.updateByPrimaryKeySelective(menu);
-        // 同步授权表里的信息
+        // 同步权限表里的信息
         baseAuthorityService.saveOrUpdateAuthority(menu.getMenuId(), ResourceType.menu);
     }
 

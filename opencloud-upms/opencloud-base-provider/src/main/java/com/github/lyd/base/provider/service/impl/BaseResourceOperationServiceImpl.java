@@ -150,7 +150,7 @@ public class BaseResourceOperationServiceImpl implements BaseResourceOperationSe
         }
         operation.setUpdateTime(new Date());
         baseResourceOperationMapper.updateByPrimaryKeySelective(operation);
-        // 同步授权表里的信息
+        // 同步权限表里的信息
         baseAuthorityService.saveOrUpdateAuthority(operation.getOperationId(), ResourceType.operation);
     }
 

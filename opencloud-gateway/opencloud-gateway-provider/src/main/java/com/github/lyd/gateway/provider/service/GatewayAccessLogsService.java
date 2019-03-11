@@ -1,29 +1,27 @@
 package com.github.lyd.gateway.provider.service;
 
-import com.github.lyd.common.constants.MqConstants;
-import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.util.AntPathMatcher;
+import com.github.lyd.common.model.PageList;
+import com.github.lyd.common.model.PageParams;
+import com.github.lyd.gateway.client.model.entity.GatewayAccessLogs;
 
 import java.util.Map;
 
 /**
- * @author liuyadu
+ * 网关访问日志
  */
-@Component
-public class GatewayAccessLogsService {
-    @Autowired
-    private AmqpTemplate amqpTemplate;
+public interface GatewayAccessLogsService {
+    /**
+     * 分页查询
+     *
+     * @param pageParams
+     * @param keyword
+     * @return
+     */
+    PageList<GatewayAccessLogs> findListPage(PageParams pageParams, String keyword);
 
-    private final AntPathMatcher antPathMatcher = new AntPathMatcher();
-
-
-    public void  saveLogs(Map map){
-        String path = map.get("path").toString();
-        if(antPathMatcher.match("/**/oauth/**", path) || antPathMatcher.match("/base/access/logs/**",path)){
-            return;
-        }
-        amqpTemplate.convertAndSend(MqConstants.QUEUE_ACCESS_LOGS, map);
-    }
+    /**
+     * 保存日志
+     * @param map
+     */
+    void  saveLogs(Map map);
 }

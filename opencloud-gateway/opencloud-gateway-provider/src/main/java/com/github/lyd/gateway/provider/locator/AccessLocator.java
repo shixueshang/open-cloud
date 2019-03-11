@@ -1,11 +1,11 @@
 package com.github.lyd.gateway.provider.locator;
 
 import com.github.lyd.base.client.model.BaseAuthorityDto;
-import com.github.lyd.base.client.model.GatewayIpLimitApisDto;
-import com.github.lyd.base.client.model.GatewayRateLimitApisDto;
+import com.github.lyd.gateway.client.model.GatewayIpLimitApisDto;
+import com.github.lyd.gateway.client.model.GatewayRateLimitApisDto;
+import com.github.lyd.gateway.provider.service.GatewayIpLimitService;
+import com.github.lyd.gateway.provider.service.GatewayRateLimitService;
 import com.github.lyd.gateway.provider.service.feign.BaseAuthorityRemoteService;
-import com.github.lyd.gateway.provider.service.feign.GatewayIpLimitRemoteService;
-import com.github.lyd.gateway.provider.service.feign.GatewayRateLimitRemoteService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.config.properties.RateLimitProperties;
@@ -76,17 +76,17 @@ public class AccessLocator {
     private RateLimitProperties rateLimitProperties;
     private ZuulRouteLocator zuulRoutesLocator;
     private BaseAuthorityRemoteService baseAuthorityRestService;
-    private GatewayIpLimitRemoteService gatewayIpLimitRestService;
-    private GatewayRateLimitRemoteService gatewayRateLimitRestService;
+    private GatewayIpLimitService gatewayIpLimitService;
+    private GatewayRateLimitService gatewayRateLimitService;
     private StringToMatchTypeConverter converter;
 
 
-    public AccessLocator(ZuulRouteLocator zuulRoutesLocator, RateLimitProperties rateLimitProperties, BaseAuthorityRemoteService baseAuthorityRestService, GatewayIpLimitRemoteService gatewayIpLimitRestService, GatewayRateLimitRemoteService gatewayRateLimitRestService) {
+    public AccessLocator(ZuulRouteLocator zuulRoutesLocator, RateLimitProperties rateLimitProperties, BaseAuthorityRemoteService baseAuthorityRestService, GatewayIpLimitService gatewayIpLimitService, GatewayRateLimitService gatewayRateLimitService) {
         this.zuulRoutesLocator = zuulRoutesLocator;
         this.rateLimitProperties = rateLimitProperties;
         this.baseAuthorityRestService = baseAuthorityRestService;
-        this.gatewayIpLimitRestService = gatewayIpLimitRestService;
-        this.gatewayRateLimitRestService = gatewayRateLimitRestService;
+        this.gatewayIpLimitService = gatewayIpLimitService;
+        this.gatewayRateLimitService = gatewayRateLimitService;
         this.converter = new StringToMatchTypeConverter();
     }
 
@@ -163,7 +163,7 @@ public class AccessLocator {
         log.info("=============加载IP黑名单==============");
         ipBlackList = Lists.newArrayList();
         try {
-            ipBlackList = gatewayIpLimitRestService.getBlackList().getData();
+            ipBlackList = gatewayIpLimitService.findBlackList().getList();
             if (ipBlackList != null) {
                 for (GatewayIpLimitApisDto item : ipBlackList) {
                     item.setPath(getZuulPath(item.getServiceId(), item.getPath()));
@@ -181,7 +181,7 @@ public class AccessLocator {
         log.info("=============加载IP白名单==============");
         ipWhiteList = Lists.newArrayList();
         try {
-            ipWhiteList = gatewayIpLimitRestService.getWhiteList().getData();
+            ipWhiteList = gatewayIpLimitService.findWhiteList().getList();
             if (ipWhiteList != null) {
                 for (GatewayIpLimitApisDto item : ipWhiteList) {
                     item.setPath(getZuulPath(item.getServiceId(), item.getPath()));
@@ -220,7 +220,7 @@ public class AccessLocator {
     protected Map<String, List<RateLimitProperties.Policy>> loadRateLimitPolicy() {
         Map<String, List<RateLimitProperties.Policy>> policyMap = Maps.newLinkedHashMap();
         try {
-            rateLimitApiList = gatewayRateLimitRestService.getRateLimitApiList().getData();
+            rateLimitApiList = gatewayRateLimitService.findRateLimitApiList().getList();
             if (rateLimitApiList != null && rateLimitApiList.size() > 0) {
                 for (GatewayRateLimitApisDto item : rateLimitApiList) {
                     List<RateLimitProperties.Policy> policyList = policyMap.get(item.getServiceId());

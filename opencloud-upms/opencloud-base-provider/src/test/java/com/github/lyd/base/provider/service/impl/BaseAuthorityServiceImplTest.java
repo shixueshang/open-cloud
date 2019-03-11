@@ -6,8 +6,10 @@ import com.github.lyd.base.provider.service.BaseAuthorityService;
 import com.github.lyd.base.provider.service.BaseResourceMenuService;
 import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.test.BaseTest;
+import com.github.lyd.common.utils.RandomValueUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class BaseAuthorityServiceImplTest extends BaseTest {
 
@@ -23,5 +25,15 @@ public class BaseAuthorityServiceImplTest extends BaseTest {
             BaseResourceMenu menu = (BaseResourceMenu)object;
             baseAuthorityService.saveOrUpdateAuthority(menu.getMenuId(), ResourceType.menu);
         }
+    }
+
+    public static void main(String[] args) {
+        BCryptPasswordEncoder encoder =  new BCryptPasswordEncoder();
+        String clientId = String.valueOf(System.currentTimeMillis());
+        String clientSecret = RandomValueUtils.uuid();
+        System.out.println(clientId);
+        //$2a$10$xxfI6N5kSKINJXipQb9dJuS1Z7T2z4h/IZrhNnx3zNzCViCQMDtfq
+        System.out.println(clientSecret);
+        System.out.println(encoder.encode(clientSecret));
     }
 }

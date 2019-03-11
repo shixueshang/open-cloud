@@ -68,13 +68,4 @@ public interface BaseAppService {
      * @return
      */
     void removeApp(String appId);
-
-    /**
-     * APP授权功能
-     *
-     * @param appId    应用ID
-     * @param apiCodes api编码
-     * @return authorities 授权后的权限标识
-     */
-    String grantAccess(String appId, String... apiCodes);
 }

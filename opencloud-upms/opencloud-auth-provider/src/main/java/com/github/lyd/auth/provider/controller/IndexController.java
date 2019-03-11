@@ -6,7 +6,7 @@ import com.github.lyd.auth.provider.service.feign.BaseUserAccountRestRemoteServi
 import com.github.lyd.auth.provider.service.impl.GiteeAuthServiceImpl;
 import com.github.lyd.auth.provider.service.impl.QQAuthServiceImpl;
 import com.github.lyd.auth.provider.service.impl.WechatAuthServiceImpl;
-import com.github.lyd.common.configuration.GatewayProperties;
+import com.github.lyd.common.configuration.CommonProperties;
 import com.github.lyd.common.http.OpenRestTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -41,7 +41,7 @@ public class IndexController {
     @Autowired
     private OpenRestTemplate openRestTemplate;
     @Autowired
-    private GatewayProperties gatewayProperties;
+    private CommonProperties commonProperties;
     @Autowired
     private BaseUserAccountRestRemoteService systemAccountClient;
     @Autowired
@@ -175,8 +175,8 @@ public class IndexController {
         MultiValueMap<String, Object> postParameters = new LinkedMultiValueMap<>();
         postParameters.add("username", userName);
         postParameters.add("password", password);
-        postParameters.add("client_id", gatewayProperties.getClientId());
-        postParameters.add("client_secret", gatewayProperties.getClientSecret());
+        postParameters.add("client_id", commonProperties.getClientId());
+        postParameters.add("client_secret", commonProperties.getClientSecret());
         postParameters.add("grant_type", "password");
         // 添加请求头区分,第三方登录
         headers.add(AuthConstants.HEADER_X_THIRDPARTY_LOGIN, type);
@@ -185,7 +185,7 @@ public class IndexController {
         // 强制移除 原来的请求头,防止token失效
         headers.remove(HttpHeaders.AUTHORIZATION);
         HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity(postParameters, headers);
-        JSONObject result = openRestTemplate.postForObject(gatewayProperties.getAccessTokenUri(), request, JSONObject.class);
+        JSONObject result = openRestTemplate.postForObject(commonProperties.getAccessTokenUri(), request, JSONObject.class);
         if (result.containsKey("access_token")) {
             return result.getString("access_token");
         }

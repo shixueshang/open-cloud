@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.lyd.gateway.provider.mapper.GatewayRateLimitApisMapper">
+    <resultMap id="BaseResultMap" type="com.github.lyd.gateway.client.model.entity.GatewayRateLimitApi">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="limit_id" jdbcType="BIGINT" property="limitId"/>
+        <result column="policy_id" jdbcType="BIGINT" property="policyId"/>
+        <result column="api_id" jdbcType="BIGINT" property="apiId"/>
+        <result column="service_id" jdbcType="VARCHAR" property="serviceId"/>
+        <result column="limit_type" jdbcType="VARCHAR" property="limitType"/>
+        <result column="limit_value" jdbcType="VARCHAR" property="limitValue"/>
+    </resultMap>
+
+    <resultMap id="IpLimitApisDto" extends="com.github.lyd.gateway.provider.mapper.GatewayIpLimitApisMapper.ApiResultMap"
+               type="com.github.lyd.gateway.client.model.GatewayRateLimitApisDto">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <result column="item_id" jdbcType="BIGINT" property="itemId"/>
+        <result column="policy_id" jdbcType="BIGINT" property="policyId"/>
+        <result column="policy_name" jdbcType="VARCHAR" property="policyName"/>
+        <result column="limit" jdbcType="BIGINT" property="limit"/>
+        <result column="interval_unit" jdbcType="VARCHAR" property="intervalUnit"/>
+    </resultMap>
+
+    <select id="selectIpLimitApisDto" resultMap="IpLimitApisDto">
+        SELECT
+            i.limit_id,
+            i.policy_id,
+            p.`limit`,
+            p.interval_unit,
+            p.policy_name,
+            i.api_id,
+            a.api_id,
+            a.api_code,
+            a.api_name,
+            a.api_category,
+            a.service_id,
+            a.path
+        FROM
+            gateway_rate_limit_api AS i
+                INNER JOIN gateway_rate_limit AS p ON i.policy_id = p.policy_id
+                INNER JOIN base_resource_api AS a ON i.api_id = a.api_id
+        WHERE
+            p.type = 'url'
+    </select>
+</mapper>

@@ -157,7 +157,7 @@ public class BaseResourceApiServiceImpl implements BaseResourceApiService {
         }
         api.setUpdateTime(new Date());
         baseResourceApiMapper.updateByPrimaryKeySelective(api);
-        // 同步授权表里的信息
+        // 同步权限表里的信息
         baseAuthorityService.saveOrUpdateAuthority(api.getApiId(),ResourceType.api);
     }
 
@@ -178,23 +178,6 @@ public class BaseResourceApiServiceImpl implements BaseResourceApiService {
         return baseResourceApiMapper.selectOneByExample(example);
     }
 
-    /**
-     * 更新启用禁用
-     *
-     * @param apiId
-     * @param status
-     * @return
-     */
-    @Override
-    public void updateStatus(Long apiId, Integer status) {
-        BaseResourceApi api = new BaseResourceApi();
-        api.setApiId(apiId);
-        api.setStatus(status);
-        api.setUpdateTime(new Date());
-        baseResourceApiMapper.updateByPrimaryKeySelective(api);
-        // 同步授权表里的信息
-        baseAuthorityService.saveOrUpdateAuthority(api.getApiId(), ResourceType.api);
-    }
 
     /**
      * 移除接口
@@ -215,32 +198,6 @@ public class BaseResourceApiServiceImpl implements BaseResourceApiService {
         baseResourceApiMapper.deleteByPrimaryKey(apiId);
     }
 
-    /**
-     * 根据编码查询ID
-     *
-     * @param codes
-     * @return
-     */
-    @Override
-    public List<String> findIdsByCodes(String... codes) {
-        List codeList = Lists.newArrayList(codes);
-        List<String> ids = Lists.newArrayList();
-        if (codeList.contains("all")) {
-            ids.add("1");
-            return ids;
-        }
-        ExampleBuilder builder = new ExampleBuilder(BaseResourceApi.class);
-        Example example = builder.criteria()
-                .andIn("apiCode", codeList)
-                .end().build();
-        List<BaseResourceApi> list = baseResourceApiMapper.selectByExample(example);
-        if (list != null && !list.isEmpty()) {
-            list.forEach(item -> {
-                ids.add(String.valueOf(item.getApiId()));
-            });
-        }
-        return ids;
-    }
 
     /**
      * 获取数量
