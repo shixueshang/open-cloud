@@ -43,8 +43,8 @@ public class MessageHandler {
                         BaseResourceApi save = baseResourceApiService.getApi(api.getApiCode(), api.getServiceId());
                         if (save == null) {
                             api.setIsOpen(0);
-                            api.setIsAuth(0);
-                            api.setIsPersist(0);
+                            api.setIsAuth(1);
+                            api.setIsPersist(1);
                             baseResourceApiService.addApi(api);
                         } else {
                             api.setIsOpen(null);

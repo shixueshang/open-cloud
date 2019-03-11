@@ -47,24 +47,6 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 
-    /**
-     * 跨域配置
-     *
-     * @param registry
-     */
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        if (corsProperties != null && corsProperties.getEnabled()) {
-            log.info("初始化CorsFilter:{}", corsProperties);
-            registry.addMapping("/**")
-                    .allowCredentials(corsProperties.getAllowCredentials())
-                    .allowedOrigins(corsProperties.getAllowedOrigin().split(","))
-                    .allowedMethods(corsProperties.getAllowedMethod().split(","))
-                    .allowedHeaders(corsProperties.getAllowedHeader().split(","))
-                    .maxAge(corsProperties.getMaxAge())
-                    .exposedHeaders("Authorization");
-        }
-    }
 
     /**
      * Jackson全局配置

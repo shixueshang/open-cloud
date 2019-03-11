@@ -16,13 +16,23 @@ import java.util.List;
 public interface BaseAuthorityService {
 
     /**
+     * 获取所有可用权限详情
+     *
+     * @param type      = null 查询全部  type = 1 获取菜单和操作 type = 2 获取API
+     * @param serviceId
+     * @return
+     */
+    List<BaseAuthorityDto> findAuthorityDto(Integer type, String serviceId);
+
+
+    /**
      * 获取所有可用权限
      *
      * @param type      = null 查询全部  type = 1 获取菜单和操作 type = 2 获取API
      * @param serviceId
      * @return
      */
-    List<BaseAuthorityDto> findAuthority(Integer type, String serviceId);
+    List<OpenGrantedAuthority> findAuthority(Integer type, String serviceId);
 
     /**
      * 保存或修改权限
@@ -119,7 +129,7 @@ public interface BaseAuthorityService {
      * @param userId
      * @return
      */
-    List<OpenGrantedAuthority> findUserGrantedAuthority(Long userId);
+    List<OpenGrantedAuthority> findUserGrantedAuthority(Long userId, Boolean root);
 
 
     /**

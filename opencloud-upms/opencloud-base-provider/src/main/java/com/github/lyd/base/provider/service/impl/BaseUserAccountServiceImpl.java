@@ -14,6 +14,7 @@ import com.github.lyd.base.provider.service.BaseAuthorityService;
 import com.github.lyd.base.provider.service.BaseRoleService;
 import com.github.lyd.base.provider.service.BaseUserAccountService;
 import com.github.lyd.base.provider.service.BaseUserService;
+import com.github.lyd.common.constants.AuthorityConstants;
 import com.github.lyd.common.exception.OpenAlertException;
 import com.github.lyd.common.mapper.ExampleBuilder;
 import com.github.lyd.common.security.OpenGrantedAuthority;
@@ -212,20 +213,22 @@ public class BaseUserAccountServiceImpl implements BaseUserAccountService {
                     roles.add(roleMap);
                     // 加入角色标识
                     OpenGrantedAuthority authority = new OpenGrantedAuthority(ROLE_PRIFIX + role.getRoleCode());
+                    authority.setOwner("role");
                     authorities.add(authority);
                 }
             }
 
+            //查询系统用户资料
+            BaseUser baseUser = baseUserService.getProfile(systemAccount.getUserId());
+
             // 加入用户权限
-            List<OpenGrantedAuthority> userGrantedAuthority = baseAuthorityService.findUserGrantedAuthority(systemAccount.getUserId());
+            List<OpenGrantedAuthority> userGrantedAuthority = baseAuthorityService.findUserGrantedAuthority(systemAccount.getUserId(),  AuthorityConstants.ROOT.equals(baseUser.getUserName()));
             if (userGrantedAuthority != null && userGrantedAuthority.size() > 0) {
                 authorities.addAll(userGrantedAuthority);
             }
-
-            //查询系统用户资料
-            BaseUser baseUser = baseUserService.getProfile(systemAccount.getUserId());
             BaseUserDto userProfile = new BaseUserDto();
             BeanUtils.copyProperties(baseUser, userProfile);
+
             //设置用户资料,权限信息
             userProfile.setAuthorities(authorities);
             userProfile.setRoles(roles);

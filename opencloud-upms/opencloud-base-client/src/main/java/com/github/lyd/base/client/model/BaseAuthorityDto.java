@@ -1,5 +1,6 @@
 package com.github.lyd.base.client.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.github.lyd.base.client.constants.BaseConstants;
 import com.github.lyd.base.client.constants.ResourceType;
 import com.github.lyd.base.client.model.entity.BaseResourceApi;
@@ -13,6 +14,7 @@ import java.util.Date;
  * 授权资源信息
  * @author liuyadu
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class BaseAuthorityDto implements Serializable {
 
     private static final long serialVersionUID = -4808517112300149563L;
@@ -172,9 +174,6 @@ public class BaseAuthorityDto implements Serializable {
      * @return
      */
     public Boolean getExpired() {
-        if(authorityId == null){
-            return null;
-        }
         if (expireTime != null && System.currentTimeMillis() < expireTime.getTime()) {
             return true;
         }
@@ -182,9 +181,6 @@ public class BaseAuthorityDto implements Serializable {
     }
 
     public Boolean getAuth() {
-        if(authorityId == null){
-            return null;
-        }
         if (api != null) {
             isAuth = api.getIsAuth().equals(BaseConstants.ENABLED);
         } else {

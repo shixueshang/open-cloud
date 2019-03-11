@@ -1,5 +1,6 @@
 package com.github.lyd.admin.provider.controller;
 
+import com.github.lyd.common.configuration.CommonProperties;
 import com.github.lyd.common.http.OpenRestTemplate;
 import com.github.lyd.common.model.ResultBody;
 import com.github.lyd.common.utils.DateUtils;
@@ -34,8 +35,8 @@ public class ApiController {
     private OpenRestTemplate openRestTemplate;
     @Autowired
     private ResourceServerProperties resourceServerProperties;
-
-
+    @Autowired
+    private CommonProperties commonProperties;
     /**
      * 获取用户访问令牌
      * 基于oauth2密码模式登录
@@ -63,7 +64,7 @@ public class ApiController {
         // 强制移除 原来的请求头,防止token失效
         headers.remove(HttpHeaders.AUTHORIZATION);
         HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity(postParameters, headers);
-        Map result = openRestTemplate.postForObject(resourceServerProperties.getTokenInfoUri(), request, Map.class);
+        Map result = openRestTemplate.postForObject(commonProperties.getAccessTokenUri(), request, Map.class);
         if (result.containsKey("access_token")) {
             return ResultBody.success(result);
         } else {

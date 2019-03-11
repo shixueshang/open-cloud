@@ -20,6 +20,17 @@ public class ApiGatewayProperties {
      */
     private Boolean accessControl = true;
 
+    /**
+     * 始终放行
+     */
+    private String permitAll;
+
+    /**
+     * 无权限允许访问
+     */
+    private String noAuthorityAllow;
+
+
     public Boolean getCheckSign() {
         return checkSign;
     }
@@ -34,5 +45,21 @@ public class ApiGatewayProperties {
 
     public void setAccessControl(Boolean accessControl) {
         this.accessControl = accessControl;
+    }
+
+    public String getPermitAll() {
+        return permitAll;
+    }
+
+    public void setPermitAll(String permitAll) {
+        this.permitAll = permitAll;
+    }
+
+    public String getNoAuthorityAllow() {
+        return noAuthorityAllow;
+    }
+
+    public void setNoAuthorityAllow(String noAuthorityAllow) {
+        this.noAuthorityAllow = noAuthorityAllow;
     }
 }

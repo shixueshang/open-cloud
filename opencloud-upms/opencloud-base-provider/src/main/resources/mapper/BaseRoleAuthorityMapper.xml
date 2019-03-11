@@ -10,13 +10,12 @@
         <result column="expire_time" jdbcType="TIMESTAMP" property="expireTime"/>
     </resultMap>
 
-    <select id="selectRoleGrantedAuthority"
-            resultType="com.github.lyd.common.security.OpenGrantedAuthority">
+    <select id="selectRoleGrantedAuthority" resultMap="com.github.lyd.base.provider.mapper.BaseAuthorityMapper.OpenGrantedAuthority">
         SELECT
-            a.authority_id as authorityId,
-            a.authority as authority,
-            rp.expire_time as expireTime ,
-            a.service_id as serviceId,
+            a.authority_id,
+            a.authority,
+            rp.expire_time,
+            a.service_id,
             'role' as owner
         FROM
             base_role_authority AS rp

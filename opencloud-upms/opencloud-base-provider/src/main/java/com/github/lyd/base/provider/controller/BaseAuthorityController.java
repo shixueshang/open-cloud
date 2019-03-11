@@ -50,7 +50,7 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
             @RequestParam(value = "type",required = false) Integer type,
             @RequestParam(value = "serviceId",required = false) String serviceId
     ) {
-        return ResultBody.success(baseAuthorityService.findAuthority(type, serviceId));
+        return ResultBody.success(baseAuthorityService.findAuthorityDto(type, serviceId));
     }
 
 
@@ -164,7 +164,7 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
     public ResultBody<List<GrantedAuthority>> getGrantedUserAuthority(
             @RequestParam(value = "userId") Long userId
     ) {
-        List<OpenGrantedAuthority> result = baseAuthorityService.findUserGrantedAuthority(userId);
+        List<OpenGrantedAuthority> result = baseAuthorityService.findUserGrantedAuthority(userId,false);
         return ResultBody.success(result);
     }
 
@@ -194,8 +194,8 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
      * @return
      */
     @ApiOperation(value = "获取登陆用户已分配权限", notes = "获取登陆用户已分配权限")
-    @GetMapping("/authority/granted/my")
-    public ResultBody<List<BaseAuthorityDto>> getGrantedMyAuthority() {
+    @GetMapping("/authority/granted/me")
+    public ResultBody<List<BaseAuthorityDto>> getGrantedMeAuthority() {
         List<BaseAuthorityDto> result = baseAuthorityService.findUserGrantedAuthorityDetail(OpenHelper.getAuthUser().getUserId(), AuthorityConstants.ROOT.equals(OpenHelper.getAuthUser().getUsername()));
         return ResultBody.success(result);
     }

@@ -46,8 +46,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/login/**").permitAll()
-                .antMatchers("/oauth/**").permitAll()
+                .antMatchers("/login/**","/oauth/**","/thirdParty/config").permitAll()
                 // 只有拥有actuator权限可执行远程端点
                 .requestMatchers(EndpointRequest.toAnyEndpoint()).hasAnyAuthority(AuthorityConstants.AUTHORITY_ACTUATOR)
                 .anyRequest().authenticated()

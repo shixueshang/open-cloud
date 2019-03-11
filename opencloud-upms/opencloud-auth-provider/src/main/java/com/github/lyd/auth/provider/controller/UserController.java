@@ -4,6 +4,7 @@ import com.github.lyd.auth.provider.service.impl.GiteeAuthServiceImpl;
 import com.github.lyd.auth.provider.service.impl.QQAuthServiceImpl;
 import com.github.lyd.auth.provider.service.impl.WechatAuthServiceImpl;
 import com.github.lyd.common.model.ResultBody;
+import com.github.lyd.common.security.OpenAuthUser;
 import com.github.lyd.common.security.OpenHelper;
 import com.google.common.collect.Maps;
 import io.swagger.annotations.Api;
@@ -34,9 +35,10 @@ public class UserController {
      * @return
      */
     @ApiOperation(value = "获取用户基础信息")
-    @GetMapping("/user")
+    @GetMapping("/user/me")
     public ResultBody getUserProfile() {
-        return ResultBody.success(OpenHelper.getAuthUser());
+        OpenAuthUser user = OpenHelper.getAuthUser();
+        return ResultBody.success(user!=null?user.getUserProfile():null);
     }
 
     /**

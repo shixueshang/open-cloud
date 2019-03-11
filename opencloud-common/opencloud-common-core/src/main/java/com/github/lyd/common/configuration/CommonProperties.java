@@ -25,6 +25,11 @@ public class CommonProperties {
     private String apiServerAddr;
 
     /**
+     * 认证服务地址
+     */
+    private String authServerAddr;
+
+    /**
      * 后台部署地址
      */
     private String adminServerAddr;
@@ -122,19 +127,27 @@ public class CommonProperties {
         this.adminServerAddr = adminServerAddr;
     }
 
+    public String getAuthServerAddr() {
+        return authServerAddr;
+    }
+
+    public void setAuthServerAddr(String authServerAddr) {
+        this.authServerAddr = authServerAddr;
+    }
+
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("OpenServerProperties{");
-        sb.append("clientId='").append(clientId).append('\'');
-        sb.append(", clientSecret='").append(clientSecret).append('\'');
-        sb.append(", apiServerAddr='").append(apiServerAddr).append('\'');
-        sb.append(", adminServerAddr='").append(adminServerAddr).append('\'');
-        sb.append(", scope='").append(scope).append('\'');
-        sb.append(", accessTokenUri='").append(accessTokenUri).append('\'');
-        sb.append(", userAuthorizationUri='").append(userAuthorizationUri).append('\'');
-        sb.append(", tokenInfoUri='").append(tokenInfoUri).append('\'');
-        sb.append(", userInfoUri='").append(userInfoUri).append('\'');
-        sb.append('}');
-        return sb.toString();
+        return "CommonProperties{" +
+                "clientId='" + clientId + '\'' +
+                ", clientSecret='" + clientSecret + '\'' +
+                ", apiServerAddr='" + apiServerAddr + '\'' +
+                ", authServerAddr='" + authServerAddr + '\'' +
+                ", adminServerAddr='" + adminServerAddr + '\'' +
+                ", scope='" + scope + '\'' +
+                ", accessTokenUri='" + accessTokenUri + '\'' +
+                ", userAuthorizationUri='" + userAuthorizationUri + '\'' +
+                ", tokenInfoUri='" + tokenInfoUri + '\'' +
+                ", userInfoUri='" + userInfoUri + '\'' +
+                '}';
     }
 }

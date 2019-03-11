@@ -1,5 +1,6 @@
 package com.github.lyd.common.security;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.util.Assert;
 
@@ -9,6 +10,7 @@ import java.util.Date;
  * 自定义已授权权限标识
  * @author liuyadu
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public final class OpenGrantedAuthority implements GrantedAuthority {
     private static final long serialVersionUID = -4682269495406460314L;
 
@@ -31,9 +33,6 @@ public final class OpenGrantedAuthority implements GrantedAuthority {
     private String owner;
 
     public Boolean getIsExpired() {
-        if(authorityId == null){
-            return null;
-        }
         if (expireTime != null && System.currentTimeMillis() < expireTime.getTime()) {
             return true;
         }

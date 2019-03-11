@@ -225,10 +225,9 @@ public class OpenExceptionHandler {
         if (resultCode == null) {
             resultCode = ResultEnum.ERROR;
         }
-        //提示消息
-        String message = ex.getMessage();
-        log.error("错误解析:method={},path={},code={},message={},exception={}", method, path, resultCode.getCode(), message, (ex instanceof OpenException ? ex.getMessage() : ex));
-        return ResultBody.failed(resultCode.getCode(), message).setPath(path);
+        String error = resultCode.getMessage();
+        log.error("错误解析:method={},path={},code={},error={},message={},exception={}", method, path, resultCode.getCode(),error, exception, (ex instanceof OpenException ? ex.getMessage() : ex));
+        return ResultBody.error().setCode(resultCode.getCode()).setMessage(exception).setPath(path).setError(error);
     }
 
 

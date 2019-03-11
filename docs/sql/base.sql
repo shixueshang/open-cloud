@@ -42,8 +42,8 @@ CREATE TABLE `base_app` (
 -- ----------------------------
 -- Records of base_app
 -- ----------------------------
-INSERT INTO `base_app` VALUES ('1552274783265', '2cde1eaa60fe4af1987f94caa13f29a2', '开放平台资源服务器', 'OpenCloudResourceServer', '', 'server', '开放平台资源服务器', '', 'http://www.baidu.com', 'http://localhost:8888/login,http://localhost:8888/webjars/springfox-swagger-ui/o2c.html', '0', 'platform', '2018-11-12 17:48:45', '2019-01-10 22:22:46', '1', '1');
-INSERT INTO `base_app` VALUES ('1552294656514', '74a02bade18a42388c3127751b96e1f7', '开放平台管理后台', 'OpenAdmin', '', 'pc', '开放平台管理后台', '', 'http://www.baidu.com', 'http://localhost:8080/login/callback', '0', 'platform', '2018-11-12 17:48:45', '2019-01-10 22:22:46', '1', '1');
+INSERT INTO `base_app` VALUES ('1552274783265', '2cde1eaa60fe4af1987f94caa13f29a2', '微服务资源服务器', 'OpenCloudResourceServer', '', 'server', '微服务资源服务器', '', 'http://www.baidu.com', 'http://localhost:8888/login,http://localhost:8888/webjars/springfox-swagger-ui/o2c.html', '0', 'platform', '2018-11-12 17:48:45', '2019-01-10 22:22:46', '1', '1');
+INSERT INTO `base_app` VALUES ('1552294656514', '74a02bade18a42388c3127751b96e1f7', '运营后台服务', 'OpenAdmin', '', 'pc', '运营后台服务', '', 'http://www.baidu.com', 'http://localhost:8080/login/callback', '0', 'platform', '2018-11-12 17:48:45', '2019-01-10 22:22:46', '1', '1');
 
 -- ----------------------------
 -- Table structure for base_app_authority

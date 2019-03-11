@@ -108,7 +108,7 @@ public class ResultBody<T extends Object> implements Serializable {
     }
 
     public String getMessage() {
-        return i18n(message);
+        return i18n(error,message);
     }
 
     public ResultBody setMessage(String message) {
@@ -155,8 +155,9 @@ public class ResultBody<T extends Object> implements Serializable {
         return this.error = (this.code == 0 ? "" : ResultEnum.getResultEnum(this.code).getMessage());
     }
 
-    public void setError(String error) {
+    public ResultBody setError(String error) {
         this.error = error;
+        return this;
     }
 
     public String getPath() {
@@ -168,10 +169,10 @@ public class ResultBody<T extends Object> implements Serializable {
         return this;
     }
 
-    private String i18n(String message) {
+    private String i18n(String error,String message) {
         MessageSource messageSource = SpringContextHolder.getBean(MessageSource.class);
         if (messageSource != null && StringUtils.isNotBlank(message)) {
-            return messageSource.getMessage(message, null, message, locale);
+            return messageSource.getMessage(error, null, message, locale);
         }
         return message;
     }

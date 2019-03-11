@@ -6,8 +6,6 @@ import com.github.lyd.common.utils.WebUtils;
 import com.github.lyd.gateway.client.model.GatewayIpLimitApisDto;
 import com.github.lyd.gateway.provider.configuration.ApiGatewayProperties;
 import com.github.lyd.gateway.provider.locator.AccessLocator;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -19,10 +17,7 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 访问控制
@@ -31,13 +26,28 @@ import java.util.Set;
 @Service
 public class AccessControl {
 
-    @Autowired
     private AccessLocator accessLocator;
 
-    @Autowired
     private ApiGatewayProperties apiGatewayProperties;
 
     private static final AntPathMatcher pathMatch = new AntPathMatcher();
+
+    private Set<String> permitAll =new HashSet<>();
+
+    private Set<String> noAuthorityAllow =new HashSet<>();
+
+    public AccessControl(AccessLocator accessLocator, ApiGatewayProperties apiGatewayProperties) {
+        this.accessLocator = accessLocator;
+        this.apiGatewayProperties = apiGatewayProperties;
+        if(apiGatewayProperties!=null){
+            if(apiGatewayProperties.getPermitAll()!=null){
+                permitAll.addAll(Arrays.asList(apiGatewayProperties.getPermitAll().split(",")));
+            }
+            if(apiGatewayProperties.getNoAuthorityAllow()!=null){
+                noAuthorityAllow.addAll(Arrays.asList(apiGatewayProperties.getNoAuthorityAllow().split(",")));
+            }
+        }
+    }
 
     /**
      * 是否准入
@@ -52,12 +62,15 @@ public class AccessControl {
         }
         String requestPath = getRequestPath(request);
         String remoteIpAddress = WebUtils.getIpAddr(request);
-
+        if(isPermitAll(requestPath)){
+            return true;
+        }
         // 1.ip黑名单控制
         boolean inIpBlacklist = inIpBlacklist(requestPath, remoteIpAddress);
         if (inIpBlacklist) {
             // 拒绝
-            throw new AccessDeniedException("black_ip_limited");
+            //throw new AccessDeniedException("black_ip_limited");
+            return false;
         }
         // 2.ip白名单控制
         boolean[] inIpWhiteList = inIpWhiteList(requestPath, remoteIpAddress);
@@ -83,13 +96,37 @@ public class AccessControl {
                 }
             } else {
                 // 白名单限制 ip检查未通过 拒绝
-                throw new AccessDeniedException("white_ip_limited");
+                //throw new AccessDeniedException("white_ip_limited");
+                return false;
             }
 
         } else {
             // 非白名单限制 校验身份
             return checkAuthorities(authentication, requestPath);
         }
+    }
+
+
+    private boolean isPermitAll(String requestPath){
+        Iterator<String> it = permitAll.iterator();
+        while (it.hasNext()) {
+            String path = it.next();
+            if(pathMatch.match(path,requestPath)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isNoAuthorityAllow(String requestPath){
+        Iterator<String> it = noAuthorityAllow.iterator();
+        while (it.hasNext()) {
+            String path = it.next();
+            if(pathMatch.match(path,requestPath)){
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -101,6 +138,10 @@ public class AccessControl {
             if (authentication instanceof AnonymousAuthenticationToken) {
                 //check if this uri can be access by anonymous
                 //return
+            }
+            if(isNoAuthorityAllow(requestPath)){
+                // 认证通过,并且无需权限
+                return true;
             }
             return mathAuthorities(authentication, requestPath);
         }
@@ -122,9 +163,10 @@ public class AccessControl {
                     if (attribute.getAttribute().equals(authority.getAuthority())) {
                         if (authority instanceof OpenGrantedAuthority) {
                             OpenGrantedAuthority customer = (OpenGrantedAuthority) authority;
-                            if (customer.getIsExpired()) {
+                            if (customer.getIsExpired()!=null && customer.getIsExpired()) {
                                 // 授权已过期
-                                throw new AccessDeniedException("authority_is_expired");
+                                //throw new AccessDeniedException("authority_is_expired");
+                                return false;
                             }
                         }
                         return true;
