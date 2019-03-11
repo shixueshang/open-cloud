@@ -5,11 +5,11 @@
     <!--
       WARNING - @mbg.generated
     -->
-    <id column="id" jdbcType="BIGINT" property="id" />
+    <id column="policy_id" jdbcType="BIGINT" property="policyId" />
+    <result column="policy_name" jdbcType="VARCHAR" property="policyName" />
     <result column="limit" jdbcType="BIGINT" property="limit" />
-    <result column="interval" jdbcType="BIGINT" property="interval" />
     <result column="interval_unit" jdbcType="VARCHAR" property="intervalUnit" />
-    <result column="limit_desc" jdbcType="VARCHAR" property="limitDesc" />
+    <result column="limit_type" jdbcType="VARCHAR" property="limitType" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>

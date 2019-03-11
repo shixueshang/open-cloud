@@ -64,7 +64,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .authorizeRequests()
                 // 直接放行的请求
                 .antMatchers(
-                        "/login/*",
+                        "/login/**",
                         "/logout",
                         "/oauth/*",
                         "/auth/login",

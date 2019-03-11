@@ -13,10 +13,10 @@
     <select id="selectRoleGrantedAuthority"
             resultType="com.github.lyd.common.security.OpenGrantedAuthority">
         SELECT
-            a.authority_id,
-            a.authority,
-            rp.expire_time,
-            a.serviceId,
+            a.authority_id as authorityId,
+            a.authority as authority,
+            rp.expire_time as expireTime ,
+            a.service_id as serviceId,
             'role' as owner
         FROM
             base_role_authority AS rp

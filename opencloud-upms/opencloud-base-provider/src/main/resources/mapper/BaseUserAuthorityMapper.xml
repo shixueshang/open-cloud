@@ -13,10 +13,10 @@
     <select id="selectUserGrantedAuthority"
             resultType="com.github.lyd.common.security.OpenGrantedAuthority">
         SELECT
-            a.authority_id,
-            a.authority,
+            a.authority_id as authorityId,
+            a.authority as authority,
             up.expire_time as expireTime,
-            a.serviceId,
+            a.service_id as serviceId,
             'user' as owner
         FROM
             base_user_authority AS up

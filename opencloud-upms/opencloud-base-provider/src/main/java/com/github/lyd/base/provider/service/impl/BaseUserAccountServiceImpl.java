@@ -239,13 +239,14 @@ public class BaseUserAccountServiceImpl implements BaseUserAccountService {
                     BaseUserAccountLogs log = new BaseUserAccountLogs();
                     log.setUserId(systemAccount.getUserId());
                     log.setAccount(systemAccount.getAccount());
+                    log.setAccountId(String.valueOf(systemAccount.getAccountId()));
                     log.setAccountType(systemAccount.getAccountType());
                     log.setLoginIp(WebUtils.getIpAddr(request));
                     log.setLoginAgent(request.getHeader(HttpHeaders.USER_AGENT));
                     addLoginLog(log);
                 }
             } catch (Exception e) {
-                log.error("添加登录日志失败");
+                log.error("添加登录日志失败:{}",e);
             }
         }
         return systemAccountDto;

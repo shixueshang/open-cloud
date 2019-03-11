@@ -1,17 +1,24 @@
 package com.github.lyd.gateway.client.model.entity;
 
+import com.github.lyd.common.gen.SnowflakeId;
+import tk.mybatis.mapper.annotation.KeySql;
+
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * @author liuyadu
+ */
 @Table(name = "gateway_ip_limit")
 public class GatewayIpLimit implements Serializable {
     /**
      * 策略ID
      */
     @Id
+    @KeySql(genId = SnowflakeId.class)
     @Column(name = "policy_id")
     private Long policyId;
 

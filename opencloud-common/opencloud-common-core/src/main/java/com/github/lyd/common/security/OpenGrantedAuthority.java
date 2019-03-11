@@ -7,6 +7,7 @@ import java.util.Date;
 
 /**
  * 自定义已授权权限标识
+ * @author liuyadu
  */
 public final class OpenGrantedAuthority implements GrantedAuthority {
     private static final long serialVersionUID = -4682269495406460314L;
@@ -29,7 +30,10 @@ public final class OpenGrantedAuthority implements GrantedAuthority {
      */
     private String owner;
 
-    public boolean getIsExpired() {
+    public Boolean getIsExpired() {
+        if(authorityId == null){
+            return null;
+        }
         if (expireTime != null && System.currentTimeMillis() < expireTime.getTime()) {
             return true;
         }
@@ -67,6 +71,7 @@ public final class OpenGrantedAuthority implements GrantedAuthority {
         return this.authority;
     }
 
+    @Override
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
@@ -75,10 +80,12 @@ public final class OpenGrantedAuthority implements GrantedAuthority {
         }
     }
 
+    @Override
     public int hashCode() {
         return this.authority.hashCode();
     }
 
+    @Override
     public String toString() {
         return this.authority;
     }

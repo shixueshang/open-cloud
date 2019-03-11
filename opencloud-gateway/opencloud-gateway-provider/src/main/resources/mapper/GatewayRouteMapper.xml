@@ -14,5 +14,6 @@
         <result column="retryable" property="retryable" jdbcType="BIT"/>
         <result column="status" property="status" jdbcType="TINYINT"/>
         <result column="route_desc" property="routeDesc" jdbcType="VARCHAR"/>
+        <result column="is_persist" property="isPersist" jdbcType="INTEGER"/>
     </resultMap>
 </mapper>

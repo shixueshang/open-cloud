@@ -62,7 +62,7 @@ open-cloud
 
 本项目基于springCloud打造的分布式快速开发架构. 需要了解SpringCloud,SpringBoot开发,分布式原理。
 
-``` java
+``` 
 -- 1.依赖服务Nacos服务发现 
 -- 2.依赖服务Redis,RabbitMq 
 -- 3.导入sql脚本
@@ -88,6 +88,7 @@ open-cloud
      1. BaseApplication
      2. AuthApplication
      3. GatewayApplication
+     4. AdminApplication
      -- 3个基础服务启动成功。就可以依赖这些服务进行微服务开发了。
      -- 访问 http://localhost:8888
 -- 7.项目部署

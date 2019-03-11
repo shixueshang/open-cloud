@@ -5,12 +5,8 @@
         <!--
           WARNING - @mbg.generated
         -->
-        <id column="limit_id" jdbcType="BIGINT" property="limitId"/>
         <result column="policy_id" jdbcType="BIGINT" property="policyId"/>
         <result column="api_id" jdbcType="BIGINT" property="apiId"/>
-        <result column="service_id" jdbcType="VARCHAR" property="serviceId"/>
-        <result column="limit_type" jdbcType="VARCHAR" property="limitType"/>
-        <result column="limit_value" jdbcType="VARCHAR" property="limitValue"/>
     </resultMap>
 
     <resultMap id="IpLimitApisDto" extends="com.github.lyd.gateway.provider.mapper.GatewayIpLimitApisMapper.ApiResultMap"
@@ -18,7 +14,6 @@
         <!--
           WARNING - @mbg.generated
         -->
-        <result column="item_id" jdbcType="BIGINT" property="itemId"/>
         <result column="policy_id" jdbcType="BIGINT" property="policyId"/>
         <result column="policy_name" jdbcType="VARCHAR" property="policyName"/>
         <result column="limit" jdbcType="BIGINT" property="limit"/>
@@ -27,7 +22,6 @@
 
     <select id="selectIpLimitApisDto" resultMap="IpLimitApisDto">
         SELECT
-            i.limit_id,
             i.policy_id,
             p.`limit`,
             p.interval_unit,
@@ -44,6 +38,6 @@
                 INNER JOIN gateway_rate_limit AS p ON i.policy_id = p.policy_id
                 INNER JOIN base_resource_api AS a ON i.api_id = a.api_id
         WHERE
-            p.type = 'url'
+            p.limit_type = 'url'
     </select>
 </mapper>

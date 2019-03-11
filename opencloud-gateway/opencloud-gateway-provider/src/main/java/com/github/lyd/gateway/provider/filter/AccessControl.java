@@ -198,7 +198,7 @@ public class AccessControl {
         if (authorityList != null) {
             for (BaseAuthorityDto auth : authorityList) {
                 String fullPath = auth.getPath();
-                Boolean isAuth = auth.getIsAuth();
+                Boolean isAuth = auth.getAuth();
                 // 无需认证,返回true
                 if (pathMatch.match(fullPath, requestPath) && !isAuth) {
                     return true;

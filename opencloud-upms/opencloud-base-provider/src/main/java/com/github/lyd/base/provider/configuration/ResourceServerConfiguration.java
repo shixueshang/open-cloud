@@ -42,7 +42,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .requestMatchers(EndpointRequest.toAnyEndpoint()).hasAnyAuthority(AuthorityConstants.AUTHORITY_ACTUATOR)
                 // 内部调用直接放行
                 .antMatchers(
-                        "/account/login",
+                        "/account/localLogin",
                         "/account/register/thirdParty",
                         "/account/logs/add",
                         "/authority/list",

@@ -12,10 +12,10 @@
 
   <select id="selectAppGrantedAuthority" resultType="com.github.lyd.common.security.OpenGrantedAuthority">
     SELECT
-      a.authority_id,
-      a.authority,
-      a.serviceId,
-      ap.expire_time
+      a.authority_id as authorityId,
+      a.authority as authority,
+      a.service_id as serviceId,
+      ap.expire_time as expireTime
       'app' as owner
     FROM
       base_app_authority AS ap

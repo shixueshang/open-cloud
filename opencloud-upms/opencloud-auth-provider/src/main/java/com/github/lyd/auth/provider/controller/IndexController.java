@@ -67,7 +67,8 @@ public class IndexController {
      * @return
      */
     @GetMapping("/login")
-    public String login() {
+    public String login(HttpServletRequest request) {
+        System.out.println(request.getParameterMap());
         return "login";
     }
 

@@ -11,6 +11,7 @@ import java.util.Date;
 
 /**
  * 授权资源信息
+ * @author liuyadu
  */
 public class BaseAuthorityDto implements Serializable {
 
@@ -105,19 +106,6 @@ public class BaseAuthorityDto implements Serializable {
         this.path = path;
     }
 
-    public Boolean getIsAuth() {
-        if (api != null) {
-            isAuth = api.getIsAuth().equals(BaseConstants.ENABLED);
-        } else {
-            isAuth = true;
-        }
-        return isAuth;
-    }
-
-    public void setIsAuth(Boolean isAuth) {
-        isAuth = isAuth;
-    }
-
     public String getServiceId() {
         return serviceId;
     }
@@ -128,18 +116,6 @@ public class BaseAuthorityDto implements Serializable {
 
     public void setResourceType(String resourceType) {
         this.resourceType = resourceType;
-    }
-
-    /**
-     * 是否已过期
-     *
-     * @return
-     */
-    public boolean getIsExpired() {
-        if (expireTime != null && System.currentTimeMillis() < expireTime.getTime()) {
-            return true;
-        }
-        return false;
     }
 
     public BaseResourceMenu getMenu() {
@@ -188,5 +164,36 @@ public class BaseAuthorityDto implements Serializable {
 
     public void setExpireTime(Date expireTime) {
         this.expireTime = expireTime;
+    }
+
+    /**
+     * 是否已过期
+     *
+     * @return
+     */
+    public Boolean getExpired() {
+        if(authorityId == null){
+            return null;
+        }
+        if (expireTime != null && System.currentTimeMillis() < expireTime.getTime()) {
+            return true;
+        }
+        return false;
+    }
+
+    public Boolean getAuth() {
+        if(authorityId == null){
+            return null;
+        }
+        if (api != null) {
+            isAuth = api.getIsAuth().equals(BaseConstants.ENABLED);
+        } else {
+            isAuth = true;
+        }
+        return isAuth;
+    }
+
+    public void setAuth(Boolean auth) {
+        isAuth = auth;
     }
 }
