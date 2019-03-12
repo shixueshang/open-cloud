@@ -13,8 +13,12 @@
 
 ---
 #### 简介
-深度整合SpringCloud+SpringSecurity+Oauth2,搭建基于OAuth2的微服务开放平台、为APP端提供统一接口管控平台、为第三方合作伙伴的业务对接提供授信可控的技术对接平台.
-统一API网关权限控制,完整实现动态rbac角色权限控制,接口权限控制、IP访问控制、流量控制等。
+搭建基于OAuth2的开放平台、为APP端提供统一接口管控平台、为第三方合作伙伴的业务对接提供授信可控的技术对接平台.
++ 统一API网关,外部调用更安全.
++ 分布式架构,基于服务发现,Fegin(伪RPC)方式内部调用,更便捷.
++ 深度整合SpringCloud+SpringSecurity+Oauth2,更细粒度、灵活的RBAC权限控制.
++ 前后端分离方式开发应用，分工合作更高效!
++ 代码合理封装、简单易懂、   
 
 <a target="_blank" href="http://39.106.187.125/admin">在线访问</a>
   
@@ -42,21 +46,22 @@ open-cloud
     ├── generator     -- mapper生成器  
     ├── sql           -- sql文件
     
-├── opencloud-common  -- 公共依赖模块
-    ├── opencloud-common-core    -- 提供微服务相关依赖包、工具类、统一全局异常解析
-    ├── opencloud-common-starter -- SpringBoot自动扫描模块
+├── opencloud-common  -- 公共类和jar包依赖
+    ├── opencloud-common-core    -- 提供微服务相关依赖包、工具类、全局异常解析等...
+    ├── opencloud-common-starter -- SpringBoot自动扫描
     
 ├── opencloud-gateway  -- API网关模块
     ├── opencloud-gateway-client    -- API网关接口
     ├── opencloud-gateway-provider  -- API网关(port = 8888)  
     
-├── opencloud-upms    --  基础服务支撑模块
-    ├── opencloud-base-client    -- 基础服务接口
-    ├── opencloud-base-provider  -- 基础服务(port = 8233)  
+├── opencloud-upms    --  通用权限模块
+    ├── opencloud-base-client    -- 基础支撑服务接口
+    ├── opencloud-base-provider  -- 基础支撑服务(port = 8233)  
     ├── opencloud-auth-client    -- 认证服务接口
     ├── opencloud-auth-provider  -- 认证服务(port = 8211)  
     
-├── opencloud-zipkin  -- 链路追踪 
+├── opencloud-app    -- 应用服务模块
+    ├── opencloud-admin-provider  -- 运营后台服务(port = 8301)  
 
 ├── opencloud-msg     -- 公共消息模块 
     ├── opencloud-msg-client    -- 消息服务接口
@@ -66,8 +71,7 @@ open-cloud
     ├── opencloud-bpm-client   -- 工作流接口
     ├── opencloud-bpm-provider -- 工作流服务(port = 8255)
     
-├── opencloud-app    -- 应用服务演示模块
-    ├── opencloud-admin-provider  -- 运营后台服务(port = 8301)  
+├── opencloud-zipkin  -- 链路追踪 
 ```
 
 #### 快速开始
