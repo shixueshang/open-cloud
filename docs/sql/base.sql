@@ -171,7 +171,7 @@ CREATE TABLE `base_resource_operation` (
   `operation_code` varchar(100) COLLATE utf8_bin NOT NULL COMMENT '资源编码',
   `operation_name` varchar(100) COLLATE utf8_bin NOT NULL COMMENT '资源名称',
   `operation_desc` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '资源描述',
-  `path` varchar(200) COLLATE utf8_bin NOT NULL COMMENT '资源路径',
+  `api_id` bigint(20) DEFAULT NULL COMMENT '绑定API',
   `menu_id` bigint(20) DEFAULT NULL COMMENT '资源父节点',
   `priority` int(10) NOT NULL DEFAULT '0' COMMENT '优先级 越小越靠前',
   `status` tinyint(3) NOT NULL DEFAULT '1' COMMENT '状态:0-无效 1-有效',
@@ -179,9 +179,11 @@ CREATE TABLE `base_resource_operation` (
   `update_time` datetime DEFAULT NULL,
   `is_persist` tinyint(3) NOT NULL DEFAULT '0' COMMENT '保留数据0-否 1-是 不允许删除',
   PRIMARY KEY (`operation_id`),
-  UNIQUE KEY `operation_code` (`operation_code`)
+  UNIQUE KEY `operation_code` (`operation_code`),
+  KEY `api_id` (`api_id`),
+  CONSTRAINT `base_resource_operation_ibfk_1` FOREIGN KEY (`api_id`) REFERENCES `base_resource_api` (`api_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=COMPACT COMMENT='系统资源-功能操作';
-
+SET FOREIGN_KEY_CHECKS=1;
 -- ----------------------------
 -- Records of base_resource_operation
 -- ----------------------------

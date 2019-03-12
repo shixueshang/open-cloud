@@ -11,7 +11,6 @@ import com.github.lyd.common.mapper.ExampleBuilder;
 import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.model.PageParams;
 import com.github.pagehelper.PageHelper;
-import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -102,7 +101,7 @@ public class BaseResourceApiServiceImpl implements BaseResourceApiService {
     @Override
     public Long addApi(BaseResourceApi api) {
         if (isExist(api.getApiCode(),api.getServiceId())) {
-            throw new OpenAlertException(String.format("%sApi编码已存在,不允许重复添加", api.getApiCode()));
+            throw new OpenAlertException(String.format("%s编码已存在!", api.getApiCode()));
         }
         if (api.getPriority() == null) {
             api.setPriority(0);
@@ -136,17 +135,14 @@ public class BaseResourceApiServiceImpl implements BaseResourceApiService {
      */
     @Override
     public void updateApi(BaseResourceApi api) {
-        if (api.getApiId() == null) {
-            throw new OpenAlertException("ID不能为空");
+        BaseResourceApi saved = getApi(api.getApiId());
+        if (saved == null) {
+            throw new OpenAlertException("信息不存在!");
         }
-        BaseResourceApi savedApi = getApi(api.getApiId());
-        if (savedApi == null) {
-            throw new OpenAlertException(String.format("%sApi不存在", api.getApiId()));
-        }
-        if (!savedApi.getApiCode().equals(api.getApiCode())) {
+        if (!saved.getApiCode().equals(api.getApiCode())) {
             // 和原来不一致重新检查唯一性
             if (isExist(api.getApiCode(),api.getServiceId())) {
-                throw new OpenAlertException(String.format("%sApi编码已存在,不允许重复添加", api.getApiCode()));
+                throw new OpenAlertException(String.format("%s编码已存在!", api.getApiCode()));
             }
         }
         if (api.getPriority() == null) {
@@ -192,7 +188,7 @@ public class BaseResourceApiServiceImpl implements BaseResourceApiService {
             throw new OpenAlertException(String.format("保留数据,不允许删除"));
         }
         if (baseAuthorityService.isGranted(apiId, ResourceType.api)) {
-            throw new OpenAlertException(String.format("资源已被授权,不允许删除,取消授权后,再次尝试!"));
+            throw new OpenAlertException(String.format("资源已被授权,不允许删除!取消授权后,再次尝试!"));
         }
         baseAuthorityService.removeAuthority(apiId,ResourceType.api);
         baseResourceApiMapper.deleteByPrimaryKey(apiId);

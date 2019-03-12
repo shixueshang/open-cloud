@@ -14,7 +14,7 @@ import com.github.lyd.base.provider.service.BaseAuthorityService;
 import com.github.lyd.base.provider.service.BaseRoleService;
 import com.github.lyd.base.provider.service.BaseUserAccountService;
 import com.github.lyd.base.provider.service.BaseUserService;
-import com.github.lyd.common.constants.AuthorityConstants;
+import com.github.lyd.common.constants.CommonConstants;
 import com.github.lyd.common.exception.OpenAlertException;
 import com.github.lyd.common.mapper.ExampleBuilder;
 import com.github.lyd.common.security.OpenGrantedAuthority;
@@ -72,7 +72,7 @@ public class BaseUserAccountServiceImpl implements BaseUserAccountService {
             return null;
         }
         if (StringUtils.isBlank(profileDto.getUserName())) {
-            throw new OpenAlertException("账号不能为空!");
+            throw new OpenAlertException("用户名不能为空!");
         }
         if (StringUtils.isBlank(profileDto.getPassword())) {
             throw new OpenAlertException("密码不能为空!");
@@ -80,7 +80,7 @@ public class BaseUserAccountServiceImpl implements BaseUserAccountService {
         BaseUser saved = baseUserService.getProfile(profileDto.getUserName());
         if (saved != null) {
             // 已注册
-            throw new OpenAlertException("登录名已经被注册!");
+            throw new OpenAlertException("用户名已被占用!");
         }
         //加密
         String encodePassword = passwordEncoder.encode(profileDto.getPassword());
@@ -222,7 +222,7 @@ public class BaseUserAccountServiceImpl implements BaseUserAccountService {
             BaseUser baseUser = baseUserService.getProfile(systemAccount.getUserId());
 
             // 加入用户权限
-            List<OpenGrantedAuthority> userGrantedAuthority = baseAuthorityService.findUserGrantedAuthority(systemAccount.getUserId(),  AuthorityConstants.ROOT.equals(baseUser.getUserName()));
+            List<OpenGrantedAuthority> userGrantedAuthority = baseAuthorityService.findUserGrantedAuthority(systemAccount.getUserId(),  CommonConstants.ROOT.equals(baseUser.getUserName()));
             if (userGrantedAuthority != null && userGrantedAuthority.size() > 0) {
                 authorities.addAll(userGrantedAuthority);
             }
@@ -332,7 +332,7 @@ public class BaseUserAccountServiceImpl implements BaseUserAccountService {
         }
         BaseUser userProfile = baseUserService.getProfile(userId);
         if (userProfile == null) {
-            throw new OpenAlertException("系统用户不存在");
+            throw new OpenAlertException("用户信息不存在!");
         }
         ExampleBuilder builder = new ExampleBuilder(BaseUserAccount.class);
         Example example = builder.criteria()
@@ -346,7 +346,7 @@ public class BaseUserAccountServiceImpl implements BaseUserAccountService {
         }
         String oldPasswordEncoder = passwordEncoder.encode(oldPassword);
         if (!passwordEncoder.matches(systemAccount.getPassword(), oldPasswordEncoder)) {
-            throw new OpenAlertException("原密码不正确");
+            throw new OpenAlertException("原密码错误!");
         }
         systemAccount.setPassword(passwordEncoder.encode(newPassword));
         baseUserAccountMapper.updateByPrimaryKey(systemAccount);

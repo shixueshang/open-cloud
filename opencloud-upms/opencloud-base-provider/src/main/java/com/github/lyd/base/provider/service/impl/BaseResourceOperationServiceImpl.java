@@ -2,6 +2,7 @@ package com.github.lyd.base.provider.service.impl;
 
 import com.github.lyd.base.client.constants.BaseConstants;
 import com.github.lyd.base.client.constants.ResourceType;
+import com.github.lyd.base.client.model.BaseResourceOperationDto;
 import com.github.lyd.base.client.model.entity.BaseResourceOperation;
 import com.github.lyd.base.provider.mapper.BaseResourceOperationMapper;
 import com.github.lyd.base.provider.service.BaseAuthorityService;
@@ -11,6 +12,7 @@ import com.github.lyd.common.mapper.ExampleBuilder;
 import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.model.PageParams;
 import com.github.pagehelper.PageHelper;
+import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author liuyadu
@@ -40,13 +43,12 @@ public class BaseResourceOperationServiceImpl implements BaseResourceOperationSe
      * @return
      */
     @Override
-    public PageList<BaseResourceOperation> findListPage(PageParams pageParams, String keyword) {
+    public PageList<BaseResourceOperationDto> findListPage(PageParams pageParams, String keyword) {
         PageHelper.startPage(pageParams.getPage(), pageParams.getLimit(), pageParams.getOrderBy());
-        ExampleBuilder builder = new ExampleBuilder(BaseResourceOperation.class);
-        Example example = builder.criteria()
-                .orLike("operationCode", keyword)
-                .orLike("operationName", keyword).end().build();
-        List<BaseResourceOperation> list = baseResourceOperationMapper.selectByExample(example);
+        Map params = Maps.newHashMap();
+        params.put("operationCode",keyword);
+        params.put("operationName",keyword);
+        List<BaseResourceOperationDto> list = baseResourceOperationMapper.selectDTOByCondition(params);
         return new PageList(list);
     }
 
@@ -56,14 +58,10 @@ public class BaseResourceOperationServiceImpl implements BaseResourceOperationSe
      * @return
      */
     @Override
-    public PageList<BaseResourceOperation> findListByMenuId(Long menuId) {
-        ExampleBuilder builder = new ExampleBuilder(BaseResourceOperation.class);
-        Example example = builder
-                .criteria()
-                .andEqualTo("menuId", menuId).end()
-                .build();
-        example.orderBy("operationId").asc().orderBy("priority").asc();
-        List<BaseResourceOperation> list = baseResourceOperationMapper.selectByExample(example);
+    public PageList<BaseResourceOperationDto> findListByMenuId(Long menuId) {
+        Map params = Maps.newHashMap();
+        params.put("menuId",menuId);
+        List<BaseResourceOperationDto> list = baseResourceOperationMapper.selectDTOByCondition(params);
         return new PageList(list);
     }
 
@@ -74,8 +72,8 @@ public class BaseResourceOperationServiceImpl implements BaseResourceOperationSe
      * @return
      */
     @Override
-    public BaseResourceOperation getOperation(Long operationId) {
-        return baseResourceOperationMapper.selectByPrimaryKey(operationId);
+    public BaseResourceOperationDto getOperation(Long operationId) {
+        return baseResourceOperationMapper.selectDTOByPrimaryKey(operationId);
     }
 
 
@@ -104,7 +102,7 @@ public class BaseResourceOperationServiceImpl implements BaseResourceOperationSe
     @Override
     public Long addOperation(BaseResourceOperation operation) {
         if (isExist(operation.getOperationCode())) {
-            throw new OpenAlertException(String.format("%s编码已存在,不允许重复添加", operation.getOperationCode()));
+            throw new OpenAlertException(String.format("%s编码已存在!", operation.getOperationCode()));
         }
         if (operation.getMenuId() == null) {
             operation.setMenuId(0L);
@@ -132,14 +130,14 @@ public class BaseResourceOperationServiceImpl implements BaseResourceOperationSe
      */
     @Override
     public void updateOperation(BaseResourceOperation operation) {
-        BaseResourceOperation savedOperation = getOperation(operation.getOperationId());
-        if (savedOperation == null) {
-            throw new OpenAlertException(String.format("%sOperation不存在", operation.getOperationId()));
+        BaseResourceOperation saved = getOperation(operation.getOperationId());
+        if (saved == null) {
+            throw new OpenAlertException(String.format("%s信息不存在", operation.getOperationId()));
         }
-        if (!savedOperation.getOperationCode().equals(operation.getOperationCode())) {
+        if (!saved.getOperationCode().equals(operation.getOperationCode())) {
             // 和原来不一致重新检查唯一性
             if (isExist(operation.getOperationCode())) {
-                throw new OpenAlertException(String.format("%sOperation编码已存在,不允许重复添加", operation.getOperationCode()));
+                throw new OpenAlertException(String.format("%s编码已存在!", operation.getOperationCode()));
             }
         }
         if (operation.getMenuId() == null) {
@@ -167,7 +165,7 @@ public class BaseResourceOperationServiceImpl implements BaseResourceOperationSe
             throw new OpenAlertException(String.format("保留数据,不允许删除"));
         }
         if (baseAuthorityService.isGranted(operationId, ResourceType.operation)) {
-            throw new OpenAlertException(String.format("资源已被授权,不允许删除,取消授权后,再次尝试!"));
+            throw new OpenAlertException(String.format("资源已被授权,不允许删除!取消授权后,再次尝试!"));
         }
         baseAuthorityService.removeAuthority(operationId,ResourceType.operation);
         baseResourceOperationMapper.deleteByPrimaryKey(operationId);

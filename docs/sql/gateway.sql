@@ -122,8 +122,7 @@ CREATE TABLE `gateway_rate_limit_role` (
 -- ----------------------------
 DROP TABLE IF EXISTS `gateway_route`;
 CREATE TABLE `gateway_route` (
-  `id` bigint(20) NOT NULL,
-  `route_id` varchar(100) DEFAULT NULL COMMENT '路由ID',
+  `route_id` bigint(20) NOT NULL COMMENT '路由ID',
   `path` varchar(255) DEFAULT NULL COMMENT '路径',
   `service_id` varchar(255) DEFAULT NULL COMMENT '服务ID',
   `url` varchar(255) DEFAULT NULL COMMENT '完整地址',
@@ -132,6 +131,6 @@ CREATE TABLE `gateway_route` (
   `status` tinyint(3) NOT NULL DEFAULT '1' COMMENT '状态:0-无效 1-有效',
   `route_desc` varchar(255) DEFAULT NULL,
   `is_persist` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否为保留数据:0-否 1-是',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`route_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='开放网关-路由';
 SET FOREIGN_KEY_CHECKS=1;

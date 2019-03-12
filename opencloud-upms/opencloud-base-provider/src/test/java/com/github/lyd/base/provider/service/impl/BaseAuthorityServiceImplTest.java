@@ -32,7 +32,6 @@ public class BaseAuthorityServiceImplTest extends BaseTest {
         String clientId = String.valueOf(System.currentTimeMillis());
         String clientSecret = RandomValueUtils.uuid();
         System.out.println(clientId);
-        //$2a$10$xxfI6N5kSKINJXipQb9dJuS1Z7T2z4h/IZrhNnx3zNzCViCQMDtfq
         System.out.println(clientSecret);
         System.out.println(encoder.encode(clientSecret));
     }

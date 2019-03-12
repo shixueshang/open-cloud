@@ -8,7 +8,6 @@ import com.github.lyd.base.provider.mapper.BaseAppMapper;
 import com.github.lyd.base.provider.service.BaseAppService;
 import com.github.lyd.base.provider.service.BaseAuthorityService;
 import com.github.lyd.base.provider.service.feign.ClientDetailsClientRemote;
-import com.github.lyd.common.configuration.CommonProperties;
 import com.github.lyd.common.exception.OpenAlertException;
 import com.github.lyd.common.mapper.ExampleBuilder;
 import com.github.lyd.common.model.PageList;
@@ -41,8 +40,6 @@ public class BaseAppServiceImpl implements BaseAppService {
     private BaseAppMapper baseAppMapper;
     @Autowired
     private ClientDetailsClientRemote clientDetailsClient;
-    @Autowired
-    private CommonProperties commonProperties;
     @Autowired
     private BaseAuthorityService baseAuthorityService;
 
@@ -115,7 +112,7 @@ public class BaseAppServiceImpl implements BaseAppService {
         baseAppMapper.insertSelective(app);
         String clientInfoJson = JSONObject.toJSONString(app);
         // 功能授权
-        app.setAuthorities(getAuthoritie(app.getAppId()));
+        app.setAuthorities(getAuthorities(app.getAppId()));
         // 保持客户端信息
         ResultBody<Boolean> resp = clientDetailsClient.addClient(clientId, clientSecret, BaseConstants.DEFAULT_OAUTH2_GRANT_TYPES, "", app.getRedirectUrls(), app.getScopes(), app.getResourceIds(), app.getAuthorities(), app.getaccessTokenValidity(), app.getrefreshTokenValidity(), clientInfoJson);
         if (!resp.isOk()) {
@@ -139,10 +136,10 @@ public class BaseAppServiceImpl implements BaseAppService {
         }
         BeanUtils.copyProperties(app, appInfo);
         appInfo.setUpdateTime(new Date());
-        int result = baseAppMapper.updateByPrimaryKeySelective(appInfo);
+        baseAppMapper.updateByPrimaryKeySelective(appInfo);
         String clientInfoJson = JSONObject.toJSONString(appInfo);
         // 更新应用权限
-        app.setAuthorities(getAuthoritie(app.getAppId()));
+        app.setAuthorities(getAuthorities(app.getAppId()));
         // 修改客户端信息
         ResultBody<Boolean> resp = clientDetailsClient.updateClient(app.getAppId(), app.getGrantTypes(), "", app.getRedirectUrls(), app.getScopes(), app.getResourceIds(), app.getAuthorities(), app.getaccessTokenValidity(), app.getrefreshTokenValidity(), clientInfoJson);
         if (!resp.isOk()) {
@@ -159,12 +156,12 @@ public class BaseAppServiceImpl implements BaseAppService {
      */
     @Override
     public String restSecret(String appId) {
-        if (commonProperties.getClientId().equals(appId)) {
-            throw new OpenAlertException(String.format("保留数据,不允许修改"));
-        }
         BaseApp appInfo = getAppInfo(appId);
         if (appInfo == null) {
             throw new OpenAlertException(appId + "应用不存在!");
+        }
+        if (appInfo.getIsPersist().equals(BaseConstants.ENABLED)) {
+            throw new OpenAlertException(String.format("保留数据,不允许修改"));
         }
         // 生成新的密钥
         String clientSecret = RandomValueUtils.uuid();
@@ -202,7 +199,12 @@ public class BaseAppServiceImpl implements BaseAppService {
         }
     }
 
-    private String getAuthoritie(String appId) {
+    /**
+     * 获取权限标识
+     * @param appId
+     * @return
+     */
+    private String getAuthorities(String appId) {
         StringBuffer sbf = new StringBuffer("");
         List<OpenGrantedAuthority> authorities = baseAuthorityService.findAppGrantedAuthority(appId);
         if (authorities != null && authorities.size() > 0) {

@@ -84,7 +84,7 @@ public class BaseRoleServiceImpl implements BaseRoleService {
     @Override
     public Long addRole(BaseRole role) {
         if (isExist(role.getRoleCode())) {
-            throw new OpenAlertException(String.format("%s角色编码已存在,不允许重复添加", role.getRoleCode()));
+            throw new OpenAlertException(String.format("%s编码已存在!", role.getRoleCode()));
         }
         if (role.getStatus() == null) {
             role.setStatus(BaseConstants.ENABLED);
@@ -106,17 +106,14 @@ public class BaseRoleServiceImpl implements BaseRoleService {
      */
     @Override
     public void updateRole(BaseRole role) {
-        if (role.getRoleId() == null) {
-            throw new OpenAlertException("ID不能为空");
-        }
-        BaseRole savedRole = getRole(role.getRoleId());
+        BaseRole saved = getRole(role.getRoleId());
         if (role == null) {
-            throw new OpenAlertException(String.format("roleId=%s不存在", role.getRoleId()));
+            throw new OpenAlertException("信息不存在!");
         }
-        if (!savedRole.getRoleCode().equals(role.getRoleCode())) {
+        if (!saved.getRoleCode().equals(role.getRoleCode())) {
             // 和原来不一致重新检查唯一性
             if (isExist(role.getRoleCode())) {
-                throw new OpenAlertException(String.format("%s菜单编码已存在,不允许重复添加", role.getRoleCode()));
+                throw new OpenAlertException(String.format("%s编码已存在!", role.getRoleCode()));
             }
         }
         role.setUpdateTime(new Date());
@@ -140,7 +137,7 @@ public class BaseRoleServiceImpl implements BaseRoleService {
         }
         int count = getCountByRole(roleId);
         if (count > 0) {
-            throw new OpenAlertException("该角色下存在授权组员,不允许删除!");
+            throw new OpenAlertException("该角色下存在授权人员,不允许删除!");
         }
         baseRoleMapper.deleteByPrimaryKey(roleId);
     }
@@ -154,7 +151,7 @@ public class BaseRoleServiceImpl implements BaseRoleService {
     @Override
     public Boolean isExist(String roleCode) {
         if (StringUtils.isBlank(roleCode)) {
-            throw new OpenAlertException("roleCode is null");
+            throw new OpenAlertException("roleCode不能为空!");
         }
         ExampleBuilder builder = new ExampleBuilder(BaseRole.class);
         Example example = builder.criteria().andEqualTo("roleCode", roleCode).end().build();

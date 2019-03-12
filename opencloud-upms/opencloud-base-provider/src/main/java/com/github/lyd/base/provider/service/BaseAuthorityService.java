@@ -127,6 +127,7 @@ public interface BaseAuthorityService {
      * 获取用户已授权权限
      *
      * @param userId
+     * @param root
      * @return
      */
     List<OpenGrantedAuthority> findUserGrantedAuthority(Long userId, Boolean root);

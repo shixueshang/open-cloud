@@ -66,8 +66,8 @@ public class BaseApiController {
     /**
      * 获取接口资源
      *
-     * @param apiId ApiId
-     * @return 应用信息
+     * @param apiId
+     * @return 
      */
     @ApiOperation(value = "获取接口资源", notes = "获取接口资源")
     @ApiImplicitParams({
@@ -188,7 +188,7 @@ public class BaseApiController {
     /**
      * 移除接口资源
      *
-     * @param apiId ApiID
+     * @param apiId
      * @return
      */
     @ApiOperation(value = "移除接口资源", notes = "移除接口资源")

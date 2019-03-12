@@ -3,7 +3,7 @@ package com.github.lyd.base.provider.controller;
 import com.github.lyd.base.client.api.BaseAuthorityRemoteApi;
 import com.github.lyd.base.client.model.BaseAuthorityDto;
 import com.github.lyd.base.provider.service.BaseAuthorityService;
-import com.github.lyd.common.constants.AuthorityConstants;
+import com.github.lyd.common.constants.CommonConstants;
 import com.github.lyd.common.http.OpenRestTemplate;
 import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.model.ResultBody;
@@ -41,7 +41,7 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
     /**
      * 获取权限列表
      *
-     * @return 应用信息
+     * @return
      */
     @ApiOperation(value = "获取权限列表", notes = "获取权限列表")
     @GetMapping("/authority/list")
@@ -196,7 +196,7 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
     @ApiOperation(value = "获取登陆用户已分配权限", notes = "获取登陆用户已分配权限")
     @GetMapping("/authority/granted/me")
     public ResultBody<List<BaseAuthorityDto>> getGrantedMeAuthority() {
-        List<BaseAuthorityDto> result = baseAuthorityService.findUserGrantedAuthorityDetail(OpenHelper.getAuthUser().getUserId(), AuthorityConstants.ROOT.equals(OpenHelper.getAuthUser().getUsername()));
+        List<BaseAuthorityDto> result = baseAuthorityService.findUserGrantedAuthorityDetail(OpenHelper.getAuthUser().getUserId(), CommonConstants.ROOT.equals(OpenHelper.getAuthUser().getUsername()));
         return ResultBody.success(result);
     }
 

@@ -1,8 +1,5 @@
 package com.github.lyd.gateway.provider.filter;
 
-import com.github.lyd.common.constants.ResultEnum;
-import com.github.lyd.common.exception.OpenAlertException;
-import com.github.lyd.common.utils.StringUtils;
 import com.github.lyd.gateway.provider.service.GatewayAccessLogsService;
 import com.google.common.collect.Maps;
 import com.netflix.zuul.ZuulFilter;
@@ -61,19 +58,15 @@ public class ZuulResponseFilter extends ZuulFilter {
         HttpServletRequest request = ctx.getRequest();
         HttpServletResponse response = ctx.getResponse();
         Throwable throwable = ctx.getThrowable();
-        Exception ex = (Exception) throwable;
-        if (StringUtils.toBoolean(ctx.get("rateLimitExceeded"))) {
-            ex = new OpenAlertException(ResultEnum.TOO_MANY_REQUEST.getCode(), ResultEnum.TOO_MANY_REQUEST.getMessage());
-        }
         try {
             Map headers = ctx.getZuulRequestHeaders();
-            String requestId = headers.get("zuul-request-id").toString();
-            String path = request.getRequestURI();
+            String requestId = headers.get(ZuulRequestFilter.X_REQUEST_ID).toString();
+            String requestPath = request.getRequestURI();
             int httpStatus = response.getStatus();
             Map<String, Object> msg = Maps.newHashMap();
             Date responseTime = new Date();
             msg.put("accessId", requestId);
-            msg.put("path", path);
+            msg.put("path", requestPath);
             msg.put("save", "update");
             msg.put("httpStatus", httpStatus);
             msg.put("responseTime", responseTime);

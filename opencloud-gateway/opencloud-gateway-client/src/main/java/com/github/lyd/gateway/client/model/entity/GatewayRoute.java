@@ -19,14 +19,13 @@ import java.io.Serializable;
 public class GatewayRoute implements Serializable {
     private static final long serialVersionUID = -2952097064941740301L;
 
-    @Id
-    @KeySql(genId = SnowflakeId.class)
-    private Long id;
     /**
      * 路由ID
      */
+    @Id
     @Column(name = "route_id")
-    private String routeId;
+    @KeySql(genId = SnowflakeId.class)
+    private Long routeId;
     /**
      * 路径
      */
@@ -47,12 +46,12 @@ public class GatewayRoute implements Serializable {
      * 忽略前缀
      */
     @Column(name = "strip_prefix")
-    private Boolean stripPrefix;
+    private Integer stripPrefix;
 
     /**
      * 0-不重试 1-重试
      */
-    private Boolean retryable;
+    private Integer retryable;
 
     /**
      * 路由描述
@@ -70,24 +69,6 @@ public class GatewayRoute implements Serializable {
      */
     @Column(name = "is_persist")
     private Integer isPersist;
-
-    /**
-     * 获取路由ID
-     *
-     * @return id - 路由ID
-     */
-    public Long getId() {
-        return id;
-    }
-
-    /**
-     * 设置路由ID
-     *
-     * @param id 路由ID
-     */
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     /**
      * 获取路径
@@ -148,7 +129,7 @@ public class GatewayRoute implements Serializable {
      *
      * @return strip_prefix - 忽略前缀
      */
-    public Boolean getStripPrefix() {
+    public Integer getStripPrefix() {
         return stripPrefix;
     }
 
@@ -157,7 +138,7 @@ public class GatewayRoute implements Serializable {
      *
      * @param stripPrefix 忽略前缀
      */
-    public void setStripPrefix(Boolean stripPrefix) {
+    public void setStripPrefix(Integer stripPrefix) {
         this.stripPrefix = stripPrefix;
     }
 
@@ -166,7 +147,7 @@ public class GatewayRoute implements Serializable {
      *
      * @return retryable - 0-不重试 1-重试
      */
-    public Boolean getRetryable() {
+    public Integer getRetryable() {
         return retryable;
     }
 
@@ -175,7 +156,7 @@ public class GatewayRoute implements Serializable {
      *
      * @param retryable 0-不重试 1-重试
      */
-    public void setRetryable(Boolean retryable) {
+    public void setRetryable(Integer retryable) {
         this.retryable = retryable;
     }
 
@@ -195,11 +176,11 @@ public class GatewayRoute implements Serializable {
         this.status = status;
     }
 
-    public String getRouteId() {
+    public Long getRouteId() {
         return routeId;
     }
 
-    public void setRouteId(String routeId) {
+    public void setRouteId(Long routeId) {
         this.routeId = routeId;
     }
 

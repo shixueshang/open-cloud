@@ -1,5 +1,6 @@
 package com.github.lyd.base.provider.controller;
 
+import com.github.lyd.base.client.model.BaseResourceOperationDto;
 import com.github.lyd.base.client.model.entity.BaseResourceOperation;
 import com.github.lyd.base.provider.service.BaseResourceOperationService;
 import com.github.lyd.common.http.OpenRestTemplate;
@@ -36,14 +37,13 @@ public class BaseOperationController {
             @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
     })
     @PostMapping("/operation")
-    public ResultBody<PageList<BaseResourceOperation>> getOperationList(
+    public ResultBody<PageList<BaseResourceOperationDto>> getOperationList(
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit,
             @RequestParam(name = "keyword", required = false) String keyword
     ) {
         return ResultBody.success(baseResourceOperationService.findListPage(new PageParams(page, limit), keyword));
     }
-
 
 
     /**
@@ -57,22 +57,22 @@ public class BaseOperationController {
             @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
     })
     @PostMapping("/operation/menu")
-    public ResultBody<PageList<BaseResourceOperation>> getOperationAllList(Long menuId) {
+    public ResultBody<PageList<BaseResourceOperationDto>> getOperationAllList(Long menuId) {
         return ResultBody.success(baseResourceOperationService.findListByMenuId(menuId));
     }
 
     /**
      * 获取操作资源详情
      *
-     * @param operationId 操作Id
-     * @return 应用信息
+     * @param operationId
+     * @return
      */
     @ApiOperation(value = "获取操作资源详情", notes = "获取操作资源详情")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "operationId", required = true, value = "操作Id", paramType = "path"),
     })
     @GetMapping("/operation/{operationId}")
-    public ResultBody<BaseResourceOperation> getOperation(@PathVariable("operationId") Long operationId) {
+    public ResultBody<BaseResourceOperationDto> getOperation(@PathVariable("operationId") Long operationId) {
         return ResultBody.success(baseResourceOperationService.getOperation(operationId));
     }
 
@@ -81,10 +81,10 @@ public class BaseOperationController {
      *
      * @param operationCode 操作编码
      * @param operationName 操作名称
-     * @param menuId     归属菜单
-     * @param path       请求路径
-     * @param status     是否启用
-     * @param priority   优先级越小越靠前
+     * @param menuId        上级菜单
+     * @param apiId          绑定接口
+     * @param status        是否启用
+     * @param priority      优先级越小越靠前
      * @param operationDesc 描述
      * @return
      */
@@ -92,8 +92,8 @@ public class BaseOperationController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "operationCode", required = true, value = "操作编码", paramType = "form"),
             @ApiImplicitParam(name = "operationName", required = true, value = "操作名称", paramType = "form"),
-            @ApiImplicitParam(name = "menuId", required = true, value = "归属菜单", paramType = "form"),
-            @ApiImplicitParam(name = "path", required = false, value = "请求路径", paramType = "form"),
+            @ApiImplicitParam(name = "menuId", required = true, value = "上级菜单", paramType = "form"),
+            @ApiImplicitParam(name = "apiId", required = false, value = "绑定接口", paramType = "form"),
             @ApiImplicitParam(name = "status", required = true, defaultValue = "1", allowableValues = "0,1", value = "是否启用", paramType = "form"),
             @ApiImplicitParam(name = "priority", required = false, value = "优先级越小越靠前", paramType = "form"),
             @ApiImplicitParam(name = "operationDesc", required = false, value = "描述", paramType = "form"),
@@ -103,7 +103,7 @@ public class BaseOperationController {
             @RequestParam(value = "operationCode") String operationCode,
             @RequestParam(value = "operationName") String operationName,
             @RequestParam(value = "menuId") Long menuId,
-            @RequestParam(value = "path", required = false, defaultValue = "") String path,
+            @RequestParam(value = "apiId", required = false) Long apiId,
             @RequestParam(value = "status", defaultValue = "1") Integer status,
             @RequestParam(value = "priority", required = false, defaultValue = "0") Integer priority,
             @RequestParam(value = "operationDesc", required = false, defaultValue = "") String operationDesc
@@ -112,7 +112,7 @@ public class BaseOperationController {
         operation.setOperationCode(operationCode);
         operation.setOperationName(operationName);
         operation.setMenuId(menuId);
-        operation.setPath(path);
+        operation.setApiId(apiId);
         operation.setStatus(status);
         operation.setPriority(priority);
         operation.setOperationDesc(operationDesc);
@@ -126,10 +126,10 @@ public class BaseOperationController {
      * @param operationId   操作ID
      * @param operationCode 操作编码
      * @param operationName 操作名称
-     * @param menuId     归属菜单
-     * @param path       请求路径
-     * @param status     是否启用
-     * @param priority   优先级越小越靠前
+     * @param menuId        上级菜单
+     * @param apiId         绑定接口
+     * @param status        是否启用
+     * @param priority      优先级越小越靠前
      * @param operationDesc 描述
      * @return
      */
@@ -138,8 +138,8 @@ public class BaseOperationController {
             @ApiImplicitParam(name = "operationId", required = true, value = "操作ID", paramType = "form"),
             @ApiImplicitParam(name = "operationCode", required = true, value = "操作编码", paramType = "form"),
             @ApiImplicitParam(name = "operationName", required = true, value = "操作名称", paramType = "form"),
-            @ApiImplicitParam(name = "menuId", required = true, value = "归属菜单", paramType = "form"),
-            @ApiImplicitParam(name = "path", required = false, value = "请求路径", paramType = "form"),
+            @ApiImplicitParam(name = "menuId", required = true, value = "上级菜单", paramType = "form"),
+            @ApiImplicitParam(name = "apiId", required = false, value = "绑定接口", paramType = "form"),
             @ApiImplicitParam(name = "status", required = true, defaultValue = "1", allowableValues = "0,1", value = "是否启用", paramType = "form"),
             @ApiImplicitParam(name = "priority", required = false, value = "优先级越小越靠前", paramType = "form"),
             @ApiImplicitParam(name = "operationDesc", required = false, value = "描述", paramType = "form"),
@@ -150,7 +150,7 @@ public class BaseOperationController {
             @RequestParam(value = "operationCode") String operationCode,
             @RequestParam(value = "operationName") String operationName,
             @RequestParam(value = "menuId") Long menuId,
-            @RequestParam(value = "path", required = false, defaultValue = "") String path,
+            @RequestParam(value = "apiId", required = false, defaultValue = "") Long apiId,
             @RequestParam(value = "status", defaultValue = "1") Integer status,
             @RequestParam(value = "priority", required = false, defaultValue = "0") Integer priority,
             @RequestParam(value = "operationDesc", required = false, defaultValue = "") String operationDesc
@@ -160,7 +160,7 @@ public class BaseOperationController {
         operation.setOperationCode(operationCode);
         operation.setOperationName(operationName);
         operation.setMenuId(menuId);
-        operation.setPath(path);
+        operation.setApiId(apiId);
         operation.setStatus(status);
         operation.setPriority(priority);
         operation.setOperationDesc(operationDesc);
@@ -174,7 +174,7 @@ public class BaseOperationController {
     /**
      * 移除操作资源
      *
-     * @param operationId 操作ID
+     * @param operationId
      * @return
      */
     @ApiOperation(value = "移除操作资源", notes = "移除操作资源")

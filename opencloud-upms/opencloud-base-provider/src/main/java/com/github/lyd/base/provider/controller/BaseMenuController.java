@@ -100,7 +100,7 @@ public class BaseMenuController {
     /**
      * 获取菜单资源详情
      *
-     * @param menuId menuId
+     * @param menuId
      * @return 应用信息
      */
     @ApiOperation(value = "获取菜单资源详情", notes = "获取菜单资源详情")
@@ -231,7 +231,7 @@ public class BaseMenuController {
     /**
      * 移除菜单资源
      *
-     * @param menuId 菜单ID
+     * @param menuId
      * @return
      */
     @ApiOperation(value = "移除菜单资源", notes = "移除菜单资源")

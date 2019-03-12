@@ -32,13 +32,7 @@ public class GatewayIpLimit implements Serializable {
      * 策略类型:0-拒绝/黑名单 1-允许/白名单
      */
     @Column(name = "policy_type")
-    private Byte policyType;
-
-    /**
-     * 备注
-     */
-    @Column(name = "policy_desc")
-    private String policyDesc;
+    private Integer policyType;
 
     /**
      * 创建时间
@@ -101,7 +95,7 @@ public class GatewayIpLimit implements Serializable {
      *
      * @return policy_type - 策略类型:0-拒绝/黑名单 1-允许/白名单
      */
-    public Byte getPolicyType() {
+    public Integer getPolicyType() {
         return policyType;
     }
 
@@ -110,26 +104,8 @@ public class GatewayIpLimit implements Serializable {
      *
      * @param policyType 策略类型:0-拒绝/黑名单 1-允许/白名单
      */
-    public void setPolicyType(Byte policyType) {
+    public void setPolicyType(Integer policyType) {
         this.policyType = policyType;
-    }
-
-    /**
-     * 获取备注
-     *
-     * @return policy_desc - 备注
-     */
-    public String getPolicyDesc() {
-        return policyDesc;
-    }
-
-    /**
-     * 设置备注
-     *
-     * @param policyDesc 备注
-     */
-    public void setPolicyDesc(String policyDesc) {
-        this.policyDesc = policyDesc == null ? null : policyDesc.trim();
     }
 
     /**
@@ -157,6 +133,10 @@ public class GatewayIpLimit implements Serializable {
      */
     public Date getUpdateTime() {
         return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 
     /**

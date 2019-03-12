@@ -122,7 +122,7 @@ public class BaseResourceMenuServiceImpl implements BaseResourceMenuService {
     @Override
     public Long addMenu(BaseResourceMenu menu) {
         if (isExist(menu.getMenuCode())) {
-            throw new OpenAlertException(String.format("%s菜单编码已存在,不允许重复添加", menu.getMenuCode()));
+            throw new OpenAlertException(String.format("%s编码已存在!", menu.getMenuCode()));
         }
         if (menu.getParentId() == null) {
             menu.setParentId(0L);
@@ -184,17 +184,14 @@ public class BaseResourceMenuServiceImpl implements BaseResourceMenuService {
      */
     @Override
     public void updateMenu(BaseResourceMenu menu) {
-        if (menu.getMenuId() == null) {
-            throw new OpenAlertException("ID不能为空");
+        BaseResourceMenu saved = getMenu(menu.getMenuId());
+        if (saved == null) {
+            throw new OpenAlertException(String.format("%s信息不存在!", menu.getMenuId()));
         }
-        BaseResourceMenu savedMenu = getMenu(menu.getMenuId());
-        if (savedMenu == null) {
-            throw new OpenAlertException(String.format("%s菜单不存在", menu.getMenuId()));
-        }
-        if (!savedMenu.getMenuCode().equals(menu.getMenuCode())) {
+        if (!saved.getMenuCode().equals(menu.getMenuCode())) {
             // 和原来不一致重新检查唯一性
             if (isExist(menu.getMenuCode())) {
-                throw new OpenAlertException(String.format("%s菜单编码已存在,不允许重复添加", menu.getMenuCode()));
+                throw new OpenAlertException(String.format("%s编码已存在!", menu.getMenuCode()));
             }
         }
         if (menu.getParentId() == null) {
@@ -237,10 +234,10 @@ public class BaseResourceMenuServiceImpl implements BaseResourceMenuService {
     public void removeMenu(Long menuId) {
         BaseResourceMenu menu = getMenu(menuId);
         if (menu != null && menu.getIsPersist().equals(BaseConstants.ENABLED)) {
-            throw new OpenAlertException(String.format("保留数据,不允许删除"));
+            throw new OpenAlertException(String.format("保留数据,不允许删除!"));
         }
        if (baseAuthorityService.isGranted(menuId, ResourceType.menu)) {
-            throw new OpenAlertException(String.format("资源已被授权,不允许删除,取消授权后,再次尝试!"));
+            throw new OpenAlertException(String.format("资源已被授权,不允许删除!取消授权后,再次尝试!"));
         }
         baseAuthorityService.removeAuthority(menuId,ResourceType.menu);
         baseResourceMenuMapper.deleteByPrimaryKey(menuId);

@@ -19,11 +19,6 @@ public class GatewayIpLimitApi implements Serializable {
     @Column(name = "api_id")
     private Long apiId;
 
-    /**
-     * ip地址/IP段:多个用隔开;最多10个
-     */
-    @Column(name = "ip_address")
-    private String ipAddress;
 
     private static final long serialVersionUID = 1L;
 
@@ -61,13 +56,5 @@ public class GatewayIpLimitApi implements Serializable {
      */
     public void setApiId(Long apiId) {
         this.apiId = apiId;
-    }
-
-    public String getIpAddress() {
-        return ipAddress;
-    }
-
-    public void setIpAddress(String ipAddress) {
-        this.ipAddress = ipAddress;
     }
 }

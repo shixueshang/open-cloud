@@ -13,6 +13,6 @@ import java.util.List;
 @Repository
 public interface GatewayRateLimitApisMapper extends CrudMapper<GatewayRateLimitApi> {
 
-    List<GatewayRateLimitApisDto> selectIpLimitApisDto();
+    List<GatewayRateLimitApisDto> selectRateLimitApisDto();
 
 }

@@ -5,7 +5,6 @@ import com.github.lyd.base.client.constants.BaseConstants;
 import com.github.lyd.base.client.constants.ResourceType;
 import com.github.lyd.base.client.model.entity.BaseResourceApi;
 import com.github.lyd.base.client.model.entity.BaseResourceMenu;
-import com.github.lyd.base.client.model.entity.BaseResourceOperation;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -32,7 +31,7 @@ public class BaseAuthorityDto implements Serializable {
     /**
      * 操作资源
      */
-    private BaseResourceOperation operation;
+    private BaseResourceOperationDto operation;
 
     /**
      * 权限ID
@@ -136,11 +135,11 @@ public class BaseAuthorityDto implements Serializable {
         this.api = api;
     }
 
-    public BaseResourceOperation getOperation() {
+    public BaseResourceOperationDto getOperation() {
         return operation;
     }
 
-    public void setOperation(BaseResourceOperation operation) {
+    public void setOperation(BaseResourceOperationDto operation) {
         this.operation = operation;
     }
 

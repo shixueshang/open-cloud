@@ -5,21 +5,76 @@
         <!--
           WARNING - @mbg.generated
         -->
-        <id column="action_id" property="actionId" jdbcType="BIGINT"/>
-        <result column="action_code" property="actionCode" jdbcType="VARCHAR"/>
-        <result column="action_name" property="actionName" jdbcType="VARCHAR"/>
-        <result column="path" property="path" jdbcType="VARCHAR"/>
+        <id column="operation_id" property="operationId" jdbcType="BIGINT"/>
+        <result column="operation_code" property="operationCode" jdbcType="VARCHAR"/>
+        <result column="operation_name" property="operationName" jdbcType="VARCHAR"/>
         <result column="menu_id" property="menuId" jdbcType="BIGINT"/>
+        <result column="api_id" property="apiId" jdbcType="BIGINT"/>
         <result column="priority" property="priority" jdbcType="INTEGER"/>
-        <result column="action_desc" property="actionDesc" jdbcType="VARCHAR"/>
+        <result column="operation_desc" property="operationDesc" jdbcType="VARCHAR"/>
         <result column="status" property="status" jdbcType="TINYINT"/>
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
         <result column="is_persist" property="isPersist" jdbcType="INTEGER"/>
     </resultMap>
 
-    <select id="selectByMenuId" resultMap="BaseResultMap">
-        select  * from system_action
-        where menu_id = #{menuId}
+    <resultMap id="BaseResourceOperationDto" extends="BaseResultMap"
+               type="com.github.lyd.base.client.model.BaseResourceOperationDto">
+        <result column="path" property="path" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="selectDTOByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResourceOperationDto">
+        SELECT
+        o.*,
+        a.path
+        FROM
+        base_resource_operation AS o
+        LEFT JOIN base_resource_api AS a ON o.api_id = a.api_id
+        where o.operation_id = #{id}
+    </select>
+
+    <select id="selectDTOByCondition" parameterType="Map" resultMap="BaseResourceOperationDto">
+        SELECT
+        o.*,
+        a.path
+        FROM
+        base_resource_operation AS o
+        LEFT JOIN base_resource_api AS a ON o.api_id = a.api_id
+        <where>
+            <if test="operationId!=null">
+                AND operation_id = #{operationId}
+            </if>
+            <if test="operationCode!=null">
+                AND operation_code = #{operationCode}
+            </if>
+            <if test="operationName!=null">
+                AND operation_name = #{operationName}
+            </if>
+            <if test="menuId!=null">
+                AND menu_id = #{menuId}
+            </if>
+            <if test="apiId!=null">
+                AND api_id = #{apiId}
+            </if>
+            <if test="priority!=null">
+                AND priority = #{priority}
+            </if>
+            <if test="operationDesc!=null">
+                AND operation_desc = #{operationDesc}
+            </if>
+            <if test="status!=null">
+                AND status = #{status}
+            </if>
+            <if test="createTime!=null">
+                AND create_time = #{createTime}
+            </if>
+            <if test="updateTime!=null">
+                AND update_time = #{updateTime}
+            </if>
+            <if test="isPersist!=null">
+                AND is_persist = #{isPersist}
+            </if>
+        </where>
+        ORDER BY operationId,priority ASC
     </select>
 </mapper>

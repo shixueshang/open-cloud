@@ -1,7 +1,7 @@
 package com.github.lyd.auth.provider.service.feign;
 
 import com.github.lyd.base.client.api.BaseUserAccountRemoteApi;
-import com.github.lyd.common.constants.ServicesConstants;
+import com.github.lyd.base.client.constants.BaseConstants;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @description:
  */
 @Component
-@FeignClient(value = ServicesConstants.BASE_SERVICE)
+@FeignClient(value = BaseConstants.BASE_SERVICE)
 public interface BaseUserAccountRestRemoteService extends BaseUserAccountRemoteApi {
 
 

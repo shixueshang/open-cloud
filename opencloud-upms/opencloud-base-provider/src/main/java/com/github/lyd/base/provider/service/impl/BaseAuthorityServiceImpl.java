@@ -327,6 +327,7 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
      * 获取用户已授权权限
      *
      * @param userId
+     * @param root 超级管理员
      * @return
      */
     @Override

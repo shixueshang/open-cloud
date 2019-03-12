@@ -149,7 +149,7 @@ public class BaseRoleController {
     /**
      * 删除角色
      *
-     * @param roleId 角色ID
+     * @param roleId
      * @return
      */
     @ApiOperation(value = "删除角色", notes = "删除角色")

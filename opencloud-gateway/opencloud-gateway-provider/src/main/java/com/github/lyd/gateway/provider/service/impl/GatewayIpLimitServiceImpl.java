@@ -1,14 +1,23 @@
 package com.github.lyd.gateway.provider.service.impl;
 
+import com.github.lyd.common.mapper.ExampleBuilder;
 import com.github.lyd.common.model.PageList;
+import com.github.lyd.common.model.PageParams;
 import com.github.lyd.gateway.client.model.GatewayIpLimitApisDto;
+import com.github.lyd.gateway.client.model.entity.GatewayIpLimit;
+import com.github.lyd.gateway.client.model.entity.GatewayIpLimitApi;
 import com.github.lyd.gateway.provider.mapper.GatewayIpLimitApisMapper;
+import com.github.lyd.gateway.provider.mapper.GatewayIpLimitMapper;
 import com.github.lyd.gateway.provider.service.GatewayIpLimitService;
+import com.github.pagehelper.PageHelper;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -20,7 +29,26 @@ import java.util.List;
 public class GatewayIpLimitServiceImpl implements GatewayIpLimitService {
 
     @Autowired
+    private GatewayIpLimitMapper gatewayIpLimitMapper;
+    @Autowired
     private GatewayIpLimitApisMapper gatewayIpLimitApisMapper;
+
+
+    /**
+     * 分页查询
+     *
+     * @param pageParams
+     * @param keyword
+     * @return
+     */
+    @Override
+    public PageList<GatewayIpLimit> findListPage(PageParams pageParams, String keyword) {
+        PageHelper.startPage(pageParams.getPage(), pageParams.getLimit(), pageParams.getOrderBy());
+        ExampleBuilder builder = new ExampleBuilder(GatewayIpLimit.class);
+        Example example = builder.criteria().end().build();
+        List<GatewayIpLimit> list = gatewayIpLimitMapper.selectByExample(example);
+        return new PageList(list);
+    }
 
     /**
      * 查询白名单
@@ -42,5 +70,114 @@ public class GatewayIpLimitServiceImpl implements GatewayIpLimitService {
     public PageList<GatewayIpLimitApisDto> findWhiteList() {
         List<GatewayIpLimitApisDto> list = gatewayIpLimitApisMapper.selectIpLimitApisDto(1);
         return new PageList<>(list);
+    }
+
+    /**
+     * 查询策略已绑定API列表
+     *
+     * @return
+     */
+    @Override
+    public PageList<GatewayIpLimitApi> findIpLimitApiList(Long policyId) {
+        GatewayIpLimitApi rateLimitApi = new GatewayIpLimitApi();
+        rateLimitApi.setPolicyId(policyId);
+        List<GatewayIpLimitApi> list = gatewayIpLimitApisMapper.select(rateLimitApi);
+        return new PageList<>(list);
+    }
+
+    /**
+     * 获取IP限制策略
+     *
+     * @param policyId
+     * @return
+     */
+    @Override
+    public GatewayIpLimit getIpLimitPolicy(Long policyId) {
+        return gatewayIpLimitMapper.selectByPrimaryKey(policyId);
+    }
+
+    /**
+     * 添加IP限制策略
+     *
+     * @param policy
+     */
+    @Override
+    public Long addIpLimitPolicy(GatewayIpLimit policy) {
+        policy.setCreateTime(new Date());
+        policy.setUpdateTime(policy.getCreateTime());
+        gatewayIpLimitMapper.insertSelective(policy);
+        return policy.getPolicyId();
+    }
+
+    /**
+     * 更新IP限制策略
+     *
+     * @param policy
+     */
+    @Override
+    public void updateIpLimitPolicy(GatewayIpLimit policy) {
+        policy.setUpdateTime(new Date());
+        gatewayIpLimitMapper.updateByPrimaryKeySelective(policy);
+    }
+
+    /**
+     * 删除IP限制策略
+     *
+     * @param policyId
+     */
+    @Override
+    public void removeIpLimitPolicy(Long policyId) {
+        clearIpLimitApisByPolicyId(policyId);
+        gatewayIpLimitMapper.deleteByPrimaryKey(policyId);
+    }
+
+    /**
+     * 绑定API, 一个API只能绑定一个策略
+     *
+     * @param policyId
+     * @param apis
+     */
+    @Override
+    public void addIpLimitApis(Long policyId, String... apis) {
+        // 先清空策略已有绑定
+        clearIpLimitApisByPolicyId(policyId);
+        if (apis != null && apis.length > 0) {
+            List<GatewayIpLimitApi> list = Lists.newArrayList();
+            for (String api : apis) {
+                // 先api解除所有绑定, 一个API只能绑定一个策略
+                Long apiId = Long.parseLong(api);
+                clearIpLimitApisByApiId(apiId);
+                GatewayIpLimitApi item = new GatewayIpLimitApi();
+                item.setApiId(apiId);
+                item.setPolicyId(policyId);
+                // 重新绑定策略
+                list.add(item);
+            }
+            gatewayIpLimitApisMapper.insertList(list);
+        }
+    }
+
+    /**
+     * 清空绑定的API
+     *
+     * @param policyId
+     */
+    @Override
+    public void clearIpLimitApisByPolicyId(Long policyId) {
+        GatewayIpLimitApi rateLimitApi = new GatewayIpLimitApi();
+        rateLimitApi.setPolicyId(policyId);
+        gatewayIpLimitApisMapper.delete(rateLimitApi);
+    }
+
+    /**
+     * API解除所有策略
+     *
+     * @param apiId
+     */
+    @Override
+    public void clearIpLimitApisByApiId(Long apiId) {
+        GatewayIpLimitApi rateLimitApi = new GatewayIpLimitApi();
+        rateLimitApi.setApiId(apiId);
+        gatewayIpLimitApisMapper.delete(rateLimitApi);
     }
 }

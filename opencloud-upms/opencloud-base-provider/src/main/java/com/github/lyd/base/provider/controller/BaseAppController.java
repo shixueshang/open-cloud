@@ -53,8 +53,8 @@ public class BaseAppController implements BaseAppRemoteApi {
     /**
      * 获取应用详情
      *
-     * @param appId appId
-     * @return 应用信息
+     * @param appId
+     * @return
      */
     @ApiOperation(value = "获取应用详情", notes = "仅限系统内部调用")
     @ApiImplicitParams({
@@ -72,7 +72,7 @@ public class BaseAppController implements BaseAppRemoteApi {
     /**
      * 获取应用开发配置信息
      *
-     * @param appId 应用Id
+     * @param appId
      * @return
      */
     @ApiOperation(value = "获取应用开发配置信息", notes = "获取应用开发配置信息")
@@ -256,7 +256,7 @@ public class BaseAppController implements BaseAppRemoteApi {
      * 重置应用秘钥
      *
      * @param appId 应用Id
-     * @return 应用信息
+     * @return
      */
     @ApiOperation(value = "重置应用秘钥", notes = "重置应用秘钥")
     @ApiImplicitParams({
@@ -274,8 +274,8 @@ public class BaseAppController implements BaseAppRemoteApi {
     /**
      * 删除应用信息
      *
-     * @param appId 应用Id
-     * @return 应用信息
+     * @param appId
+     * @return
      */
     @ApiOperation(value = "删除应用信息", notes = "删除应用信息")
     @ApiImplicitParams({

@@ -40,11 +40,6 @@ public class BaseResourceOperation implements Serializable {
     private String operationName;
 
     /**
-     * 资源路径
-     */
-    private String path;
-
-    /**
      * 资源父节点
      */
     @Column(name = "menu_id")
@@ -77,6 +72,12 @@ public class BaseResourceOperation implements Serializable {
      */
     @Column(name = "is_persist")
     private Integer isPersist;
+
+    /**
+     * 绑定API
+     */
+    @Column(name = "api_id")
+    private Long apiId;
 
     /**
      * 获取资源ID
@@ -130,14 +131,6 @@ public class BaseResourceOperation implements Serializable {
      */
     public void setOperationName(String operationName) {
         this.operationName = operationName;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
     }
 
     /**
@@ -226,5 +219,13 @@ public class BaseResourceOperation implements Serializable {
 
     public void setIsPersist(Integer isPersist) {
         this.isPersist = isPersist;
+    }
+
+    public Long getApiId() {
+        return apiId;
+    }
+
+    public void setApiId(Long apiId) {
+        this.apiId = apiId;
     }
 }

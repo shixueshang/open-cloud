@@ -8,6 +8,11 @@ package com.github.lyd.base.client.constants;
 public class BaseConstants {
 
     /**
+     * 服务名称
+     */
+    public static final String BASE_SERVICE = "opencloud-base-provider";
+
+    /**
      * 默认oauth2授权类型
      */
     public final static String DEFAULT_OAUTH2_GRANT_TYPES = "authorization_code,refresh_token,client_credentials";

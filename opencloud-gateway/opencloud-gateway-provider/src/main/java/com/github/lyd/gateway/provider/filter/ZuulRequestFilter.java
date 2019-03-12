@@ -28,6 +28,8 @@ import java.util.Map;
 @Slf4j
 public class ZuulRequestFilter extends ZuulFilter {
 
+    public static final String X_REQUEST_ID = "X-Request-Id";
+
     @Autowired
     private GatewayAccessLogsService gatewayAccessLogsService;
 
@@ -73,10 +75,10 @@ public class ZuulRequestFilter extends ZuulFilter {
         HttpServletResponse response = ctx.getResponse();
         try {
             Long requestId = snowflakeIdGenerator.nextId();
-            ctx.addZuulRequestHeader("zuul-request-id", String.valueOf(requestId));
+            ctx.addZuulRequestHeader(X_REQUEST_ID, String.valueOf(requestId));
             Map headers = WebUtils.getHttpHeaders(request);
             Map data = WebUtils.getParameterMap(request);
-            String path = request.getRequestURI();
+            String requestPath = request.getRequestURI();
             String method = request.getMethod();
             String ip = WebUtils.getIpAddr(request);
             String userAgent = request.getHeader(HttpHeaders.USER_AGENT);
@@ -87,7 +89,7 @@ public class ZuulRequestFilter extends ZuulFilter {
             msg.put("accessId", requestId);
             msg.put("save", "insert");
             msg.put("headers", JSONObject.toJSON(headers));
-            msg.put("path", path);
+            msg.put("path", requestPath);
             msg.put("params", JSONObject.toJSON(data));
             msg.put("ip", ip);
             msg.put("method", method);

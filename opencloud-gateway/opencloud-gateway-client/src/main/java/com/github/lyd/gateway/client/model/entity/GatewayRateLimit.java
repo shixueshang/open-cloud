@@ -19,22 +19,31 @@ public class GatewayRateLimit implements Serializable {
     @Column(name = "policy_id")
     private Long policyId;
 
+    /**
+     * 策略名称
+     */
     @Column(name = "policy_name")
     private String policyName;
 
+    /**
+     * 服务名称
+     */
     @Column(name = "service_id")
     private String serviceId;
     /**
-     * 流量限制
+     * 限制数
      */
     private Long limit;
 
     /**
-     * 时间单位:second-秒,minute-分钟,hour-小时,day-天
+     * 单位时间:second-秒,minute-分钟,hour-小时,day-天
      */
     @Column(name = "interval_unit")
     private String intervalUnit;
 
+    /**
+     * 限流规则类型:url,origin,user
+     */
     @Column(name = "limit_type")
     private String limitType;
 

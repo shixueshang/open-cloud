@@ -1,5 +1,6 @@
 package com.github.lyd.gateway.provider.service.impl;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.lyd.common.constants.MqConstants;
 import com.github.lyd.common.mapper.ExampleBuilder;
 import com.github.lyd.common.model.PageList;
@@ -16,8 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.AntPathMatcher;
 import tk.mybatis.mapper.entity.Example;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author liuyadu
@@ -25,7 +25,7 @@ import java.util.Map;
 @Slf4j
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class GatewayAccessLogsServiceImpl implements GatewayAccessLogsService{
+public class GatewayAccessLogsServiceImpl implements GatewayAccessLogsService {
     @Autowired
     private AmqpTemplate amqpTemplate;
 
@@ -35,20 +35,42 @@ public class GatewayAccessLogsServiceImpl implements GatewayAccessLogsService{
 
     private final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
+    @JsonIgnore
+    private Set<String> ignores = new HashSet<>(Arrays.asList(new String[]{
+            "/**/oauth/**",
+            "/base/access/logs/**"
+    }));
+
+    /**
+     * 不记录日志
+     *
+     * @param requestPath
+     * @return
+     */
+    public boolean isIgnore(String requestPath) {
+        Iterator<String> iterator = ignores.iterator();
+        while (iterator.hasNext()) {
+            String path = iterator.next();
+            if (antPathMatcher.match(path, requestPath)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * 保存日志
+     *
      * @param map
      */
     @Override
-    public void  saveLogs(Map map){
-        String path = map.get("path").toString();
-        if(antPathMatcher.match("/**/oauth/**", path) || antPathMatcher.match("/base/access/logs/**",path)){
+    public void saveLogs(Map map) {
+        String requestPath = map.get("path").toString();
+        if (isIgnore(requestPath)) {
             return;
         }
         amqpTemplate.convertAndSend(MqConstants.QUEUE_ACCESS_LOGS, map);
     }
-
 
 
     /**

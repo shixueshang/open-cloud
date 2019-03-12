@@ -10,7 +10,8 @@
         <result column="expire_time" jdbcType="TIMESTAMP" property="expireTime"/>
     </resultMap>
 
-    <select id="selectUserGrantedAuthority" resultMap="com.github.lyd.base.provider.mapper.BaseAuthorityMapper.OpenGrantedAuthority">
+    <select id="selectUserGrantedAuthority"
+            resultMap="com.github.lyd.base.provider.mapper.BaseAuthorityMapper.OpenGrantedAuthority">
         SELECT
             a.authority_id,
             a.authority,
