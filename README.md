@@ -29,7 +29,7 @@
 <a target="_blank" href="https://gitee.com/liuyadu/open-admin-ui">前端ui源码</a>
 
 #### 代码结构
-``` 
+``` lua
 open-cloud
 ├── docs
     ├── bin           -- 执行脚本  
@@ -62,7 +62,7 @@ open-cloud
 
 本项目基于springCloud打造的分布式快速开发架构. 需要了解SpringCloud,SpringBoot开发,分布式原理。
 
-``` 
+``` lua
 -- 1.依赖服务Nacos服务发现 
 -- 2.依赖服务Redis,RabbitMq 
 -- 3.导入sql脚本
