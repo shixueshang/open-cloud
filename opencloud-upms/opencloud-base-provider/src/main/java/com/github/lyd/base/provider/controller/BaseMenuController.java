@@ -75,7 +75,7 @@ public class BaseMenuController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
     })
-    @PostMapping("/menu/action/list")
+    @PostMapping("/menu/operation/list")
     public ResultBody<PageList<BaseResourceMenuDto>> getMenuActionList(
             @RequestParam(name = "keyword", required = false) String keyword
     ) {
@@ -92,7 +92,7 @@ public class BaseMenuController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
     })
-    @PostMapping("/menu/action")
+    @PostMapping("/menu/operation")
     public ResultBody<PageList<BaseResourceOperation>> getMenuActionList(Long menuId) {
         return ResultBody.success(baseResourceOperationService.findListByMenuId(menuId));
     }

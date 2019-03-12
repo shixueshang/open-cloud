@@ -20,8 +20,7 @@ public interface BaseResourceOperationMapper extends CrudMapper<BaseResourceOper
      * @param id
      * @return
      */
-    BaseResourceOperationDto selectDTOByPrimaryKey(Long id);
-
+    BaseResourceOperationDto selectOperationDtoByPrimaryKey(Long id);
 
     /**
      * 条件查询操作拓展信息
@@ -29,5 +28,5 @@ public interface BaseResourceOperationMapper extends CrudMapper<BaseResourceOper
      * @param params
      * @return
      */
-    List<BaseResourceOperationDto> selectDTOByCondition(Map params);
+    List<BaseResourceOperationDto> selectOperationDtoByCondition(Map params);
 }

@@ -1,9 +1,9 @@
 package com.github.lyd.base.provider.service.impl;
 
-import com.github.lyd.base.client.constants.ResourceType;
 import com.github.lyd.base.client.model.entity.BaseResourceMenu;
-import com.github.lyd.base.provider.service.BaseAuthorityService;
+import com.github.lyd.base.client.model.entity.BaseResourceOperation;
 import com.github.lyd.base.provider.service.BaseResourceMenuService;
+import com.github.lyd.base.provider.service.BaseResourceOperationService;
 import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.test.BaseTest;
 import com.github.lyd.common.utils.RandomValueUtils;
@@ -14,16 +14,50 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class BaseAuthorityServiceImplTest extends BaseTest {
 
     @Autowired
-    private BaseAuthorityService baseAuthorityService;
+    private BaseResourceOperationService baseResourceOperationService;
     @Autowired
     private BaseResourceMenuService baseResourceMenuService;
 
     @Test
-    public void saveOrUpdateAuthority() {
+    public void save() {
       PageList<BaseResourceMenu> pageList =  baseResourceMenuService.findAllList("");
         for (Object object:pageList.getList()) {
             BaseResourceMenu menu = (BaseResourceMenu)object;
-            baseAuthorityService.saveOrUpdateAuthority(menu.getMenuId(), ResourceType.menu);
+            BaseResourceOperation browse = new BaseResourceOperation();
+            browse.setMenuId(menu.getMenuId());
+            browse.setOperationCode(menu.getMenuCode()+"Browse");
+            browse.setOperationName("浏览");
+            browse.setOperationDesc(menu.getMenuName()+browse.getOperationName());
+            browse.setIsPersist(1);
+            browse.setStatus(1);
+            BaseResourceOperation create = new BaseResourceOperation();
+            create.setMenuId(menu.getMenuId());
+            create.setOperationCode(menu.getMenuCode()+"Create");
+            create.setOperationName("创建");
+            create.setOperationDesc(menu.getMenuName()+create.getOperationName());
+            create.setIsPersist(1);
+            create.setStatus(1);
+            BaseResourceOperation edit = new BaseResourceOperation();
+            edit.setMenuId(menu.getMenuId());
+            edit.setOperationCode(menu.getMenuCode()+"Edit");
+            edit.setOperationName("编辑");
+            edit.setOperationDesc(menu.getMenuName()+edit.getOperationName());
+            edit.setIsPersist(1);
+            edit.setStatus(1);
+            BaseResourceOperation remove = new BaseResourceOperation();
+            remove.setMenuId(menu.getMenuId());
+            remove.setOperationName("删除");
+            remove.setOperationDesc(menu.getMenuName()+remove.getOperationName());
+            remove.setOperationCode(menu.getMenuCode()+"Remove");
+            remove.setIsPersist(1);
+            remove.setStatus(1);
+            try {
+                baseResourceOperationService.addOperation(browse);
+                baseResourceOperationService.addOperation(create);
+                baseResourceOperationService.addOperation(edit);
+                baseResourceOperationService.addOperation(remove);
+            }catch (Exception e){
+            }
         }
     }
 

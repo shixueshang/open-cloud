@@ -41,7 +41,7 @@ public class GatewayIpLimitController {
             @ApiImplicitParam(name = "limit", value = "显示条数:最大999", paramType = "form"),
             @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
     })
-    @PostMapping("/limit/ip")
+    @PostMapping("/gateway/limit/ip")
     public ResultBody<PageList<GatewayIpLimit>> getIpLimitList(
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit,
@@ -60,7 +60,7 @@ public class GatewayIpLimitController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "policyId", value = "策略ID", paramType = "form"),
     })
-    @PostMapping("/limit/ip/api/list")
+    @PostMapping("/gateway/limit/ip/api/list")
     public ResultBody<PageList<GatewayIpLimit>> getIpLimitApiList(
             @RequestParam("policyId") Long policyId
     ) {
@@ -79,7 +79,7 @@ public class GatewayIpLimitController {
             @ApiImplicitParam(name = "policyId", value = "策略ID", defaultValue = "", required = true, paramType = "form"),
             @ApiImplicitParam(name = "apiIds", value = "API接口ID.多个以,隔开.选填", defaultValue = "", required = false, paramType = "form")
     })
-    @PostMapping("/limit/ip/api/add")
+    @PostMapping("/gateway/limit/ip/api/add")
     public ResultBody addIpLimitApis(
             @RequestParam("policyId") Long policyId,
             @RequestParam(value = "apiIds", required = false) String apiIds
@@ -99,7 +99,7 @@ public class GatewayIpLimitController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "policyId", required = true, value = "策略ID", paramType = "path"),
     })
-    @GetMapping("/limit/ip/{policyId}")
+    @GetMapping("/gateway/limit/ip/{policyId}")
     public ResultBody<GatewayIpLimit> getIpLimit(@PathVariable("policyId") Long policyId) {
         return ResultBody.success(gatewayIpLimitService.getIpLimitPolicy(policyId));
     }
@@ -118,7 +118,7 @@ public class GatewayIpLimitController {
             @ApiImplicitParam(name = "policyType", required = true, value = "策略类型:0-拒绝/黑名单 1-允许/白名单", allowableValues = "0,1", paramType = "form"),
             @ApiImplicitParam(name = "ipAddress", required = true, value = "ip地址/IP段:多个用隔开;最多10个", paramType = "form")
     })
-    @PostMapping("/limit/ip/add")
+    @PostMapping("/gateway/limit/ip/add")
     public ResultBody<Long> addIpLimit(
             @RequestParam(value = "policyName") String policyName,
             @RequestParam(value = "policyType") Integer policyType,
@@ -150,7 +150,7 @@ public class GatewayIpLimitController {
             @ApiImplicitParam(name = "policyType", required = true, value = "策略类型:0-拒绝/黑名单 1-允许/白名单", allowableValues = "0,1", paramType = "form"),
             @ApiImplicitParam(name = "ipAddress", required = true, value = "ip地址/IP段:多个用隔开;最多10个", paramType = "form")
     })
-    @PostMapping("/limit/ip/update")
+    @PostMapping("/gateway/limit/ip/update")
     public ResultBody updateIpLimit(
             @RequestParam("policyId") Long policyId,
             @RequestParam(value = "policyName") String policyName,
@@ -179,7 +179,7 @@ public class GatewayIpLimitController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "policyId", required = true, value = "ApiId", paramType = "form"),
     })
-    @PostMapping("/limit/ip/remove")
+    @PostMapping("/gateway/limit/ip/remove")
     public ResultBody removeIpLimit(
             @RequestParam("policyId") Long policyId
     ) {

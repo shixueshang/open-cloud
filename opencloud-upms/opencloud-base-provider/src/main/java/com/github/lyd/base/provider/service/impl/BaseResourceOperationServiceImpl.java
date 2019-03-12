@@ -48,7 +48,7 @@ public class BaseResourceOperationServiceImpl implements BaseResourceOperationSe
         Map params = Maps.newHashMap();
         params.put("operationCode",keyword);
         params.put("operationName",keyword);
-        List<BaseResourceOperationDto> list = baseResourceOperationMapper.selectDTOByCondition(params);
+        List<BaseResourceOperationDto> list = baseResourceOperationMapper.selectOperationDtoByCondition(params);
         return new PageList(list);
     }
 
@@ -61,7 +61,7 @@ public class BaseResourceOperationServiceImpl implements BaseResourceOperationSe
     public PageList<BaseResourceOperationDto> findListByMenuId(Long menuId) {
         Map params = Maps.newHashMap();
         params.put("menuId",menuId);
-        List<BaseResourceOperationDto> list = baseResourceOperationMapper.selectDTOByCondition(params);
+        List<BaseResourceOperationDto> list = baseResourceOperationMapper.selectOperationDtoByCondition(params);
         return new PageList(list);
     }
 
@@ -73,7 +73,7 @@ public class BaseResourceOperationServiceImpl implements BaseResourceOperationSe
      */
     @Override
     public BaseResourceOperationDto getOperation(Long operationId) {
-        return baseResourceOperationMapper.selectDTOByPrimaryKey(operationId);
+        return baseResourceOperationMapper.selectOperationDtoByPrimaryKey(operationId);
     }
 
 
@@ -119,6 +119,8 @@ public class BaseResourceOperationServiceImpl implements BaseResourceOperationSe
         operation.setCreateTime(new Date());
         operation.setUpdateTime(operation.getCreateTime());
         baseResourceOperationMapper.insertSelective(operation);
+        // 同步权限表里的信息
+        baseAuthorityService.saveOrUpdateAuthority(operation.getOperationId(), ResourceType.operation);
         return operation.getOperationId();
     }
 

@@ -23,7 +23,7 @@
         <result column="path" property="path" jdbcType="VARCHAR"/>
     </resultMap>
 
-    <select id="selectDTOByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResourceOperationDto">
+    <select id="selectOperationDtoByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResourceOperationDto">
         SELECT
         o.*,
         a.path
@@ -33,7 +33,7 @@
         where o.operation_id = #{id}
     </select>
 
-    <select id="selectDTOByCondition" parameterType="Map" resultMap="BaseResourceOperationDto">
+    <select id="selectOperationDtoByCondition" parameterType="Map" resultMap="BaseResourceOperationDto">
         SELECT
         o.*,
         a.path
@@ -75,6 +75,6 @@
                 AND is_persist = #{isPersist}
             </if>
         </where>
-        ORDER BY operationId,priority ASC
+        ORDER BY operation_id,priority ASC
     </select>
 </mapper>

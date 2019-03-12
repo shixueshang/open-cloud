@@ -41,7 +41,7 @@ public class GatewayRateLimitController {
             @ApiImplicitParam(name = "limit", value = "显示条数:最大999", paramType = "form"),
             @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
     })
-    @PostMapping("/limit/rate")
+    @PostMapping("/gateway/limit/rate")
     public ResultBody<PageList<GatewayRateLimit>> getRateLimitList(
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit,
@@ -60,7 +60,7 @@ public class GatewayRateLimitController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "policyId", value = "策略ID", paramType = "form"),
     })
-    @PostMapping("/limit/rate/api/list")
+    @PostMapping("/gateway/limit/rate/api/list")
     public ResultBody<PageList<GatewayRateLimit>> getRateLimitApiList(
             @RequestParam("policyId") Long policyId
     ) {
@@ -79,7 +79,7 @@ public class GatewayRateLimitController {
             @ApiImplicitParam(name = "policyId", value = "策略ID", defaultValue = "", required = true, paramType = "form"),
             @ApiImplicitParam(name = "apiIds", value = "API接口ID.多个以,隔开.选填", defaultValue = "", required = false, paramType = "form")
     })
-    @PostMapping("/limit/rate/api/add")
+    @PostMapping("/gateway/limit/rate/api/add")
     public ResultBody addRateLimitApis(
             @RequestParam("policyId") Long policyId,
             @RequestParam(value = "apiIds", required = false) String apiIds
@@ -99,7 +99,7 @@ public class GatewayRateLimitController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "policyId", required = true, value = "策略ID", paramType = "path"),
     })
-    @GetMapping("/limit/rate/{policyId}")
+    @GetMapping("/gateway/limit/rate/{policyId}")
     public ResultBody<GatewayRateLimit> getRateLimit(@PathVariable("policyId") Long policyId) {
         return ResultBody.success(gatewayRateLimitService.getRateLimitPolicy(policyId));
     }
@@ -122,7 +122,7 @@ public class GatewayRateLimitController {
             @ApiImplicitParam(name = "intervalUnit", required = true, value = "单位时间:second-秒,minute-分钟,hour-小时,day-天", allowableValues = "second,minute,hour,day", paramType = "form"),
             @ApiImplicitParam(name = "limitType", required = true, value = "限流规则类型:url,origin,user", allowableValues = "url,origin,user", paramType = "form")
     })
-    @PostMapping("/limit/rate/add")
+    @PostMapping("/gateway/limit/rate/add")
     public ResultBody<Long> addRateLimit(
             @RequestParam(value = "policyName") String policyName,
             @RequestParam(value = "serviceId") String serviceId,
@@ -162,7 +162,7 @@ public class GatewayRateLimitController {
             @ApiImplicitParam(name = "intervalUnit", required = true, value = "单位时间:second-秒,minute-分钟,hour-小时,day-天", allowableValues = "second,minute,hour,day", paramType = "form"),
             @ApiImplicitParam(name = "limitType", required = true, value = "限流规则类型:url,origin,user", allowableValues = "url,origin,user", paramType = "form")
     })
-    @PostMapping("/limit/rate/update")
+    @PostMapping("/gateway/limit/rate/update")
     public ResultBody updateRateLimit(
             @RequestParam("policyId") Long policyId,
             @RequestParam(value = "policyName") String policyName,
@@ -195,7 +195,7 @@ public class GatewayRateLimitController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "policyId", required = true, value = "ApiId", paramType = "form"),
     })
-    @PostMapping("/limit/rate/remove")
+    @PostMapping("/gateway/limit/rate/remove")
     public ResultBody removeRateLimit(
             @RequestParam("policyId") Long policyId
     ) {

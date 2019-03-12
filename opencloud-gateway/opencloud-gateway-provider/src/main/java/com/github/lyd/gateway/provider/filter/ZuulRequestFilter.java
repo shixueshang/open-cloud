@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.http.HttpHeaders;
-import org.springframework.util.AntPathMatcher;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,15 +27,13 @@ import java.util.Map;
 @Slf4j
 public class ZuulRequestFilter extends ZuulFilter {
 
-    public static final String X_REQUEST_ID = "X-Request-Id";
+    public static final String X_REQUEST_ID = "x-request-id";
 
     @Autowired
     private GatewayAccessLogsService gatewayAccessLogsService;
 
     @Autowired
     private SnowflakeIdGenerator snowflakeIdGenerator;
-
-    private final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
     /**
      * 是否应该执行该过滤器，如果是false，则不执行该filter

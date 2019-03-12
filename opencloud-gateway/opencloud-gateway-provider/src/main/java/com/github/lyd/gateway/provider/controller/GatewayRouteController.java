@@ -40,7 +40,7 @@ public class GatewayRouteController {
             @ApiImplicitParam(name = "limit", value = "显示条数:最大999", paramType = "form"),
             @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
     })
-    @PostMapping("/route")
+    @PostMapping("/gateway/route")
     public ResultBody<PageList<GatewayRoute>> getRouteList(
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit,
@@ -60,7 +60,7 @@ public class GatewayRouteController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "routeId", required = true, value = "路由ID", paramType = "path"),
     })
-    @GetMapping("/route/{routeId}")
+    @GetMapping("/gateway/route/{routeId}")
     public ResultBody<GatewayRoute> getRoute(@PathVariable("routeId") Long routeId) {
         return ResultBody.success(gatewayRouteService.getRoute(routeId));
     }
@@ -87,7 +87,7 @@ public class GatewayRouteController {
             @ApiImplicitParam(name = "status", required = false, allowableValues = "0,1", defaultValue = "1", value = "是否启用", paramType = "form"),
             @ApiImplicitParam(name = "routeDesc", required = false, value = "描述", paramType = "form")
     })
-    @PostMapping("/route/add")
+    @PostMapping("/gateway/route/add")
     public ResultBody<Long> addRoute(
             @RequestParam(value = "path") String path,
             @RequestParam(value = "serviceId", required = false) String serviceId,
@@ -135,7 +135,7 @@ public class GatewayRouteController {
             @ApiImplicitParam(name = "status", required = false, allowableValues = "0,1", defaultValue = "1", value = "是否启用", paramType = "form"),
             @ApiImplicitParam(name = "routeDesc", required = false, value = "描述", paramType = "form")
     })
-    @PostMapping("/route/update")
+    @PostMapping("/gateway/route/update")
     public ResultBody updateRoute(
             @RequestParam("routeId") Long routeId,
             @RequestParam(value = "path") String path,
@@ -172,7 +172,7 @@ public class GatewayRouteController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "routeId", required = true, value = "ApiId", paramType = "form"),
     })
-    @PostMapping("/route/remove")
+    @PostMapping("/gateway/route/remove")
     public ResultBody removeRoute(
             @RequestParam("routeId") Long routeId
     ) {

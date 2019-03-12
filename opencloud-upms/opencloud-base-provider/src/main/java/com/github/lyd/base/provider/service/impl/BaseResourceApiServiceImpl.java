@@ -124,6 +124,8 @@ public class BaseResourceApiServiceImpl implements BaseResourceApiService {
         api.setCreateTime(new Date());
         api.setUpdateTime(api.getCreateTime());
         baseResourceApiMapper.insertSelective(api);
+        // 同步权限表里的信息
+        baseAuthorityService.saveOrUpdateAuthority(api.getApiId(),ResourceType.api);
         return api.getApiId();
     }
 

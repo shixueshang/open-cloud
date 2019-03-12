@@ -1,11 +1,13 @@
 package com.github.lyd.gateway.provider.filter;
 
 import com.github.lyd.base.client.model.BaseAuthorityDto;
+import com.github.lyd.common.constants.CommonConstants;
 import com.github.lyd.common.security.OpenGrantedAuthority;
 import com.github.lyd.common.utils.WebUtils;
 import com.github.lyd.gateway.client.model.GatewayIpLimitApisDto;
 import com.github.lyd.gateway.provider.configuration.ApiGatewayProperties;
 import com.github.lyd.gateway.provider.locator.AccessLocator;
+import com.github.lyd.common.utils.StringUtils;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -14,7 +16,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.util.matcher.IpAddressMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.util.AntPathMatcher;
-import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -153,6 +154,9 @@ public class AccessControl {
         if (authentication == null) {
             return false;
         } else {
+            if(CommonConstants.ROOT.equals(authentication.getName())){
+                return true;
+            }
             Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
             Iterator var6 = attributes.iterator();
             Iterator var8 = authorities.iterator();
@@ -242,7 +246,7 @@ public class AccessControl {
                 String fullPath = auth.getPath();
                 Boolean isAuth = auth.getAuth();
                 // 无需认证,返回true
-                if (pathMatch.match(fullPath, requestPath) && !isAuth) {
+                if (StringUtils.isNotBlank(fullPath) && pathMatch.match(fullPath, requestPath) && !isAuth) {
                     return true;
                 }
             }
@@ -254,7 +258,7 @@ public class AccessControl {
         String url = request.getServletPath();
         String pathInfo = request.getPathInfo();
         if (pathInfo != null) {
-            url = StringUtils.hasLength(url) ? url + pathInfo : pathInfo;
+            url = StringUtils.isNotBlank(url) ? url + pathInfo : pathInfo;
         }
         return url;
     }
