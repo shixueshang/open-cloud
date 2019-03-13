@@ -64,7 +64,7 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
      * @return
      */
     @Override
-    public List<BaseAuthorityDto> findAuthorityDto(Integer type, String serviceId) {
+    public List<BaseAuthorityDto> findAuthorityDto(String type, String serviceId) {
         Map map = Maps.newHashMap();
         map.put("type", type);
         map.put("serviceId", serviceId);
@@ -79,7 +79,7 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
      * @return
      */
     @Override
-    public List<OpenGrantedAuthority> findAuthority(Integer type, String serviceId) {
+    public List<OpenGrantedAuthority> findAuthority(String type, String serviceId) {
         Map map = Maps.newHashMap();
         map.put("type", type);
         map.put("serviceId", serviceId);
@@ -334,7 +334,7 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
     public List<OpenGrantedAuthority> findUserGrantedAuthority(Long userId, Boolean root) {
         if (root) {
             // 超级管理员返回所有
-            return findAuthority(1, null);
+            return findAuthority("1", null);
         }
         List<OpenGrantedAuthority> authorities = Lists.newArrayList();
         List<BaseRole> rolesList = baseRoleService.getUserRoles(userId);
@@ -370,7 +370,7 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
     public List<BaseAuthorityDto> findUserGrantedAuthorityDetail(Long userId, Boolean root) {
         if (root) {
             // 超级管理员返回所有
-            return findAuthorityDto(1, null);
+            return findAuthorityDto("1", null);
         }
         // 用户权限列表
         List<BaseAuthorityDto> authorities = Lists.newArrayList();

@@ -23,7 +23,7 @@
         <result column="path" property="path" jdbcType="VARCHAR"/>
     </resultMap>
 
-    <select id="selectOperationDtoByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResourceOperationDto">
+    <select id="selectOperationDtoByPrimaryKey"  resultMap="BaseResourceOperationDto">
         SELECT
         o.*,
         a.path
@@ -33,7 +33,7 @@
         where o.operation_id = #{id}
     </select>
 
-    <select id="selectOperationDtoByCondition" parameterType="Map" resultMap="BaseResourceOperationDto">
+    <select id="selectOperationDtoByCondition"  resultMap="BaseResourceOperationDto">
         SELECT
         o.*,
         a.path

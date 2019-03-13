@@ -5,7 +5,7 @@ package com.github.lyd.common.constants;
  */
 public class CommonConstants {
     /**
-     * 超级管理员
+     * 默认超级管理员账号
      */
     public final static String ROOT = "admin";
 

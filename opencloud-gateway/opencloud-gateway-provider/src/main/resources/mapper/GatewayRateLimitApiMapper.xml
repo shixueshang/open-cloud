@@ -20,7 +20,7 @@
         <result column="interval_unit" jdbcType="VARCHAR" property="intervalUnit"/>
     </resultMap>
 
-    <select id="selectIpLimitApisDto" resultMap="IpLimitApisDto">
+    <select id="selectRateLimitApisDto" resultMap="IpLimitApisDto">
         SELECT
             i.policy_id,
             p.`limit`,

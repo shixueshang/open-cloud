@@ -47,7 +47,7 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
     @GetMapping("/authority/list")
     @Override
     public ResultBody<List<BaseAuthorityDto>> getAuthorityList(
-            @RequestParam(value = "type",required = false) Integer type,
+            @RequestParam(value = "type",required = false) String type,
             @RequestParam(value = "serviceId",required = false) String serviceId
     ) {
         return ResultBody.success(baseAuthorityService.findAuthorityDto(type, serviceId));

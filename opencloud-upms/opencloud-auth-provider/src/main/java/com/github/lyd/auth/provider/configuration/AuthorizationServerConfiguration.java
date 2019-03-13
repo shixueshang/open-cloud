@@ -30,7 +30,7 @@ import org.springframework.security.oauth2.provider.token.store.redis.RedisToken
 import javax.sql.DataSource;
 
 /**
- * 认证服务器配置
+ * 平台认证服务器配置
  *
  * @author liuyadu
  */

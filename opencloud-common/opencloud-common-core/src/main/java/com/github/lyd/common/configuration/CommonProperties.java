@@ -25,7 +25,7 @@ public class CommonProperties {
     private String apiServerAddr;
 
     /**
-     * 认证服务地址
+     * 平台认证服务地址
      */
     private String authServerAddr;
 

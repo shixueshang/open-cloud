@@ -6,7 +6,7 @@
     <groupId>com.github.lyd</groupId>
     <artifactId>open-cloud</artifactId>
     <packaging>pom</packaging>
-    <version>${opencloud.version}</version>
+    <version>1.0.0</version>
     <description>微服务开放平台</description>
     <modules>
         <module>docs/generator</module>
@@ -28,6 +28,8 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
+                <!--当前环境-->
+                <profile.name>dev</profile.name>
                 <!--Nacos配置中心地址-->
                 <config.server-addr>127.0.0.1:8848</config.server-addr>
                 <!--Nacos配置中心命名空间,用于支持多环境.这里必须使用ID，不能使用名称,默认为空-->
@@ -40,6 +42,8 @@
         <profile>
             <id>test</id>
             <properties>
+                <!--当前环境-->
+                <profile.name>test</profile.name>
                 <!--Nacos配置中心地址-->
                 <config.server-addr>172.17.207.82:8848</config.server-addr>
                 <!--Nacos配置中心命名空间,用于支持多环境.这里必须使用ID，不能使用名称,默认为空-->
@@ -52,6 +56,8 @@
         <profile>
             <id>online</id>
             <properties>
+                <!--当前环境,生产环境为空-->
+                <profile.name></profile.name>
                 <!--Nacos配置中心地址-->
                 <config.server-addr>172.17.207.82:8848</config.server-addr>
                 <!--Nacos配置中心命名空间,用于支持多环境.这里必须使用ID，不能使用名称,默认为空-->
@@ -94,7 +100,6 @@
         <swagger2.version>2.7.0</swagger2.version>
 
         <!--自定义版本-->
-        <opencloud.version>1.0.0</opencloud.version>
         <opencloud.common.version>1.0.0-SNAPSHOT</opencloud.common.version>
         <opencloud.gateway-client.version>1.0.0-SNAPSHOT</opencloud.gateway-client.version>
         <opencloud.base-client.version>1.0.0-SNAPSHOT</opencloud.base-client.version>

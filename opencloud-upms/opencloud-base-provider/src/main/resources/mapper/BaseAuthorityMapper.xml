@@ -34,37 +34,41 @@
         <result column="owner" jdbcType="VARCHAR" property="owner"/>
     </resultMap>
 
-    <select id="selectBaseAuthorityDto" parameterType="Map" resultMap="BaseAuthorityDto">
+    <select id="selectBaseAuthorityDto" resultMap="BaseAuthorityDto">
         select * from base_authority
-        where status = 1
-        <if test="type!=null and type==1">
-            and api_id is null
-        </if>
-        <if test="type!=null and type==2">
-            and api_id is not null
-            <if test="serviceId!=null">
-                and
+        <where>
+            status = 1
+            <if test="type!=null and type!='' and type == '1'.toString()">
+                and api_id is null
             </if>
-        </if>
+            <if test="type!=null and type!='' and type == '2'.toString()">
+                and api_id is not null
+            </if>
+            <if test="serviceId!=null">
+                and service_id = #{serviceId}
+            </if>
+        </where>
     </select>
 
-    <select id="selectAuthority" parameterType="Map"
-            resultMap="com.github.lyd.base.provider.mapper.BaseAuthorityMapper.OpenGrantedAuthority">
+    <select id="selectAuthority"
+            resultMap="OpenGrantedAuthority">
         select
         authority_id,
         authority,
         service_id,
         'user' as owner
         from base_authority
-        where status = 1
-        <if test="type!=null and type==1">
-            and api_id is null
-        </if>
-        <if test="type!=null and type==2">
-            and api_id is not null
-            <if test="serviceId!=null">
-                and
+        <where>
+            status = 1
+            <if test="type!=null and type!='' and type == '1'.toString()">
+                and api_id is null
             </if>
-        </if>
+            <if test="type!=null and type!='' and type == '2'.toString()">
+                and api_id is not null
+            </if>
+            <if test="serviceId!=null">
+                and service_id = #{serviceId}
+            </if>
+        </where>
     </select>
 </mapper>

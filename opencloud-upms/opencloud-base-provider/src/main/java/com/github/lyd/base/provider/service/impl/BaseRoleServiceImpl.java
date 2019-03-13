@@ -3,9 +3,12 @@ package com.github.lyd.base.provider.service.impl;
 import com.github.lyd.base.client.constants.BaseConstants;
 import com.github.lyd.base.client.model.entity.BaseRole;
 import com.github.lyd.base.client.model.entity.BaseRoleUser;
+import com.github.lyd.base.client.model.entity.BaseUser;
 import com.github.lyd.base.provider.mapper.BaseRoleMapper;
 import com.github.lyd.base.provider.mapper.BaseRoleUserMapper;
 import com.github.lyd.base.provider.service.BaseRoleService;
+import com.github.lyd.base.provider.service.BaseUserService;
+import com.github.lyd.common.constants.CommonConstants;
 import com.github.lyd.common.exception.OpenAlertException;
 import com.github.lyd.common.mapper.ExampleBuilder;
 import com.github.lyd.common.model.PageList;
@@ -32,6 +35,8 @@ public class BaseRoleServiceImpl implements BaseRoleService {
     private BaseRoleMapper baseRoleMapper;
     @Autowired
     private BaseRoleUserMapper baseRoleUserMapper;
+    @Autowired
+    private BaseUserService baseUserService;
 
     /**
      * 分页查询
@@ -166,18 +171,25 @@ public class BaseRoleServiceImpl implements BaseRoleService {
      * @return
      */
     @Override
-    public void saveMemberRoles(Long userId, Long... roles) {
+    public void saveMemberRoles(Long userId, String... roles) {
         if (userId == null || roles == null) {
             return;
+        }
+        BaseUser user = baseUserService.getProfile(userId);
+        if (user == null) {
+            return;
+        }
+        if (CommonConstants.ROOT.equals(user.getUserName())) {
+            throw new OpenAlertException("默认用户无需分配!");
         }
         // 先清空,在添加
         removeMemberRoles(userId);
         if (roles.length > 0) {
             List<BaseRoleUser> list = Lists.newArrayList();
-            for (Long roleId : roles) {
+            for (String roleId : roles) {
                 BaseRoleUser roleUser = new BaseRoleUser();
                 roleUser.setUserId(userId);
-                roleUser.setRoleId(roleId);
+                roleUser.setRoleId(Long.parseLong(roleId));
                 list.add(roleUser);
             }
             // 批量保存

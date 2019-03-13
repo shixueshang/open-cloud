@@ -22,6 +22,7 @@ import java.util.*;
 
 /**
  * 访问控制
+ *
  * @author liuyadu
  */
 @Service
@@ -33,18 +34,18 @@ public class AccessControl {
 
     private static final AntPathMatcher pathMatch = new AntPathMatcher();
 
-    private Set<String> permitAll =new HashSet<>();
+    private Set<String> permitAll = new HashSet<>();
 
-    private Set<String> noAuthorityAllow =new HashSet<>();
+    private Set<String> noAuthorityAllow = new HashSet<>();
 
     public AccessControl(AccessLocator accessLocator, ApiGatewayProperties apiGatewayProperties) {
         this.accessLocator = accessLocator;
         this.apiGatewayProperties = apiGatewayProperties;
-        if(apiGatewayProperties!=null){
-            if(apiGatewayProperties.getPermitAll()!=null){
+        if (apiGatewayProperties != null) {
+            if (apiGatewayProperties.getPermitAll() != null) {
                 permitAll.addAll(Arrays.asList(apiGatewayProperties.getPermitAll().split(",")));
             }
-            if(apiGatewayProperties.getNoAuthorityAllow()!=null){
+            if (apiGatewayProperties.getNoAuthorityAllow() != null) {
                 noAuthorityAllow.addAll(Arrays.asList(apiGatewayProperties.getNoAuthorityAllow().split(",")));
             }
         }
@@ -63,7 +64,7 @@ public class AccessControl {
         }
         String requestPath = getRequestPath(request);
         String remoteIpAddress = WebUtils.getIpAddr(request);
-        if(isPermitAll(requestPath)){
+        if (isPermitAll(requestPath)) {
             return true;
         }
         // 1.ip黑名单控制
@@ -108,22 +109,22 @@ public class AccessControl {
     }
 
 
-    private boolean isPermitAll(String requestPath){
+    private boolean isPermitAll(String requestPath) {
         Iterator<String> it = permitAll.iterator();
         while (it.hasNext()) {
             String path = it.next();
-            if(pathMatch.match(path,requestPath)){
+            if (pathMatch.match(path, requestPath)) {
                 return true;
             }
         }
         return false;
     }
 
-    private boolean isNoAuthorityAllow(String requestPath){
+    private boolean isNoAuthorityAllow(String requestPath) {
         Iterator<String> it = noAuthorityAllow.iterator();
         while (it.hasNext()) {
             String path = it.next();
-            if(pathMatch.match(path,requestPath)){
+            if (pathMatch.match(path, requestPath)) {
                 return true;
             }
         }
@@ -140,7 +141,7 @@ public class AccessControl {
                 //check if this uri can be access by anonymous
                 //return
             }
-            if(isNoAuthorityAllow(requestPath)){
+            if (isNoAuthorityAllow(requestPath)) {
                 // 认证通过,并且无需权限
                 return true;
             }
@@ -154,7 +155,8 @@ public class AccessControl {
         if (authentication == null) {
             return false;
         } else {
-            if(CommonConstants.ROOT.equals(authentication.getName())){
+            if (CommonConstants.ROOT.equals(authentication.getName())) {
+                // 默认超级管理员账号,直接放行
                 return true;
             }
             Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
@@ -167,7 +169,7 @@ public class AccessControl {
                     if (attribute.getAttribute().equals(authority.getAuthority())) {
                         if (authority instanceof OpenGrantedAuthority) {
                             OpenGrantedAuthority customer = (OpenGrantedAuthority) authority;
-                            if (customer.getIsExpired()!=null && customer.getIsExpired()) {
+                            if (customer.getIsExpired() != null && customer.getIsExpired()) {
                                 // 授权已过期
                                 //throw new AccessDeniedException("authority_is_expired");
                                 return false;

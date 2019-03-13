@@ -9,22 +9,25 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author liuyadu
+ */
 @Repository
 public interface BaseAuthorityMapper extends CrudMapper<BaseAuthority> {
 
     /**
      * 查询权限列表
      *
-     * @param params
+     * @param map
      * @return
      */
-    List<OpenGrantedAuthority> selectAuthority(Map params);
+    List<OpenGrantedAuthority> selectAuthority(Map map);
 
     /**
      * 查询权限列表详情
      *
-     * @param params
+     * @param map
      * @return
      */
-    List<BaseAuthorityDto> selectBaseAuthorityDto(Map params);
+    List<BaseAuthorityDto> selectBaseAuthorityDto(Map map);
 }

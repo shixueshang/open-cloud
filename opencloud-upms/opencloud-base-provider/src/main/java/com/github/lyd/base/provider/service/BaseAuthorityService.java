@@ -22,7 +22,7 @@ public interface BaseAuthorityService {
      * @param serviceId
      * @return
      */
-    List<BaseAuthorityDto> findAuthorityDto(Integer type, String serviceId);
+    List<BaseAuthorityDto> findAuthorityDto(String type, String serviceId);
 
 
     /**
@@ -32,7 +32,7 @@ public interface BaseAuthorityService {
      * @param serviceId
      * @return
      */
-    List<OpenGrantedAuthority> findAuthority(Integer type, String serviceId);
+    List<OpenGrantedAuthority> findAuthority(String type, String serviceId);
 
     /**
      * 保存或修改权限

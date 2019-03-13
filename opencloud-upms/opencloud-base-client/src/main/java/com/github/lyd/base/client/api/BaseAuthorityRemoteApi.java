@@ -22,7 +22,7 @@ public interface BaseAuthorityRemoteApi {
      */
     @GetMapping("/authority/list")
     ResultBody<List<BaseAuthorityDto>> getAuthorityList(
-            @RequestParam(value = "type",required = false) Integer type,
+            @RequestParam(value = "type",required = false) String type,
             @RequestParam(value = "serviceId",required = false) String serviceId);
 
     /**

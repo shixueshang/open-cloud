@@ -3,8 +3,8 @@ package com.github.lyd.base.provider.controller;
 import com.github.lyd.base.client.model.BaseUserDto;
 import com.github.lyd.base.client.model.entity.BaseRole;
 import com.github.lyd.base.client.model.entity.BaseUser;
-import com.github.lyd.base.provider.service.BaseUserAccountService;
 import com.github.lyd.base.provider.service.BaseRoleService;
+import com.github.lyd.base.provider.service.BaseUserAccountService;
 import com.github.lyd.base.provider.service.BaseUserService;
 import com.github.lyd.common.http.OpenRestTemplate;
 import com.github.lyd.common.model.PageList;
@@ -19,10 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 系统用户信息
@@ -101,8 +97,7 @@ public class BaseUserController {
             @RequestParam(value = "email", required = false) String email,
             @RequestParam(value = "mobile", required = false) String mobile,
             @RequestParam(value = "userDesc", required = false) String userDesc,
-            @RequestParam(value = "avatar", required = false) String avatar,
-            @RequestParam(value = "roleIds", required = false) String roleIds
+            @RequestParam(value = "avatar", required = false) String avatar
     ) {
         BaseUserDto user = new BaseUserDto();
         user.setUserName(userName);
@@ -114,10 +109,6 @@ public class BaseUserController {
         user.setMobile(mobile);
         user.setUserDesc(userDesc);
         user.setAvatar(avatar);
-        if(StringUtils.isNotBlank(roleIds)){
-            List<Long> ids = Arrays.asList(roleIds.split(",")).stream().map(s -> Long.parseLong(s.trim())).collect(Collectors.toList());
-            user.setRoleIds(ids);
-        }
         Long userId = baseUserAccountService.register(user);
         return ResultBody.success(userId);
     }
@@ -145,8 +136,7 @@ public class BaseUserController {
             @RequestParam(value = "email", required = false) String email,
             @RequestParam(value = "mobile", required = false) String mobile,
             @RequestParam(value = "userDesc", required = false) String userDesc,
-            @RequestParam(value = "avatar", required = false) String avatar,
-            @RequestParam(value = "roleIds", required = false) String roleIds
+            @RequestParam(value = "avatar", required = false) String avatar
     ) {
         BaseUserDto user = new BaseUserDto();
         user.setUserId(userId);
@@ -157,15 +147,21 @@ public class BaseUserController {
         user.setMobile(mobile);
         user.setUserDesc(userDesc);
         user.setAvatar(avatar);
-        if(StringUtils.isNotBlank(roleIds)){
-            List<Long> ids = Arrays.asList(roleIds.split(",")).stream().map(s -> Long.parseLong(s.trim())).collect(Collectors.toList());
-            user.setRoleIds(ids);
-        }
         baseUserService.updateProfile(user);
-        openRestTemplate.refreshGateway();
         return ResultBody.success();
     }
 
+
+    @ApiOperation(value = "用户分配角色", notes = "用户分配角色")
+    @PostMapping("/user/roles/add")
+    public ResultBody addUserRoles(
+            @RequestParam(value = "userId") Long userId,
+            @RequestParam(value = "roleIds", required = false) String roleIds
+    ) {
+        baseRoleService.saveMemberRoles(userId, StringUtils.isNotBlank(roleIds) ? roleIds.split(",") : new String[]{});
+        openRestTemplate.refreshGateway();
+        return ResultBody.success();
+    }
 
     /**
      * 获取用户角色
@@ -173,7 +169,7 @@ public class BaseUserController {
      * @param userId
      * @return
      */
-    @ApiOperation(value = "获取用户角色", notes = "获取用户角色")
+    @ApiOperation(value = "获取用户已分配角色", notes = "获取用户已分配角色")
     @PostMapping("/user/roles")
     public ResultBody<PageList<BaseRole>> getUserRoles(
             @RequestParam(value = "userId") Long userId

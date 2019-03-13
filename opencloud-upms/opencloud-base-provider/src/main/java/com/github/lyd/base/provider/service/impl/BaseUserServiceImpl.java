@@ -39,9 +39,6 @@ public class BaseUserServiceImpl implements BaseUserService {
     @Override
     public Long addProfile(BaseUserDto userProfile) {
         baseUserMapper.insertSelective(userProfile);
-        if (userProfile != null && userProfile.getRoleIds() != null && userProfile.getRoleIds().size() > 0) {
-            baseRoleService.saveMemberRoles(userProfile.getUserId(), userProfile.getRoleIds().toArray(new Long[userProfile.getRoleIds().size()]));
-        }
         return userProfile.getUserId();
     }
 
@@ -59,7 +56,6 @@ public class BaseUserServiceImpl implements BaseUserService {
         if (userProfile.getUserId() == null) {
             return false;
         }
-        baseRoleService.saveMemberRoles(userProfile.getUserId(), userProfile.getRoleIds().toArray(new Long[userProfile.getRoleIds().size()]));
         return baseUserMapper.updateByPrimaryKeySelective(userProfile) > 0;
     }
 

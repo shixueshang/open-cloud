@@ -23,10 +23,7 @@ public class BaseUserDto extends BaseUser implements Serializable {
      * 用户角色
      */
     private Collection<Map> roles = Lists.newArrayList();
-    /**
-     * 用户角色ID
-     */
-    private List<Long> roleIds = Lists.newArrayList();
+
     /**
      * 用户权限
      */
@@ -66,14 +63,6 @@ public class BaseUserDto extends BaseUser implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public List<Long> getRoleIds() {
-        return roleIds;
-    }
-
-    public void setRoleIds(List<Long> roleIds) {
-        this.roleIds = roleIds;
     }
 
     public String getThirdParty() {

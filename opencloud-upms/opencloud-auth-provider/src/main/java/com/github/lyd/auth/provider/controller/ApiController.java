@@ -21,34 +21,37 @@ import java.util.Map;
  * @date: 2018/11/9 15:43
  * @description:
  */
-@Api(tags = "已认证用户")
+@Api(tags = "开放接口")
 @RestController
-public class UserController {
+public class ApiController {
     @Autowired
     private QQAuthServiceImpl qqAuthService;
     @Autowired
     private WechatAuthServiceImpl wechatAuthService;
     @Autowired
     private GiteeAuthServiceImpl giteeAuthService;
+
     /**
      * 获取用户基础信息
+     *
      * @return
      */
     @ApiOperation(value = "获取用户基础信息")
     @GetMapping("/user/me")
     public ResultBody getUserProfile() {
         OpenAuthUser user = OpenHelper.getAuthUser();
-        return ResultBody.success(user!=null?user.getUserProfile():null);
+        return ResultBody.success(user != null ? user.getUserProfile() : null);
     }
 
     /**
      * 获取第三方登录配置
+     *
      * @return
      */
-    @ApiOperation(value = "获取第三方登录配置")
-    @GetMapping("/thirdParty/config")
+    @ApiOperation(value = "获取第三方登录配置", notes = "任何人都可访问")
+    @GetMapping("/login/other/config")
     @ResponseBody
-    public ResultBody getThirdPartyConfig() {
+    public ResultBody getLoginOtherConfig() {
         Map<String, String> map = Maps.newHashMap();
         map.put("qq", qqAuthService.getAuthorizationUrl());
         map.put("wechat", wechatAuthService.getAuthorizationUrl());

@@ -1,26 +1,26 @@
 package com.github.lyd.base.provider.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.lyd.auth.client.model.BaseClientDetailsDto;
 import com.github.lyd.base.client.constants.BaseConstants;
 import com.github.lyd.base.client.model.BaseAppDto;
 import com.github.lyd.base.client.model.entity.BaseApp;
 import com.github.lyd.base.provider.mapper.BaseAppMapper;
 import com.github.lyd.base.provider.service.BaseAppService;
 import com.github.lyd.base.provider.service.BaseAuthorityService;
-import com.github.lyd.base.provider.service.feign.ClientDetailsClientRemote;
 import com.github.lyd.common.exception.OpenAlertException;
 import com.github.lyd.common.mapper.ExampleBuilder;
 import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.model.PageParams;
-import com.github.lyd.common.model.ResultBody;
 import com.github.lyd.common.security.OpenGrantedAuthority;
 import com.github.lyd.common.utils.RandomValueUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.provider.ClientDetails;
+import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
@@ -39,9 +39,9 @@ public class BaseAppServiceImpl implements BaseAppService {
     @Autowired
     private BaseAppMapper baseAppMapper;
     @Autowired
-    private ClientDetailsClientRemote clientDetailsClient;
-    @Autowired
     private BaseAuthorityService baseAuthorityService;
+    @Autowired
+    private JdbcClientDetailsService jdbcClientDetailsService;
 
     /**
      * 查询应用列表
@@ -85,7 +85,12 @@ public class BaseAppServiceImpl implements BaseAppService {
         BaseAppDto appDto = new BaseAppDto();
         BeanUtils.copyProperties(appInfo, appDto);
         try {
-            appDto.setClientInfo(clientDetailsClient.getClient(appInfo.getAppId()).getData());
+            ClientDetails clientDetails = jdbcClientDetailsService.loadClientByClientId(appId);
+            if (clientDetails == null) {
+                return null;
+            }
+            BaseClientDetailsDto clientInfo = new BaseClientDetailsDto(clientDetails);
+            appDto.setClientInfo(clientInfo);
         } catch (Exception e) {
             log.error("clientDetailsClient.getClient error:{}", e.getMessage());
         }
@@ -110,15 +115,11 @@ public class BaseAppServiceImpl implements BaseAppService {
             app.setIsPersist(0);
         }
         baseAppMapper.insertSelective(app);
-        String clientInfoJson = JSONObject.toJSONString(app);
+        String clientInfo = JSONObject.toJSONString(app);
         // 功能授权
         app.setAuthorities(getAuthorities(app.getAppId()));
-        // 保持客户端信息
-        ResultBody<Boolean> resp = clientDetailsClient.addClient(clientId, clientSecret, BaseConstants.DEFAULT_OAUTH2_GRANT_TYPES, "", app.getRedirectUrls(), app.getScopes(), app.getResourceIds(), app.getAuthorities(), app.getaccessTokenValidity(), app.getrefreshTokenValidity(), clientInfoJson);
-        if (!resp.isOk()) {
-            // 回滚事物
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-        }
+        BaseClientDetailsDto client = new BaseClientDetailsDto(app.getAppId(), app.getAppSecret(), app.getGrantTypes(), "", app.getRedirectUrls(), app.getScopes(), app.getResourceIds(), app.getAuthorities(), app.getaccessTokenValidity(), app.getaccessTokenValidity(), clientInfo);
+        jdbcClientDetailsService.addClientDetails(client);
         return app.getAppId();
     }
 
@@ -137,15 +138,12 @@ public class BaseAppServiceImpl implements BaseAppService {
         BeanUtils.copyProperties(app, appInfo);
         appInfo.setUpdateTime(new Date());
         baseAppMapper.updateByPrimaryKeySelective(appInfo);
-        String clientInfoJson = JSONObject.toJSONString(appInfo);
+        String clientInfo = JSONObject.toJSONString(appInfo);
         // 更新应用权限
         app.setAuthorities(getAuthorities(app.getAppId()));
         // 修改客户端信息
-        ResultBody<Boolean> resp = clientDetailsClient.updateClient(app.getAppId(), app.getGrantTypes(), "", app.getRedirectUrls(), app.getScopes(), app.getResourceIds(), app.getAuthorities(), app.getaccessTokenValidity(), app.getrefreshTokenValidity(), clientInfoJson);
-        if (!resp.isOk()) {
-            // 手动事物回滚
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-        }
+        BaseClientDetailsDto client = new BaseClientDetailsDto(app.getAppId(), app.getAppSecret(), app.getGrantTypes(), "", app.getRedirectUrls(), app.getScopes(), app.getResourceIds(), app.getAuthorities(), app.getaccessTokenValidity(), app.getaccessTokenValidity(), clientInfo);
+        jdbcClientDetailsService.updateClientDetails(client);
     }
 
     /**
@@ -167,13 +165,9 @@ public class BaseAppServiceImpl implements BaseAppService {
         String clientSecret = RandomValueUtils.uuid();
         appInfo.setAppSecret(clientSecret);
         appInfo.setUpdateTime(new Date());
-        int result = baseAppMapper.updateByPrimaryKeySelective(appInfo);
-        ResultBody<Boolean> resp = clientDetailsClient.resetSecret(appInfo.getAppId(), clientSecret);
-        if (!resp.isOk()) {
-            // 手动事物回滚
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-        }
-        return (result > 0 && resp.isOk()) ? clientSecret : null;
+        baseAppMapper.updateByPrimaryKeySelective(appInfo);
+        jdbcClientDetailsService.updateClientSecret(appInfo.getAppId(), clientSecret);
+        return clientSecret;
     }
 
     /**
@@ -192,15 +186,12 @@ public class BaseAppServiceImpl implements BaseAppService {
             throw new OpenAlertException(String.format("保留数据,不允许删除"));
         }
         baseAppMapper.deleteByPrimaryKey(appInfo.getAppId());
-        ResultBody<Boolean> resp = clientDetailsClient.removeClinet(appInfo.getAppId());
-        if (!resp.isOk()) {
-            // 回滚事物
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-        }
+        jdbcClientDetailsService.removeClientDetails(appInfo.getAppId());
     }
 
     /**
      * 获取权限标识
+     *
      * @param appId
      * @return
      */

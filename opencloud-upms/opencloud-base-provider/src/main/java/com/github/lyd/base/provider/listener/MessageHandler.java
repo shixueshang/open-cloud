@@ -36,7 +36,7 @@ public class MessageHandler {
     public void ScanApiResourceQueue(@Payload List<Map> list) {
         try {
             if (list != null && list.size() > 0) {
-                log.info("【apiResourceQueue监听到消息】" + list.toString());
+                log.info("【apiResourceQueue监听到消息】");
                 for (Map map : list) {
                     try {
                         BaseResourceApi api = BeanConvertUtils.mapToObject(map, BaseResourceApi.class);

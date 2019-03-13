@@ -55,10 +55,10 @@ open-cloud
     ├── opencloud-gateway-provider  -- API网关(port = 8888)  
     
 ├── opencloud-upms    --  通用权限模块
-    ├── opencloud-base-client    -- 基础支撑服务接口
-    ├── opencloud-base-provider  -- 基础支撑服务(port = 8233)  
-    ├── opencloud-auth-client    -- 认证服务接口
-    ├── opencloud-auth-provider  -- 认证服务(port = 8211)  
+    ├── opencloud-base-client    -- 平台基础服务接口
+    ├── opencloud-base-provider  -- 平台基础服务(port = 8233)  
+    ├── opencloud-auth-client    -- 平台认证服务接口
+    ├── opencloud-auth-provider  -- 平台认证服务(port = 8211)  
     
 ├── opencloud-app    -- 应用服务模块
     ├── opencloud-admin-provider  -- 运营后台服务(port = 8301)  
@@ -103,6 +103,11 @@ open-cloud
         + docs/config/common.properties  > common.properties
         
 4. 修改主pom.xml  
+
+    初始化
+    ``` bush
+        maven clean install
+    ```
     本地启动,默认不用修改
     ``` xml
         <!--Nacos配置中心地址-->
@@ -112,6 +117,7 @@ open-cloud
         <!--Nacos服务发现地址-->
         <discovery.server-addr>127.0.0.1:8848</discovery.server-addr>
     ```
+    
 5. 本地启动
      + BaseApplication
      + AuthApplication

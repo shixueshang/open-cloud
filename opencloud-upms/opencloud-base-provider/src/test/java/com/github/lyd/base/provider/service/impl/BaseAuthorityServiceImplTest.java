@@ -27,35 +27,43 @@ public class BaseAuthorityServiceImplTest extends BaseTest {
             browse.setMenuId(menu.getMenuId());
             browse.setOperationCode(menu.getMenuCode()+"Browse");
             browse.setOperationName("浏览");
-            browse.setOperationDesc(menu.getMenuName()+browse.getOperationName());
+            browse.setOperationDesc("查看列表");
             browse.setIsPersist(1);
             browse.setStatus(1);
             BaseResourceOperation create = new BaseResourceOperation();
             create.setMenuId(menu.getMenuId());
             create.setOperationCode(menu.getMenuCode()+"Create");
             create.setOperationName("创建");
-            create.setOperationDesc(menu.getMenuName()+create.getOperationName());
+            create.setOperationDesc("新增数据");
             create.setIsPersist(1);
             create.setStatus(1);
             BaseResourceOperation edit = new BaseResourceOperation();
             edit.setMenuId(menu.getMenuId());
             edit.setOperationCode(menu.getMenuCode()+"Edit");
             edit.setOperationName("编辑");
-            edit.setOperationDesc(menu.getMenuName()+edit.getOperationName());
+            edit.setOperationDesc("编辑数据");
             edit.setIsPersist(1);
             edit.setStatus(1);
             BaseResourceOperation remove = new BaseResourceOperation();
             remove.setMenuId(menu.getMenuId());
             remove.setOperationName("删除");
-            remove.setOperationDesc(menu.getMenuName()+remove.getOperationName());
+            remove.setOperationDesc("删除数据");
             remove.setOperationCode(menu.getMenuCode()+"Remove");
             remove.setIsPersist(1);
             remove.setStatus(1);
+            BaseResourceOperation detail = new BaseResourceOperation();
+            detail.setMenuId(menu.getMenuId());
+            detail.setOperationCode(menu.getMenuCode()+"Detail");
+            detail.setOperationName("详情");
+            detail.setOperationDesc("查看详情");
+            detail.setIsPersist(1);
+            detail.setStatus(1);
             try {
                 baseResourceOperationService.addOperation(browse);
                 baseResourceOperationService.addOperation(create);
                 baseResourceOperationService.addOperation(edit);
                 baseResourceOperationService.addOperation(remove);
+                baseResourceOperationService.addOperation(detail);
             }catch (Exception e){
             }
         }

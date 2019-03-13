@@ -77,7 +77,7 @@ public interface BaseRoleService {
      * @param roles
      * @return
      */
-    void saveMemberRoles(Long userId, Long... roles);
+    void saveMemberRoles(Long userId, String... roles);
 
     /**
      * 获取角色所有授权组员数量
