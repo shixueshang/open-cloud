@@ -28,7 +28,7 @@ public interface BaseRoleService {
      * @param keyword
      * @return
      */
-    PageList<BaseRole> findList(String keyword);
+    List<BaseRole> findList(String keyword);
 
     /**
      * 获取角色信息

@@ -42,7 +42,7 @@ public class GatewayRateLimitController {
             @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
     })
     @PostMapping("/gateway/limit/rate")
-    public ResultBody<PageList<GatewayRateLimit>> getRateLimitList(
+    public ResultBody<PageList<GatewayRateLimit>> getRateLimitListPage(
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit,
             @RequestParam(name = "keyword", required = false) String keyword

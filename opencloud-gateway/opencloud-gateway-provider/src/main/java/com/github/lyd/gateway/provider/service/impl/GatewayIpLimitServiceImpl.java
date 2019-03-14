@@ -56,9 +56,9 @@ public class GatewayIpLimitServiceImpl implements GatewayIpLimitService {
      * @return
      */
     @Override
-    public PageList<GatewayIpLimitApisDto> findBlackList() {
+    public List<GatewayIpLimitApisDto> findBlackList() {
         List<GatewayIpLimitApisDto> list = gatewayIpLimitApisMapper.selectIpLimitApisDto(0);
-        return new PageList<>(list);
+        return list;
     }
 
     /**
@@ -67,9 +67,9 @@ public class GatewayIpLimitServiceImpl implements GatewayIpLimitService {
      * @return
      */
     @Override
-    public PageList<GatewayIpLimitApisDto> findWhiteList() {
+    public List<GatewayIpLimitApisDto> findWhiteList() {
         List<GatewayIpLimitApisDto> list = gatewayIpLimitApisMapper.selectIpLimitApisDto(1);
-        return new PageList<>(list);
+        return list;
     }
 
     /**
@@ -78,11 +78,11 @@ public class GatewayIpLimitServiceImpl implements GatewayIpLimitService {
      * @return
      */
     @Override
-    public PageList<GatewayIpLimitApi> findIpLimitApiList(Long policyId) {
+    public List<GatewayIpLimitApi> findIpLimitApiList(Long policyId) {
         GatewayIpLimitApi rateLimitApi = new GatewayIpLimitApi();
         rateLimitApi.setPolicyId(policyId);
         List<GatewayIpLimitApi> list = gatewayIpLimitApisMapper.select(rateLimitApi);
-        return new PageList<>(list);
+        return list;
     }
 
     /**

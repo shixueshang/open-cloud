@@ -13,6 +13,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author liuyadu
  */
@@ -59,7 +61,7 @@ public class BaseApiController {
             @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
     })
     @PostMapping("/api/all")
-    public ResultBody<PageList<BaseResourceApi>> getApiAllList(String keyword) {
+    public ResultBody<List<BaseResourceApi>> getApiAllList(String keyword) {
         return ResultBody.success(apiService.findAllList(keyword));
     }
 
@@ -67,7 +69,7 @@ public class BaseApiController {
      * 获取接口资源
      *
      * @param apiId
-     * @return 
+     * @return
      */
     @ApiOperation(value = "获取接口资源", notes = "获取接口资源")
     @ApiImplicitParams({
@@ -101,6 +103,7 @@ public class BaseApiController {
             @ApiImplicitParam(name = "priority", required = false, value = "优先级越小越靠前", paramType = "form"),
             @ApiImplicitParam(name = "apiDesc", required = false, value = "描述", paramType = "form"),
             @ApiImplicitParam(name = "isOpen", required = false, defaultValue = "0", allowableValues = "0,1", value = "是否开放接口", paramType = "form"),
+            @ApiImplicitParam(name = "isAuth", required = false, defaultValue = "0", allowableValues = "0,1", value = "是否身份认证", paramType = "form")
     })
     @PostMapping("/api/add")
     public ResultBody<Long> addApi(
@@ -112,7 +115,8 @@ public class BaseApiController {
             @RequestParam(value = "status", defaultValue = "1") Integer status,
             @RequestParam(value = "priority", required = false, defaultValue = "0") Integer priority,
             @RequestParam(value = "apiDesc", required = false, defaultValue = "") String apiDesc,
-            @RequestParam(value = "isOpen", required = false, defaultValue = "0") Integer isOpen
+            @RequestParam(value = "isOpen", required = false, defaultValue = "0") Integer isOpen,
+            @RequestParam(value = "isAuth", required = false, defaultValue = "1") Integer isAuth
     ) {
         BaseResourceApi api = new BaseResourceApi();
         api.setApiCode(apiCode);
@@ -124,6 +128,7 @@ public class BaseApiController {
         api.setPriority(priority);
         api.setApiDesc(apiDesc);
         api.setIsOpen(isOpen);
+        api.setIsAuth(isAuth);
         Long result = apiService.addApi(api);
         return ResultBody.success(result);
     }
@@ -153,6 +158,7 @@ public class BaseApiController {
             @ApiImplicitParam(name = "priority", required = false, value = "优先级越小越靠前", paramType = "form"),
             @ApiImplicitParam(name = "apiDesc", required = false, value = "描述", paramType = "form"),
             @ApiImplicitParam(name = "isOpen", required = false, defaultValue = "0", allowableValues = "0,1", value = "是否开放接口", paramType = "form"),
+            @ApiImplicitParam(name = "isAuth", required = false, defaultValue = "0", allowableValues = "0,1", value = "是否身份认证", paramType = "form")
     })
     @PostMapping("/api/update")
     public ResultBody updateApi(
@@ -165,7 +171,8 @@ public class BaseApiController {
             @RequestParam(value = "status", defaultValue = "1") Integer status,
             @RequestParam(value = "priority", required = false, defaultValue = "0") Integer priority,
             @RequestParam(value = "apiDesc", required = false, defaultValue = "") String apiDesc,
-            @RequestParam(value = "isOpen", required = false, defaultValue = "0") Integer isOpen
+            @RequestParam(value = "isOpen", required = false, defaultValue = "0") Integer isOpen,
+            @RequestParam(value = "isAuth", required = false, defaultValue = "1") Integer isAuth
     ) {
         BaseResourceApi api = new BaseResourceApi();
         api.setApiId(apiId);
@@ -178,6 +185,7 @@ public class BaseApiController {
         api.setPriority(priority);
         api.setApiDesc(apiDesc);
         api.setIsOpen(isOpen);
+        api.setIsAuth(isAuth);
         apiService.updateApi(api);
         // 刷新网关
         openRestTemplate.refreshGateway();

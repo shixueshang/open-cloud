@@ -40,7 +40,7 @@ public class GatewayAccessLogsController {
             @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
     })
     @PostMapping("/gateway/access/logs")
-    public ResultBody<PageList<GatewayAccessLogs>> getAccessLogList(
+    public ResultBody<PageList<GatewayAccessLogs>> getAccessLogListPage(
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit,
             @RequestParam(name = "keyword", required = false) String keyword

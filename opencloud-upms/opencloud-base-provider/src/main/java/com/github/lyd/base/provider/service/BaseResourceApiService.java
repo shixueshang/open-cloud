@@ -4,6 +4,8 @@ import com.github.lyd.base.client.model.entity.BaseResourceApi;
 import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.model.PageParams;
 
+import java.util.List;
+
 /**
  * 接口资源管理
  * @author liuyadu
@@ -23,7 +25,7 @@ public interface BaseResourceApiService {
      * @param keyword
      * @return
      */
-    PageList<BaseResourceApi> findAllList(String keyword);
+    List<BaseResourceApi> findAllList(String keyword);
 
     /**
      * 根据主键获取接口

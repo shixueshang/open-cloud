@@ -6,6 +6,8 @@ import com.github.lyd.gateway.client.model.GatewayIpLimitApisDto;
 import com.github.lyd.gateway.client.model.entity.GatewayIpLimit;
 import com.github.lyd.gateway.client.model.entity.GatewayIpLimitApi;
 
+import java.util.List;
+
 /**
  * 网关IP访问控制
  *
@@ -26,21 +28,21 @@ public interface GatewayIpLimitService {
      *
      * @return
      */
-    PageList<GatewayIpLimitApisDto> findBlackList();
+    List<GatewayIpLimitApisDto> findBlackList();
 
     /**
      * 查询黑名单
      *
      * @return
      */
-    PageList<GatewayIpLimitApisDto> findWhiteList();
+    List<GatewayIpLimitApisDto> findWhiteList();
 
     /**
      * 查询策略已绑定API列表
      *
      * @return
      */
-    PageList<GatewayIpLimitApi> findIpLimitApiList(Long policyId);
+    List<GatewayIpLimitApi> findIpLimitApiList(Long policyId);
 
     /**
      * 获取IP限制策略

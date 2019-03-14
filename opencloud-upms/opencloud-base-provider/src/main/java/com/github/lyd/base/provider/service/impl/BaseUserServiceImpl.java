@@ -81,13 +81,13 @@ public class BaseUserServiceImpl implements BaseUserService {
      * @return
      */
     @Override
-    public PageList<BaseUser> findList(String keyword) {
+    public List<BaseUser> findList(String keyword) {
         ExampleBuilder builder = new ExampleBuilder(BaseUser.class);
         Example example = builder.criteria()
                 .orLike("userName", keyword).end().build();
         example.orderBy("userId").asc();
         List<BaseUser> list = baseUserMapper.selectByExample(example);
-        return new PageList(list);
+        return list;
     }
 
     /**

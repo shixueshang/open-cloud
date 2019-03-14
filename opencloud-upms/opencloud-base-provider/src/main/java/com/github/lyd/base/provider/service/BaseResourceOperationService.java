@@ -5,6 +5,8 @@ import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.model.PageParams;
 import com.github.lyd.base.client.model.entity.BaseResourceOperation;
 
+import java.util.List;
+
 /**
  * 操作资源管理
  * @author liuyadu
@@ -32,7 +34,7 @@ public interface BaseResourceOperationService {
      * @param menuId
      * @return
      */
-    PageList<BaseResourceOperationDto> findListByMenuId(Long menuId);
+    List<BaseResourceOperationDto> findListByMenuId(Long menuId);
 
     /**
      * 检查操作编码是否存在

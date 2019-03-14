@@ -51,11 +51,11 @@ public class GatewayRouteServiceImpl implements GatewayRouteService {
      * @return
      */
     @Override
-    public PageList<GatewayRoute> findRouteList() {
+    public List<GatewayRoute> findRouteList() {
         ExampleBuilder builder = new ExampleBuilder(GatewayRoute.class);
         Example example = builder.criteria().andEqualTo("status", BaseConstants.ENABLED).end().build();
         List<GatewayRoute> list = gatewayRouteMapper.selectByExample(example);
-        return new PageList(list);
+        return list;
     }
 
     /**

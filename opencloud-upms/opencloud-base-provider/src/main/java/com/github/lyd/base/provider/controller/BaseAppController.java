@@ -41,7 +41,7 @@ public class BaseAppController implements BaseAppRemoteApi {
             @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
     })
     @PostMapping("/app")
-    public ResultBody<PageList<BaseApp>> getAppList(
+    public ResultBody<PageList<BaseApp>> getAppListPage(
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit,
             @RequestParam(name = "keyword", required = false) String keyword

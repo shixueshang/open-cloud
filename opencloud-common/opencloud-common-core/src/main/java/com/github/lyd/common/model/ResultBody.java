@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * @author admin
  */
-public class ResultBody<T extends Object> implements Serializable {
+public class ResultBody<T> implements Serializable {
     private static final long serialVersionUID = -6190689122701100762L;
     /**
      * 国际化配置

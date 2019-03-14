@@ -1,6 +1,6 @@
 package com.github.lyd.auth.provider.service.impl;
 
-import com.github.lyd.auth.provider.service.feign.BaseUserAccountRestRemoteService;
+import com.github.lyd.auth.provider.service.feign.BaseUserAccountRemoteService;
 import com.github.lyd.base.client.constants.BaseConstants;
 import com.github.lyd.base.client.model.BaseUserAccountDto;
 import com.github.lyd.common.model.ResultBody;
@@ -26,7 +26,7 @@ import java.util.Map;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    private BaseUserAccountRestRemoteService systemAccountClient;
+    private BaseUserAccountRemoteService baseUserAccountRemoteService;
     /**
      * 认证中心名称
      */
@@ -36,7 +36,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
-        ResultBody<BaseUserAccountDto> resp = systemAccountClient.localLogin(username);
+        ResultBody<BaseUserAccountDto> resp = baseUserAccountRemoteService.localLogin(username);
         BaseUserAccountDto account = resp.getData();
         if (account == null) {
             throw new UsernameNotFoundException("系统用户 " + username + " 不存在!");

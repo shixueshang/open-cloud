@@ -75,16 +75,16 @@ public class AccessLocator {
 
     private RateLimitProperties rateLimitProperties;
     private ZuulRouteLocator zuulRoutesLocator;
-    private BaseAuthorityRemoteService baseAuthorityRestService;
+    private BaseAuthorityRemoteService baseAuthorityRemoteService;
     private GatewayIpLimitService gatewayIpLimitService;
     private GatewayRateLimitService gatewayRateLimitService;
     private StringToMatchTypeConverter converter;
 
 
-    public AccessLocator(ZuulRouteLocator zuulRoutesLocator, RateLimitProperties rateLimitProperties, BaseAuthorityRemoteService baseAuthorityRestService, GatewayIpLimitService gatewayIpLimitService, GatewayRateLimitService gatewayRateLimitService) {
+    public AccessLocator(ZuulRouteLocator zuulRoutesLocator, RateLimitProperties rateLimitProperties, BaseAuthorityRemoteService baseAuthorityRemoteService, GatewayIpLimitService gatewayIpLimitService, GatewayRateLimitService gatewayRateLimitService) {
         this.zuulRoutesLocator = zuulRoutesLocator;
         this.rateLimitProperties = rateLimitProperties;
-        this.baseAuthorityRestService = baseAuthorityRestService;
+        this.baseAuthorityRemoteService = baseAuthorityRemoteService;
         this.gatewayIpLimitService = gatewayIpLimitService;
         this.gatewayRateLimitService = gatewayRateLimitService;
         this.converter = new StringToMatchTypeConverter();
@@ -131,7 +131,7 @@ public class AccessLocator {
         Collection<ConfigAttribute> array;
         ConfigAttribute cfg;
         try {
-            authorityList = baseAuthorityRestService.getAuthorityList(null,null).getData();
+            authorityList = baseAuthorityRemoteService.getAuthorityList(null,null).getData();
             if (authorityList != null) {
                 for (BaseAuthorityDto item : authorityList) {
                     String path = item.getPath();
@@ -163,7 +163,7 @@ public class AccessLocator {
         log.info("=============加载IP黑名单==============");
         ipBlackList = Lists.newArrayList();
         try {
-            ipBlackList = gatewayIpLimitService.findBlackList().getList();
+            ipBlackList = gatewayIpLimitService.findBlackList();
             if (ipBlackList != null) {
                 for (GatewayIpLimitApisDto item : ipBlackList) {
                     item.setPath(getZuulPath(item.getServiceId(), item.getPath()));
@@ -181,7 +181,7 @@ public class AccessLocator {
         log.info("=============加载IP白名单==============");
         ipWhiteList = Lists.newArrayList();
         try {
-            ipWhiteList = gatewayIpLimitService.findWhiteList().getList();
+            ipWhiteList = gatewayIpLimitService.findWhiteList();
             if (ipWhiteList != null) {
                 for (GatewayIpLimitApisDto item : ipWhiteList) {
                     item.setPath(getZuulPath(item.getServiceId(), item.getPath()));
@@ -220,7 +220,7 @@ public class AccessLocator {
     protected Map<String, List<RateLimitProperties.Policy>> loadRateLimitPolicy() {
         Map<String, List<RateLimitProperties.Policy>> policyMap = Maps.newLinkedHashMap();
         try {
-            rateLimitApiList = gatewayRateLimitService.findRateLimitApiList().getList();
+            rateLimitApiList = gatewayRateLimitService.findRateLimitApiList();
             if (rateLimitApiList != null && rateLimitApiList.size() > 0) {
                 for (GatewayRateLimitApisDto item : rateLimitApiList) {
                     List<RateLimitProperties.Policy> policyList = policyMap.get(item.getServiceId());

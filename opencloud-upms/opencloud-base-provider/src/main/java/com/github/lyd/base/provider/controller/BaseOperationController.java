@@ -14,6 +14,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author liuyadu
  */
@@ -37,7 +39,7 @@ public class BaseOperationController {
             @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
     })
     @PostMapping("/operation")
-    public ResultBody<PageList<BaseResourceOperationDto>> getOperationList(
+    public ResultBody<PageList<BaseResourceOperationDto>> getOperationListPage(
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit,
             @RequestParam(name = "keyword", required = false) String keyword
@@ -57,7 +59,7 @@ public class BaseOperationController {
             @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
     })
     @PostMapping("/operation/menu")
-    public ResultBody<PageList<BaseResourceOperationDto>> getOperationAllList(Long menuId) {
+    public ResultBody<List<BaseResourceOperationDto>> getOperationAllList(Long menuId) {
         return ResultBody.success(baseResourceOperationService.findListByMenuId(menuId));
     }
 

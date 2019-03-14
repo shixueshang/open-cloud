@@ -11,6 +11,7 @@ import java.util.Date;
 
 /**
  * 授权资源信息
+ *
  * @author liuyadu
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -68,6 +69,26 @@ public class BaseAuthorityDto implements Serializable {
      */
     private String path;
 
+    private int priority;
+
+    public int getPriority() {
+        priority = 0;
+        if (menu != null) {
+            priority = menu.getPriority();
+        }
+        if (operation != null) {
+            priority = operation.getPriority();
+        }
+        if (api != null) {
+            priority = api.getPriority();
+        }
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -85,7 +106,7 @@ public class BaseAuthorityDto implements Serializable {
             resourceType = ResourceType.operation.name();
         }
         if (api != null) {
-            resourceType =  ResourceType.api.name();
+            resourceType = ResourceType.api.name();
         }
         return resourceType;
     }

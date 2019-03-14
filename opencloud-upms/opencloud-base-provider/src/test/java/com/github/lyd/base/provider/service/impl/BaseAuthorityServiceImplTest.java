@@ -4,12 +4,13 @@ import com.github.lyd.base.client.model.entity.BaseResourceMenu;
 import com.github.lyd.base.client.model.entity.BaseResourceOperation;
 import com.github.lyd.base.provider.service.BaseResourceMenuService;
 import com.github.lyd.base.provider.service.BaseResourceOperationService;
-import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.test.BaseTest;
 import com.github.lyd.common.utils.RandomValueUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.util.List;
 
 public class BaseAuthorityServiceImplTest extends BaseTest {
 
@@ -20,8 +21,8 @@ public class BaseAuthorityServiceImplTest extends BaseTest {
 
     @Test
     public void save() {
-      PageList<BaseResourceMenu> pageList =  baseResourceMenuService.findAllList("");
-        for (Object object:pageList.getList()) {
+      List<BaseResourceMenu> list =  baseResourceMenuService.findAllList("");
+        for (Object object:list) {
             BaseResourceMenu menu = (BaseResourceMenu)object;
             BaseResourceOperation browse = new BaseResourceOperation();
             browse.setMenuId(menu.getMenuId());

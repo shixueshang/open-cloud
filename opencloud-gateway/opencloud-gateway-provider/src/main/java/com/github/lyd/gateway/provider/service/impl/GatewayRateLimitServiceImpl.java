@@ -55,9 +55,9 @@ public class GatewayRateLimitServiceImpl implements GatewayRateLimitService {
      * @return
      */
     @Override
-    public PageList<GatewayRateLimitApisDto> findRateLimitApiList() {
+    public List<GatewayRateLimitApisDto> findRateLimitApiList() {
         List<GatewayRateLimitApisDto> list = gatewayRateLimitApisMapper.selectRateLimitApisDto();
-        return new PageList<>(list);
+        return list;
     }
 
     /**
@@ -67,11 +67,11 @@ public class GatewayRateLimitServiceImpl implements GatewayRateLimitService {
      * @return
      */
     @Override
-    public PageList<GatewayRateLimitApi> findRateLimitApiList(Long policyId) {
+    public List<GatewayRateLimitApi> findRateLimitApiList(Long policyId) {
         GatewayRateLimitApi rateLimitApi = new GatewayRateLimitApi();
         rateLimitApi.setPolicyId(policyId);
         List<GatewayRateLimitApi> list = gatewayRateLimitApisMapper.select(rateLimitApi);
-        return new PageList<>(list);
+        return list;
     }
 
     /**

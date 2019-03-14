@@ -79,7 +79,7 @@ public class ZuulRouteLocator extends SimpleRouteLocator {
     public Map<String, ZuulRoute> loadRouteWithDb() {
         Map<String, ZuulProperties.ZuulRoute> routes = Maps.newLinkedHashMap();
         try {
-            routeList = gatewayRouteService.findRouteList().getList();
+            routeList = gatewayRouteService.findRouteList();
             if (routeList != null && routeList.size() > 0) {
                 for (GatewayRoute result : routeList) {
                     if (StringUtils.isEmpty(result.getPath())) {

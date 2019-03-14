@@ -397,7 +397,7 @@ INSERT INTO `base_resource_menu` VALUES ('8', '1', 'systemRole', '角色信息',
 INSERT INTO `base_resource_menu` VALUES ('9', '1', 'systemApp', '应用信息', '应用信息、授权', '/', 'system/app/index', '', '_self', '0', '1', '2018-12-27 15:41:52', '2018-12-29 14:56:11', '1');
 INSERT INTO `base_resource_menu` VALUES ('10', '1', 'systemUser', '系统用户', '', '/', 'system/user/index', '', '_self', '0', '1', '2018-12-27 15:46:29', '2018-12-29 14:56:28', '1');
 INSERT INTO `base_resource_menu` VALUES ('11', '13', 'apiDebug', '接口调试', 'swagger接口调试', 'http://', 'localhost:8888', '', '_self', '0', '1', '2019-01-10 20:47:19', '2019-02-25 00:27:27', '1');
-INSERT INTO `base_resource_menu` VALUES ('12', '13', 'gatewayLogs', '访问日志', '', '/', 'system/access-logs/index', '', '_self', '0', '1', '2019-01-28 02:37:42', '2019-02-25 00:16:40', '1');
+INSERT INTO `base_resource_menu` VALUES ('12', '13', 'gatewayLogs', '访问日志', '', '/', 'gateway/logs/index', '', '_self', '0', '1', '2019-01-28 02:37:42', '2019-02-25 00:16:40', '1');
 INSERT INTO `base_resource_menu` VALUES ('13', '0', 'gateway', 'API网关', '', '/', '', '', '_self', '0', '1', '2019-02-25 00:15:09', '2019-02-25 00:15:09', '0');
 INSERT INTO `base_resource_menu` VALUES ('14', '0', 'help', '帮助文档', '', '/', '', '', '_self', '0', '1', '2019-02-25 00:26:44', '2019-02-25 00:26:44', '0');
 INSERT INTO `base_resource_menu` VALUES ('15', '14', 'wiki', '使用手册', 'wiki', 'https://', 'gitee.com/liuyadu/open-cloud/wikis/pages', '', '_self', '0', '1', '2019-02-25 01:02:44', '2019-02-25 01:03:37', '0');

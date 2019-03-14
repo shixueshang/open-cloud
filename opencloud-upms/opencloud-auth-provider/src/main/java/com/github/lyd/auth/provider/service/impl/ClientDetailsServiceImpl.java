@@ -1,7 +1,7 @@
 package com.github.lyd.auth.provider.service.impl;
 
 import com.github.lyd.auth.client.model.ClientDetailsDto;
-import com.github.lyd.auth.provider.service.feign.BaseAuthorityRestRemoteService;
+import com.github.lyd.auth.provider.service.feign.BaseAuthorityRemoteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,14 +28,14 @@ public class ClientDetailsServiceImpl implements ClientDetailsService {
     private JdbcClientDetailsService jdbcClientDetailsService;
 
     @Autowired
-    private BaseAuthorityRestRemoteService baseAuthorityRestRestService;
+    private BaseAuthorityRemoteService baseAuthorityRemoteService;
 
     @Override
     public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
         ClientDetails details = jdbcClientDetailsService.loadClientByClientId(clientId);
         if (details != null) {
             // 获取应用权限
-            List<GrantedAuthority> authorities = baseAuthorityRestRestService.getGrantedAppAuthority(clientId).getData();
+            List<GrantedAuthority> authorities = baseAuthorityRemoteService.getGrantedAppAuthority(clientId).getData();
             ClientDetailsDto clientDetailsDto = new ClientDetailsDto(details, authorities);
             return clientDetailsDto;
         }

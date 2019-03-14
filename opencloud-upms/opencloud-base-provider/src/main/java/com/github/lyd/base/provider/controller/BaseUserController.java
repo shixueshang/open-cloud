@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * 系统用户信息
  *
@@ -68,7 +70,7 @@ public class BaseUserController {
             @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
     })
     @PostMapping("/user/all")
-    public ResultBody<PageList<BaseRole>> getUserAllList(String keyword) {
+    public ResultBody<List<BaseRole>> getUserAllList(String keyword) {
         return ResultBody.success(baseUserService.findList(keyword));
     }
 
@@ -171,9 +173,9 @@ public class BaseUserController {
      */
     @ApiOperation(value = "获取用户已分配角色", notes = "获取用户已分配角色")
     @PostMapping("/user/roles")
-    public ResultBody<PageList<BaseRole>> getUserRoles(
+    public ResultBody<List<BaseRole>> getUserRoles(
             @RequestParam(value = "userId") Long userId
     ) {
-        return ResultBody.success(new PageList<>(baseRoleService.getUserRoles(userId)));
+        return ResultBody.success(baseRoleService.getUserRoles(userId));
     }
 }

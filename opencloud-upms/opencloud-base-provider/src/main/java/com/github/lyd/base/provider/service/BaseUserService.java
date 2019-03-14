@@ -5,6 +5,8 @@ import com.github.lyd.base.client.model.entity.BaseUser;
 import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.model.PageParams;
 
+import java.util.List;
+
 /**
  * 系统用户资料管理
  *
@@ -45,7 +47,7 @@ public interface BaseUserService {
      * @param keyword
      * @return
      */
-    PageList<BaseUser> findList(String keyword);
+    List<BaseUser> findList(String keyword);
 
     /**
      * 依据登录名查询系统用户信息

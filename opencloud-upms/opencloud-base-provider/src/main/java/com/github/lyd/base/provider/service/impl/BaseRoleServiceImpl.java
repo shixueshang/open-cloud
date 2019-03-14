@@ -59,14 +59,14 @@ public class BaseRoleServiceImpl implements BaseRoleService {
      * @return
      */
     @Override
-    public PageList<BaseRole> findList(String keyword) {
+    public List<BaseRole> findList(String keyword) {
         ExampleBuilder builder = new ExampleBuilder(BaseRole.class);
         Example example = builder.criteria()
                 .orLike("roleCode", keyword)
                 .orLike("roleName", keyword).end().build();
         example.orderBy("roleId").asc();
         List<BaseRole> list = baseRoleMapper.selectByExample(example);
-        return new PageList(list);
+        return list;
     }
 
     /**

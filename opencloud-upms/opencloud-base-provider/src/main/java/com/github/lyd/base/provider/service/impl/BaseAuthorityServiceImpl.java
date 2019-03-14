@@ -8,6 +8,8 @@ import com.github.lyd.base.provider.mapper.BaseAuthorityMapper;
 import com.github.lyd.base.provider.mapper.BaseRoleAuthorityMapper;
 import com.github.lyd.base.provider.mapper.BaseUserAuthorityMapper;
 import com.github.lyd.base.provider.service.*;
+import com.github.lyd.common.constants.CommonConstants;
+import com.github.lyd.common.exception.OpenAlertException;
 import com.github.lyd.common.mapper.ExampleBuilder;
 import com.github.lyd.common.security.OpenGrantedAuthority;
 import com.google.common.collect.Lists;
@@ -50,6 +52,8 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
     private BaseResourceApiService baseResourceApiService;
     @Autowired
     private BaseRoleService baseRoleService;
+    @Autowired
+    private BaseUserService baseUserService;
 
     private final static String SEPARATOR = ":";
 
@@ -59,7 +63,7 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
     /**
      * 获取所有可用权限详情
      *
-     * @param type = null 查询全部  type = 1 获取菜单和操作 type = 2 获取API
+     * @param type      = null 查询全部  type = 1 获取菜单和操作 type = 2 获取API
      * @param serviceId
      * @return
      */
@@ -68,7 +72,9 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
         Map map = Maps.newHashMap();
         map.put("type", type);
         map.put("serviceId", serviceId);
-        return baseAuthorityMapper.selectBaseAuthorityDto(map);
+        List<BaseAuthorityDto> authorities = baseAuthorityMapper.selectBaseAuthorityDto(map);
+        return authorities;
+
     }
 
     /**
@@ -148,17 +154,35 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
         if (resourceId == null || resourceType == null) {
             return null;
         }
-        BaseAuthority authority = new BaseAuthority();
+        BaseAuthority authority = buildAuthority(resourceId, resourceType);
+        if (authority == null) {
+            return null;
+        }
+        return baseAuthorityMapper.selectOne(authority);
+    }
+
+    /**
+     * 构建权限对象
+     *
+     * @param resourceId
+     * @param resourceType
+     * @return
+     */
+    private BaseAuthority buildAuthority(Long resourceId, ResourceType resourceType) {
+        BaseAuthority authority = null;
         if (ResourceType.menu.equals(resourceType)) {
+            authority = new BaseAuthority();
             authority.setMenuId(resourceId);
         }
         if (ResourceType.operation.equals(resourceType)) {
+            authority = new BaseAuthority();
             authority.setOperationId(resourceId);
         }
         if (ResourceType.api.equals(resourceType)) {
+            authority = new BaseAuthority();
             authority.setApiId(resourceId);
         }
-        return baseAuthorityMapper.selectOne(authority);
+        return authority;
     }
 
     /**
@@ -170,10 +194,14 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
      */
     @Override
     public void removeAuthority(Long resourceId, ResourceType resourceType) {
-        BaseAuthority baseAuthority = getAuthority(resourceId, resourceType);
-        if (baseAuthority != null) {
-            baseAuthorityMapper.deleteByPrimaryKey(baseAuthority);
+        if (isGranted(resourceId, resourceType)) {
+            throw new OpenAlertException(String.format("资源已被授权,不允许删除!取消授权后,再次尝试!"));
         }
+        BaseAuthority authority = buildAuthority(resourceId, resourceType);
+        if (authority == null) {
+            return;
+        }
+        baseAuthorityMapper.delete(authority);
     }
 
     /**
@@ -248,6 +276,13 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
         if (userId == null) {
             return;
         }
+        BaseUser user = baseUserService.getProfile(userId);
+        if (user == null) {
+            return;
+        }
+        if (CommonConstants.ROOT.equals(user.getUserName())) {
+            throw new OpenAlertException("默认用户无需授权!");
+        }
         // 清空用户已有授权
         ExampleBuilder builder = new ExampleBuilder(BaseUserAuthority.class);
         Example example = builder.criteria()
@@ -282,10 +317,9 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
             return;
         }
         // 清空应用已有授权
-        ExampleBuilder builder = new ExampleBuilder(BaseAppAuthority.class);
-        Example example = builder.criteria()
-                .andEqualTo("appId", appId).end().build();
-        baseAppAuthorityMapper.deleteByExample(example);
+        BaseAppAuthority appAuthority = new BaseAppAuthority();
+        appAuthority.setAppId(appId);
+        baseAppAuthorityMapper.delete(appAuthority);
         List<BaseAppAuthority> authorities = Lists.newArrayList();
         BaseAppAuthority authority = null;
         if (authorityIds != null && authorityIds.length > 0) {
@@ -299,6 +333,26 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
             // 批量添加授权
             baseAppAuthorityMapper.insertList(authorities);
         }
+    }
+
+    /**
+     * 应用授权-添加单个权限
+     *
+     * @param appId
+     * @param expireTime
+     * @param authorityId
+     */
+    @Override
+    public void addAppAuthority(String appId, Date expireTime, String authorityId) {
+        BaseAppAuthority appAuthority = new BaseAppAuthority();
+        appAuthority.setAppId(appId);
+        appAuthority.setAuthorityId(Long.parseLong(authorityId));
+        int count = baseAppAuthorityMapper.selectCount(appAuthority);
+        if (count > 0) {
+            return;
+        }
+        appAuthority.setExpireTime(expireTime);
+        baseAppAuthorityMapper.insertSelective(appAuthority);
     }
 
     /**
@@ -327,7 +381,7 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
      * 获取用户已授权权限
      *
      * @param userId
-     * @param root 超级管理员
+     * @param root   超级管理员
      * @return
      */
     @Override
@@ -395,6 +449,8 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
         authorities.addAll(h);
         return authorities;
     }
+
+
 
 
 }

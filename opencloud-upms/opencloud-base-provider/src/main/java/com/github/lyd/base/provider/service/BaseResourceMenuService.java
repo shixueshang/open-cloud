@@ -1,9 +1,11 @@
 package com.github.lyd.base.provider.service;
 
 import com.github.lyd.base.client.model.BaseResourceMenuDto;
+import com.github.lyd.base.client.model.entity.BaseResourceMenu;
 import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.model.PageParams;
-import com.github.lyd.base.client.model.entity.BaseResourceMenu;
+
+import java.util.List;
 
 /**
  * 菜单资源管理
@@ -24,14 +26,14 @@ public interface BaseResourceMenuService {
      * @param keyword
      * @return
      */
-    PageList<BaseResourceMenu> findAllList(String keyword);
+    List<BaseResourceMenu> findAllList(String keyword);
 
     /**
      * 获取菜单和操作列表
      * @param keyword
      * @return
      */
-    PageList<BaseResourceMenuDto> findWithActionList(String keyword);
+    List<BaseResourceMenuDto> findWithActionList(String keyword);
 
     /**
      * 根据主键获取菜单

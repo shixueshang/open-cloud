@@ -2,7 +2,7 @@ package com.github.lyd.auth.provider.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.lyd.auth.client.constants.AuthConstants;
-import com.github.lyd.auth.provider.service.feign.BaseUserAccountRestRemoteService;
+import com.github.lyd.auth.provider.service.feign.BaseUserAccountRemoteService;
 import com.github.lyd.auth.provider.service.impl.GiteeAuthServiceImpl;
 import com.github.lyd.auth.provider.service.impl.QQAuthServiceImpl;
 import com.github.lyd.auth.provider.service.impl.WechatAuthServiceImpl;
@@ -43,7 +43,7 @@ public class IndexController {
     @Autowired
     private CommonProperties commonProperties;
     @Autowired
-    private BaseUserAccountRestRemoteService systemAccountClient;
+    private BaseUserAccountRemoteService systemAccountClient;
     @Autowired
     private QQAuthServiceImpl qqAuthService;
     @Autowired

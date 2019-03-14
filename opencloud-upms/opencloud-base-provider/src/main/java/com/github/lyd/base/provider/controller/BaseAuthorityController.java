@@ -2,10 +2,11 @@ package com.github.lyd.base.provider.controller;
 
 import com.github.lyd.base.client.api.BaseAuthorityRemoteApi;
 import com.github.lyd.base.client.model.BaseAuthorityDto;
+import com.github.lyd.base.client.model.entity.BaseUser;
 import com.github.lyd.base.provider.service.BaseAuthorityService;
+import com.github.lyd.base.provider.service.BaseUserService;
 import com.github.lyd.common.constants.CommonConstants;
 import com.github.lyd.common.http.OpenRestTemplate;
-import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.model.ResultBody;
 import com.github.lyd.common.security.OpenGrantedAuthority;
 import com.github.lyd.common.security.OpenHelper;
@@ -37,6 +38,8 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
     private BaseAuthorityService baseAuthorityService;
     @Autowired
     private OpenRestTemplate openRestTemplate;
+    @Autowired
+    private BaseUserService baseUserService;
 
     /**
      * 获取权限列表
@@ -50,7 +53,8 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
             @RequestParam(value = "type",required = false) String type,
             @RequestParam(value = "serviceId",required = false) String serviceId
     ) {
-        return ResultBody.success(baseAuthorityService.findAuthorityDto(type, serviceId));
+        List<BaseAuthorityDto> result = baseAuthorityService.findAuthorityDto(type, serviceId);
+        return ResultBody.success(result);
     }
 
 
@@ -164,7 +168,8 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
     public ResultBody<List<GrantedAuthority>> getGrantedUserAuthority(
             @RequestParam(value = "userId") Long userId
     ) {
-        List<OpenGrantedAuthority> result = baseAuthorityService.findUserGrantedAuthority(userId,false);
+        BaseUser user = baseUserService.getProfile(userId);
+        List<OpenGrantedAuthority> result = baseAuthorityService.findUserGrantedAuthority(userId,CommonConstants.ROOT.equals(user.getUserName()));
         return ResultBody.success(result);
     }
 
@@ -185,7 +190,7 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
             @RequestParam(value = "appId") String appId
     ) {
         List<OpenGrantedAuthority> result = baseAuthorityService.findAppGrantedAuthority(appId);
-        return ResultBody.success(new PageList(result));
+        return ResultBody.success(result);
     }
 
     /**

@@ -41,7 +41,7 @@ public class GatewayRouteController {
             @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
     })
     @PostMapping("/gateway/route")
-    public ResultBody<PageList<GatewayRoute>> getRouteList(
+    public ResultBody<PageList<GatewayRoute>> getRouteListPage(
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit,
             @RequestParam(name = "keyword", required = false) String keyword

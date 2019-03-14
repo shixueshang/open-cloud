@@ -63,14 +63,14 @@ public class BaseResourceMenuServiceImpl implements BaseResourceMenuService {
      * @return
      */
     @Override
-    public PageList<BaseResourceMenu> findAllList(String keyword) {
+    public List<BaseResourceMenu> findAllList(String keyword) {
         ExampleBuilder builder = new ExampleBuilder(BaseResourceMenu.class);
         Example example = builder.criteria()
                 .orLike("menuCode", keyword)
                 .orLike("menuName", keyword).end().build();
         example.orderBy("menuId").asc().orderBy("priority").asc();
         List<BaseResourceMenu> list = baseResourceMenuMapper.selectByExample(example);
-        return new PageList(list);
+        return list;
     }
 
     /**
@@ -80,9 +80,9 @@ public class BaseResourceMenuServiceImpl implements BaseResourceMenuService {
      * @return
      */
     @Override
-    public PageList<BaseResourceMenuDto> findWithActionList(String keyword) {
+    public List<BaseResourceMenuDto> findWithActionList(String keyword) {
         List<BaseResourceMenuDto> list = baseResourceMenuMapper.selectWithActionList();
-        return new PageList(list);
+        return list;
     }
 
     /**
@@ -247,9 +247,6 @@ public class BaseResourceMenuServiceImpl implements BaseResourceMenuService {
         BaseResourceMenu menu = getMenu(menuId);
         if (menu != null && menu.getIsPersist().equals(BaseConstants.ENABLED)) {
             throw new OpenAlertException(String.format("保留数据,不允许删除!"));
-        }
-       if (baseAuthorityService.isGranted(menuId, ResourceType.menu)) {
-            throw new OpenAlertException(String.format("资源已被授权,不允许删除!取消授权后,再次尝试!"));
         }
         baseAuthorityService.removeAuthority(menuId,ResourceType.menu);
         baseResourceMenuMapper.deleteByPrimaryKey(menuId);

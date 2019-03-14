@@ -4,6 +4,8 @@ import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.model.PageParams;
 import com.github.lyd.gateway.client.model.entity.GatewayRoute;
 
+import java.util.List;
+
 /**
  * 路由管理
  *
@@ -24,7 +26,7 @@ public interface GatewayRouteService {
      *
      * @return
      */
-    PageList<GatewayRoute> findRouteList();
+    List<GatewayRoute> findRouteList();
 
     /**
      * 获取路由信息

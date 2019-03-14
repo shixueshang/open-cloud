@@ -13,6 +13,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author liuyadu
  */
@@ -37,7 +39,7 @@ public class BaseRoleController {
             @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
     })
     @PostMapping("/role")
-    public ResultBody<PageList<BaseRole>> getRoleList(
+    public ResultBody<PageList<BaseRole>> getRoleListPage(
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit,
             @RequestParam(name = "keyword", required = false) String keyword
@@ -56,7 +58,7 @@ public class BaseRoleController {
             @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
     })
     @PostMapping("/role/all")
-    public ResultBody<PageList<BaseRole>> getRoleAllList(String keyword) {
+    public ResultBody<List<BaseRole>> getRoleAllList(String keyword) {
         return ResultBody.success(baseRoleService.findList(keyword));
     }
 

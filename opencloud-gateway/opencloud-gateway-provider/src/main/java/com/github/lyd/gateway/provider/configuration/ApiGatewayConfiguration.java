@@ -82,8 +82,8 @@ public class ApiGatewayConfiguration {
      * @return
      */
     @Bean
-    public AccessLocator accessLocator(ZuulRouteLocator zuulRoutesLocator, RateLimitProperties rateLimitProperties, BaseAuthorityRemoteService baseAuthorityRestService, GatewayIpLimitService gatewayIpLimitService, GatewayRateLimitService gatewayRateLimitService) {
-        accessLocator = new AccessLocator(zuulRoutesLocator,rateLimitProperties, baseAuthorityRestService, gatewayIpLimitService,gatewayRateLimitService);
+    public AccessLocator accessLocator(ZuulRouteLocator zuulRoutesLocator, RateLimitProperties rateLimitProperties, BaseAuthorityRemoteService baseAuthorityRemoteService, GatewayIpLimitService gatewayIpLimitService, GatewayRateLimitService gatewayRateLimitService) {
+        accessLocator = new AccessLocator(zuulRoutesLocator,rateLimitProperties, baseAuthorityRemoteService, gatewayIpLimitService,gatewayRateLimitService);
         return accessLocator;
     }
 
@@ -93,8 +93,8 @@ public class ApiGatewayConfiguration {
      * @return
      */
     @Bean
-    public ZuulRouteLocator zuulRouteLocator(ZuulProperties zuulProperties, ServerProperties serverProperties, GatewayRouteService gatewayRouteRestService) {
-        zuulRoutesLocator = new ZuulRouteLocator(serverProperties.getServlet().getContextPath(), zuulProperties, gatewayRouteRestService);
+    public ZuulRouteLocator zuulRouteLocator(ZuulProperties zuulProperties, ServerProperties serverProperties, GatewayRouteService gatewayRouteService) {
+        zuulRoutesLocator = new ZuulRouteLocator(serverProperties.getServlet().getContextPath(), zuulProperties, gatewayRouteService);
         log.info("初始化ZuulRoutesLocator:{}", zuulRoutesLocator);
         return zuulRoutesLocator;
     }

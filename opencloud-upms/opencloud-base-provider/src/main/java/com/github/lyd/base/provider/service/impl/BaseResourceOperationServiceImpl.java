@@ -58,11 +58,11 @@ public class BaseResourceOperationServiceImpl implements BaseResourceOperationSe
      * @return
      */
     @Override
-    public PageList<BaseResourceOperationDto> findListByMenuId(Long menuId) {
+    public List<BaseResourceOperationDto> findListByMenuId(Long menuId) {
         Map params = Maps.newHashMap();
         params.put("menuId",menuId);
         List<BaseResourceOperationDto> list = baseResourceOperationMapper.selectOperationDtoByCondition(params);
-        return new PageList(list);
+        return list;
     }
 
     /**
@@ -165,9 +165,6 @@ public class BaseResourceOperationServiceImpl implements BaseResourceOperationSe
         BaseResourceOperation operation = getOperation(operationId);
         if (operation != null && operation.getIsPersist().equals(BaseConstants.ENABLED)) {
             throw new OpenAlertException(String.format("保留数据,不允许删除"));
-        }
-        if (baseAuthorityService.isGranted(operationId, ResourceType.operation)) {
-            throw new OpenAlertException(String.format("资源已被授权,不允许删除!取消授权后,再次尝试!"));
         }
         baseAuthorityService.removeAuthority(operationId,ResourceType.operation);
         baseResourceOperationMapper.deleteByPrimaryKey(operationId);

@@ -108,6 +108,14 @@ public interface BaseAuthorityService {
     void addAppAuthority(String appId, Date expireTime, String... authorityIds);
 
     /**
+     * 应用授权-添加单个权限
+     * @param appId
+     * @param expireTime
+     * @param authorityId
+     */
+    void addAppAuthority(String appId, Date expireTime, String authorityId);
+
+    /**
      * 获取应用已授权权限
      *
      * @param appId

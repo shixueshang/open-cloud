@@ -46,7 +46,7 @@ public class BaseResourceApiServiceImpl implements BaseResourceApiService {
         Example example = builder.criteria()
                 .orLike("apiCode", keyword)
                 .orLike("apiName", keyword).end().build();
-
+        example.orderBy("apiId").asc().orderBy("priority").asc();
         List<BaseResourceApi> list = baseResourceApiMapper.selectByExample(example);
         return new PageList(list);
     }
@@ -58,7 +58,7 @@ public class BaseResourceApiServiceImpl implements BaseResourceApiService {
      * @return
      */
     @Override
-    public PageList<BaseResourceApi> findAllList(String keyword) {
+    public List<BaseResourceApi> findAllList(String keyword) {
         ExampleBuilder builder = new ExampleBuilder(BaseResourceApi.class);
         Example example = builder.criteria()
                 .orLike("apiCode", keyword)
@@ -66,7 +66,7 @@ public class BaseResourceApiServiceImpl implements BaseResourceApiService {
                 .andEqualTo("isOpen","1").end().build();
         example.orderBy("apiId").asc().orderBy("priority").asc();
         List<BaseResourceApi> list = baseResourceApiMapper.selectByExample(example);
-        return new PageList(list);
+        return list;
     }
 
     /**
@@ -188,9 +188,6 @@ public class BaseResourceApiServiceImpl implements BaseResourceApiService {
         BaseResourceApi api = getApi(apiId);
         if (api != null && api.getIsPersist().equals(BaseConstants.ENABLED)) {
             throw new OpenAlertException(String.format("保留数据,不允许删除"));
-        }
-        if (baseAuthorityService.isGranted(apiId, ResourceType.api)) {
-            throw new OpenAlertException(String.format("资源已被授权,不允许删除!取消授权后,再次尝试!"));
         }
         baseAuthorityService.removeAuthority(apiId,ResourceType.api);
         baseResourceApiMapper.deleteByPrimaryKey(apiId);

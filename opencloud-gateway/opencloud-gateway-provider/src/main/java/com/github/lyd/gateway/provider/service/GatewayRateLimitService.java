@@ -6,6 +6,8 @@ import com.github.lyd.gateway.client.model.GatewayRateLimitApisDto;
 import com.github.lyd.gateway.client.model.entity.GatewayRateLimit;
 import com.github.lyd.gateway.client.model.entity.GatewayRateLimitApi;
 
+import java.util.List;
+
 /**
  * 访问日志
  * @author liuyadu
@@ -26,14 +28,14 @@ public interface GatewayRateLimitService {
      *
      * @return
      */
-    PageList<GatewayRateLimitApisDto> findRateLimitApiList();
+    List<GatewayRateLimitApisDto> findRateLimitApiList();
 
     /**
      * 查询策略已绑定API列表
      *
      * @return
      */
-    PageList<GatewayRateLimitApi> findRateLimitApiList(Long policyId);
+    List<GatewayRateLimitApi> findRateLimitApiList(Long policyId);
 
     /**
      * 获取限流策略
