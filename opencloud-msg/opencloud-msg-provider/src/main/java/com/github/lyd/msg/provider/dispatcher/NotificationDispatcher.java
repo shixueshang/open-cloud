@@ -1,15 +1,12 @@
 package com.github.lyd.msg.provider.dispatcher;
 
-import com.github.lyd.msg.client.constants.MessageConstants;
 import com.github.lyd.msg.client.dto.Notification;
 import com.github.lyd.msg.provider.exchanger.NotificationExchanger;
 import com.github.lyd.msg.provider.task.NotificationTask;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.Queue;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -27,12 +24,6 @@ import java.util.concurrent.TimeUnit;
 public class NotificationDispatcher implements ApplicationContextAware{
 
     private Collection<NotificationExchanger> exchangers;
-
-
-    @Bean
-    public Queue notificationQueue(){
-        return new Queue(MessageConstants.QUEUE_MSG);
-    }
 
     private ExecutorService executorService;
 
