@@ -1,7 +1,8 @@
 package com.github.lyd.base.provider.controller;
 
 import com.github.lyd.base.client.api.BaseAuthorityRemoteApi;
-import com.github.lyd.base.client.model.BaseAuthorityDto;
+import com.github.lyd.base.client.model.BaseApiAuthority;
+import com.github.lyd.base.client.model.BaseMenuAuthority;
 import com.github.lyd.base.client.model.entity.BaseUser;
 import com.github.lyd.base.provider.service.BaseAuthorityService;
 import com.github.lyd.base.provider.service.BaseUserService;
@@ -46,14 +47,26 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
      *
      * @return
      */
-    @ApiOperation(value = "获取权限列表", notes = "获取权限列表")
-    @GetMapping("/authority/list")
+    @ApiOperation(value = "获取接口权限列表", notes = "获取接口权限列表")
+    @GetMapping("/authority/api/list")
     @Override
-    public ResultBody<List<BaseAuthorityDto>> getAuthorityList(
-            @RequestParam(value = "type",required = false) String type,
+    public ResultBody<List<BaseApiAuthority>> getApiAuthorityList(
             @RequestParam(value = "serviceId",required = false) String serviceId
     ) {
-        List<BaseAuthorityDto> result = baseAuthorityService.findAuthorityDto(type, serviceId);
+        List<BaseApiAuthority> result = baseAuthorityService.findApiAuthority(serviceId);
+        return ResultBody.success(result);
+    }
+
+    /**
+     * 获取菜单权限列表
+     *
+     * @return
+     */
+    @ApiOperation(value = "获取菜单权限列表", notes = "获取菜单权限列表")
+    @GetMapping("/authority/menu/list")
+    @Override
+    public ResultBody<List<BaseMenuAuthority>> getMenuAuthorityList() {
+        List<BaseMenuAuthority> result = baseAuthorityService.findMenuAuthority();
         return ResultBody.success(result);
     }
 
@@ -199,9 +212,9 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
      * @return
      */
     @ApiOperation(value = "获取登陆用户已分配权限", notes = "获取登陆用户已分配权限")
-    @GetMapping("/authority/granted/me")
-    public ResultBody<List<BaseAuthorityDto>> getGrantedMeAuthority() {
-        List<BaseAuthorityDto> result = baseAuthorityService.findUserGrantedAuthorityDetail(OpenHelper.getAuthUser().getUserId(), CommonConstants.ROOT.equals(OpenHelper.getAuthUser().getUsername()));
+    @GetMapping("/authority/granted/me/menu")
+    public ResultBody<List<BaseMenuAuthority>> getGrantedMyMenuAuthority() {
+        List<BaseMenuAuthority> result = baseAuthorityService.findUserMenuAuthority(OpenHelper.getAuthUser().getUserId(), CommonConstants.ROOT.equals(OpenHelper.getAuthUser().getUsername()));
         return ResultBody.success(result);
     }
 

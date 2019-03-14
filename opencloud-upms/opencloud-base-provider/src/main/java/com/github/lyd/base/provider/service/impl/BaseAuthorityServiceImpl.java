@@ -1,7 +1,8 @@
 package com.github.lyd.base.provider.service.impl;
 
 import com.github.lyd.base.client.constants.ResourceType;
-import com.github.lyd.base.client.model.BaseAuthorityDto;
+import com.github.lyd.base.client.model.BaseApiAuthority;
+import com.github.lyd.base.client.model.BaseMenuAuthority;
 import com.github.lyd.base.client.model.entity.*;
 import com.github.lyd.base.provider.mapper.BaseAppAuthorityMapper;
 import com.github.lyd.base.provider.mapper.BaseAuthorityMapper;
@@ -61,18 +62,23 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
     private String DEFAULT_SERVICE_ID;
 
     /**
-     * 获取所有可用权限详情
+     * 获取菜单权限列表
      *
-     * @param type      = null 查询全部  type = 1 获取菜单和操作 type = 2 获取API
-     * @param serviceId
      * @return
      */
     @Override
-    public List<BaseAuthorityDto> findAuthorityDto(String type, String serviceId) {
+    public List<BaseMenuAuthority> findMenuAuthority() {
         Map map = Maps.newHashMap();
-        map.put("type", type);
-        map.put("serviceId", serviceId);
-        List<BaseAuthorityDto> authorities = baseAuthorityMapper.selectBaseAuthorityDto(map);
+        List<BaseMenuAuthority> authorities = baseAuthorityMapper.selectMenuAuthority(map);
+        return authorities;
+
+    }
+
+    @Override
+    public List<BaseApiAuthority> findApiAuthority(String serviceId) {
+        Map map = Maps.newHashMap();
+        map.put("serviceId",serviceId);
+        List<BaseApiAuthority> authorities = baseAuthorityMapper.selectApiAuthority(map);
         return authorities;
 
     }
@@ -80,15 +86,13 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
     /**
      * 获取所有可用权限
      *
-     * @param type      = null 查询全部  type = 1 获取菜单和操作 type = 2 获取API
-     * @param serviceId
+     * @param type = null 查询全部  type = 1 获取菜单和操作 type = 2 获取API
      * @return
      */
     @Override
-    public List<OpenGrantedAuthority> findAuthority(String type, String serviceId) {
+    public List<OpenGrantedAuthority> findAuthority(String type) {
         Map map = Maps.newHashMap();
         map.put("type", type);
-        map.put("serviceId", serviceId);
         return baseAuthorityMapper.selectAuthority(map);
     }
 
@@ -388,7 +392,7 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
     public List<OpenGrantedAuthority> findUserGrantedAuthority(Long userId, Boolean root) {
         if (root) {
             // 超级管理员返回所有
-            return findAuthority("1", null);
+            return findAuthority("1");
         }
         List<OpenGrantedAuthority> authorities = Lists.newArrayList();
         List<BaseRole> rolesList = baseRoleService.getUserRoles(userId);
@@ -421,25 +425,25 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
      * @return
      */
     @Override
-    public List<BaseAuthorityDto> findUserGrantedAuthorityDetail(Long userId, Boolean root) {
+    public List<BaseMenuAuthority> findUserMenuAuthority(Long userId, Boolean root) {
         if (root) {
             // 超级管理员返回所有
-            return findAuthorityDto("1", null);
+            return findMenuAuthority();
         }
         // 用户权限列表
-        List<BaseAuthorityDto> authorities = Lists.newArrayList();
+        List<BaseMenuAuthority> authorities = Lists.newArrayList();
         List<BaseRole> rolesList = baseRoleService.getUserRoles(userId);
         if (rolesList != null) {
             for (BaseRole role : rolesList) {
                 // 加入角色已授权
-                List<BaseAuthorityDto> roleGrantedAuthority = baseRoleAuthorityMapper.selectRoleGrantedAuthorityDto(role.getRoleId());
+                List<BaseMenuAuthority> roleGrantedAuthority = baseRoleAuthorityMapper.selectRoleMenuAuthority(role.getRoleId());
                 if (roleGrantedAuthority != null && roleGrantedAuthority.size() > 0) {
                     authorities.addAll(roleGrantedAuthority);
                 }
             }
         }
         // 加入用户特殊授权
-        List<BaseAuthorityDto> userGrantedAuthority = baseUserAuthorityMapper.selectUserGrantedAuthorityDto(userId);
+        List<BaseMenuAuthority> userGrantedAuthority = baseUserAuthorityMapper.selectUserMenuAuthority(userId);
         if (userGrantedAuthority != null && userGrantedAuthority.size() > 0) {
             authorities.addAll(userGrantedAuthority);
         }
@@ -449,8 +453,6 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
         authorities.addAll(h);
         return authorities;
     }
-
-
 
 
 }

@@ -119,8 +119,8 @@ open-cloud
     ```
     
 5. 本地启动
-     + BaseApplication
      + AuthApplication
+     + BaseApplication
      + GatewayApplication
      + AdminApplication   
    4个服务启动成功后。就可以依赖这些服务进行微服务开发了。  
@@ -130,8 +130,9 @@ open-cloud
     ```bush
         npm install 
         npm run dev
-    ```
-
+    ``` 
+    访问 http://localhost:8080
+    
 7. 项目打包部署  
 
      maven多环境打包

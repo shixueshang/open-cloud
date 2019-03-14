@@ -1,9 +1,8 @@
 package com.github.lyd.base.provider.service;
 
-import com.github.lyd.base.client.model.BaseResourceOperationDto;
+import com.github.lyd.base.client.model.entity.BaseResourceOperation;
 import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.model.PageParams;
-import com.github.lyd.base.client.model.entity.BaseResourceOperation;
 
 import java.util.List;
 
@@ -19,7 +18,7 @@ public interface BaseResourceOperationService {
      * @param keyword
      * @return
      */
-    PageList<BaseResourceOperationDto> findListPage(PageParams pageParams, String keyword);
+    PageList<BaseResourceOperation> findListPage(PageParams pageParams, String keyword);
 
     /**
      * 根据主键获取操作
@@ -27,14 +26,14 @@ public interface BaseResourceOperationService {
      * @param operationId
      * @return
      */
-    BaseResourceOperationDto getOperation(Long operationId);
+    BaseResourceOperation getOperation(Long operationId);
 
     /**
      * 查询菜单下所有操作
      * @param menuId
      * @return
      */
-    List<BaseResourceOperationDto> findListByMenuId(Long menuId);
+    List<BaseResourceOperation> findListByMenuId(Long menuId);
 
     /**
      * 检查操作编码是否存在

@@ -14,19 +14,6 @@
         <result column="service_id" jdbcType="VARCHAR" property="serviceId"/>
     </resultMap>
 
-    <resultMap id="BaseAuthorityDto" type="com.github.lyd.base.client.model.BaseAuthorityDto">
-        <result column="authority_id" jdbcType="BIGINT" property="authorityId"/>
-        <result column="authority" jdbcType="VARCHAR" property="authority"/>
-        <result column="expire_time" jdbcType="TIMESTAMP" property="expireTime"/>
-        <result column="service_id" jdbcType="VARCHAR" property="serviceId"/>
-        <association column="menu_id" property="menu"
-                     select="com.github.lyd.base.provider.mapper.BaseResourceMenuMapper.selectByPrimaryKey"></association>
-        <association column="api_id" property="api"
-                     select="com.github.lyd.base.provider.mapper.BaseResourceApiMapper.selectByPrimaryKey"></association>
-        <association column="operation_id" property="operation"
-                     select="com.github.lyd.base.provider.mapper.BaseResourceOperationMapper.selectOperationDtoByPrimaryKey"></association>
-    </resultMap>
-
     <resultMap id="OpenGrantedAuthority" type="com.github.lyd.common.security.OpenGrantedAuthority">
         <result column="authority_id" jdbcType="BIGINT" property="authorityId"/>
         <result column="authority" jdbcType="VARCHAR" property="authority"/>
@@ -34,20 +21,78 @@
         <result column="owner" jdbcType="VARCHAR" property="owner"/>
     </resultMap>
 
-    <select id="selectBaseAuthorityDto" resultMap="BaseAuthorityDto">
-        select * from base_authority
-        <where>
-            status = 1
-            <if test="type!=null and type!='' and type == '1'.toString()">
-                and api_id is null
-            </if>
-            <if test="type!=null and type!='' and type == '2'.toString()">
-                and api_id is not null
-            </if>
-            <if test="serviceId!=null">
-                and service_id = #{serviceId}
-            </if>
-        </where>
+    <resultMap id="BaseMenuAuthority" type="com.github.lyd.base.client.model.BaseMenuAuthority"
+               extends="com.github.lyd.base.provider.mapper.BaseResourceMenuMapper.BaseResultMap">
+        <result column="authority_id" jdbcType="BIGINT" property="authorityId"/>
+        <result column="authority" jdbcType="VARCHAR" property="authority"/>
+        <result column="service_id" jdbcType="VARCHAR" property="serviceId"/>
+        <collection property="operationList" column="{menuId=menu_id}" select="selectOperationAuthority"/>
+    </resultMap>
+
+    <resultMap id="BaseOperationAuthority" type="com.github.lyd.base.client.model.BaseOperationAuthority"
+               extends="com.github.lyd.base.provider.mapper.BaseResourceOperationMapper.BaseResultMap">
+        <result column="authority_id" jdbcType="BIGINT" property="authorityId"/>
+        <result column="authority" jdbcType="VARCHAR" property="authority"/>
+        <result column="service_id" jdbcType="VARCHAR" property="serviceId"/>
+    </resultMap>
+
+    <resultMap id="BaseApiAuthority" type="com.github.lyd.base.client.model.BaseApiAuthority"
+               extends="com.github.lyd.base.provider.mapper.BaseResourceApiMapper.BaseResultMap">
+        <result column="authority_id" jdbcType="BIGINT" property="authorityId"/>
+        <result column="authority" jdbcType="VARCHAR" property="authority"/>
+    </resultMap>
+
+    <select id="selectMenuAuthority" resultMap="BaseMenuAuthority">
+        SELECT
+            a.authority_id,
+            a.authority,
+            a.service_id,
+            m.*
+        FROM
+            base_authority AS a
+        INNER JOIN base_resource_menu AS m ON a.menu_id = m.menu_id
+        WHERE a.status = 1
+    </select>
+
+    <select id="selectOperationAuthority" resultMap="BaseOperationAuthority">
+        SELECT
+        a.authority_id,
+        a.authority,
+        a.service_id,
+        o.*
+        FROM
+        base_authority AS a
+        INNER JOIN base_resource_operation AS o ON a.operation_id = o.operation_id
+        <if test="roleId!=null">
+            INNER JOIN base_role_authority AS ra ON ra.authority_id = a.authority_id
+        </if>
+        <if test="userId!=null">
+            INNER JOIN base_user_authority AS ua ON ua.authority_id = a.authority_id
+        </if>
+        WHERE a.status = 1
+        <if test="menuId!=null">
+            AND o.menu_id = #{menuId}
+        </if>
+        <if test="roleId!=null">
+            AND ra.role_id = #{roleId}
+        </if>
+        <if test="userId!=null">
+            AND ua.user_id = #{userId}
+        </if>
+    </select>
+
+    <select id="selectApiAuthority" resultMap="BaseApiAuthority">
+        SELECT
+        a.authority_id,
+        a.authority,
+        api.*
+        FROM
+        base_authority AS a
+        INNER JOIN base_resource_api AS api ON a.api_id = api.api_id
+        WHERE a.status = 1
+        <if test="serviceId!=null">
+            AND api.service_id = #{serviceId}
+        </if>
     </select>
 
     <select id="selectAuthority"
@@ -65,9 +110,6 @@
             </if>
             <if test="type!=null and type!='' and type == '2'.toString()">
                 and api_id is not null
-            </if>
-            <if test="serviceId!=null">
-                and service_id = #{serviceId}
             </if>
         </where>
     </select>

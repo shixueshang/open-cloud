@@ -1,6 +1,6 @@
 package com.github.lyd.gateway.provider.locator;
 
-import com.github.lyd.base.client.model.BaseAuthorityDto;
+import com.github.lyd.base.client.model.BaseApiAuthority;
 import com.github.lyd.gateway.client.model.GatewayIpLimitApisDto;
 import com.github.lyd.gateway.client.model.GatewayRateLimitApisDto;
 import com.github.lyd.gateway.provider.service.GatewayIpLimitService;
@@ -56,7 +56,7 @@ public class AccessLocator {
     /**
      * 权限列表
      */
-    private List<BaseAuthorityDto> authorityList;
+    private List<BaseApiAuthority> authorityList;
 
     /**
      * IP黑名单
@@ -125,15 +125,14 @@ public class AccessLocator {
      * 加载授权列表
      */
     public void loadAuthority() {
-        log.info("=============加载动态权限==============");
         allConfigAttribute = Maps.newHashMap();
         authorityList = Lists.newArrayList();
         Collection<ConfigAttribute> array;
         ConfigAttribute cfg;
         try {
-            authorityList = baseAuthorityRemoteService.getAuthorityList(null,null).getData();
+            authorityList = baseAuthorityRemoteService.getApiAuthorityList(null).getData();
             if (authorityList != null) {
-                for (BaseAuthorityDto item : authorityList) {
+                for (BaseApiAuthority item : authorityList) {
                     String path = item.getPath();
                     if (path == null) {
                         continue;
@@ -154,13 +153,13 @@ public class AccessLocator {
         } catch (Exception e) {
             log.error("加载动态权限错误:{}", e.getMessage());
         }
+        log.info("=============加载动态权限:{}==============",authorityList.size());
     }
 
     /**
      * 加载IP黑名单
      */
     public void loadIpBlackList() {
-        log.info("=============加载IP黑名单==============");
         ipBlackList = Lists.newArrayList();
         try {
             ipBlackList = gatewayIpLimitService.findBlackList();
@@ -172,13 +171,13 @@ public class AccessLocator {
         } catch (Exception e) {
             log.error("加载IP黑名单错误:{}", e.getMessage());
         }
+        log.info("=============加载IP黑名单:{}==============",ipBlackList.size());
     }
 
     /**
      * 加载IP白名单
      */
     public void loadIpWhiteList() {
-        log.info("=============加载IP白名单==============");
         ipWhiteList = Lists.newArrayList();
         try {
             ipWhiteList = gatewayIpLimitService.findWhiteList();
@@ -190,6 +189,7 @@ public class AccessLocator {
         } catch (Exception e) {
             log.error("加载IP白名单错误:{}", e.getMessage());
         }
+        log.info("=============加载IP白名单:{}==============",ipWhiteList.size());
     }
 
     /**
@@ -207,13 +207,13 @@ public class AccessLocator {
      * @return
      */
     public void loadRateLimit() {
-        log.info("=============加载动态限流==============");
         LinkedHashMap<String, List<RateLimitProperties.Policy>> policysMap = Maps.newLinkedHashMap();
         //从application.properties中加载限流信息
         policysMap.putAll(rateLimitProperties.getPolicyList());
         //从db中加载限流信息
         policysMap.putAll(loadRateLimitPolicy());
         rateLimitProperties.setPolicyList(policysMap);
+        log.info("=============加载动态限流:{}==============",rateLimitProperties.getPolicyList().size());
     }
 
 
@@ -270,11 +270,11 @@ public class AccessLocator {
     }
 
 
-    public List<BaseAuthorityDto> getAuthorityList() {
+    public List<BaseApiAuthority> getAuthorityList() {
         return authorityList;
     }
 
-    public void setAuthorityList(List<BaseAuthorityDto> authorityList) {
+    public void setAuthorityList(List<BaseApiAuthority> authorityList) {
         this.authorityList = authorityList;
     }
 

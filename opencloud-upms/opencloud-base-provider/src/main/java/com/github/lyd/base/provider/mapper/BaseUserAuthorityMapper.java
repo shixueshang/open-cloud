@@ -1,6 +1,6 @@
 package com.github.lyd.base.provider.mapper;
 
-import com.github.lyd.base.client.model.BaseAuthorityDto;
+import com.github.lyd.base.client.model.BaseMenuAuthority;
 import com.github.lyd.base.client.model.entity.BaseUserAuthority;
 import com.github.lyd.common.mapper.CrudMapper;
 import com.github.lyd.common.security.OpenGrantedAuthority;
@@ -26,5 +26,5 @@ public interface BaseUserAuthorityMapper extends CrudMapper<BaseUserAuthority> {
      * @param userId
      * @return
      */
-    List<BaseAuthorityDto> selectUserGrantedAuthorityDto(@Param("userId") Long userId);
+    List<BaseMenuAuthority> selectUserMenuAuthority(@Param("userId") Long userId);
 }

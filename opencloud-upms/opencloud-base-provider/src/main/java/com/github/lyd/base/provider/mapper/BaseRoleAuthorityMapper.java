@@ -1,6 +1,6 @@
 package com.github.lyd.base.provider.mapper;
 
-import com.github.lyd.base.client.model.BaseAuthorityDto;
+import com.github.lyd.base.client.model.BaseMenuAuthority;
 import com.github.lyd.base.client.model.entity.BaseRoleAuthority;
 import com.github.lyd.common.mapper.CrudMapper;
 import com.github.lyd.common.security.OpenGrantedAuthority;
@@ -9,6 +9,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * @author liuyadu
+ */
 @Repository
 public interface BaseRoleAuthorityMapper extends CrudMapper<BaseRoleAuthority> {
 
@@ -21,10 +24,10 @@ public interface BaseRoleAuthorityMapper extends CrudMapper<BaseRoleAuthority> {
     List<OpenGrantedAuthority> selectRoleGrantedAuthority(@Param("roleId") Long roleId);
 
     /**
-     * 获取角色已授权权限完整信息
+     * 获取角色已授权权限
      *
      * @param roleId
      * @return
      */
-    List<BaseAuthorityDto> selectRoleGrantedAuthorityDto(@Param("roleId") Long roleId);
+    List<BaseMenuAuthority> selectRoleMenuAuthority(@Param("roleId") Long roleId);
 }

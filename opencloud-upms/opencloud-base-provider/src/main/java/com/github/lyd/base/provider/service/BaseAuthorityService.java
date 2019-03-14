@@ -1,7 +1,8 @@
 package com.github.lyd.base.provider.service;
 
 import com.github.lyd.base.client.constants.ResourceType;
-import com.github.lyd.base.client.model.BaseAuthorityDto;
+import com.github.lyd.base.client.model.BaseApiAuthority;
+import com.github.lyd.base.client.model.BaseMenuAuthority;
 import com.github.lyd.base.client.model.entity.BaseAuthority;
 import com.github.lyd.common.security.OpenGrantedAuthority;
 
@@ -16,23 +17,29 @@ import java.util.List;
 public interface BaseAuthorityService {
 
     /**
-     * 获取所有可用权限详情
+     * 获取菜单权限列表
      *
-     * @param type      = null 查询全部  type = 1 获取菜单和操作 type = 2 获取API
+     * @return
+     */
+    List<BaseMenuAuthority> findMenuAuthority();
+
+
+    /**
+     * 获取API权限列表
+     *
      * @param serviceId
      * @return
      */
-    List<BaseAuthorityDto> findAuthorityDto(String type, String serviceId);
+    List<BaseApiAuthority> findApiAuthority(String serviceId);
 
 
     /**
      * 获取所有可用权限
      *
      * @param type      = null 查询全部  type = 1 获取菜单和操作 type = 2 获取API
-     * @param serviceId
      * @return
      */
-    List<OpenGrantedAuthority> findAuthority(String type, String serviceId);
+    List<OpenGrantedAuthority> findAuthority(String type);
 
     /**
      * 保存或修改权限
@@ -109,6 +116,7 @@ public interface BaseAuthorityService {
 
     /**
      * 应用授权-添加单个权限
+     *
      * @param appId
      * @param expireTime
      * @param authorityId
@@ -148,7 +156,7 @@ public interface BaseAuthorityService {
      * @param root
      * @return
      */
-    List<BaseAuthorityDto> findUserGrantedAuthorityDetail(Long userId, Boolean root);
+    List<BaseMenuAuthority> findUserMenuAuthority(Long userId, Boolean root);
 
 
 }

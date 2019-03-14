@@ -20,8 +20,4 @@
         <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
         <result column="is_persist" property="isPersist" jdbcType="INTEGER"/>
     </resultMap>
-
-    <resultMap id="BaseResourceMenuDto" type="com.github.lyd.base.client.model.BaseResourceMenuDto">
-
-    </resultMap>
 </mapper>

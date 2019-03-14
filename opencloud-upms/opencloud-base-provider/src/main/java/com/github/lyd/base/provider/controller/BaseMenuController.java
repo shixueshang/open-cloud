@@ -1,10 +1,9 @@
 package com.github.lyd.base.provider.controller;
 
-import com.github.lyd.base.client.model.BaseResourceMenuDto;
-import com.github.lyd.base.client.model.entity.BaseResourceOperation;
 import com.github.lyd.base.client.model.entity.BaseResourceMenu;
-import com.github.lyd.base.provider.service.BaseResourceOperationService;
+import com.github.lyd.base.client.model.entity.BaseResourceOperation;
 import com.github.lyd.base.provider.service.BaseResourceMenuService;
+import com.github.lyd.base.provider.service.BaseResourceOperationService;
 import com.github.lyd.common.http.OpenRestTemplate;
 import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.model.PageParams;
@@ -67,22 +66,6 @@ public class BaseMenuController {
         return ResultBody.success(baseResourceMenuService.findAllList(keyword));
     }
 
-    /**
-     * 获取菜单和操作列表
-     *
-     * @param keyword
-     * @return
-     */
-    @ApiOperation(value = "获取菜单和操作列表", notes = "获取菜单和操作列表")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
-    })
-    @PostMapping("/menu/operation/list")
-    public ResultBody<List<BaseResourceMenuDto>> getMenuActionList(
-            @RequestParam(name = "keyword", required = false) String keyword
-    ) {
-        return ResultBody.success(baseResourceMenuService.findWithActionList(keyword));
-    }
 
     /**
      * 获取菜单下所有操作
@@ -92,10 +75,10 @@ public class BaseMenuController {
      */
     @ApiOperation(value = "获取菜单下所有操作", notes = "获取菜单下所有操作")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
+            @ApiImplicitParam(name = "menuId", value = "menuId", paramType = "form"),
     })
     @PostMapping("/menu/operation")
-    public ResultBody<List<BaseResourceOperation>> getMenuActionList(Long menuId) {
+    public ResultBody<List<BaseResourceOperation>> getMenuOperationList(Long menuId) {
         return ResultBody.success(baseResourceOperationService.findListByMenuId(menuId));
     }
 

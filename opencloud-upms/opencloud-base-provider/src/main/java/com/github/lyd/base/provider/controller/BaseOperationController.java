@@ -1,6 +1,6 @@
 package com.github.lyd.base.provider.controller;
 
-import com.github.lyd.base.client.model.BaseResourceOperationDto;
+import com.github.lyd.base.client.model.BaseOperationAuthority;
 import com.github.lyd.base.client.model.entity.BaseResourceOperation;
 import com.github.lyd.base.provider.service.BaseResourceOperationService;
 import com.github.lyd.common.http.OpenRestTemplate;
@@ -39,7 +39,7 @@ public class BaseOperationController {
             @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
     })
     @PostMapping("/operation")
-    public ResultBody<PageList<BaseResourceOperationDto>> getOperationListPage(
+    public ResultBody<PageList<BaseOperationAuthority>> getOperationListPage(
             @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
             @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit,
             @RequestParam(name = "keyword", required = false) String keyword
@@ -59,7 +59,7 @@ public class BaseOperationController {
             @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
     })
     @PostMapping("/operation/menu")
-    public ResultBody<List<BaseResourceOperationDto>> getOperationAllList(Long menuId) {
+    public ResultBody<List<BaseOperationAuthority>> getOperationAllList(Long menuId) {
         return ResultBody.success(baseResourceOperationService.findListByMenuId(menuId));
     }
 
@@ -74,7 +74,7 @@ public class BaseOperationController {
             @ApiImplicitParam(name = "operationId", required = true, value = "操作Id", paramType = "path"),
     })
     @GetMapping("/operation/{operationId}")
-    public ResultBody<BaseResourceOperationDto> getOperation(@PathVariable("operationId") Long operationId) {
+    public ResultBody<BaseOperationAuthority> getOperation(@PathVariable("operationId") Long operationId) {
         return ResultBody.success(baseResourceOperationService.getOperation(operationId));
     }
 

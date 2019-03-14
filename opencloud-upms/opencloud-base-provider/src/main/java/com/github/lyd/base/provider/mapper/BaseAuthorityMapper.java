@@ -1,6 +1,8 @@
 package com.github.lyd.base.provider.mapper;
 
-import com.github.lyd.base.client.model.BaseAuthorityDto;
+import com.github.lyd.base.client.model.BaseApiAuthority;
+import com.github.lyd.base.client.model.BaseMenuAuthority;
+import com.github.lyd.base.client.model.BaseOperationAuthority;
 import com.github.lyd.base.client.model.entity.BaseAuthority;
 import com.github.lyd.common.mapper.CrudMapper;
 import com.github.lyd.common.security.OpenGrantedAuthority;
@@ -23,11 +25,28 @@ public interface BaseAuthorityMapper extends CrudMapper<BaseAuthority> {
      */
     List<OpenGrantedAuthority> selectAuthority(Map map);
 
+
     /**
-     * 查询权限列表详情
+     * 获取菜单权限
      *
      * @param map
      * @return
      */
-    List<BaseAuthorityDto> selectBaseAuthorityDto(Map map);
+    List<BaseMenuAuthority> selectMenuAuthority(Map map);
+
+    /**
+     * 获取操作权限
+     *
+     * @param map
+     * @return
+     */
+    List<BaseOperationAuthority> selectOperationAuthority(Map map);
+
+    /**
+     * 获取API权限
+     *
+     * @param map
+     * @return
+     */
+    List<BaseApiAuthority> selectApiAuthority(Map map);
 }

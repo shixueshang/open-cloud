@@ -1,13 +1,13 @@
 package com.github.lyd.gateway.provider.filter;
 
-import com.github.lyd.base.client.model.BaseAuthorityDto;
+import com.github.lyd.base.client.model.BaseApiAuthority;
 import com.github.lyd.common.constants.CommonConstants;
 import com.github.lyd.common.security.OpenGrantedAuthority;
+import com.github.lyd.common.utils.StringUtils;
 import com.github.lyd.common.utils.WebUtils;
 import com.github.lyd.gateway.client.model.GatewayIpLimitApisDto;
 import com.github.lyd.gateway.provider.configuration.ApiGatewayProperties;
 import com.github.lyd.gateway.provider.locator.AccessLocator;
-import com.github.lyd.common.utils.StringUtils;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -242,11 +242,11 @@ public class AccessControl {
     }
 
     private boolean isAuthAccess(String requestPath) {
-        List<BaseAuthorityDto> authorityList = accessLocator.getAuthorityList();
+        List<BaseApiAuthority> authorityList = accessLocator.getAuthorityList();
         if (authorityList != null) {
-            for (BaseAuthorityDto auth : authorityList) {
+            for (BaseApiAuthority auth : authorityList) {
                 String fullPath = auth.getPath();
-                Boolean isAuth = auth.getAuth();
+                Boolean isAuth = auth.getIsAuth() != null && auth.getIsAuth().equals(1) ? true : false;
                 // 无需认证,返回true
                 if (StringUtils.isNotBlank(fullPath) && pathMatch.match(fullPath, requestPath) && !isAuth) {
                     return true;

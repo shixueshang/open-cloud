@@ -2,7 +2,6 @@ package com.github.lyd.base.provider.service.impl;
 
 import com.github.lyd.base.client.constants.BaseConstants;
 import com.github.lyd.base.client.constants.ResourceType;
-import com.github.lyd.base.client.model.BaseResourceMenuDto;
 import com.github.lyd.base.client.model.entity.BaseResourceMenu;
 import com.github.lyd.base.client.model.entity.BaseResourceOperation;
 import com.github.lyd.base.provider.mapper.BaseResourceMenuMapper;
@@ -70,18 +69,6 @@ public class BaseResourceMenuServiceImpl implements BaseResourceMenuService {
                 .orLike("menuName", keyword).end().build();
         example.orderBy("menuId").asc().orderBy("priority").asc();
         List<BaseResourceMenu> list = baseResourceMenuMapper.selectByExample(example);
-        return list;
-    }
-
-    /**
-     * 获取菜单和操作列表
-     *
-     * @param keyword
-     * @return
-     */
-    @Override
-    public List<BaseResourceMenuDto> findWithActionList(String keyword) {
-        List<BaseResourceMenuDto> list = baseResourceMenuMapper.selectWithActionList();
         return list;
     }
 

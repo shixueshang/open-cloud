@@ -2,7 +2,6 @@ package com.github.lyd.base.provider.service.impl;
 
 import com.github.lyd.base.client.constants.BaseConstants;
 import com.github.lyd.base.client.constants.ResourceType;
-import com.github.lyd.base.client.model.BaseResourceOperationDto;
 import com.github.lyd.base.client.model.entity.BaseResourceOperation;
 import com.github.lyd.base.provider.mapper.BaseResourceOperationMapper;
 import com.github.lyd.base.provider.service.BaseAuthorityService;
@@ -12,7 +11,6 @@ import com.github.lyd.common.mapper.ExampleBuilder;
 import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.model.PageParams;
 import com.github.pagehelper.PageHelper;
-import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +19,6 @@ import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author liuyadu
@@ -43,12 +40,14 @@ public class BaseResourceOperationServiceImpl implements BaseResourceOperationSe
      * @return
      */
     @Override
-    public PageList<BaseResourceOperationDto> findListPage(PageParams pageParams, String keyword) {
+    public PageList<BaseResourceOperation> findListPage(PageParams pageParams, String keyword) {
         PageHelper.startPage(pageParams.getPage(), pageParams.getLimit(), pageParams.getOrderBy());
-        Map params = Maps.newHashMap();
-        params.put("operationCode",keyword);
-        params.put("operationName",keyword);
-        List<BaseResourceOperationDto> list = baseResourceOperationMapper.selectOperationDtoByCondition(params);
+        ExampleBuilder builder = new ExampleBuilder(BaseResourceOperation.class);
+        Example example = builder.criteria()
+                .orLike("operationCode", keyword)
+                .orLike("operationName", keyword).end().build();
+        example.orderBy("operationId").asc().orderBy("priority").asc();
+        List<BaseResourceOperation> list = baseResourceOperationMapper.selectByExample(example);
         return new PageList(list);
     }
 
@@ -58,10 +57,11 @@ public class BaseResourceOperationServiceImpl implements BaseResourceOperationSe
      * @return
      */
     @Override
-    public List<BaseResourceOperationDto> findListByMenuId(Long menuId) {
-        Map params = Maps.newHashMap();
-        params.put("menuId",menuId);
-        List<BaseResourceOperationDto> list = baseResourceOperationMapper.selectOperationDtoByCondition(params);
+    public List<BaseResourceOperation> findListByMenuId(Long menuId) {
+        ExampleBuilder builder = new ExampleBuilder(BaseResourceOperation.class);
+        Example example = builder.criteria()
+                .orLike("menuId", menuId).end().build();
+        List<BaseResourceOperation> list = baseResourceOperationMapper.selectByExample(example);
         return list;
     }
 
@@ -72,8 +72,8 @@ public class BaseResourceOperationServiceImpl implements BaseResourceOperationSe
      * @return
      */
     @Override
-    public BaseResourceOperationDto getOperation(Long operationId) {
-        return baseResourceOperationMapper.selectOperationDtoByPrimaryKey(operationId);
+    public BaseResourceOperation getOperation(Long operationId) {
+        return baseResourceOperationMapper.selectByPrimaryKey(operationId);
     }
 
 
