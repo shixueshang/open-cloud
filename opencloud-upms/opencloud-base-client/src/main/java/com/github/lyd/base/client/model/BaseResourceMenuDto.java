@@ -13,13 +13,13 @@ public class BaseResourceMenuDto extends BaseResourceMenu implements Serializabl
 
     private static final long serialVersionUID = 3474271304324863160L;
 
-    private List<BaseResourceOperation> actionList;
+    private List<BaseResourceOperation> operationList;
 
-    public List<BaseResourceOperation> getActionList() {
-        return actionList;
+    public List<BaseResourceOperation> getOperationList() {
+        return operationList;
     }
 
-    public void setActionList(List<BaseResourceOperation> actionList) {
-        this.actionList = actionList;
+    public void setOperationList(List<BaseResourceOperation> operationList) {
+        this.operationList = operationList;
     }
 }

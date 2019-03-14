@@ -22,17 +22,12 @@ public class BaseAuthorityDto implements Serializable {
     /**
      * 菜单资源
      */
-    private BaseResourceMenu menu;
+    private BaseResourceMenuDto menu;
 
     /**
      * 接口资源
      */
     private BaseResourceApi api;
-
-    /**
-     * 操作资源
-     */
-    private BaseResourceOperationDto operation;
 
     /**
      * 权限ID
@@ -76,9 +71,6 @@ public class BaseAuthorityDto implements Serializable {
         if (menu != null) {
             priority = menu.getPriority();
         }
-        if (operation != null) {
-            priority = operation.getPriority();
-        }
         if (api != null) {
             priority = api.getPriority();
         }
@@ -102,9 +94,6 @@ public class BaseAuthorityDto implements Serializable {
         if (menu != null) {
             resourceType = ResourceType.menu.name();
         }
-        if (operation != null) {
-            resourceType = ResourceType.operation.name();
-        }
         if (api != null) {
             resourceType = ResourceType.api.name();
         }
@@ -114,9 +103,6 @@ public class BaseAuthorityDto implements Serializable {
     public String getPath() {
         if (menu != null) {
             path = menu.getPrefix() + menu.getPath();
-        }
-        if (operation != null) {
-            path = operation.getPath();
         }
         if (api != null) {
             path = api.getPath();
@@ -140,11 +126,11 @@ public class BaseAuthorityDto implements Serializable {
         this.resourceType = resourceType;
     }
 
-    public BaseResourceMenu getMenu() {
+    public BaseResourceMenuDto getMenu() {
         return menu;
     }
 
-    public void setMenu(BaseResourceMenu menu) {
+    public void setMenu(BaseResourceMenuDto menu) {
         this.menu = menu;
     }
 
@@ -154,14 +140,6 @@ public class BaseAuthorityDto implements Serializable {
 
     public void setApi(BaseResourceApi api) {
         this.api = api;
-    }
-
-    public BaseResourceOperationDto getOperation() {
-        return operation;
-    }
-
-    public void setOperation(BaseResourceOperationDto operation) {
-        this.operation = operation;
     }
 
     public Long getAuthorityId() {
