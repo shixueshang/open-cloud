@@ -33,7 +33,7 @@ public final class OpenGrantedAuthority implements GrantedAuthority {
     private String owner;
 
     public Boolean getIsExpired() {
-        if (expireTime != null && System.currentTimeMillis() < expireTime.getTime()) {
+        if (expireTime != null && System.currentTimeMillis() > expireTime.getTime()) {
             return true;
         }
         return false;

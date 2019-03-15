@@ -20,4 +20,11 @@ public interface BaseRoleUserMapper extends CrudMapper<BaseRoleUser> {
      * @return
      */
     List<BaseRole> selectUserRoleList(@Param("userId") Long userId);
+
+    /**
+     * 查询用户角色ID列表
+     * @param userId
+     * @return
+     */
+    List<Long> selectUserRoleIdList(@Param("userId") Long userId);
 }

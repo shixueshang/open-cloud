@@ -25,8 +25,7 @@ public class BaseAuthorityServiceImplTest extends BaseTest {
 
     @Test
     public void  findAuthorityDetail(){
-        List<BaseMenuAuthority> list = baseAuthorityService.findMenuAuthority();
-        System.out.println(list.size());
+        List<BaseMenuAuthority> list = baseAuthorityService.findMenuAuthority(null);
     }
 
     @Test

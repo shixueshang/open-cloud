@@ -130,11 +130,18 @@ public interface BaseRoleService {
     Boolean isExist(Long userId, Long roleId);
 
     /**
-     * 获取组员角色
+     * 获取用户角色列表
      *
      * @param userId
      * @return
      */
     List<BaseRole> getUserRoles(Long userId);
 
+    /**
+     * 获取用户角色ID列表
+     *
+     * @param userId
+     * @return
+     */
+    List<Long> getUserRoleIds(Long userId);
 }

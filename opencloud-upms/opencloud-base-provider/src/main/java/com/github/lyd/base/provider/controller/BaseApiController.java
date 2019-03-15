@@ -61,7 +61,7 @@ public class BaseApiController {
             @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
     })
     @PostMapping("/api/all")
-    public ResultBody<List<BaseResourceApi>> getApiAllList(String keyword) {
+    public ResultBody<List<BaseResourceApi>> getApiAllList(@RequestParam(required = false) String keyword) {
         return ResultBody.success(apiService.findAllList(keyword));
     }
 

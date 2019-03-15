@@ -24,4 +24,14 @@
         LEFT JOIN base_role ON base_role_user.role_id = base_role.role_id
         WHERE user_id = #{userId}  and status = 1
     </select>
+
+
+    <select id="selectUserRoleIdList" resultType="java.lang.Long">
+        SELECT
+        base_role.role_id
+        FROM
+        base_role_user
+        LEFT JOIN base_role ON base_role_user.role_id = base_role.role_id
+        WHERE user_id = #{userId}  and status = 1
+    </select>
 </mapper>

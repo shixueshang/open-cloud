@@ -17,6 +17,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -66,7 +67,7 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
     @GetMapping("/authority/menu/list")
     @Override
     public ResultBody<List<BaseMenuAuthority>> getMenuAuthorityList() {
-        List<BaseMenuAuthority> result = baseAuthorityService.findMenuAuthority();
+        List<BaseMenuAuthority> result = baseAuthorityService.findMenuAuthority(1);
         return ResultBody.success(result);
     }
 
@@ -88,7 +89,7 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
     @PostMapping("/authority/grant/role")
     public ResultBody grantRoleAuthority(
             @RequestParam(value = "roleId") Long roleId,
-            @RequestParam(value = "expireTime", required = false) Date expireTime,
+            @RequestParam(value = "expireTime", required = false)@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss") Date expireTime,
             @RequestParam(value = "authorityIds", required = false) String authorityIds
     ) {
         baseAuthorityService.addRoleAuthority(roleId, expireTime, StringUtils.isNotBlank(authorityIds) ? authorityIds.split(",") : new String[]{});
@@ -115,7 +116,7 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
     @PostMapping("/authority/grant/user")
     public ResultBody grantUserAuthority(
             @RequestParam(value = "userId") Long userId,
-            @RequestParam(value = "expireTime", required = false) Date expireTime,
+            @RequestParam(value = "expireTime", required = false) @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")  Date expireTime,
             @RequestParam(value = "authorityIds", required = false) String authorityIds
     ) {
         baseAuthorityService.addUserAuthority(userId, expireTime, StringUtils.isNotBlank(authorityIds) ? authorityIds.split(",") : new String[]{});
@@ -141,7 +142,7 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
     @PostMapping("/authority/grant/app")
     public ResultBody grantAppAuthority(
             @RequestParam(value = "appId") String appId,
-            @RequestParam(value = "expireTime", required = false) Date expireTime,
+            @RequestParam(value = "expireTime", required = false)@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss") Date expireTime,
             @RequestParam(value = "authorityIds", required = false) String authorityIds
     ) {
         baseAuthorityService.addAppAuthority(appId, expireTime, StringUtils.isNotBlank(authorityIds) ? authorityIds.split(",") : new String[]{});

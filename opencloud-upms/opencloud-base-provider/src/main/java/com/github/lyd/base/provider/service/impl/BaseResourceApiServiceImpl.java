@@ -63,7 +63,7 @@ public class BaseResourceApiServiceImpl implements BaseResourceApiService {
         Example example = builder.criteria()
                 .orLike("apiCode", keyword)
                 .orLike("apiName", keyword)
-                .andEqualTo("isOpen","1").end().build();
+                .end().build();
         example.orderBy("apiId").asc().orderBy("priority").asc();
         List<BaseResourceApi> list = baseResourceApiMapper.selectByExample(example);
         return list;

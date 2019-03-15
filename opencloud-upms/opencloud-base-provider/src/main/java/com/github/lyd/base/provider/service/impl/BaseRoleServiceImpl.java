@@ -298,5 +298,16 @@ public class BaseRoleServiceImpl implements BaseRoleService {
         return roles;
     }
 
+    /**
+     * 获取用户角色ID列表
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<Long> getUserRoleIds(Long userId) {
+        return baseRoleUserMapper.selectUserRoleIdList(userId);
+    }
+
 
 }

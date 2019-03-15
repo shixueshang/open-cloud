@@ -11,6 +11,7 @@ import com.github.lyd.base.provider.mapper.BaseUserAuthorityMapper;
 import com.github.lyd.base.provider.service.*;
 import com.github.lyd.common.constants.CommonConstants;
 import com.github.lyd.common.exception.OpenAlertException;
+import com.github.lyd.common.exception.OpenException;
 import com.github.lyd.common.mapper.ExampleBuilder;
 import com.github.lyd.common.security.OpenGrantedAuthority;
 import com.google.common.collect.Lists;
@@ -67,8 +68,9 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
      * @return
      */
     @Override
-    public List<BaseMenuAuthority> findMenuAuthority() {
+    public List<BaseMenuAuthority> findMenuAuthority(Integer status) {
         Map map = Maps.newHashMap();
+        map.put("status", status);
         List<BaseMenuAuthority> authorities = baseAuthorityMapper.selectMenuAuthority(map);
         return authorities;
 
@@ -77,7 +79,9 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
     @Override
     public List<BaseApiAuthority> findApiAuthority(String serviceId) {
         Map map = Maps.newHashMap();
-        map.put("serviceId",serviceId);
+        map.put("serviceId", serviceId);
+        map.put("status", 1);
+        map.put("isOpen",1);
         List<BaseApiAuthority> authorities = baseAuthorityMapper.selectApiAuthority(map);
         return authorities;
 
@@ -93,6 +97,7 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
     public List<OpenGrantedAuthority> findAuthority(String type) {
         Map map = Maps.newHashMap();
         map.put("type", type);
+        map.put("status", 1);
         return baseAuthorityMapper.selectAuthority(map);
     }
 
@@ -287,6 +292,8 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
         if (CommonConstants.ROOT.equals(user.getUserName())) {
             throw new OpenAlertException("默认用户无需授权!");
         }
+        // 获取用户角色列表
+        List<Long> roleIds = baseRoleService.getUserRoleIds(userId);
         // 清空用户已有授权
         ExampleBuilder builder = new ExampleBuilder(BaseUserAuthority.class);
         Example example = builder.criteria()
@@ -296,14 +303,22 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
         BaseUserAuthority authority = null;
         if (authorityIds != null && authorityIds.length > 0) {
             for (String id : authorityIds) {
+                if (roleIds != null && roleIds.size() > 0) {
+                    // 防止重复授权
+                    if (isGrantByRoles(id, roleIds.toArray(new Long[roleIds.size()]))) {
+                        continue;
+                    }
+                }
                 authority = new BaseUserAuthority();
                 authority.setAuthorityId(Long.parseLong(id));
                 authority.setUserId(userId);
                 authority.setExpireTime(expireTime);
                 authorities.add(authority);
             }
-            // 批量添加授权
-            baseUserAuthorityMapper.insertList(authorities);
+            if (!authorities.isEmpty()) {
+                // 批量添加授权
+                baseUserAuthorityMapper.insertList(authorities);
+            }
         }
     }
 
@@ -428,7 +443,7 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
     public List<BaseMenuAuthority> findUserMenuAuthority(Long userId, Boolean root) {
         if (root) {
             // 超级管理员返回所有
-            return findMenuAuthority();
+            return findMenuAuthority(null);
         }
         // 用户权限列表
         List<BaseMenuAuthority> authorities = Lists.newArrayList();
@@ -452,6 +467,24 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
         authorities.clear();
         authorities.addAll(h);
         return authorities;
+    }
+
+    /**
+     * 检测权限是否被多个角色授权
+     *
+     * @param authorityId
+     * @param roleIds
+     * @return
+     */
+    @Override
+    public Boolean isGrantByRoles(String authorityId, Long... roleIds) {
+        if (roleIds == null || roleIds.length == 0) {
+            throw new OpenException("roleIds is empty");
+        }
+        ExampleBuilder builder = new ExampleBuilder(BaseRoleAuthority.class);
+        Example example = builder.criteria().andIn("roleId", roleIds).andEqualTo("authorityId", authorityId).end().build();
+        int count = baseRoleAuthorityMapper.selectCountByExample(example);
+        return count > 0;
     }
 
 

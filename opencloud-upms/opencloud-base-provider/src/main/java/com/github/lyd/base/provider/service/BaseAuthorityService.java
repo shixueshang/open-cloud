@@ -21,7 +21,7 @@ public interface BaseAuthorityService {
      *
      * @return
      */
-    List<BaseMenuAuthority> findMenuAuthority();
+    List<BaseMenuAuthority> findMenuAuthority(Integer status);
 
 
     /**
@@ -36,7 +36,7 @@ public interface BaseAuthorityService {
     /**
      * 获取所有可用权限
      *
-     * @param type      = null 查询全部  type = 1 获取菜单和操作 type = 2 获取API
+     * @param type = null 查询全部  type = 1 获取菜单和操作 type = 2 获取API
      * @return
      */
     List<OpenGrantedAuthority> findAuthority(String type);
@@ -157,6 +157,15 @@ public interface BaseAuthorityService {
      * @return
      */
     List<BaseMenuAuthority> findUserMenuAuthority(Long userId, Boolean root);
+
+    /**
+     * 检测全是是否被多个角色授权
+     *
+     * @param authorityId
+     * @param roleIds
+     * @return
+     */
+    Boolean isGrantByRoles(String authorityId, Long... roleIds);
 
 
 }
