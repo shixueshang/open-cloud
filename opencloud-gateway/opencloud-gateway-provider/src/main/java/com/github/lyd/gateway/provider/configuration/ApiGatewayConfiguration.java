@@ -76,7 +76,7 @@ public class ApiGatewayConfiguration {
      *
      * @param zuulRoutesLocator
      * @param rateLimitProperties
-     * @param baseAuthorityRestService
+     * @param baseAuthorityRemoteService
      * @param gatewayIpLimitService
      * @param gatewayRateLimitService
      * @return

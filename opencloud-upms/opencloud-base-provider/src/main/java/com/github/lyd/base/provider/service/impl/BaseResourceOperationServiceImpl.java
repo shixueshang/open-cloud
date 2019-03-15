@@ -60,7 +60,7 @@ public class BaseResourceOperationServiceImpl implements BaseResourceOperationSe
     public List<BaseResourceOperation> findListByMenuId(Long menuId) {
         ExampleBuilder builder = new ExampleBuilder(BaseResourceOperation.class);
         Example example = builder.criteria()
-                .orLike("menuId", menuId).end().build();
+                .andEqualTo("menuId", menuId).end().build();
         List<BaseResourceOperation> list = baseResourceOperationMapper.selectByExample(example);
         return list;
     }
