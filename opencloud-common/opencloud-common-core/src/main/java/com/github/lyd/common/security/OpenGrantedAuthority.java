@@ -104,4 +104,5 @@ public final class OpenGrantedAuthority implements GrantedAuthority {
     public void setOwner(String owner) {
         this.owner = owner;
     }
+
 }

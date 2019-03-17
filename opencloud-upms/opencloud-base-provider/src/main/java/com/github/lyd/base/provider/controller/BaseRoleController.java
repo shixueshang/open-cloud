@@ -2,7 +2,6 @@ package com.github.lyd.base.provider.controller;
 
 import com.github.lyd.base.client.model.entity.BaseRole;
 import com.github.lyd.base.provider.service.BaseRoleService;
-import com.github.lyd.common.http.OpenRestTemplate;
 import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.model.PageParams;
 import com.github.lyd.common.model.ResultBody;
@@ -23,9 +22,6 @@ import java.util.List;
 public class BaseRoleController {
     @Autowired
     private BaseRoleService baseRoleService;
-
-    @Autowired
-    private OpenRestTemplate openRestTemplate;
 
     /**
      * 获取分页角色列表
@@ -50,16 +46,12 @@ public class BaseRoleController {
     /**
      * 获取所有角色列表
      *
-     * @param keyword
      * @return
      */
     @ApiOperation(value = "获取所有角色列表", notes = "获取所有角色列表")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
-    })
     @PostMapping("/role/all")
-    public ResultBody<List<BaseRole>> getRoleAllList(String keyword) {
-        return ResultBody.success(baseRoleService.findList(keyword));
+    public ResultBody<List<BaseRole>> getRoleAllList() {
+        return ResultBody.success(baseRoleService.findList());
     }
 
     /**
@@ -106,8 +98,12 @@ public class BaseRoleController {
         role.setRoleName(roleName);
         role.setStatus(status);
         role.setRoleDesc(roleDesc);
-        Long result = baseRoleService.addRole(role);
-        return ResultBody.success(result);
+        Long roleId = null;
+        BaseRole result = baseRoleService.addRole(role);
+        if (result != null) {
+            roleId = result.getRoleId();
+        }
+        return ResultBody.success(roleId);
     }
 
     /**
@@ -143,7 +139,6 @@ public class BaseRoleController {
         role.setStatus(status);
         role.setRoleDesc(roleDesc);
         baseRoleService.updateRole(role);
-        openRestTemplate.refreshGateway();
         return ResultBody.success();
     }
 
@@ -163,7 +158,6 @@ public class BaseRoleController {
             @RequestParam(value = "roleId") Long roleId
     ) {
         baseRoleService.removeRole(roleId);
-        openRestTemplate.refreshGateway();
         return ResultBody.success();
     }
 

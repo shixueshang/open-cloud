@@ -2,7 +2,6 @@ package com.github.lyd.base.client.api;
 
 import com.github.lyd.base.client.model.BaseUserAccountDto;
 import com.github.lyd.common.model.ResultBody;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -16,7 +15,7 @@ public interface BaseUserAccountRemoteApi {
      * @param username 登录名
      * @return
      */
-    @GetMapping("/account/localLogin")
+    @PostMapping("/account/localLogin")
     ResultBody<BaseUserAccountDto> localLogin(@RequestParam(value = "username") String username);
 
 

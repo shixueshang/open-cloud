@@ -11,7 +11,6 @@
         <result column="app_type" property="appType" jdbcType="VARCHAR"/>
         <result column="app_desc" property="appDesc" jdbcType="VARCHAR"/>
         <result column="website" property="website" jdbcType="VARCHAR"/>
-        <result column="redirect_uris" property="redirectUrls" jdbcType="VARCHAR"/>
         <result column="user_id" property="userId" jdbcType="BIGINT"/>
         <result column="user_type" property="userType" jdbcType="VARCHAR"/>
         <result column="status" property="status" jdbcType="TINYINT"/>

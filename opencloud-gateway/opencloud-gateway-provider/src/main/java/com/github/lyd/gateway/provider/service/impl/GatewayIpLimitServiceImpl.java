@@ -102,11 +102,11 @@ public class GatewayIpLimitServiceImpl implements GatewayIpLimitService {
      * @param policy
      */
     @Override
-    public Long addIpLimitPolicy(GatewayIpLimit policy) {
+    public GatewayIpLimit addIpLimitPolicy(GatewayIpLimit policy) {
         policy.setCreateTime(new Date());
         policy.setUpdateTime(policy.getCreateTime());
         gatewayIpLimitMapper.insertSelective(policy);
-        return policy.getPolicyId();
+        return policy;
     }
 
     /**
@@ -115,9 +115,10 @@ public class GatewayIpLimitServiceImpl implements GatewayIpLimitService {
      * @param policy
      */
     @Override
-    public void updateIpLimitPolicy(GatewayIpLimit policy) {
+    public GatewayIpLimit updateIpLimitPolicy(GatewayIpLimit policy) {
         policy.setUpdateTime(new Date());
         gatewayIpLimitMapper.updateByPrimaryKeySelective(policy);
+        return policy;
     }
 
     /**

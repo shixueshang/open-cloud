@@ -22,10 +22,9 @@ public interface BaseResourceApiService {
 
     /**
      * 查询列表
-     * @param keyword
      * @return
      */
-    List<BaseResourceApi> findAllList(String keyword);
+    List<BaseResourceApi> findAllList();
 
     /**
      * 根据主键获取接口
@@ -50,7 +49,7 @@ public interface BaseResourceApiService {
      * @param api
      * @return
      */
-    Long addApi(BaseResourceApi api);
+    BaseResourceApi addApi(BaseResourceApi api);
 
     /**
      * 修改接口
@@ -58,7 +57,7 @@ public interface BaseResourceApiService {
      * @param api
      * @return
      */
-    void updateApi(BaseResourceApi api);
+    BaseResourceApi updateApi(BaseResourceApi api);
 
     /**
      * 查询接口

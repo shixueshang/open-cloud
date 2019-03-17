@@ -53,16 +53,12 @@ public class BaseApiController {
     /**
      * 获取所有接口列表
      *
-     * @param keyword
      * @return
      */
     @ApiOperation(value = "获取所有接口列表", notes = "获取所有接口列表")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
-    })
     @PostMapping("/api/all")
-    public ResultBody<List<BaseResourceApi>> getApiAllList(@RequestParam(required = false) String keyword) {
-        return ResultBody.success(apiService.findAllList(keyword));
+    public ResultBody<List<BaseResourceApi>> getApiAllList() {
+        return ResultBody.success(apiService.findAllList());
     }
 
     /**
@@ -129,8 +125,14 @@ public class BaseApiController {
         api.setApiDesc(apiDesc);
         api.setIsOpen(isOpen);
         api.setIsAuth(isAuth);
-        Long result = apiService.addApi(api);
-        return ResultBody.success(result);
+        Long apiId = null;
+        BaseResourceApi result = apiService.addApi(api);
+        if (result != null) {
+            apiId = result.getApiId();
+            // 刷新网关
+            openRestTemplate.refreshGateway();
+        }
+        return ResultBody.success(apiId);
     }
 
     /**

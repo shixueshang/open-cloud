@@ -21,7 +21,7 @@ import java.util.Map;
  * @date: 2018/11/9 15:43
  * @description:
  */
-@Api(tags = "开放接口")
+@Api(tags = "认证开放接口")
 @RestController
 public class ApiController {
     @Autowired

@@ -25,22 +25,7 @@ public class BaseMenuAuthority extends BaseResourceMenu implements Serializable 
     private String authority;
 
 
-    /**
-     * 服务名
-     */
-    private String serviceId;
-
-    /**
-     * 是否需要安全认证
-     */
-    private Boolean isAuth = true;
-
     private List<BaseOperationAuthority> operationList;
-
-
-    public Boolean getAuth() {
-        return isAuth;
-    }
 
     public Long getAuthorityId() {
         return authorityId;
@@ -58,18 +43,6 @@ public class BaseMenuAuthority extends BaseResourceMenu implements Serializable 
         this.authority = authority;
     }
 
-
-    public String getServiceId() {
-        return serviceId;
-    }
-
-    public void setServiceId(String serviceId) {
-        this.serviceId = serviceId;
-    }
-
-    public void setAuth(Boolean auth) {
-        isAuth = auth;
-    }
 
     public List<BaseOperationAuthority> getOperationList() {
         return operationList;

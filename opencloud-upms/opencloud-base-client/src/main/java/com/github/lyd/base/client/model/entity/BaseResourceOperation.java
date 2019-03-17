@@ -74,10 +74,10 @@ public class BaseResourceOperation implements Serializable {
     private Integer isPersist;
 
     /**
-     * 绑定API
+     * 服务ID
      */
-    @Column(name = "api_id")
-    private Long apiId;
+    @Column(name = "service_id")
+    private String serviceId;
 
     /**
      * 获取资源ID
@@ -221,11 +221,11 @@ public class BaseResourceOperation implements Serializable {
         this.isPersist = isPersist;
     }
 
-    public Long getApiId() {
-        return apiId;
+    public String getServiceId() {
+        return serviceId;
     }
 
-    public void setApiId(Long apiId) {
-        this.apiId = apiId;
+    public void setServiceId(String serviceId) {
+        this.serviceId = serviceId;
     }
 }

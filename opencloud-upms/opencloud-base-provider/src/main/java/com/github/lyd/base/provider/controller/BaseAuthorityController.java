@@ -1,13 +1,13 @@
 package com.github.lyd.base.provider.controller;
 
 import com.github.lyd.base.client.api.BaseAuthorityRemoteApi;
+import com.github.lyd.base.client.model.AccessAuthority;
 import com.github.lyd.base.client.model.BaseApiAuthority;
 import com.github.lyd.base.client.model.BaseMenuAuthority;
 import com.github.lyd.base.client.model.entity.BaseUser;
 import com.github.lyd.base.provider.service.BaseAuthorityService;
 import com.github.lyd.base.provider.service.BaseUserService;
 import com.github.lyd.common.constants.CommonConstants;
-import com.github.lyd.common.http.OpenRestTemplate;
 import com.github.lyd.common.model.ResultBody;
 import com.github.lyd.common.security.OpenGrantedAuthority;
 import com.github.lyd.common.security.OpenHelper;
@@ -39,9 +39,20 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
     @Autowired
     private BaseAuthorityService baseAuthorityService;
     @Autowired
-    private OpenRestTemplate openRestTemplate;
-    @Autowired
     private BaseUserService baseUserService;
+
+    /**
+     * 获取所有访问权限列表
+     *
+     * @return
+     */
+    @ApiOperation(value = "获取所有访问权限列表", notes = "获取所有访问权限列表")
+    @GetMapping("/authority/access/list")
+    @Override
+    public ResultBody<List<AccessAuthority>> getAccessAuthorityList() {
+        List<AccessAuthority> result =  baseAuthorityService.findAccessAuthority();
+        return ResultBody.success(result);
+    }
 
     /**
      * 获取权限列表
@@ -50,13 +61,15 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
      */
     @ApiOperation(value = "获取接口权限列表", notes = "获取接口权限列表")
     @GetMapping("/authority/api/list")
-    @Override
     public ResultBody<List<BaseApiAuthority>> getApiAuthorityList(
-            @RequestParam(value = "serviceId",required = false) String serviceId
+            @RequestParam(value = "isOpen", required = false) Integer isOpen,
+            @RequestParam(value = "serviceId", required = false) String serviceId
     ) {
-        List<BaseApiAuthority> result = baseAuthorityService.findApiAuthority(serviceId);
+        List<BaseApiAuthority> result = baseAuthorityService.findApiAuthority(isOpen, serviceId);
         return ResultBody.success(result);
     }
+
+
 
     /**
      * 获取菜单权限列表
@@ -89,12 +102,10 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
     @PostMapping("/authority/grant/role")
     public ResultBody grantRoleAuthority(
             @RequestParam(value = "roleId") Long roleId,
-            @RequestParam(value = "expireTime", required = false)@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss") Date expireTime,
+            @RequestParam(value = "expireTime", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date expireTime,
             @RequestParam(value = "authorityIds", required = false) String authorityIds
     ) {
         baseAuthorityService.addRoleAuthority(roleId, expireTime, StringUtils.isNotBlank(authorityIds) ? authorityIds.split(",") : new String[]{});
-        // 刷新王国
-        openRestTemplate.refreshGateway();
         return ResultBody.success();
     }
 
@@ -116,11 +127,10 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
     @PostMapping("/authority/grant/user")
     public ResultBody grantUserAuthority(
             @RequestParam(value = "userId") Long userId,
-            @RequestParam(value = "expireTime", required = false) @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")  Date expireTime,
+            @RequestParam(value = "expireTime", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date expireTime,
             @RequestParam(value = "authorityIds", required = false) String authorityIds
     ) {
         baseAuthorityService.addUserAuthority(userId, expireTime, StringUtils.isNotBlank(authorityIds) ? authorityIds.split(",") : new String[]{});
-        openRestTemplate.refreshGateway();
         return ResultBody.success();
     }
 
@@ -142,11 +152,10 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
     @PostMapping("/authority/grant/app")
     public ResultBody grantAppAuthority(
             @RequestParam(value = "appId") String appId,
-            @RequestParam(value = "expireTime", required = false)@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss") Date expireTime,
+            @RequestParam(value = "expireTime", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date expireTime,
             @RequestParam(value = "authorityIds", required = false) String authorityIds
     ) {
         baseAuthorityService.addAppAuthority(appId, expireTime, StringUtils.isNotBlank(authorityIds) ? authorityIds.split(",") : new String[]{});
-        openRestTemplate.refreshGateway();
         return ResultBody.success();
     }
 
@@ -182,8 +191,8 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
     public ResultBody<List<GrantedAuthority>> getGrantedUserAuthority(
             @RequestParam(value = "userId") Long userId
     ) {
-        BaseUser user = baseUserService.getProfile(userId);
-        List<OpenGrantedAuthority> result = baseAuthorityService.findUserGrantedAuthority(userId,CommonConstants.ROOT.equals(user.getUserName()));
+        BaseUser user = baseUserService.getUserByUserId(userId);
+        List<OpenGrantedAuthority> result = baseAuthorityService.findUserGrantedAuthority(userId, CommonConstants.ROOT.equals(user.getUserName()));
         return ResultBody.success(result);
     }
 
@@ -199,8 +208,7 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
             @ApiImplicitParam(name = "appId", value = "应用Id", defaultValue = "", required = true, paramType = "form")
     })
     @PostMapping("/authority/granted/app")
-    @Override
-    public ResultBody<List<GrantedAuthority>> getGrantedAppAuthority(
+    public ResultBody<List<OpenGrantedAuthority>> getGrantedAppAuthority(
             @RequestParam(value = "appId") String appId
     ) {
         List<OpenGrantedAuthority> result = baseAuthorityService.findAppGrantedAuthority(appId);

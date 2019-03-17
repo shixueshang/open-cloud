@@ -105,10 +105,14 @@ public class GatewayRouteController {
         route.setStripPrefix(stripPrefix);
         route.setStatus(status);
         route.setRouteDesc(routeDesc);
-        Long result = gatewayRouteService.addRoute(route);
-        // 刷新网关
-        openRestTemplate.refreshGateway();
-        return ResultBody.success(result);
+        Long routeId = null;
+        GatewayRoute result = gatewayRouteService.addRoute(route);
+        if (result != null) {
+            routeId = result.getRouteId();
+            // 刷新网关
+            openRestTemplate.refreshGateway();
+        }
+        return ResultBody.success(routeId);
     }
 
     /**
@@ -170,7 +174,7 @@ public class GatewayRouteController {
      */
     @ApiOperation(value = "移除路由", notes = "移除路由")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "routeId", required = true, value = "ApiId", paramType = "form"),
+            @ApiImplicitParam(name = "routeId", required = true, value = "routeId", paramType = "form"),
     })
     @PostMapping("/gateway/route/remove")
     public ResultBody removeRoute(

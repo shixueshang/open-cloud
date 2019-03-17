@@ -24,7 +24,6 @@
             a.authority_id,
             a.authority,
             rp.expire_time,
-            a.service_id,
             'role' as owner
         FROM
             base_role_authority AS rp

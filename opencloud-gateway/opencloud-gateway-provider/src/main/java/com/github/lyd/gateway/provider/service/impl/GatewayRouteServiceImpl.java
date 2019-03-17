@@ -75,7 +75,7 @@ public class GatewayRouteServiceImpl implements GatewayRouteService {
      * @param route
      */
     @Override
-    public Long addRoute(GatewayRoute route) {
+    public GatewayRoute addRoute(GatewayRoute route) {
         if (StringUtils.isBlank(route.getPath())) {
             throw new OpenAlertException(String.format("path不能为空!"));
         }
@@ -84,7 +84,7 @@ public class GatewayRouteServiceImpl implements GatewayRouteService {
         }
         route.setIsPersist(0);
         gatewayRouteMapper.insertSelective(route);
-        return route.getRouteId();
+        return route;
     }
 
     /**
@@ -93,13 +93,16 @@ public class GatewayRouteServiceImpl implements GatewayRouteService {
      * @param route
      */
     @Override
-    public void updateRoute(GatewayRoute route) {
+    public GatewayRoute updateRoute(GatewayRoute route) {
         if (StringUtils.isBlank(route.getPath())) {
             throw new OpenAlertException(String.format("path不能为空"));
         }
         GatewayRoute saved = getRoute(route.getRouteId());
         if (saved == null) {
             throw new OpenAlertException("路由信息不存在!");
+        }
+        if (saved != null && saved.getIsPersist().equals(BaseConstants.ENABLED)) {
+            throw new OpenAlertException(String.format("保留数据,不允许修改"));
         }
         if (!saved.getPath().equals(route.getPath())) {
             // 和原来不一致重新检查唯一性
@@ -108,6 +111,7 @@ public class GatewayRouteServiceImpl implements GatewayRouteService {
             }
         }
         gatewayRouteMapper.updateByPrimaryKeySelective(route);
+        return route;
     }
 
     /**

@@ -1,18 +1,14 @@
 package com.github.lyd.auth.provider.service.impl;
 
-import com.github.lyd.auth.client.model.ClientDetailsDto;
-import com.github.lyd.auth.provider.service.feign.BaseAuthorityRemoteService;
+import com.github.lyd.auth.provider.service.feign.BaseAppRemoteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.ClientRegistrationException;
-import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
+import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 /**
  * @author: liuyadu
@@ -25,19 +21,13 @@ import java.util.List;
 public class ClientDetailsServiceImpl implements ClientDetailsService {
 
     @Autowired
-    private JdbcClientDetailsService jdbcClientDetailsService;
-
-    @Autowired
-    private BaseAuthorityRemoteService baseAuthorityRemoteService;
+    private BaseAppRemoteService baseAppRemoteService;
 
     @Override
     public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
-        ClientDetails details = jdbcClientDetailsService.loadClientByClientId(clientId);
+        BaseClientDetails details = baseAppRemoteService.getAppClientInfo(clientId).getData();
         if (details != null) {
-            // 获取应用权限
-            List<GrantedAuthority> authorities = baseAuthorityRemoteService.getGrantedAppAuthority(clientId).getData();
-            ClientDetailsDto clientDetailsDto = new ClientDetailsDto(details, authorities);
-            return clientDetailsDto;
+            return details;
         }
         return null;
     }

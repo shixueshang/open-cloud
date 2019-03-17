@@ -64,6 +64,11 @@ public class OpenRestTemplate extends RestTemplate {
 
     /**
      * 刷新网关
+     * 注:不要频繁调用!
+     * 1.资源权限发生变化时可以调用
+     * 2.流量限制变化时可以调用
+     * 3.IP访问发生变化时可以调用
+     * 4.智能路由发生变化时可以调用
      */
     public void refreshGateway() {
         try {

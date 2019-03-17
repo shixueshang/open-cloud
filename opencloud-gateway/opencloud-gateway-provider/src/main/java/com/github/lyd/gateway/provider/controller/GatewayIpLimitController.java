@@ -128,10 +128,15 @@ public class GatewayIpLimitController {
         ipLimit.setPolicyName(policyName);
         ipLimit.setPolicyType(policyType);
         ipLimit.setIpAddress(ipAddress);
-        Long result = gatewayIpLimitService.addIpLimitPolicy(ipLimit);
-        // 刷新网关
-        openRestTemplate.refreshGateway();
-        return ResultBody.success(result);
+        Long policyId = null;
+        GatewayIpLimit result = gatewayIpLimitService.addIpLimitPolicy(ipLimit);
+        if(result!=null){
+            policyId = result.getPolicyId();
+            // 刷新网关
+            openRestTemplate.refreshGateway();
+        }
+
+        return ResultBody.success(policyId);
     }
 
     /**
@@ -177,7 +182,7 @@ public class GatewayIpLimitController {
      */
     @ApiOperation(value = "移除IP限制", notes = "移除IP限制")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "policyId", required = true, value = "ApiId", paramType = "form"),
+            @ApiImplicitParam(name = "policyId", required = true, value = "policyId", paramType = "form"),
     })
     @PostMapping("/gateway/limit/ip/remove")
     public ResultBody removeIpLimit(

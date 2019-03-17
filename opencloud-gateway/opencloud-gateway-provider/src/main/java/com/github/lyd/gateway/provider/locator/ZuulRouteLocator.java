@@ -91,6 +91,7 @@ public class ZuulRouteLocator extends SimpleRouteLocator {
                     ZuulProperties.ZuulRoute zuulRoute = new ZuulProperties.ZuulRoute();
 
                     BeanUtils.copyProperties(result, zuulRoute);
+                    zuulRoute.setId(result.getServiceId());
                     routes.put(zuulRoute.getPath(), zuulRoute);
                 }
             }

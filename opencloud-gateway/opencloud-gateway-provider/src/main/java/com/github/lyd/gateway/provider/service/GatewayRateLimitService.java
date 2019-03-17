@@ -51,14 +51,14 @@ public interface GatewayRateLimitService {
      * @param policy
      * @return
      */
-    Long addRateLimitPolicy(GatewayRateLimit policy);
+    GatewayRateLimit addRateLimitPolicy(GatewayRateLimit policy);
 
     /**
      * 更新限流策略
      *
      * @param policy
      */
-    void updateRateLimitPolicy(GatewayRateLimit policy);
+    GatewayRateLimit updateRateLimitPolicy(GatewayRateLimit policy);
 
     /**
      * 删除限流策略

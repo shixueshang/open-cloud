@@ -15,8 +15,7 @@
     SELECT
       a.authority_id,
       a.authority,
-      a.service_id,
-      ap.expire_time
+      ap.expire_time,
       'app' as owner
     FROM
       base_app_authority AS ap

@@ -1,7 +1,8 @@
 package com.github.lyd.gateway.provider.filter;
 
-import com.github.lyd.base.client.model.BaseApiAuthority;
+import com.github.lyd.base.client.model.AccessAuthority;
 import com.github.lyd.common.constants.CommonConstants;
+import com.github.lyd.common.constants.ResultEnum;
 import com.github.lyd.common.security.OpenGrantedAuthority;
 import com.github.lyd.common.utils.StringUtils;
 import com.github.lyd.common.utils.WebUtils;
@@ -38,6 +39,8 @@ public class AccessControl {
 
     private Set<String> noAuthorityAllow = new HashSet<>();
 
+    private static final String ACCESS_ERROR = "javax.servlet.access.error";
+
     public AccessControl(AccessLocator accessLocator, ApiGatewayProperties apiGatewayProperties) {
         this.accessLocator = accessLocator;
         this.apiGatewayProperties = apiGatewayProperties;
@@ -52,7 +55,7 @@ public class AccessControl {
     }
 
     /**
-     * 是否准入
+     * 访问控制
      *
      * @param request
      * @param authentication
@@ -67,44 +70,42 @@ public class AccessControl {
         if (isPermitAll(requestPath)) {
             return true;
         }
-        // 1.ip黑名单控制
-        boolean inIpBlacklist = inIpBlacklist(requestPath, remoteIpAddress);
-        if (inIpBlacklist) {
+        // 1.ip黑名单检测
+        boolean deny = matchIpBlacklist(requestPath, remoteIpAddress);
+        if (deny) {
             // 拒绝
-            //throw new AccessDeniedException("black_ip_limited");
+            request.setAttribute(ACCESS_ERROR, ResultEnum.ACCESS_DENIED_BLACK_IP_LIMITED.getMessage());
             return false;
         }
-        // 2.ip白名单控制
-        boolean[] inIpWhiteList = inIpWhiteList(requestPath, remoteIpAddress);
-        boolean hasWhiteList = inIpWhiteList[0];
-        boolean inWhite = inIpWhiteList[1];
+
+        // 2.ip白名单检测
+        boolean[] matchIpWhiteListResult = matchIpWhiteList(requestPath, remoteIpAddress);
+        boolean hasWhiteList = matchIpWhiteListResult[0];
+        boolean allow = matchIpWhiteListResult[1];
 
         // 3.判断api是否需要认证
-        boolean isAuthAccess = isAuthAccess(requestPath);
+        boolean isAuth = isAuthAccess(requestPath);
 
-        // 白名单限制  ip检查未通过 拒绝
-        // 白名单限制 ip检查通过  校验身份
-        // 非白名单限制 检测权限
         if (hasWhiteList) {
-            // 白名单限制
-            if (inWhite) {
-                // 白名单限制 ip检查通过
-                if (!isAuthAccess) {
+            // 接口存在白名单限制
+            if (allow) {
+                // IP白名单检测通过
+                if (!isAuth) {
                     // 无需身份验证,允许
                     return true;
                 } else {
                     // 校验身份
-                    return checkAuthorities(authentication, requestPath);
+                    return checkAuthorities(request, authentication, requestPath);
                 }
             } else {
-                // 白名单限制 ip检查未通过 拒绝
-                //throw new AccessDeniedException("white_ip_limited");
+                // IP白名单检测通过,拒绝
+                request.setAttribute(ACCESS_ERROR, ResultEnum.ACCESS_DENIED_WHITE_IP_LIMITED.getMessage());
                 return false;
             }
 
         } else {
-            // 非白名单限制 校验身份
-            return checkAuthorities(authentication, requestPath);
+            // 接口不存在白名单限制,只校验身份
+            return checkAuthorities(request, authentication, requestPath);
         }
     }
 
@@ -132,7 +133,7 @@ public class AccessControl {
     }
 
 
-    private boolean checkAuthorities(Authentication authentication, String requestPath) {
+    private boolean checkAuthorities(HttpServletRequest request, Authentication authentication, String requestPath) {
         Object principal = authentication.getPrincipal();
         // 已认证身份
         if (principal != null) {
@@ -145,12 +146,12 @@ public class AccessControl {
                 // 认证通过,并且无需权限
                 return true;
             }
-            return mathAuthorities(authentication, requestPath);
+            return mathAuthorities(request, authentication, requestPath);
         }
         return false;
     }
 
-    public boolean mathAuthorities(Authentication authentication, String requestPath) {
+    public boolean mathAuthorities(HttpServletRequest request, Authentication authentication, String requestPath) {
         Collection<ConfigAttribute> attributes = getAttributes(requestPath);
         if (authentication == null) {
             return false;
@@ -171,7 +172,7 @@ public class AccessControl {
                             OpenGrantedAuthority customer = (OpenGrantedAuthority) authority;
                             if (customer.getIsExpired() != null && customer.getIsExpired()) {
                                 // 授权已过期
-                                //throw new AccessDeniedException("authority_is_expired");
+                                request.setAttribute(ACCESS_ERROR, ResultEnum.ACCESS_DENIED_AUTHORITY_EXPIRED.getMessage());
                                 return false;
                             }
                         }
@@ -196,7 +197,7 @@ public class AccessControl {
     }
 
 
-    private boolean inIpBlacklist(String requestPath, String remoteIpAddress) {
+    private boolean matchIpBlacklist(String requestPath, String remoteIpAddress) {
         List<GatewayIpLimitApisDto> blackList = accessLocator.getIpBlackList();
         if (blackList != null) {
             for (GatewayIpLimitApisDto api : blackList) {
@@ -211,20 +212,20 @@ public class AccessControl {
 
     }
 
-    private boolean[] inIpWhiteList(String requestPath, String remoteIpAddress) {
+    private boolean[] matchIpWhiteList(String requestPath, String remoteIpAddress) {
         boolean hasWhiteList = false;
-        boolean inWhite = false;
+        boolean allow = false;
         List<GatewayIpLimitApisDto> whiteList = accessLocator.getIpWhiteList();
         if (whiteList != null) {
             for (GatewayIpLimitApisDto api : whiteList) {
                 if (pathMatch.match(api.getPath(), requestPath) && api.getIpAddressSet() != null && !api.getIpAddressSet().isEmpty()) {
                     hasWhiteList = true;
-                    inWhite = matchIp(api.getIpAddressSet(), remoteIpAddress);
+                    allow = matchIp(api.getIpAddressSet(), remoteIpAddress);
                     break;
                 }
             }
         }
-        return new boolean[]{hasWhiteList, inWhite};
+        return new boolean[]{hasWhiteList, allow};
     }
 
     private boolean matchIp(Set<String> ips, String remoteIpAddress) {
@@ -242,9 +243,9 @@ public class AccessControl {
     }
 
     private boolean isAuthAccess(String requestPath) {
-        List<BaseApiAuthority> authorityList = accessLocator.getAuthorityList();
+        List<AccessAuthority> authorityList = accessLocator.getAuthorityList();
         if (authorityList != null) {
-            for (BaseApiAuthority auth : authorityList) {
+            for (AccessAuthority auth : authorityList) {
                 String fullPath = auth.getPath();
                 Boolean isAuth = auth.getIsAuth() != null && auth.getIsAuth().equals(1) ? true : false;
                 // 无需认证,返回true

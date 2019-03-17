@@ -3,6 +3,8 @@ package com.github.lyd.base.provider.service.impl;
 import com.github.lyd.base.client.constants.BaseConstants;
 import com.github.lyd.base.client.constants.ResourceType;
 import com.github.lyd.base.client.model.entity.BaseResourceOperation;
+import com.github.lyd.base.client.model.entity.BaseResourceOperationApi;
+import com.github.lyd.base.provider.mapper.BaseResourceOperationApiMapper;
 import com.github.lyd.base.provider.mapper.BaseResourceOperationMapper;
 import com.github.lyd.base.provider.service.BaseAuthorityService;
 import com.github.lyd.base.provider.service.BaseResourceOperationService;
@@ -11,8 +13,10 @@ import com.github.lyd.common.mapper.ExampleBuilder;
 import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.model.PageParams;
 import com.github.pagehelper.PageHelper;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
@@ -30,7 +34,11 @@ public class BaseResourceOperationServiceImpl implements BaseResourceOperationSe
     @Autowired
     private BaseResourceOperationMapper baseResourceOperationMapper;
     @Autowired
+    private BaseResourceOperationApiMapper baseResourceOperationApiMapper;
+    @Autowired
     private BaseAuthorityService baseAuthorityService;
+    @Value("${spring.application.name}")
+    private String DEFAULT_SERVICE_ID;
 
     /**
      * 分页查询
@@ -53,6 +61,7 @@ public class BaseResourceOperationServiceImpl implements BaseResourceOperationSe
 
     /**
      * 查询菜单下所有操作
+     *
      * @param menuId
      * @return
      */
@@ -100,7 +109,7 @@ public class BaseResourceOperationServiceImpl implements BaseResourceOperationSe
      * @return
      */
     @Override
-    public Long addOperation(BaseResourceOperation operation) {
+    public BaseResourceOperation addOperation(BaseResourceOperation operation) {
         if (isExist(operation.getOperationCode())) {
             throw new OpenAlertException(String.format("%s编码已存在!", operation.getOperationCode()));
         }
@@ -117,11 +126,12 @@ public class BaseResourceOperationServiceImpl implements BaseResourceOperationSe
             operation.setIsPersist(BaseConstants.DISABLED);
         }
         operation.setCreateTime(new Date());
+        operation.setServiceId(DEFAULT_SERVICE_ID);
         operation.setUpdateTime(operation.getCreateTime());
         baseResourceOperationMapper.insertSelective(operation);
         // 同步权限表里的信息
         baseAuthorityService.saveOrUpdateAuthority(operation.getOperationId(), ResourceType.operation);
-        return operation.getOperationId();
+        return operation;
     }
 
     /**
@@ -131,7 +141,7 @@ public class BaseResourceOperationServiceImpl implements BaseResourceOperationSe
      * @return
      */
     @Override
-    public void updateOperation(BaseResourceOperation operation) {
+    public BaseResourceOperation updateOperation(BaseResourceOperation operation) {
         BaseResourceOperation saved = getOperation(operation.getOperationId());
         if (saved == null) {
             throw new OpenAlertException(String.format("%s信息不存在", operation.getOperationId()));
@@ -152,6 +162,7 @@ public class BaseResourceOperationServiceImpl implements BaseResourceOperationSe
         baseResourceOperationMapper.updateByPrimaryKeySelective(operation);
         // 同步权限表里的信息
         baseAuthorityService.saveOrUpdateAuthority(operation.getOperationId(), ResourceType.operation);
+        return operation;
     }
 
     /**
@@ -166,9 +177,59 @@ public class BaseResourceOperationServiceImpl implements BaseResourceOperationSe
         if (operation != null && operation.getIsPersist().equals(BaseConstants.ENABLED)) {
             throw new OpenAlertException(String.format("保留数据,不允许删除"));
         }
-        baseAuthorityService.removeAuthority(operationId,ResourceType.operation);
+        removeOperationApi(operationId);
+        baseAuthorityService.removeAuthority(operationId, ResourceType.operation);
         baseResourceOperationMapper.deleteByPrimaryKey(operationId);
     }
 
+    /**
+     * 操作绑定接口资源
+     *
+     * @param operationId
+     * @param apiIds
+     * @return
+     */
+    @Override
+    public void addOperationApi(Long operationId, String... apiIds) {
+        if (operationId == null) {
+            return;
+        }
+        // 移除操作已绑定接口
+        removeOperationApi(operationId);
+        if (apiIds != null && apiIds.length > 0) {
+            List<BaseResourceOperationApi> list = Lists.newArrayList();
+            for (String api : apiIds) {
+                Long apiId = Long.parseLong(api);
+                BaseResourceOperationApi item = new BaseResourceOperationApi();
+                item.setOperationId(operationId);
+                item.setApiId(apiId);
+                list.add(item);
+            }
+            baseResourceOperationApiMapper.insertList(list);
+        }
+    }
 
+    /**
+     * 查询操作已绑定接口
+     *
+     * @param operationId
+     * @return
+     */
+    @Override
+    public List<BaseResourceOperationApi> findOperationApi(Long operationId) {
+        BaseResourceOperationApi query = new BaseResourceOperationApi();
+        query.setOperationId(operationId);
+       return baseResourceOperationApiMapper.select(query);
+    }
+
+    /**
+     * 移除操作已绑定接口
+     * @param operationId
+     */
+    @Override
+    public void removeOperationApi(Long operationId) {
+        BaseResourceOperationApi operationApi = new BaseResourceOperationApi();
+        operationApi.setOperationId(operationId);
+        baseResourceOperationApiMapper.delete(operationApi);
+    }
 }

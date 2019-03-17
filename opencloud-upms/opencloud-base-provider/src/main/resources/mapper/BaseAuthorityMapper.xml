@@ -11,7 +11,13 @@
         <result column="api_id" jdbcType="BIGINT" property="apiId"/>
         <result column="operation_id" jdbcType="BIGINT" property="operationId"/>
         <result column="status" property="status" jdbcType="TINYINT"/>
-        <result column="service_id" jdbcType="VARCHAR" property="serviceId"/>
+    </resultMap>
+
+    <resultMap id="AccessAuthority" type="com.github.lyd.base.client.model.AccessAuthority">
+        <result column="path" jdbcType="VARCHAR" property="path"/>
+        <result column="authority" jdbcType="VARCHAR" property="authority"/>
+        <result column="service_id" jdbcType="TIMESTAMP" property="serviceId"/>
+        <result column="is_auth" jdbcType="INTEGER" property="isAuth"/>
     </resultMap>
 
     <resultMap id="OpenGrantedAuthority" type="com.github.lyd.common.security.OpenGrantedAuthority">
@@ -25,7 +31,6 @@
                extends="com.github.lyd.base.provider.mapper.BaseResourceMenuMapper.BaseResultMap">
         <result column="authority_id" jdbcType="BIGINT" property="authorityId"/>
         <result column="authority" jdbcType="VARCHAR" property="authority"/>
-        <result column="service_id" jdbcType="VARCHAR" property="serviceId"/>
         <collection property="operationList" column="{menuId=menu_id,status=status}" select="selectOperationAuthority"/>
     </resultMap>
 
@@ -46,14 +51,13 @@
         SELECT
             a.authority_id,
             a.authority,
-            a.service_id,
             m.*
         FROM
             base_authority AS a
         INNER JOIN base_resource_menu AS m ON a.menu_id = m.menu_id
         <where>
             <if test="status!=null">
-                AND a.status = #{status}
+                AND m.status = #{status}
             </if>
         </where>
     </select>
@@ -62,7 +66,6 @@
         SELECT
         a.authority_id,
         a.authority,
-        a.service_id,
         o.*
         FROM
         base_authority AS a
@@ -75,7 +78,7 @@
         </if>
         <where>
             <if test="status!=null">
-                AND a.status = #{status}
+                AND o.status = #{status}
             </if>
             <if test="menuId!=null">
                 AND o.menu_id = #{menuId}
@@ -99,7 +102,7 @@
         INNER JOIN base_resource_api AS api ON a.api_id = api.api_id
         <where>
             <if test="status!=null">
-                AND a.status = #{status}
+                AND api.status = #{status}
             </if>
             <if test="serviceId!=null">
                 AND api.service_id = #{serviceId}
@@ -110,12 +113,11 @@
         </where>
     </select>
 
-    <select id="selectAuthority"
+    <select id="selectAllGrantedAuthority"
             resultMap="OpenGrantedAuthority">
         select
         authority_id,
         authority,
-        service_id,
         'user' as owner
         from base_authority
         <where>
@@ -129,5 +131,46 @@
                 and api_id is not null
             </if>
         </where>
+    </select>
+
+    <select id="selectAccessAuthority" resultMap="AccessAuthority">
+        SELECT
+            a.authority_id,
+            a.authority,
+            menu.path,
+            menu.service_id,
+            '1' AS is_auth
+        FROM
+            base_authority AS a
+                INNER JOIN base_resource_menu AS menu ON a.menu_id = menu.menu_id
+        WHERE
+            menu.`status` = 1
+        UNION ALL
+        SELECT
+            a.authority_id,
+            a.authority,
+            api.path,
+            api.service_id,
+            api.is_auth
+        FROM
+            base_authority AS a
+                INNER JOIN base_resource_api AS api ON a.api_id = api.api_id
+        WHERE
+            api.`status` = 1
+        UNION ALL
+        SELECT
+            a.authority_id,
+            a.authority,
+            api.path,
+            api.service_id,
+            api.is_auth
+        FROM
+            base_authority AS a
+                INNER JOIN base_resource_operation AS o ON a.operation_id = o.operation_id
+                INNER JOIN base_resource_operation_api AS oa ON oa.operation_id = o.operation_id
+                INNER JOIN base_resource_api AS api ON oa.api_id = api.api_id
+        WHERE
+            o.`status` = 1
+          AND api.`status` = 1
     </select>
 </mapper>

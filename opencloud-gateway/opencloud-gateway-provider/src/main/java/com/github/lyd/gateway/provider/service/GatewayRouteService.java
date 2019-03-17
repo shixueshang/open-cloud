@@ -41,14 +41,14 @@ public interface GatewayRouteService {
      *
      * @param route
      */
-    Long addRoute(GatewayRoute route);
+    GatewayRoute addRoute(GatewayRoute route);
 
     /**
      * 更新路由
      *
      * @param route
      */
-    void updateRoute(GatewayRoute route);
+    GatewayRoute updateRoute(GatewayRoute route);
 
     /**
      * 删除路由

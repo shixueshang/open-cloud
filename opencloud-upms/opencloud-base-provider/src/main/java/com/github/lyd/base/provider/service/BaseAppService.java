@@ -1,9 +1,9 @@
 package com.github.lyd.base.provider.service;
 
-import com.github.lyd.base.client.model.BaseAppDto;
 import com.github.lyd.base.client.model.entity.BaseApp;
 import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.model.PageParams;
+import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 
 /**
  * 应用信息管理
@@ -35,7 +35,14 @@ public interface BaseAppService {
      * @param appId
      * @return
      */
-    BaseAppDto getAppWithClientInfo(String appId);
+    BaseClientDetails getAppClientInfo(String appId);
+
+
+    /**
+     * 更新应用开发新型
+     * @param baseClientDetails
+     */
+    BaseClientDetails updateAppClientInfo(BaseClientDetails baseClientDetails);
 
     /**
      * 添加应用
@@ -43,7 +50,7 @@ public interface BaseAppService {
      * @param app 应用
      * @return 应用信息
      */
-    String addAppInfo(BaseAppDto app);
+    BaseApp addAppInfo(BaseApp app);
 
     /**
      * 修改应用
@@ -51,7 +58,8 @@ public interface BaseAppService {
      * @param app 应用
      * @return 应用信息
      */
-    void updateInfo(BaseAppDto app);
+    BaseApp updateInfo(BaseApp app);
+
 
     /**
      * 重置秘钥

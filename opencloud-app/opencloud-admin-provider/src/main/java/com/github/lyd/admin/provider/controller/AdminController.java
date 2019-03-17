@@ -8,6 +8,7 @@ import com.github.lyd.common.utils.RandomValueUtils;
 import com.github.lyd.common.utils.SignatureUtils;
 import com.github.lyd.common.utils.WebUtils;
 import com.google.common.collect.Maps;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -29,8 +30,9 @@ import java.util.Map;
 /**
  * @author liuyadu
  */
+@Api(tags = "运营后台开放接口")
 @RestController
-public class ApiController {
+public class AdminController {
     @Autowired
     private OpenRestTemplate openRestTemplate;
     @Autowired

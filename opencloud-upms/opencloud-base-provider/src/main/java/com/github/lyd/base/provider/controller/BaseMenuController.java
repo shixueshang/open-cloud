@@ -31,6 +31,7 @@ public class BaseMenuController {
 
     @Autowired
     private OpenRestTemplate openRestTemplate;
+
     /**
      * 获取分页菜单资源列表
      *
@@ -54,16 +55,12 @@ public class BaseMenuController {
     /**
      * 菜单所有资源列表
      *
-     * @param keyword
      * @return
      */
     @ApiOperation(value = "菜单所有资源列表", notes = "菜单所有资源列表")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
-    })
     @PostMapping("/menu/all")
-    public ResultBody<List<BaseResourceMenu>> getMenuAllList(String keyword) {
-        return ResultBody.success(baseResourceMenuService.findAllList(keyword));
+    public ResultBody<List<BaseResourceMenu>> getMenuAllList() {
+        return ResultBody.success(baseResourceMenuService.findAllList());
     }
 
 
@@ -149,8 +146,12 @@ public class BaseMenuController {
         menu.setParentId(parentId);
         menu.setPriority(priority);
         menu.setMenuDesc(menuDesc);
-        Long result = baseResourceMenuService.addMenu(menu);
-        return ResultBody.success(result);
+        Long menuId = null;
+        BaseResourceMenu result = baseResourceMenuService.addMenu(menu);
+        if (result != null) {
+            menuId = result.getMenuId();
+        }
+        return ResultBody.success(menuId);
     }
 
     /**

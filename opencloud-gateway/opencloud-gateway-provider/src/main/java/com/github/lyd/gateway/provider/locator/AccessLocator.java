@@ -1,6 +1,6 @@
 package com.github.lyd.gateway.provider.locator;
 
-import com.github.lyd.base.client.model.BaseApiAuthority;
+import com.github.lyd.base.client.model.AccessAuthority;
 import com.github.lyd.gateway.client.model.GatewayIpLimitApisDto;
 import com.github.lyd.gateway.client.model.GatewayRateLimitApisDto;
 import com.github.lyd.gateway.provider.service.GatewayIpLimitService;
@@ -56,7 +56,7 @@ public class AccessLocator {
     /**
      * 权限列表
      */
-    private List<BaseApiAuthority> authorityList;
+    private List<AccessAuthority> authorityList;
 
     /**
      * IP黑名单
@@ -130,9 +130,10 @@ public class AccessLocator {
         Collection<ConfigAttribute> array;
         ConfigAttribute cfg;
         try {
-            authorityList = baseAuthorityRemoteService.getApiAuthorityList(null).getData();
+            // 查询所有接口
+            authorityList = baseAuthorityRemoteService.getAccessAuthorityList().getData();
             if (authorityList != null) {
-                for (BaseApiAuthority item : authorityList) {
+                for (AccessAuthority item : authorityList) {
                     String path = item.getPath();
                     if (path == null) {
                         continue;
@@ -270,11 +271,11 @@ public class AccessLocator {
     }
 
 
-    public List<BaseApiAuthority> getAuthorityList() {
+    public List<AccessAuthority> getAuthorityList() {
         return authorityList;
     }
 
-    public void setAuthorityList(List<BaseApiAuthority> authorityList) {
+    public void setAuthorityList(List<AccessAuthority> authorityList) {
         this.authorityList = authorityList;
     }
 

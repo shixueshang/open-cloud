@@ -54,16 +54,12 @@ public class BaseResourceApiServiceImpl implements BaseResourceApiService {
     /**
      * 查询列表
      *
-     * @param keyword
      * @return
      */
     @Override
-    public List<BaseResourceApi> findAllList(String keyword) {
+    public List<BaseResourceApi> findAllList() {
         ExampleBuilder builder = new ExampleBuilder(BaseResourceApi.class);
-        Example example = builder.criteria()
-                .orLike("apiCode", keyword)
-                .orLike("apiName", keyword)
-                .end().build();
+        Example example = builder.criteria().end().build();
         example.orderBy("apiId").asc().orderBy("priority").asc();
         List<BaseResourceApi> list = baseResourceApiMapper.selectByExample(example);
         return list;
@@ -82,11 +78,11 @@ public class BaseResourceApiServiceImpl implements BaseResourceApiService {
 
 
     @Override
-    public Boolean isExist(String apiCode,String serviceId) {
+    public Boolean isExist(String apiCode, String serviceId) {
         ExampleBuilder builder = new ExampleBuilder(BaseResourceApi.class);
         Example example = builder.criteria()
                 .andEqualTo("apiCode", apiCode)
-                .andEqualTo("serviceId",serviceId)
+                .andEqualTo("serviceId", serviceId)
                 .end().build();
         int count = baseResourceApiMapper.selectCountByExample(example);
         return count > 0 ? true : false;
@@ -99,8 +95,8 @@ public class BaseResourceApiServiceImpl implements BaseResourceApiService {
      * @return
      */
     @Override
-    public Long addApi(BaseResourceApi api) {
-        if (isExist(api.getApiCode(),api.getServiceId())) {
+    public BaseResourceApi addApi(BaseResourceApi api) {
+        if (isExist(api.getApiCode(), api.getServiceId())) {
             throw new OpenAlertException(String.format("%s编码已存在!", api.getApiCode()));
         }
         if (api.getPriority() == null) {
@@ -115,18 +111,18 @@ public class BaseResourceApiServiceImpl implements BaseResourceApiService {
         if (api.getIsPersist() == null) {
             api.setIsPersist(0);
         }
-        if(api.getIsOpen() == null){
+        if (api.getIsOpen() == null) {
             api.setIsOpen(0);
         }
-        if(api.getIsAuth() == null){
+        if (api.getIsAuth() == null) {
             api.setIsAuth(0);
         }
         api.setCreateTime(new Date());
         api.setUpdateTime(api.getCreateTime());
         baseResourceApiMapper.insertSelective(api);
         // 同步权限表里的信息
-        baseAuthorityService.saveOrUpdateAuthority(api.getApiId(),ResourceType.api);
-        return api.getApiId();
+        baseAuthorityService.saveOrUpdateAuthority(api.getApiId(), ResourceType.api);
+        return api;
     }
 
     /**
@@ -136,14 +132,14 @@ public class BaseResourceApiServiceImpl implements BaseResourceApiService {
      * @return
      */
     @Override
-    public void updateApi(BaseResourceApi api) {
+    public BaseResourceApi updateApi(BaseResourceApi api) {
         BaseResourceApi saved = getApi(api.getApiId());
         if (saved == null) {
             throw new OpenAlertException("信息不存在!");
         }
         if (!saved.getApiCode().equals(api.getApiCode())) {
             // 和原来不一致重新检查唯一性
-            if (isExist(api.getApiCode(),api.getServiceId())) {
+            if (isExist(api.getApiCode(), api.getServiceId())) {
                 throw new OpenAlertException(String.format("%s编码已存在!", api.getApiCode()));
             }
         }
@@ -156,7 +152,8 @@ public class BaseResourceApiServiceImpl implements BaseResourceApiService {
         api.setUpdateTime(new Date());
         baseResourceApiMapper.updateByPrimaryKeySelective(api);
         // 同步权限表里的信息
-        baseAuthorityService.saveOrUpdateAuthority(api.getApiId(),ResourceType.api);
+        baseAuthorityService.saveOrUpdateAuthority(api.getApiId(), ResourceType.api);
+        return api;
     }
 
     /**
@@ -189,7 +186,7 @@ public class BaseResourceApiServiceImpl implements BaseResourceApiService {
         if (api != null && api.getIsPersist().equals(BaseConstants.ENABLED)) {
             throw new OpenAlertException(String.format("保留数据,不允许删除"));
         }
-        baseAuthorityService.removeAuthority(apiId,ResourceType.api);
+        baseAuthorityService.removeAuthority(apiId, ResourceType.api);
         baseResourceApiMapper.deleteByPrimaryKey(apiId);
     }
 

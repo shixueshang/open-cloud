@@ -51,24 +51,24 @@
         <dependency>
             <groupId>io.zipkin.java</groupId>
             <artifactId>zipkin-server</artifactId>
-            <version>2.11.12</version>
+            <version>2.11.13</version>
         </dependency>
         <dependency>
             <groupId>io.zipkin.java</groupId>
             <artifactId>zipkin-autoconfigure-ui</artifactId>
-            <version>2.11.12</version>
+            <version>2.11.13</version>
         </dependency>
         <!-- 使用消息的方式收集数据（使用rabbitmq） -->
         <dependency>
             <groupId>io.zipkin.java</groupId>
             <artifactId>zipkin-autoconfigure-collector-rabbitmq</artifactId>
-            <version>2.11.12</version>
+            <version>2.11.13</version>
         </dependency>
         <!-- 使用mysql存储-->
         <dependency>
             <groupId>io.zipkin.java</groupId>
             <artifactId>zipkin-autoconfigure-storage-mysql</artifactId>
-            <version>2.11.12</version>
+            <version>2.11.13</version>
         </dependency>
         <dependency>
             <groupId>io.zipkin.java</groupId>

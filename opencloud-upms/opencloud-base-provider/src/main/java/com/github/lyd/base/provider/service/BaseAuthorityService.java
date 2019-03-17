@@ -1,6 +1,7 @@
 package com.github.lyd.base.provider.service;
 
 import com.github.lyd.base.client.constants.ResourceType;
+import com.github.lyd.base.client.model.AccessAuthority;
 import com.github.lyd.base.client.model.BaseApiAuthority;
 import com.github.lyd.base.client.model.BaseMenuAuthority;
 import com.github.lyd.base.client.model.entity.BaseAuthority;
@@ -17,6 +18,13 @@ import java.util.List;
 public interface BaseAuthorityService {
 
     /**
+     * 获取访问权限列表
+     *
+     * @return
+     */
+    List<AccessAuthority> findAccessAuthority();
+
+    /**
      * 获取菜单权限列表
      *
      * @return
@@ -27,19 +35,13 @@ public interface BaseAuthorityService {
     /**
      * 获取API权限列表
      *
+     * @param isOpen
      * @param serviceId
      * @return
      */
-    List<BaseApiAuthority> findApiAuthority(String serviceId);
+    List<BaseApiAuthority> findApiAuthority(Integer isOpen, String serviceId);
 
 
-    /**
-     * 获取所有可用权限
-     *
-     * @param type = null 查询全部  type = 1 获取菜单和操作 type = 2 获取API
-     * @return
-     */
-    List<OpenGrantedAuthority> findAuthority(String type);
 
     /**
      * 保存或修改权限
@@ -48,7 +50,7 @@ public interface BaseAuthorityService {
      * @param resourceType
      * @return 权限Id
      */
-    Long saveOrUpdateAuthority(Long resourceId, ResourceType resourceType);
+    BaseAuthority saveOrUpdateAuthority(Long resourceId, ResourceType resourceType);
 
 
     /**
@@ -67,8 +69,14 @@ public interface BaseAuthorityService {
      * @param resourceType
      * @return
      */
-    void removeAuthority(Long resourceId, ResourceType resourceType);
+    Long removeAuthority(Long resourceId, ResourceType resourceType);
 
+    /**
+     * 移除应用权限
+     *
+     * @param appId
+     */
+    void removeAppAuthority(String appId);
 
     /**
      * 是否已被授权
@@ -148,6 +156,13 @@ public interface BaseAuthorityService {
      */
     List<OpenGrantedAuthority> findUserGrantedAuthority(Long userId, Boolean root);
 
+    /**
+     * 获取开放对象权限
+     *
+     * @param type = null 查询全部  type = 1 获取菜单和操作 type = 2 获取API
+     * @return
+     */
+    List<OpenGrantedAuthority> findGrantedAuthority(String type);
 
     /**
      * 获取用户已授权权限详情

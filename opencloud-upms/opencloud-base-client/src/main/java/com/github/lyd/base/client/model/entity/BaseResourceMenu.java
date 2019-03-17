@@ -101,6 +101,12 @@ public class BaseResourceMenu implements Serializable {
     private Integer isPersist;
 
     /**
+     * 服务ID
+     */
+    @Column(name = "service_id")
+    private String serviceId;
+
+    /**
      * 获取菜单Id
      *
      * @return menu_id - 菜单Id
@@ -280,5 +286,13 @@ public class BaseResourceMenu implements Serializable {
 
     public void setIsPersist(Integer isPersist) {
         this.isPersist = isPersist;
+    }
+
+    public String getServiceId() {
+        return serviceId;
+    }
+
+    public void setServiceId(String serviceId) {
+        this.serviceId = serviceId;
     }
 }

@@ -1,12 +1,9 @@
 package com.github.lyd.base.client.api;
 
-import com.github.lyd.base.client.model.BaseApiAuthority;
+import com.github.lyd.base.client.model.AccessAuthority;
 import com.github.lyd.base.client.model.BaseMenuAuthority;
 import com.github.lyd.common.model.ResultBody;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -17,14 +14,11 @@ import java.util.List;
  */
 public interface BaseAuthorityRemoteApi {
     /**
-     * 获取接口权限列表
-     *
-     * @param serviceId
+     * 获取所有访问权限列表
      * @return
      */
-    @GetMapping("/authority/api/list")
-    ResultBody<List<BaseApiAuthority>> getApiAuthorityList(
-            @RequestParam(value = "serviceId", required = false) String serviceId);
+    @GetMapping("/authority/access/list")
+    ResultBody<List<AccessAuthority>> getAccessAuthorityList();
 
     /**
      * 获取菜单权限列表
@@ -33,15 +27,4 @@ public interface BaseAuthorityRemoteApi {
      */
     @GetMapping("/authority/menu/list")
     ResultBody<List<BaseMenuAuthority>> getMenuAuthorityList();
-
-    /**
-     * 获取应用已分配接口权限
-     *
-     * @param appId
-     * @return
-     */
-    @PostMapping("/authority/granted/app/api")
-    ResultBody<List<GrantedAuthority>> getGrantedAppAuthority(
-            @RequestParam(value = "appId") String appId
-    );
 }

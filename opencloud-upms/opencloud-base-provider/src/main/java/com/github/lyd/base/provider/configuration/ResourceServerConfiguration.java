@@ -63,10 +63,10 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                         "/account/localLogin",
                         "/account/register/thirdParty",
                         "/account/logs/add",
-                        "/authority/api/list",
-                        "/authority/menu/list",
-                        "/authority/granted/app/api",
-                        "/app/{appId}").permitAll()
+                        "/authority/access/list",
+                        "/authority/granted/app",
+                        "/app/{appId}",
+                        "/app/client/{appId}").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 //认证鉴权错误处理,为了统一异常处理。每个资源服务器都应该加上。

@@ -67,6 +67,7 @@ public class ZuulRequestFilter extends ZuulFilter {
      */
     @Override
     public Object run() {
+        Date requestTime = new Date();
         RequestContext ctx = RequestContext.getCurrentContext();
         HttpServletRequest request = ctx.getRequest();
         HttpServletResponse response = ctx.getResponse();
@@ -82,7 +83,6 @@ public class ZuulRequestFilter extends ZuulFilter {
             String serverIp = WebUtils.getLocalIpAddress();
             int httpStatus = response.getStatus();
             Map<String, Object> msg = Maps.newHashMap();
-            Date requestTime = new Date();
             msg.put("accessId", requestId);
             msg.put("save", "insert");
             msg.put("headers", JSONObject.toJSON(headers));

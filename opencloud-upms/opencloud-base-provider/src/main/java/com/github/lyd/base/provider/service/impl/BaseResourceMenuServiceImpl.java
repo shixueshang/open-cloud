@@ -15,6 +15,7 @@ import com.github.lyd.common.model.PageParams;
 import com.github.pagehelper.PageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
@@ -35,7 +36,8 @@ public class BaseResourceMenuServiceImpl implements BaseResourceMenuService {
     private BaseAuthorityService baseAuthorityService;
     @Autowired
     private BaseResourceOperationService baseResourceOperationService;
-
+    @Value("${spring.application.name}")
+    private String DEFAULT_SERVICE_ID;
     /**
      * 分页查询
      *
@@ -58,15 +60,12 @@ public class BaseResourceMenuServiceImpl implements BaseResourceMenuService {
     /**
      * 查询列表
      *
-     * @param keyword
      * @return
      */
     @Override
-    public List<BaseResourceMenu> findAllList(String keyword) {
+    public List<BaseResourceMenu> findAllList() {
         ExampleBuilder builder = new ExampleBuilder(BaseResourceMenu.class);
-        Example example = builder.criteria()
-                .orLike("menuCode", keyword)
-                .orLike("menuName", keyword).end().build();
+        Example example = builder.criteria().end().build();
         example.orderBy("menuId").asc().orderBy("priority").asc();
         List<BaseResourceMenu> list = baseResourceMenuMapper.selectByExample(example);
         return list;
@@ -105,8 +104,7 @@ public class BaseResourceMenuServiceImpl implements BaseResourceMenuService {
      * @param menu
      * @return
      */
-    @Override
-    public Long addMenu(BaseResourceMenu menu) {
+    public BaseResourceMenu addMenu(BaseResourceMenu menu) {
         if (isExist(menu.getMenuCode())) {
             throw new OpenAlertException(String.format("%s编码已存在!", menu.getMenuCode()));
         }
@@ -117,11 +115,12 @@ public class BaseResourceMenuServiceImpl implements BaseResourceMenuService {
             menu.setPriority(0);
         }
         if (menu.getStatus() == null) {
-            menu.setStatus(BaseConstants.ENABLED);
+            menu.setStatus(1);
         }
         if (menu.getIsPersist() == null) {
-            menu.setIsPersist(BaseConstants.DISABLED);
+            menu.setIsPersist(0);
         }
+        menu.setServiceId(DEFAULT_SERVICE_ID);
         menu.setCreateTime(new Date());
         menu.setUpdateTime(menu.getCreateTime());
         baseResourceMenuMapper.insertSelective(menu);
@@ -172,7 +171,7 @@ public class BaseResourceMenuServiceImpl implements BaseResourceMenuService {
        }catch (Exception e){
            log.error("");
        }
-        return menu.getMenuId();
+        return menu;
     }
 
     /**
@@ -181,8 +180,7 @@ public class BaseResourceMenuServiceImpl implements BaseResourceMenuService {
      * @param menu
      * @return
      */
-    @Override
-    public void updateMenu(BaseResourceMenu menu) {
+    public BaseResourceMenu updateMenu(BaseResourceMenu menu) {
         BaseResourceMenu saved = getMenu(menu.getMenuId());
         if (saved == null) {
             throw new OpenAlertException(String.format("%s信息不存在!", menu.getMenuId()));
@@ -203,25 +201,9 @@ public class BaseResourceMenuServiceImpl implements BaseResourceMenuService {
         baseResourceMenuMapper.updateByPrimaryKeySelective(menu);
         // 同步权限表里的信息
         baseAuthorityService.saveOrUpdateAuthority(menu.getMenuId(), ResourceType.menu);
+        return menu;
     }
 
-    /**
-     * 更新启用禁用
-     *
-     * @param menuId
-     * @param status
-     * @return
-     */
-    @Override
-    public void updateStatus(Long menuId, Integer status) {
-        BaseResourceMenu menu = new BaseResourceMenu();
-        menu.setMenuId(menuId);
-        menu.setStatus(status);
-        menu.setUpdateTime(new Date());
-        baseResourceMenuMapper.updateByPrimaryKeySelective(menu);
-        // 同步权限表里的信息
-        baseAuthorityService.saveOrUpdateAuthority(menu.getMenuId(), ResourceType.menu);
-    }
 
     /**
      * 移除菜单

@@ -55,15 +55,12 @@ public class BaseRoleServiceImpl implements BaseRoleService {
     /**
      * 查询列表
      *
-     * @param keyword
      * @return
      */
     @Override
-    public List<BaseRole> findList(String keyword) {
+    public List<BaseRole> findList() {
         ExampleBuilder builder = new ExampleBuilder(BaseRole.class);
-        Example example = builder.criteria()
-                .orLike("roleCode", keyword)
-                .orLike("roleName", keyword).end().build();
+        Example example = builder.criteria().end().build();
         example.orderBy("roleId").asc();
         List<BaseRole> list = baseRoleMapper.selectByExample(example);
         return list;
@@ -87,7 +84,7 @@ public class BaseRoleServiceImpl implements BaseRoleService {
      * @return
      */
     @Override
-    public Long addRole(BaseRole role) {
+    public BaseRole addRole(BaseRole role) {
         if (isExist(role.getRoleCode())) {
             throw new OpenAlertException(String.format("%s编码已存在!", role.getRoleCode()));
         }
@@ -100,7 +97,7 @@ public class BaseRoleServiceImpl implements BaseRoleService {
         role.setCreateTime(new Date());
         role.setUpdateTime(role.getCreateTime());
         baseRoleMapper.insertSelective(role);
-        return role.getRoleId();
+        return role;
     }
 
     /**
@@ -110,7 +107,7 @@ public class BaseRoleServiceImpl implements BaseRoleService {
      * @return
      */
     @Override
-    public void updateRole(BaseRole role) {
+    public BaseRole updateRole(BaseRole role) {
         BaseRole saved = getRole(role.getRoleId());
         if (role == null) {
             throw new OpenAlertException("信息不存在!");
@@ -123,6 +120,7 @@ public class BaseRoleServiceImpl implements BaseRoleService {
         }
         role.setUpdateTime(new Date());
         baseRoleMapper.updateByPrimaryKeySelective(role);
+        return role;
     }
 
     /**
@@ -175,7 +173,7 @@ public class BaseRoleServiceImpl implements BaseRoleService {
         if (userId == null || roles == null) {
             return;
         }
-        BaseUser user = baseUserService.getProfile(userId);
+        BaseUser user = baseUserService.getUserByUserId(userId);
         if (user == null) {
             return;
         }
@@ -249,22 +247,6 @@ public class BaseRoleServiceImpl implements BaseRoleService {
         ExampleBuilder builder = new ExampleBuilder(BaseRoleUser.class);
         Example example = builder.criteria().andEqualTo("userId", userId).end().build();
         baseRoleUserMapper.deleteByExample(example);
-    }
-
-    /**
-     * 更新启用禁用
-     *
-     * @param roleId
-     * @param status
-     * @return
-     */
-    @Override
-    public void updateStatus(Long roleId, Integer status) {
-        BaseRole role = new BaseRole();
-        role.setRoleId(roleId);
-        role.setStatus(status);
-        role.setUpdateTime(new Date());
-        baseRoleMapper.updateByPrimaryKeySelective(role);
     }
 
     /**

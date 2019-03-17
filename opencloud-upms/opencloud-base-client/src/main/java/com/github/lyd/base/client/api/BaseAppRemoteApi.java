@@ -2,6 +2,7 @@ package com.github.lyd.base.client.api;
 
 import com.github.lyd.base.client.model.entity.BaseApp;
 import com.github.lyd.common.model.ResultBody;
+import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -19,4 +20,11 @@ public interface BaseAppRemoteApi {
     @GetMapping("/app/{appId}")
     ResultBody<BaseApp> getApp(@PathVariable("appId") String appId);
 
+    /**
+     * 获取应用开发配置信息
+     * @param appId
+     * @return
+     */
+    @GetMapping("/app/client/{appId}")
+    ResultBody<BaseClientDetails> getAppClientInfo(@PathVariable("appId") String appId);
 }

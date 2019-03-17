@@ -2,6 +2,7 @@ package com.github.lyd.base.provider.controller;
 
 import com.github.lyd.base.client.api.BaseUserAccountRemoteApi;
 import com.github.lyd.base.client.model.BaseUserAccountDto;
+import com.github.lyd.base.client.model.entity.BaseUserAccount;
 import com.github.lyd.base.provider.service.BaseUserAccountService;
 import com.github.lyd.common.model.ResultBody;
 import io.swagger.annotations.Api;
@@ -10,7 +11,6 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,7 +37,7 @@ public class BaseUserUserAccountController implements BaseUserAccountRemoteApi {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "username", required = true, value = "登录名", paramType = "path"),
     })
-    @GetMapping("/account/localLogin")
+    @PostMapping("/account/localLogin")
     @Override
     public ResultBody<BaseUserAccountDto> localLogin(@RequestParam(value = "username") String username) {
         BaseUserAccountDto account = baseUserAccountService.login(username);
@@ -60,7 +60,11 @@ public class BaseUserUserAccountController implements BaseUserAccountRemoteApi {
             @RequestParam(value = "password") String password,
             @RequestParam(value = "accountType") String accountType
     ) {
-        Long userId = baseUserAccountService.register(account, password, accountType);
+        Long userId = null;
+        BaseUserAccount baseUserAccount = baseUserAccountService.register(account, password, accountType);
+        if (baseUserAccount != null) {
+            userId = baseUserAccount.getUserId();
+        }
         return ResultBody.success(userId);
     }
 

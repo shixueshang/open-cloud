@@ -25,10 +25,9 @@ public interface BaseRoleService {
     /**
      * 查询列表
      *
-     * @param keyword
      * @return
      */
-    List<BaseRole> findList(String keyword);
+    List<BaseRole> findList();
 
     /**
      * 获取角色信息
@@ -44,7 +43,7 @@ public interface BaseRoleService {
      * @param role 角色
      * @return
      */
-    Long addRole(BaseRole role);
+    BaseRole addRole(BaseRole role);
 
     /**
      * 更新角色
@@ -52,7 +51,7 @@ public interface BaseRoleService {
      * @param role 角色
      * @return
      */
-    void updateRole(BaseRole role);
+    BaseRole updateRole(BaseRole role);
 
     /**
      * 删除角色
@@ -110,15 +109,6 @@ public interface BaseRoleService {
      * @return
      */
     void removeMemberRoles(Long userId);
-
-    /**
-     * 更新启用禁用
-     *
-     * @param roleId
-     * @param status
-     * @return
-     */
-    void updateStatus(Long roleId, Integer status);
 
     /**
      * 检测是否存在

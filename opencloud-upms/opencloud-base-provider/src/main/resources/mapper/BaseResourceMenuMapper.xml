@@ -19,5 +19,6 @@
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
         <result column="is_persist" property="isPersist" jdbcType="INTEGER"/>
+        <result column="service_id" jdbcType="TIMESTAMP" property="serviceId"/>
     </resultMap>
 </mapper>

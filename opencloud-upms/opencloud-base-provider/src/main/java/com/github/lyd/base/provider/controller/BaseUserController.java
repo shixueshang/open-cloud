@@ -6,7 +6,6 @@ import com.github.lyd.base.client.model.entity.BaseUser;
 import com.github.lyd.base.provider.service.BaseRoleService;
 import com.github.lyd.base.provider.service.BaseUserAccountService;
 import com.github.lyd.base.provider.service.BaseUserService;
-import com.github.lyd.common.http.OpenRestTemplate;
 import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.model.PageParams;
 import com.github.lyd.common.model.ResultBody;
@@ -36,8 +35,6 @@ public class BaseUserController {
     private BaseUserAccountService baseUserAccountService;
     @Autowired
     private BaseRoleService baseRoleService;
-    @Autowired
-    private OpenRestTemplate openRestTemplate;
 
     /**
      * 系统分页用户列表
@@ -61,17 +58,12 @@ public class BaseUserController {
 
     /**
      * 获取所有用户列表
-     *
-     * @param keyword
      * @return
      */
     @ApiOperation(value = "获取所有用户列表", notes = "获取所有用户列表")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
-    })
     @PostMapping("/user/all")
-    public ResultBody<List<BaseRole>> getUserAllList(String keyword) {
-        return ResultBody.success(baseUserService.findList(keyword));
+    public ResultBody<List<BaseRole>> getUserAllList() {
+        return ResultBody.success(baseUserService.findList());
     }
 
     /**
@@ -149,7 +141,7 @@ public class BaseUserController {
         user.setMobile(mobile);
         user.setUserDesc(userDesc);
         user.setAvatar(avatar);
-        baseUserService.updateProfile(user);
+        baseUserService.updateUser(user);
         return ResultBody.success();
     }
 
@@ -161,7 +153,6 @@ public class BaseUserController {
             @RequestParam(value = "roleIds", required = false) String roleIds
     ) {
         baseRoleService.saveMemberRoles(userId, StringUtils.isNotBlank(roleIds) ? roleIds.split(",") : new String[]{});
-        openRestTemplate.refreshGateway();
         return ResultBody.success();
     }
 

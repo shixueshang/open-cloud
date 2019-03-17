@@ -1,5 +1,6 @@
 package com.github.lyd.base.provider.mapper;
 
+import com.github.lyd.base.client.model.AccessAuthority;
 import com.github.lyd.base.client.model.BaseApiAuthority;
 import com.github.lyd.base.client.model.BaseMenuAuthority;
 import com.github.lyd.base.client.model.BaseOperationAuthority;
@@ -18,12 +19,18 @@ import java.util.Map;
 public interface BaseAuthorityMapper extends CrudMapper<BaseAuthority> {
 
     /**
-     * 查询权限列表
+     * 查询所有访问权限列表
+     */
+    List<AccessAuthority> selectAccessAuthority();
+
+
+    /**
+     * 查询已授权权限列表
      *
      * @param map
      * @return
      */
-    List<OpenGrantedAuthority> selectAuthority(Map map);
+    List<OpenGrantedAuthority> selectAllGrantedAuthority(Map map);
 
 
     /**

@@ -1,6 +1,8 @@
 package com.github.lyd.base.provider.service.impl;
 
+import com.github.lyd.base.client.constants.BaseConstants;
 import com.github.lyd.base.client.constants.ResourceType;
+import com.github.lyd.base.client.model.AccessAuthority;
 import com.github.lyd.base.client.model.BaseApiAuthority;
 import com.github.lyd.base.client.model.BaseMenuAuthority;
 import com.github.lyd.base.client.model.entity.*;
@@ -18,6 +20,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
@@ -56,11 +59,23 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
     private BaseRoleService baseRoleService;
     @Autowired
     private BaseUserService baseUserService;
+    @Autowired
+    private BaseAppService baseAppService;
 
     private final static String SEPARATOR = ":";
 
     @Value("${spring.application.name}")
     private String DEFAULT_SERVICE_ID;
+
+    /**
+     * 获取访问权限列表
+     *
+     * @return
+     */
+    @Override
+    public List<AccessAuthority> findAccessAuthority() {
+        return baseAuthorityMapper.selectAccessAuthority();
+    }
 
     /**
      * 获取菜单权限列表
@@ -77,29 +92,16 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
     }
 
     @Override
-    public List<BaseApiAuthority> findApiAuthority(String serviceId) {
+    public List<BaseApiAuthority> findApiAuthority(Integer isOpen, String serviceId) {
         Map map = Maps.newHashMap();
         map.put("serviceId", serviceId);
         map.put("status", 1);
-        map.put("isOpen",1);
+        map.put("isOpen", isOpen);
         List<BaseApiAuthority> authorities = baseAuthorityMapper.selectApiAuthority(map);
         return authorities;
 
     }
 
-    /**
-     * 获取所有可用权限
-     *
-     * @param type = null 查询全部  type = 1 获取菜单和操作 type = 2 获取API
-     * @return
-     */
-    @Override
-    public List<OpenGrantedAuthority> findAuthority(String type) {
-        Map map = Maps.newHashMap();
-        map.put("type", type);
-        map.put("status", 1);
-        return baseAuthorityMapper.selectAuthority(map);
-    }
 
     /**
      * 保存或修改权限
@@ -109,7 +111,7 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
      * @return 权限Id
      */
     @Override
-    public Long saveOrUpdateAuthority(Long resourceId, ResourceType resourceType) {
+    public BaseAuthority saveOrUpdateAuthority(Long resourceId, ResourceType resourceType) {
         BaseAuthority baseAuthority = getAuthority(resourceId, resourceType);
         String authority = null;
         if (baseAuthority == null) {
@@ -120,21 +122,18 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
             authority = ResourceType.menu.name() + SEPARATOR + menu.getMenuCode();
             baseAuthority.setMenuId(resourceId);
             baseAuthority.setStatus(menu.getStatus());
-            baseAuthority.setServiceId(DEFAULT_SERVICE_ID);
         }
         if (ResourceType.operation.equals(resourceType)) {
             BaseResourceOperation operation = baseResourceOperationService.getOperation(resourceId);
             authority = ResourceType.operation.name() + SEPARATOR + operation.getOperationCode();
             baseAuthority.setOperationId(resourceId);
             baseAuthority.setStatus(operation.getStatus());
-            baseAuthority.setServiceId(DEFAULT_SERVICE_ID);
         }
         if (ResourceType.api.equals(resourceType)) {
             BaseResourceApi api = baseResourceApiService.getApi(resourceId);
             authority = api.getApiCode();
             baseAuthority.setApiId(resourceId);
             baseAuthority.setStatus(api.getStatus());
-            baseAuthority.setServiceId(api.getServiceId());
         }
         if (authority == null) {
             return null;
@@ -148,7 +147,27 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
             // 修改权限
             baseAuthorityMapper.updateByPrimaryKeySelective(baseAuthority);
         }
-        return baseAuthority.getAuthorityId();
+        return baseAuthority;
+    }
+
+    /**
+     * 移除权限
+     *
+     * @param resourceId
+     * @param resourceType
+     * @return
+     */
+    @Override
+    public Long removeAuthority(Long resourceId, ResourceType resourceType) {
+        if (isGranted(resourceId, resourceType)) {
+            throw new OpenAlertException(String.format("资源已被授权,不允许删除!取消授权后,再次尝试!"));
+        }
+        BaseAuthority authority = buildAuthority(resourceId, resourceType);
+        if (authority == null) {
+            return null;
+        }
+        baseAuthorityMapper.delete(authority);
+        return authority.getAuthorityId();
     }
 
     /**
@@ -168,6 +187,31 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
             return null;
         }
         return baseAuthorityMapper.selectOne(authority);
+    }
+
+    /**
+     * 是否已被授权
+     *
+     * @param resourceId
+     * @param resourceType
+     * @return
+     */
+    @Override
+    public Boolean isGranted(Long resourceId, ResourceType resourceType) {
+        BaseAuthority authority = getAuthority(resourceId, resourceType);
+        if (authority == null) {
+            return false;
+        }
+        BaseRoleAuthority roleAuthority = new BaseRoleAuthority();
+        roleAuthority.setAuthorityId(authority.getAuthorityId());
+        int roleGrantedCount = baseRoleAuthorityMapper.selectCount(roleAuthority);
+        BaseUserAuthority userAuthority = new BaseUserAuthority();
+        userAuthority.setAuthorityId(authority.getAuthorityId());
+        int userGrantedCount = baseUserAuthorityMapper.selectCount(userAuthority);
+        BaseAppAuthority appAuthority = new BaseAppAuthority();
+        appAuthority.setAuthorityId(authority.getAuthorityId());
+        int appGrantedCount = baseAppAuthorityMapper.selectCount(appAuthority);
+        return roleGrantedCount == 0 && userGrantedCount == 0 && appGrantedCount == 0;
     }
 
     /**
@@ -194,48 +238,17 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
         return authority;
     }
 
-    /**
-     * 移除权限
-     *
-     * @param resourceId
-     * @param resourceType
-     * @return
-     */
-    @Override
-    public void removeAuthority(Long resourceId, ResourceType resourceType) {
-        if (isGranted(resourceId, resourceType)) {
-            throw new OpenAlertException(String.format("资源已被授权,不允许删除!取消授权后,再次尝试!"));
-        }
-        BaseAuthority authority = buildAuthority(resourceId, resourceType);
-        if (authority == null) {
-            return;
-        }
-        baseAuthorityMapper.delete(authority);
-    }
 
     /**
-     * 是否已被授权
+     * 移除应用权限
      *
-     * @param resourceId
-     * @param resourceType
-     * @return
+     * @param appId
      */
     @Override
-    public Boolean isGranted(Long resourceId, ResourceType resourceType) {
-        BaseAuthority authority = getAuthority(resourceId, resourceType);
-        if (authority == null) {
-            return false;
-        }
-        BaseRoleAuthority roleAuthority = new BaseRoleAuthority();
-        roleAuthority.setAuthorityId(authority.getAuthorityId());
-        int roleGrantedCount = baseRoleAuthorityMapper.selectCount(roleAuthority);
-        BaseUserAuthority userAuthority = new BaseUserAuthority();
-        userAuthority.setAuthorityId(authority.getAuthorityId());
-        int userGrantedCount = baseUserAuthorityMapper.selectCount(userAuthority);
-        BaseAppAuthority appAuthority = new BaseAppAuthority();
-        appAuthority.setAuthorityId(authority.getAuthorityId());
-        int appGrantedCount = baseAppAuthorityMapper.selectCount(appAuthority);
-        return roleGrantedCount == 0 && userGrantedCount == 0 && appGrantedCount == 0;
+    public void removeAppAuthority(String appId) {
+        BaseAppAuthority baseAppAuthority = new BaseAppAuthority();
+        baseAppAuthority.setAppId(appId);
+        baseAppAuthorityMapper.delete(baseAppAuthority);
     }
 
 
@@ -285,7 +298,7 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
         if (userId == null) {
             return;
         }
-        BaseUser user = baseUserService.getProfile(userId);
+        BaseUser user = baseUserService.getUserByUserId(userId);
         if (user == null) {
             return;
         }
@@ -330,10 +343,18 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
      * @param authorityIds 权限集合
      * @return
      */
+    @CacheEvict(value = {"apps"}, key = "'client:'+#appId")
     @Override
     public void addAppAuthority(String appId, Date expireTime, String... authorityIds) {
         if (appId == null) {
             return;
+        }
+        BaseApp baseApp = baseAppService.getAppInfo(appId);
+        if (baseApp == null) {
+            return;
+        }
+        if (baseApp.getIsPersist().equals(BaseConstants.ENABLED)) {
+            throw new OpenAlertException(String.format("保留数据,不允许授权"));
         }
         // 清空应用已有授权
         BaseAppAuthority appAuthority = new BaseAppAuthority();
@@ -361,6 +382,7 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
      * @param expireTime
      * @param authorityId
      */
+    @CacheEvict(value = {"apps"}, key = "'client:'+#appId")
     @Override
     public void addAppAuthority(String appId, Date expireTime, String authorityId) {
         BaseAppAuthority appAuthority = new BaseAppAuthority();
@@ -397,6 +419,20 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
     }
 
     /**
+     * 获取所有可用权限
+     *
+     * @param type = null 查询全部  type = 1 获取菜单和操作 type = 2 获取API
+     * @return
+     */
+    @Override
+    public List<OpenGrantedAuthority> findGrantedAuthority(String type) {
+        Map map = Maps.newHashMap();
+        map.put("type", type);
+        map.put("status", 1);
+        return baseAuthorityMapper.selectAllGrantedAuthority(map);
+    }
+
+    /**
      * 获取用户已授权权限
      *
      * @param userId
@@ -407,7 +443,7 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
     public List<OpenGrantedAuthority> findUserGrantedAuthority(Long userId, Boolean root) {
         if (root) {
             // 超级管理员返回所有
-            return findAuthority("1");
+            return findGrantedAuthority("1");
         }
         List<OpenGrantedAuthority> authorities = Lists.newArrayList();
         List<BaseRole> rolesList = baseRoleService.getUserRoles(userId);

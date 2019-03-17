@@ -54,6 +54,7 @@ public class ZuulResponseFilter extends ZuulFilter {
      */
     @Override
     public Object run() {
+        Date responseTime = new Date();
         RequestContext ctx = RequestContext.getCurrentContext();
         HttpServletRequest request = ctx.getRequest();
         HttpServletResponse response = ctx.getResponse();
@@ -64,7 +65,6 @@ public class ZuulResponseFilter extends ZuulFilter {
             String requestPath = request.getRequestURI();
             int httpStatus = response.getStatus();
             Map<String, Object> msg = Maps.newHashMap();
-            Date responseTime = new Date();
             msg.put("accessId", requestId);
             msg.put("path", requestPath);
             msg.put("save", "update");

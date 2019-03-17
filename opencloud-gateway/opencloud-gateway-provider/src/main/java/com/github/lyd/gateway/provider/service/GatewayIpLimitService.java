@@ -58,14 +58,14 @@ public interface GatewayIpLimitService {
      * @param policy
      * @return
      */
-    Long addIpLimitPolicy(GatewayIpLimit policy);
+    GatewayIpLimit addIpLimitPolicy(GatewayIpLimit policy);
 
     /**
      * 更新IP限制策略
      *
      * @param policy
      */
-    void updateIpLimitPolicy(GatewayIpLimit policy);
+    GatewayIpLimit updateIpLimitPolicy(GatewayIpLimit policy);
 
     /**
      * 删除IP限制策略

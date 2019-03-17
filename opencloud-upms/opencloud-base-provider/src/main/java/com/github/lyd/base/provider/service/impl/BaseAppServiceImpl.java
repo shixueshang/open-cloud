@@ -1,9 +1,6 @@
 package com.github.lyd.base.provider.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
-import com.github.lyd.auth.client.model.BaseClientDetailsDto;
 import com.github.lyd.base.client.constants.BaseConstants;
-import com.github.lyd.base.client.model.BaseAppDto;
 import com.github.lyd.base.client.model.entity.BaseApp;
 import com.github.lyd.base.provider.mapper.BaseAppMapper;
 import com.github.lyd.base.provider.service.BaseAppService;
@@ -12,12 +9,15 @@ import com.github.lyd.common.exception.OpenAlertException;
 import com.github.lyd.common.mapper.ExampleBuilder;
 import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.model.PageParams;
-import com.github.lyd.common.security.OpenGrantedAuthority;
 import com.github.lyd.common.utils.RandomValueUtils;
+import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.oauth2.provider.ClientDetails;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
+import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +25,7 @@ import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: liuyadu
@@ -65,6 +66,7 @@ public class BaseAppServiceImpl implements BaseAppService {
      * @param appId
      * @return
      */
+    @Cacheable(value = "apps", key = "#appId")
     @Override
     public BaseApp getAppInfo(String appId) {
         return baseAppMapper.selectByPrimaryKey(appId);
@@ -77,25 +79,39 @@ public class BaseAppServiceImpl implements BaseAppService {
      * @return
      */
     @Override
-    public BaseAppDto getAppWithClientInfo(String appId) {
-        BaseApp appInfo = getAppInfo(appId);
-        if (appInfo == null) {
-            return null;
-        }
-        BaseAppDto appDto = new BaseAppDto();
-        BeanUtils.copyProperties(appInfo, appDto);
+    @Cacheable(value = "apps", key = "'client:'+#appId")
+    public BaseClientDetails getAppClientInfo(String appId) {
         try {
-            ClientDetails clientDetails = jdbcClientDetailsService.loadClientByClientId(appId);
-            if (clientDetails == null) {
-                return null;
-            }
-            BaseClientDetailsDto clientInfo = new BaseClientDetailsDto(clientDetails);
-            appDto.setClientInfo(clientInfo);
+            BaseClientDetails clientDetails = (BaseClientDetails) jdbcClientDetailsService.loadClientByClientId(appId);
+            clientDetails.setAuthorities(baseAuthorityService.findAppGrantedAuthority(appId));
+            return clientDetails;
         } catch (Exception e) {
             log.error("clientDetailsClient.getClient error:{}", e.getMessage());
         }
-        return appDto;
+        return null;
     }
+
+    /**
+     * 更新应用开发新型
+     *
+     * @param baseClientDetails
+     */
+    @CachePut(value = "apps", key = "'client:'+#baseClientDetails.clientId")
+    @Override
+    public BaseClientDetails updateAppClientInfo(BaseClientDetails baseClientDetails) {
+        BaseApp app = getAppInfo(baseClientDetails.getClientId());
+        Map<String, Object> info = Maps.newHashMap();
+        info.put("appName", app.getAppName());
+        info.put("appNameEn", app.getAppNameEn());
+        info.put("appIcon", app.getAppIcon());
+        info.put("appType", app.getAppType());
+        info.put("appOs", app.getAppOs());
+        info.put("website", app.getWebsite());
+        baseClientDetails.setAdditionalInformation(info);
+        jdbcClientDetailsService.updateClientDetails(baseClientDetails);
+        return baseClientDetails;
+    }
+
 
     /**
      * 添加应用
@@ -103,8 +119,9 @@ public class BaseAppServiceImpl implements BaseAppService {
      * @param app
      * @return 应用信息
      */
+    @CachePut(value = "apps", key = "#app.appId")
     @Override
-    public String addAppInfo(BaseAppDto app) {
+    public BaseApp addAppInfo(BaseApp app) {
         String clientId = String.valueOf(System.currentTimeMillis());
         String clientSecret = RandomValueUtils.uuid();
         app.setAppId(clientId);
@@ -115,12 +132,20 @@ public class BaseAppServiceImpl implements BaseAppService {
             app.setIsPersist(0);
         }
         baseAppMapper.insertSelective(app);
-        String clientInfo = JSONObject.toJSONString(app);
+        Map<String, Object> info = Maps.newHashMap();
+        info.put("appName", app.getAppName());
+        info.put("appNameEn", app.getAppNameEn());
+        info.put("appIcon", app.getAppIcon());
+        info.put("appType", app.getAppType());
+        info.put("appOs", app.getAppOs());
+        info.put("website", app.getWebsite());
         // 功能授权
-        app.setAuthorities(getAuthorities(app.getAppId()));
-        BaseClientDetailsDto client = new BaseClientDetailsDto(app.getAppId(), app.getAppSecret(), app.getGrantTypes(), "", app.getRedirectUrls(), app.getScopes(), app.getResourceIds(), app.getAuthorities(), app.getaccessTokenValidity(), app.getaccessTokenValidity(), clientInfo);
+        BaseClientDetails client = new BaseClientDetails();
+        client.setClientId(app.getAppId());
+        client.setClientSecret(app.getAppSecret());
+        client.setAdditionalInformation(info);
         jdbcClientDetailsService.addClientDetails(client);
-        return app.getAppId();
+        return app;
     }
 
     /**
@@ -129,21 +154,30 @@ public class BaseAppServiceImpl implements BaseAppService {
      * @param app 应用
      * @return 应用信息
      */
+    @Caching(evict = {
+            @CacheEvict(value = {"apps"}, key = "#app.appId"),
+            @CacheEvict(value = {"apps"}, key = "'client:'+#app.appId")
+    })
     @Override
-    public void updateInfo(BaseAppDto app) {
+    public BaseApp updateInfo(BaseApp app) {
         BaseApp appInfo = getAppInfo(app.getAppId());
         if (appInfo == null) {
             throw new OpenAlertException(app.getAppId() + "应用不存在!");
         }
-        BeanUtils.copyProperties(app, appInfo);
-        appInfo.setUpdateTime(new Date());
+        app.setUpdateTime(new Date());
         baseAppMapper.updateByPrimaryKeySelective(appInfo);
-        String clientInfo = JSONObject.toJSONString(appInfo);
-        // 更新应用权限
-        app.setAuthorities(getAuthorities(app.getAppId()));
+        Map<String, Object> info = Maps.newHashMap();
+        info.put("appName", app.getAppName());
+        info.put("appNameEn", app.getAppNameEn());
+        info.put("appIcon", app.getAppIcon());
+        info.put("appType", app.getAppType());
+        info.put("appOs", app.getAppOs());
+        info.put("website", app.getWebsite());
         // 修改客户端信息
-        BaseClientDetailsDto client = new BaseClientDetailsDto(app.getAppId(), app.getAppSecret(), app.getGrantTypes(), "", app.getRedirectUrls(), app.getScopes(), app.getResourceIds(), app.getAuthorities(), app.getaccessTokenValidity(), app.getaccessTokenValidity(), clientInfo);
+        BaseClientDetails client = (BaseClientDetails) jdbcClientDetailsService.loadClientByClientId(app.getAppId());
+        client.setAdditionalInformation(info);
         jdbcClientDetailsService.updateClientDetails(client);
+        return app;
     }
 
     /**
@@ -153,6 +187,10 @@ public class BaseAppServiceImpl implements BaseAppService {
      * @return
      */
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = {"apps"}, key = "#app.appId"),
+            @CacheEvict(value = {"apps"}, key = "'client:'+#app.appId")
+    })
     public String restSecret(String appId) {
         BaseApp appInfo = getAppInfo(appId);
         if (appInfo == null) {
@@ -176,6 +214,10 @@ public class BaseAppServiceImpl implements BaseAppService {
      * @param appId
      * @return
      */
+    @Caching(evict = {
+            @CacheEvict(value = {"apps"}, key = "#app.appId"),
+            @CacheEvict(value = {"apps"}, key = "'client:'+#app.appId")
+    })
     @Override
     public void removeApp(String appId) {
         BaseApp appInfo = getAppInfo(appId);
@@ -185,26 +227,11 @@ public class BaseAppServiceImpl implements BaseAppService {
         if (appInfo.getIsPersist().equals(BaseConstants.ENABLED)) {
             throw new OpenAlertException(String.format("保留数据,不允许删除"));
         }
+        // 移除应用权限
+        baseAuthorityService.removeAppAuthority(appId);
         baseAppMapper.deleteByPrimaryKey(appInfo.getAppId());
         jdbcClientDetailsService.removeClientDetails(appInfo.getAppId());
     }
 
-    /**
-     * 获取权限标识
-     *
-     * @param appId
-     * @return
-     */
-    private String getAuthorities(String appId) {
-        StringBuffer sbf = new StringBuffer("");
-        List<OpenGrantedAuthority> authorities = baseAuthorityService.findAppGrantedAuthority(appId);
-        if (authorities != null && authorities.size() > 0) {
-            for (OpenGrantedAuthority authority : authorities
-                    ) {
-                sbf.append(authority.getAuthority()).append(",");
-            }
-            sbf.deleteCharAt(sbf.length() - 1);
-        }
-        return sbf.toString();
-    }
+
 }

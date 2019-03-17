@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Map;
 
-@Api(tags = "网关接口")
+@Api(tags = "网关服务开放接口")
 @RestController
 public class GatewayController {
     @Autowired

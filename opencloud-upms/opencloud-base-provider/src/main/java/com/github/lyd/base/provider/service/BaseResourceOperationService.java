@@ -1,6 +1,7 @@
 package com.github.lyd.base.provider.service;
 
 import com.github.lyd.base.client.model.entity.BaseResourceOperation;
+import com.github.lyd.base.client.model.entity.BaseResourceOperationApi;
 import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.model.PageParams;
 
@@ -50,7 +51,7 @@ public interface BaseResourceOperationService {
      * @param operation
      * @return
      */
-    Long addOperation(BaseResourceOperation operation);
+    BaseResourceOperation addOperation(BaseResourceOperation operation);
 
     /**
      * 修改操作资源
@@ -58,8 +59,7 @@ public interface BaseResourceOperationService {
      * @param operation
      * @return
      */
-    void updateOperation(BaseResourceOperation operation);
-
+    BaseResourceOperation updateOperation(BaseResourceOperation operation);
 
     /**
      * 移除操作
@@ -68,4 +68,25 @@ public interface BaseResourceOperationService {
      * @return
      */
     void removeOperation(Long operationId);
+
+    /**
+     * 操作绑定接口资源
+     * @param operationId
+     * @param apiIds
+     * @return
+     */
+    void addOperationApi(Long operationId,String ... apiIds);
+
+    /**
+     * 查询操作已绑定接口
+     * @param operationId
+     * @return
+     */
+    List<BaseResourceOperationApi> findOperationApi(Long operationId);
+
+    /**
+     * 移除操作已绑定接口
+     * @param operationId
+     */
+    void  removeOperationApi(Long operationId);
 }

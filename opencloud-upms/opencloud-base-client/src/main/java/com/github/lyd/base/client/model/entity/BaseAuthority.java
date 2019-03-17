@@ -35,6 +35,9 @@ public class BaseAuthority implements Serializable {
     @Column(name = "api_id")
     private Long apiId;
 
+    /**
+     * 操作资源ID
+     */
     @Column(name = "operation_id")
     private Long operationId;
 
@@ -43,11 +46,6 @@ public class BaseAuthority implements Serializable {
      */
     private Integer status;
 
-    /**
-     * 服务名
-     */
-    @Column(name = "service_id")
-    private String serviceId;
 
     private static final long serialVersionUID = 1L;
 
@@ -139,13 +137,5 @@ public class BaseAuthority implements Serializable {
 
     public void setStatus(Integer status) {
         this.status = status;
-    }
-
-    public String getServiceId() {
-        return serviceId;
-    }
-
-    public void setServiceId(String serviceId) {
-        this.serviceId = serviceId;
     }
 }

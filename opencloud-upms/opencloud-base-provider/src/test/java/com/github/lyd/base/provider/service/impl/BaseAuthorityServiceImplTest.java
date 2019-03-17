@@ -30,7 +30,7 @@ public class BaseAuthorityServiceImplTest extends BaseTest {
 
     @Test
     public void insertAuthority() {
-        List<BaseResourceMenu> list = baseResourceMenuService.findAllList("");
+        List<BaseResourceMenu> list = baseResourceMenuService.findAllList();
         for (Object object : list) {
             BaseResourceMenu menu = (BaseResourceMenu) object;
             BaseResourceOperation browse = new BaseResourceOperation();

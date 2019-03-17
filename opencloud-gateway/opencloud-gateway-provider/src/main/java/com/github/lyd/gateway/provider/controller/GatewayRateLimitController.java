@@ -136,10 +136,14 @@ public class GatewayRateLimitController {
         rateLimit.setLimit(limit);
         rateLimit.setIntervalUnit(intervalUnit);
         rateLimit.setLimitType(limitType);
-        Long result = gatewayRateLimitService.addRateLimitPolicy(rateLimit);
-        // 刷新网关
-        openRestTemplate.refreshGateway();
-        return ResultBody.success(result);
+        Long policyId = null;
+        GatewayRateLimit result = gatewayRateLimitService.addRateLimitPolicy(rateLimit);
+        if(result!=null){
+            policyId = result.getPolicyId();
+            // 刷新网关
+            openRestTemplate.refreshGateway();
+        }
+        return ResultBody.success(policyId);
     }
 
     /**
@@ -193,7 +197,7 @@ public class GatewayRateLimitController {
      */
     @ApiOperation(value = "移除流量控制", notes = "移除流量控制")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "policyId", required = true, value = "ApiId", paramType = "form"),
+            @ApiImplicitParam(name = "policyId", required = true, value = "policyId", paramType = "form"),
     })
     @PostMapping("/gateway/limit/rate/remove")
     public ResultBody removeRateLimit(

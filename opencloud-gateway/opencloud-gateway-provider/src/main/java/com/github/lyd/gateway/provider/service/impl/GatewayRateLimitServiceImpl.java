@@ -91,11 +91,11 @@ public class GatewayRateLimitServiceImpl implements GatewayRateLimitService {
      * @param policy
      */
     @Override
-    public Long addRateLimitPolicy(GatewayRateLimit policy) {
+    public GatewayRateLimit addRateLimitPolicy(GatewayRateLimit policy) {
         policy.setCreateTime(new Date());
         policy.setUpdateTime(policy.getCreateTime());
         gatewayRateLimitMapper.insertSelective(policy);
-        return policy.getPolicyId();
+        return policy;
     }
 
     /**
@@ -104,9 +104,10 @@ public class GatewayRateLimitServiceImpl implements GatewayRateLimitService {
      * @param policy
      */
     @Override
-    public void updateRateLimitPolicy(GatewayRateLimit policy) {
+    public GatewayRateLimit updateRateLimitPolicy(GatewayRateLimit policy) {
         policy.setUpdateTime(new Date());
         gatewayRateLimitMapper.updateByPrimaryKeySelective(policy);
+        return policy;
     }
 
     /**

@@ -22,10 +22,9 @@ public interface BaseResourceMenuService {
 
     /**
      * 查询列表
-     * @param keyword
      * @return
      */
-    List<BaseResourceMenu> findAllList(String keyword);
+    List<BaseResourceMenu> findAllList();
 
     /**
      * 根据主键获取菜单
@@ -50,7 +49,7 @@ public interface BaseResourceMenuService {
      * @param menu
      * @return
      */
-    Long addMenu(BaseResourceMenu menu);
+    BaseResourceMenu addMenu(BaseResourceMenu menu);
 
     /**
      * 修改菜单资源
@@ -58,16 +57,7 @@ public interface BaseResourceMenuService {
      * @param menu
      * @return
      */
-    void updateMenu(BaseResourceMenu menu);
-
-    /**
-     * 更新启用禁用
-     *
-     * @param menuId
-     * @param status
-     * @return
-     */
-    void updateStatus(Long menuId, Integer status);
+    BaseResourceMenu updateMenu(BaseResourceMenu menu);
 
     /**
      * 移除菜单

@@ -1,6 +1,5 @@
 package com.github.lyd.base.provider.service;
 
-import com.github.lyd.base.client.model.BaseUserDto;
 import com.github.lyd.base.client.model.entity.BaseUser;
 import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.model.PageParams;
@@ -19,18 +18,18 @@ public interface BaseUserService {
     /**
      * 更新系统用户
      *
-     * @param profileDto
+     * @param baseUser
      * @return
      */
-    Long addProfile(BaseUserDto profileDto);
+    BaseUser addUser(BaseUser baseUser);
 
     /**
      * 更新系统用户
      *
-     * @param profileDto
+     * @param baseUser
      * @return
      */
-    Boolean updateProfile(BaseUserDto profileDto);
+    BaseUser updateUser(BaseUser baseUser);
 
     /**
      * 分页查询
@@ -44,18 +43,10 @@ public interface BaseUserService {
     /**
      * 查询列表
      *
-     * @param keyword
      * @return
      */
-    List<BaseUser> findList(String keyword);
+    List<BaseUser> findList();
 
-    /**
-     * 依据登录名查询系统用户信息
-     *
-     * @param username
-     * @return
-     */
-    BaseUser getProfile(String username);
 
     /**
      * 依据系统用户Id查询系统用户信息
@@ -63,5 +54,14 @@ public interface BaseUserService {
      * @param userId
      * @return
      */
-    BaseUser getProfile(Long userId);
+    BaseUser getUserByUserId(Long userId);
+
+    /**
+     * 依据登录名查询系统用户信息
+     *
+     * @param username
+     * @return
+     */
+    BaseUser getUserByUsername(String username);
+
 }

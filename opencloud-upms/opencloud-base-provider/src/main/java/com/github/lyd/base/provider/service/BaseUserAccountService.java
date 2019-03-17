@@ -2,6 +2,7 @@ package com.github.lyd.base.provider.service;
 
 import com.github.lyd.base.client.model.BaseUserAccountDto;
 import com.github.lyd.base.client.model.BaseUserDto;
+import com.github.lyd.base.client.model.entity.BaseUserAccount;
 import com.github.lyd.base.client.model.entity.BaseUserAccountLogs;
 
 /**
@@ -26,7 +27,7 @@ public interface BaseUserAccountService {
      * @param password
      * @return
      */
-    Long register(String account, String password,String accountType);
+    BaseUserAccount register(String account, String password, String accountType);
 
     /**
      * 绑定系统用户名账户
@@ -36,7 +37,7 @@ public interface BaseUserAccountService {
      * @param password
      * @return
      */
-    Long registerUsernameAccount(Long userId, String username, String password);
+    BaseUserAccount registerUsernameAccount(Long userId, String username, String password);
 
     /**
      * 绑定email账号
@@ -46,7 +47,7 @@ public interface BaseUserAccountService {
      * @param password
      * @return
      */
-    Long registerEmailAccount(Long userId, String email, String password);
+    BaseUserAccount registerEmailAccount(Long userId, String email, String password);
 
 
     /**
@@ -57,7 +58,7 @@ public interface BaseUserAccountService {
      * @param mobile
      * @return
      */
-    Long registerMobileAccount(Long userId, String mobile, String password);
+    BaseUserAccount registerMobileAccount(Long userId, String mobile, String password);
 
     /**
      * 支持密码、手机号、email登陆

@@ -2,6 +2,7 @@ package com.github.lyd.auth.provider.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.lyd.auth.client.constants.AuthConstants;
+import com.github.lyd.auth.provider.service.feign.BaseAppRemoteService;
 import com.github.lyd.auth.provider.service.feign.BaseUserAccountRemoteService;
 import com.github.lyd.auth.provider.service.impl.GiteeAuthServiceImpl;
 import com.github.lyd.auth.provider.service.impl.QQAuthServiceImpl;
@@ -14,7 +15,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.provider.AuthorizationRequest;
 import org.springframework.security.oauth2.provider.ClientDetails;
-import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -37,13 +37,13 @@ import java.util.Map;
 @Controller
 public class IndexController {
     @Autowired
-    private JdbcClientDetailsService clientDetailsService;
+    private BaseAppRemoteService baseAppRemoteService;
     @Autowired
     private OpenRestTemplate openRestTemplate;
     @Autowired
     private CommonProperties commonProperties;
     @Autowired
-    private BaseUserAccountRemoteService systemAccountClient;
+    private BaseUserAccountRemoteService baseUserAccountRemoteService;
     @Autowired
     private QQAuthServiceImpl qqAuthService;
     @Autowired
@@ -68,7 +68,6 @@ public class IndexController {
      */
     @GetMapping("/login")
     public String login(HttpServletRequest request) {
-        System.out.println(request.getParameterMap());
         return "login";
     }
 
@@ -91,7 +90,7 @@ public class IndexController {
         if (auth != null) {
             try {
                 AuthorizationRequest authorizationRequest = (AuthorizationRequest) auth;
-                ClientDetails clientDetails = clientDetailsService.loadClientByClientId(authorizationRequest.getClientId());
+                ClientDetails clientDetails = baseAppRemoteService.getAppClientInfo(authorizationRequest.getClientId()).getData();
                 model.put("app", clientDetails.getAdditionalInformation());
             } catch (Exception e) {
 
@@ -113,7 +112,7 @@ public class IndexController {
         if (accessToken != null) {
             String openId = qqAuthService.getOpenId(token);
             if (openId != null) {
-                systemAccountClient.registerThirdPartyAccount(openId, openId, AuthConstants.LOGIN_QQ);
+                baseUserAccountRemoteService.registerThirdPartyAccount(openId, openId, AuthConstants.LOGIN_QQ);
                 token = getToken(openId, openId, AuthConstants.LOGIN_QQ, headers);
             }
         }
@@ -133,7 +132,7 @@ public class IndexController {
         if (accessToken != null) {
             String openId = wechatAuthService.getOpenId(token);
             if (openId != null) {
-                systemAccountClient.registerThirdPartyAccount(openId, openId, AuthConstants.LOGIN_WECHAT);
+                baseUserAccountRemoteService.registerThirdPartyAccount(openId, openId, AuthConstants.LOGIN_WECHAT);
                 token = getToken(openId, openId, AuthConstants.LOGIN_WECHAT, headers);
             }
         }
@@ -155,7 +154,7 @@ public class IndexController {
             JSONObject userInfo = giteeAuthService.getUserInfo(accessToken, null);
             String openId = userInfo.getString("id");
             if (openId != null) {
-                systemAccountClient.registerThirdPartyAccount(openId, openId, AuthConstants.LOGIN_GITEE);
+                baseUserAccountRemoteService.registerThirdPartyAccount(openId, openId, AuthConstants.LOGIN_GITEE);
                 token = getToken(openId, openId, AuthConstants.LOGIN_GITEE, headers);
             }
         }
@@ -171,7 +170,7 @@ public class IndexController {
      * @param headers
      * @return
      */
-    private String getToken(String userName, String password, String type, HttpHeaders headers) {
+    private String getToken(String userName, String password, String type,HttpHeaders headers) {
         // 使用oauth2密码模式登录.
         MultiValueMap<String, Object> postParameters = new LinkedMultiValueMap<>();
         postParameters.add("username", userName);
