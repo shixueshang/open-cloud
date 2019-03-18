@@ -39,7 +39,7 @@ public class AccessControl {
 
     private Set<String> noAuthorityAllow = new HashSet<>();
 
-    private static final String ACCESS_ERROR = "javax.servlet.access.error";
+    public static final String ACCESS_DENIED = "x.access.denied";
 
     public AccessControl(AccessLocator accessLocator, ApiGatewayProperties apiGatewayProperties) {
         this.accessLocator = accessLocator;
@@ -74,7 +74,7 @@ public class AccessControl {
         boolean deny = matchIpBlacklist(requestPath, remoteIpAddress);
         if (deny) {
             // 拒绝
-            request.setAttribute(ACCESS_ERROR, ResultEnum.ACCESS_DENIED_BLACK_IP_LIMITED.getMessage());
+            request.setAttribute(ACCESS_DENIED, ResultEnum.ACCESS_DENIED_BLACK_IP_LIMITED.getMessage());
             return false;
         }
 
@@ -99,7 +99,7 @@ public class AccessControl {
                 }
             } else {
                 // IP白名单检测通过,拒绝
-                request.setAttribute(ACCESS_ERROR, ResultEnum.ACCESS_DENIED_WHITE_IP_LIMITED.getMessage());
+                request.setAttribute(ACCESS_DENIED, ResultEnum.ACCESS_DENIED_WHITE_IP_LIMITED.getMessage());
                 return false;
             }
 
@@ -172,7 +172,7 @@ public class AccessControl {
                             OpenGrantedAuthority customer = (OpenGrantedAuthority) authority;
                             if (customer.getIsExpired() != null && customer.getIsExpired()) {
                                 // 授权已过期
-                                request.setAttribute(ACCESS_ERROR, ResultEnum.ACCESS_DENIED_AUTHORITY_EXPIRED.getMessage());
+                                request.setAttribute(ACCESS_DENIED, ResultEnum.ACCESS_DENIED_AUTHORITY_EXPIRED.getMessage());
                                 return false;
                             }
                         }

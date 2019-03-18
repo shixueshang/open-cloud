@@ -61,12 +61,12 @@ public class ZuulResponseFilter extends ZuulFilter {
             RequestContext ctx = RequestContext.getCurrentContext();
             HttpServletRequest request = ctx.getRequest();
             HttpServletResponse response = ctx.getResponse();
+            Object accessDenied = request.getAttribute(AccessControl.ACCESS_DENIED);
+            if(accessDenied!=null){
+                response.setHeader("X-Access-Denied",accessDenied.toString());
+            }
             Map headers = ctx.getZuulRequestHeaders();
             String requestId = headers.get(ZuulRequestFilter.X_REQUEST_ID).toString();
-            InputStream out = ctx.getResponseDataStream();
-            String outBody = StreamUtils.copyToString(out, Charset.forName("UTF-8"));
-            //重要！！！
-            ctx.setResponseBody(outBody);
             String requestPath = request.getRequestURI();
             int httpStatus = response.getStatus();
             Map<String, Object> msg = Maps.newHashMap();
@@ -76,6 +76,10 @@ public class ZuulResponseFilter extends ZuulFilter {
             msg.put("httpStatus", httpStatus);
             msg.put("responseTime", new Date());
             gatewayAccessLogsService.saveLogs(msg);
+            InputStream out = ctx.getResponseDataStream();
+            String outBody = StreamUtils.copyToString(out, Charset.forName("UTF-8"));
+            //重要！！！
+            ctx.setResponseBody(outBody);
         } catch (Exception e) {
             log.error("修改访问日志异常:{}", e);
         }

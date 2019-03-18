@@ -140,8 +140,6 @@ public class GatewayRateLimitController {
         GatewayRateLimit result = gatewayRateLimitService.addRateLimitPolicy(rateLimit);
         if(result!=null){
             policyId = result.getPolicyId();
-            // 刷新网关
-            openRestTemplate.refreshGateway();
         }
         return ResultBody.success(policyId);
     }
@@ -183,7 +181,6 @@ public class GatewayRateLimitController {
         rateLimit.setIntervalUnit(intervalUnit);
         rateLimit.setLimitType(limitType);
         gatewayRateLimitService.updateRateLimitPolicy(rateLimit);
-        // 刷新网关
         openRestTemplate.refreshGateway();
         return ResultBody.success();
     }

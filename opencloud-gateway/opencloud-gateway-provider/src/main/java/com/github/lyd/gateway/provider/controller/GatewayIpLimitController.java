@@ -132,10 +132,7 @@ public class GatewayIpLimitController {
         GatewayIpLimit result = gatewayIpLimitService.addIpLimitPolicy(ipLimit);
         if(result!=null){
             policyId = result.getPolicyId();
-            // 刷新网关
-            openRestTemplate.refreshGateway();
         }
-
         return ResultBody.success(policyId);
     }
 
@@ -168,7 +165,6 @@ public class GatewayIpLimitController {
         ipLimit.setPolicyType(policyType);
         ipLimit.setIpAddress(ipAddress);
         gatewayIpLimitService.updateIpLimitPolicy(ipLimit);
-        // 刷新网关
         openRestTemplate.refreshGateway();
         return ResultBody.success();
     }

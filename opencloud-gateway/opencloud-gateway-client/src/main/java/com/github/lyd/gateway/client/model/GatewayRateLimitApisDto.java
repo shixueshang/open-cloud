@@ -12,7 +12,7 @@ public class GatewayRateLimitApisDto extends BaseResourceApi implements Serializ
     private static final long serialVersionUID = 1212925216631391016L;
     private Long itemId;
     private Long policyId;
-    private Long policyName;
+    private String policyName;
     private Long limit;
     private String intervalUnit;
 
@@ -32,11 +32,11 @@ public class GatewayRateLimitApisDto extends BaseResourceApi implements Serializ
         this.policyId = policyId;
     }
 
-    public Long getPolicyName() {
+    public String getPolicyName() {
         return policyName;
     }
 
-    public void setPolicyName(Long policyName) {
+    public void setPolicyName(String policyName) {
         this.policyName = policyName;
     }
 
