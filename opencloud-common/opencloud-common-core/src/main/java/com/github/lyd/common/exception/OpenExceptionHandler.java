@@ -2,8 +2,11 @@ package com.github.lyd.common.exception;
 
 import com.github.lyd.common.constants.ResultEnum;
 import com.github.lyd.common.model.ResultBody;
+import com.github.lyd.common.utils.SpringContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
@@ -23,6 +26,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Locale;
 
 /**
  * 统一异常管理
@@ -34,7 +38,10 @@ import javax.servlet.http.HttpServletResponse;
 @ResponseBody
 @Slf4j
 public class OpenExceptionHandler {
-
+    /**
+     * 国际化配置
+     */
+    private static Locale locale = LocaleContextHolder.getLocale();
     private static final String KEY = "x.servlet.exception.code";
 
     /**
@@ -225,10 +232,20 @@ public class OpenExceptionHandler {
         if (resultCode == null) {
             resultCode = ResultEnum.ERROR;
         }
-        String error = resultCode.getMessage();
-        log.error("错误解析:method={},path={},code={},error={},message={},exception={}", method, path, resultCode.getCode(),error, exception, (ex instanceof OpenException ? ex.getMessage() : ex));
-        return ResultBody.error().setCode(resultCode.getCode()).setMessage(exception).setPath(path).setError(error);
+        //提示消息
+        String message = "";
+        if (resultCode.getCode() == ResultEnum.ALERT.getCode()
+                || resultCode.getCode() == ResultEnum.SIGNATURE_DENIED.getCode()) {
+            message = i18n(ex.getMessage());
+        } else {
+            message = i18n(resultCode.getMessage());
+        }
+        log.error("错误解析:method={},path={},code={},message={},exception={}", method, path, resultCode.getCode(), message, (ex instanceof OpenException ? ex.getMessage() : ex));
+        return ResultBody.failed(resultCode.getCode(), message).setPath(path);
     }
 
-
+    private static String i18n(String message) {
+        MessageSource messageSource = SpringContextHolder.getBean(MessageSource.class);
+        return messageSource.getMessage(message, null, message, locale);
+    }
 }
