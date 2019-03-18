@@ -2,11 +2,8 @@ package com.github.lyd.common.exception;
 
 import com.github.lyd.common.constants.ResultEnum;
 import com.github.lyd.common.model.ResultBody;
-import com.github.lyd.common.utils.SpringContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
@@ -26,7 +23,6 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Locale;
 
 /**
  * 统一异常管理
@@ -38,10 +34,7 @@ import java.util.Locale;
 @ResponseBody
 @Slf4j
 public class OpenExceptionHandler {
-    /**
-     * 国际化配置
-     */
-    private static Locale locale = LocaleContextHolder.getLocale();
+
     private static final String KEY = "x.servlet.exception.code";
 
     /**
@@ -126,7 +119,11 @@ public class OpenExceptionHandler {
         } else {
             code = ResultEnum.INVALID_REQUEST;
         }
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        if(code.equals(ResultEnum.ACCESS_DENIED)){
+            response.setStatus(HttpStatus.FORBIDDEN.value());
+        }else{
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        }
         //放入请求域
         request.setAttribute(KEY, code);
         return buildBody(ex, request, response);
@@ -143,7 +140,7 @@ public class OpenExceptionHandler {
     @ExceptionHandler({OpenException.class})
     public static ResultBody openException(Exception ex, HttpServletRequest request, HttpServletResponse response) {
         ResultEnum code = ResultEnum.ERROR;
-        if (ex instanceof OpenMessageException) {
+        if (ex instanceof OpenAlertException) {
             code = ResultEnum.ALERT;
         }
         if (ex instanceof OpenSignatureException) {
@@ -228,20 +225,10 @@ public class OpenExceptionHandler {
         if (resultCode == null) {
             resultCode = ResultEnum.ERROR;
         }
-        //提示消息
-        String message = "";
-        if (resultCode.getCode() == ResultEnum.ALERT.getCode()
-                || resultCode.getCode() == ResultEnum.SIGNATURE_DENIED.getCode()) {
-            message = i18n(ex.getMessage());
-        } else {
-            message = i18n(resultCode.getMessage());
-        }
-        log.error("错误解析:method={},path={},code={},message={},exception={}", method, path, resultCode.getCode(), message, (ex instanceof OpenException ? ex.getMessage() : ex));
-        return ResultBody.failed(resultCode.getCode(), message).setPath(path);
+        String error = resultCode.getMessage();
+        log.error("错误解析:method={},path={},code={},error={},message={},exception={}", method, path, resultCode.getCode(),error, exception, (ex instanceof OpenException ? ex.getMessage() : ex));
+        return ResultBody.error().setCode(resultCode.getCode()).setMessage(exception).setPath(path).setError(error);
     }
 
-    private static String i18n(String message) {
-        MessageSource messageSource = SpringContextHolder.getBean(MessageSource.class);
-        return messageSource.getMessage(message, null, message, locale);
-    }
+
 }

@@ -1,6 +1,6 @@
 package com.github.lyd.msg.provider.service.impl;
 
-import com.github.lyd.msg.client.dto.mail.MailSenderParams;
+import com.github.lyd.msg.client.model.EmailNotify;
 import freemarker.template.Template;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.FileSystemResource;
@@ -33,12 +33,12 @@ public class MailSenderImpl {
     /**
      * 发送邮件
      */
-    public void sendSimpleMail(MailSenderParams params)  {
+    public void sendSimpleMail(EmailNotify params)  {
     	 MimeMessage message = null;
          try {
              message = javaMailSender.createMimeMessage();
              MimeMessageHelper helper = new MimeMessageHelper(message, true);
-             helper.setTo(params.getMailTo());
+             helper.setTo(params.getTo());
              helper.setFrom(javaMailSender.getUsername());
              helper.setSubject(params.getTitle());
              helper.setText(params.getContent(), true);
@@ -52,13 +52,13 @@ public class MailSenderImpl {
     /**
      * 发送html邮件
      */
-    public void sendHtmlMail(MailSenderParams params){
+    public void sendHtmlMail(EmailNotify params){
         MimeMessage message = null;
         try {
             message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(javaMailSender.getUsername());
-            helper.setTo(params.getMailTo());
+            helper.setTo(params.getTo());
             helper.setSubject(params.getTitle());
             helper.setText(params.getContent(), true);
             this.addAttachment(helper,params);
@@ -71,13 +71,13 @@ public class MailSenderImpl {
     /**
      * 发送带附件的邮件
      */
-    public void sendAttachmentMail(MailSenderParams params) {
+    public void sendAttachmentMail(EmailNotify params) {
         MimeMessage message = null;
         try {
             message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(javaMailSender.getUsername());
-            helper.setTo(params.getMailTo());
+            helper.setTo(params.getTo());
             helper.setSubject(params.getTitle());
             helper.setText(params.getContent(), true);
             this.addAttachment(helper,params);
@@ -90,13 +90,13 @@ public class MailSenderImpl {
     /**
      * 发送模板邮件
      */
-    public void sendTemplateMail(MailSenderParams params) {
+    public void sendTemplateMail(EmailNotify params) {
         MimeMessage message = null;
         try {
             message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(javaMailSender.getUsername());
-            helper.setTo(params.getMailTo());
+            helper.setTo(params.getTo());
             helper.setSubject(params.getTitle());
             this.addAttachment(helper,params);
             Template template = freeMarkerConfigurer.getConfiguration().getTemplate(params.getTemplateFile());
@@ -114,7 +114,7 @@ public class MailSenderImpl {
      * @param params
      * @throws MessagingException
      */
-    private void addAttachment(MimeMessageHelper helper, MailSenderParams params) throws MessagingException {
+    private void addAttachment(MimeMessageHelper helper, EmailNotify params) throws MessagingException {
         if(params.getAttachments() != null){
             List<File> attachments = params.getAttachments();
             for (File file:attachments){
