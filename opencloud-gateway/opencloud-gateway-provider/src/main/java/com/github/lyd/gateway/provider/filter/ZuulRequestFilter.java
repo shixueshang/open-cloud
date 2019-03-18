@@ -67,7 +67,6 @@ public class ZuulRequestFilter extends ZuulFilter {
      */
     @Override
     public Object run() {
-        Date requestTime = new Date();
         RequestContext ctx = RequestContext.getCurrentContext();
         HttpServletRequest request = ctx.getRequest();
         HttpServletResponse response = ctx.getResponse();
@@ -91,7 +90,7 @@ public class ZuulRequestFilter extends ZuulFilter {
             msg.put("ip", ip);
             msg.put("method", method);
             msg.put("httpStatus", httpStatus);
-            msg.put("requestTime", requestTime);
+            msg.put("requestTime", new Date());
             msg.put("userAgent",userAgent);
             msg.put("serverIp",serverIp);
             OpenAuthUser user = OpenHelper.getAuthUser();

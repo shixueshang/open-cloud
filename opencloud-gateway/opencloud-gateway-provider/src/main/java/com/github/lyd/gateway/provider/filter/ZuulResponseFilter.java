@@ -54,11 +54,9 @@ public class ZuulResponseFilter extends ZuulFilter {
      */
     @Override
     public Object run() {
-        Date responseTime = new Date();
         RequestContext ctx = RequestContext.getCurrentContext();
         HttpServletRequest request = ctx.getRequest();
         HttpServletResponse response = ctx.getResponse();
-        Throwable throwable = ctx.getThrowable();
         try {
             Map headers = ctx.getZuulRequestHeaders();
             String requestId = headers.get(ZuulRequestFilter.X_REQUEST_ID).toString();
@@ -69,7 +67,7 @@ public class ZuulResponseFilter extends ZuulFilter {
             msg.put("path", requestPath);
             msg.put("save", "update");
             msg.put("httpStatus", httpStatus);
-            msg.put("responseTime", responseTime);
+            msg.put("responseTime", new Date());
             gatewayAccessLogsService.saveLogs(msg);
         } catch (Exception e) {
             log.error("修改访问日志异常:{}", e);
