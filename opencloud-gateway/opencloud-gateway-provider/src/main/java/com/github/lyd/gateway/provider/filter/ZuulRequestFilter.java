@@ -16,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -58,7 +59,7 @@ public class ZuulRequestFilter extends ZuulFilter {
      */
     @Override
     public int filterOrder() {
-        return FilterConstants.DEBUG_FILTER_ORDER;
+        return 0;
     }
 
     /**
@@ -89,6 +90,7 @@ public class ZuulRequestFilter extends ZuulFilter {
             msg.put("ip", ip);
             msg.put("method", method);
             msg.put("httpStatus", httpStatus);
+            msg.put("requestTime", new Date());
             msg.put("userAgent",userAgent);
             msg.put("serverIp",serverIp);
             OpenAuthUser user = OpenHelper.getAuthUser();

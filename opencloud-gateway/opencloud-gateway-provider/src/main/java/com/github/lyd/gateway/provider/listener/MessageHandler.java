@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.handler.annotation.Payload;
 
-import java.util.Date;
 import java.util.Map;
 
 /**
@@ -37,12 +36,10 @@ public class MessageHandler {
                 GatewayAccessLogs gatewayAccessLogs = BeanConvertUtils.mapToObject(access, GatewayAccessLogs.class);
                 if (gatewayAccessLogs != null) {
                     if ("insert".equals(access.get("save"))) {
-                        gatewayAccessLogs.setRequestTime(new Date());
                         gatewayLogsMapper.insertSelective(gatewayAccessLogs);
                     } else {
                         GatewayAccessLogs logs = gatewayLogsMapper.selectByPrimaryKey(gatewayAccessLogs.getAccessId());
                         if (logs != null) {
-                            gatewayAccessLogs.setResponseTime(new Date());
                             gatewayAccessLogs.setUseTime(gatewayAccessLogs.getResponseTime().getTime() - logs.getRequestTime().getTime());
                             gatewayLogsMapper.updateByPrimaryKeySelective(gatewayAccessLogs);
                         }

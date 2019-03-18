@@ -7,9 +7,13 @@ import com.netflix.zuul.context.RequestContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
+import org.springframework.util.StreamUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -45,7 +49,7 @@ public class ZuulResponseFilter extends ZuulFilter {
      */
     @Override
     public int filterOrder() {
-        return FilterConstants.SEND_RESPONSE_FILTER_ORDER;
+        return 0;
     }
 
     /**
@@ -53,10 +57,10 @@ public class ZuulResponseFilter extends ZuulFilter {
      */
     @Override
     public Object run() {
-        RequestContext ctx = RequestContext.getCurrentContext();
-        HttpServletRequest request = ctx.getRequest();
-        HttpServletResponse response = ctx.getResponse();
         try {
+            RequestContext ctx = RequestContext.getCurrentContext();
+            HttpServletRequest request = ctx.getRequest();
+            HttpServletResponse response = ctx.getResponse();
             Map headers = ctx.getZuulRequestHeaders();
             String requestId = headers.get(ZuulRequestFilter.X_REQUEST_ID).toString();
             String requestPath = request.getRequestURI();
@@ -66,7 +70,13 @@ public class ZuulResponseFilter extends ZuulFilter {
             msg.put("path", requestPath);
             msg.put("save", "update");
             msg.put("httpStatus", httpStatus);
+            msg.put("responseTime", new Date());
             gatewayAccessLogsService.saveLogs(msg);
+            // 打印response
+            InputStream out = ctx.getResponseDataStream();
+            String outBody = StreamUtils.copyToString(out, Charset.forName("UTF-8"));
+            //重要！！！
+            ctx.setResponseBody(outBody);
         } catch (Exception e) {
             log.error("修改访问日志异常:{}", e);
         }
