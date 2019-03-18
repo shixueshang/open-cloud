@@ -42,7 +42,7 @@ public class MessageHandler {
                     } else {
                         GatewayAccessLogs logs = gatewayLogsMapper.selectByPrimaryKey(gatewayAccessLogs.getAccessId());
                         if (logs != null) {
-                            logs.setResponseTime(new Date());
+                            gatewayAccessLogs.setResponseTime(new Date());
                             gatewayAccessLogs.setUseTime(gatewayAccessLogs.getResponseTime().getTime() - logs.getRequestTime().getTime());
                             gatewayLogsMapper.updateByPrimaryKeySelective(gatewayAccessLogs);
                         }
