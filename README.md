@@ -80,7 +80,7 @@ open-cloud
 
 本项目基于springCloud打造的分布式快速开发框架. 需要了解SpringCloud,SpringBoot开发,分布式原理。
 
-#### 注：Nacos版本选择V0.9.0一下版本. 1.0.0以上版本暂未测试!
+#### 注：Nacos版本选择V0.9.0以下版本. 1.0.0以上版本暂未测试!
 
 1. 准备环境
     + Java1.8
