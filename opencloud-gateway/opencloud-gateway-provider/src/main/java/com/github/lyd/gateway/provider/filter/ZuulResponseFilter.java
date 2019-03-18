@@ -46,7 +46,7 @@ public class ZuulResponseFilter extends ZuulFilter {
      */
     @Override
     public int filterOrder() {
-        return 0;
+        return FilterConstants.SEND_RESPONSE_FILTER_ORDER;
     }
 
     /**
