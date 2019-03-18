@@ -10,7 +10,6 @@ import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
 import java.util.Map;
 
 /**
@@ -67,7 +66,6 @@ public class ZuulResponseFilter extends ZuulFilter {
             msg.put("path", requestPath);
             msg.put("save", "update");
             msg.put("httpStatus", httpStatus);
-            msg.put("responseTime", new Date());
             gatewayAccessLogsService.saveLogs(msg);
         } catch (Exception e) {
             log.error("修改访问日志异常:{}", e);
