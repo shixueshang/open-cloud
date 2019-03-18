@@ -63,6 +63,10 @@ public class ZuulResponseFilter extends ZuulFilter {
             HttpServletResponse response = ctx.getResponse();
             Map headers = ctx.getZuulRequestHeaders();
             String requestId = headers.get(ZuulRequestFilter.X_REQUEST_ID).toString();
+            InputStream out = ctx.getResponseDataStream();
+            String outBody = StreamUtils.copyToString(out, Charset.forName("UTF-8"));
+            //重要！！！
+            ctx.setResponseBody(outBody);
             String requestPath = request.getRequestURI();
             int httpStatus = response.getStatus();
             Map<String, Object> msg = Maps.newHashMap();
@@ -72,11 +76,6 @@ public class ZuulResponseFilter extends ZuulFilter {
             msg.put("httpStatus", httpStatus);
             msg.put("responseTime", new Date());
             gatewayAccessLogsService.saveLogs(msg);
-            // 打印response
-            InputStream out = ctx.getResponseDataStream();
-            String outBody = StreamUtils.copyToString(out, Charset.forName("UTF-8"));
-            //重要！！！
-            ctx.setResponseBody(outBody);
         } catch (Exception e) {
             log.error("修改访问日志异常:{}", e);
         }
