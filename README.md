@@ -75,6 +75,16 @@ open-cloud
 ├── opencloud-zipkin  -- 链路追踪 
 ```
 
+#### 数据模型
+
+##### 基础权限模型  
+
+![base](/docs/base.png)  
+
+##### 网关访问限制模型  
+
+![gateway](/docs/gateway.png)  
+
 #### 快速开始
 上手难度：★★★
 
@@ -149,6 +159,9 @@ open-cloud
     ./docs/bin/startup.sh {start|stop|restart|status} open-gateway-provider.jar
     ./docs/bin/startup.sh {start|stop|restart|status} open-admin-provider.jar
     ```
+    
+#### 第三方接口调用 
+   
 #### 更新日志
     v-1.0.0 2019-03-18
         1. 重构项目结构
