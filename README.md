@@ -76,7 +76,7 @@ open-cloud
 ```
 #### 系统结构图
 
-![springcloud](/docs/springcloud.png)  
+![springcloud](/docs/springcloud.jpg)  
 
 #### 数据模型
 
