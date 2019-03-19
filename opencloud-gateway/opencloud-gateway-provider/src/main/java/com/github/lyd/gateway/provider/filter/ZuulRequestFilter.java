@@ -59,7 +59,7 @@ public class ZuulRequestFilter extends ZuulFilter {
      */
     @Override
     public int filterOrder() {
-        return 0;
+        return FilterConstants.PRE_DECORATION_FILTER_ORDER+1;
     }
 
     /**
