@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 自定义签名过滤器,认证完成之后执行
+ * 数字签名验证过滤器,认证完成之后执行
  *
  * @author: liuyadu
  * @date: 2018/11/28 18:26

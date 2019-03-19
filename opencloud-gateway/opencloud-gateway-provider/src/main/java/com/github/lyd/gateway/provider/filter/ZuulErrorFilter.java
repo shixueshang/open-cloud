@@ -29,7 +29,7 @@ public class ZuulErrorFilter extends ZuulFilter {
 
     @Override
     public Object run() {
-
+        log.debug("==================error");
         return null;
     }
 }

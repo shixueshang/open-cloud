@@ -1,12 +1,12 @@
 package com.github.lyd.gateway.provider.filter;
 
 import com.github.lyd.gateway.provider.service.GatewayAccessLogsService;
-import com.google.common.collect.Maps;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,6 +23,8 @@ public class ZuulResponseFilter extends ZuulFilter {
 
     @Autowired
     private GatewayAccessLogsService gatewayAccessLogsService;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     /**
      * 是否应该执行该过滤器，如果是false，则不执行该filter
@@ -58,23 +60,23 @@ public class ZuulResponseFilter extends ZuulFilter {
             RequestContext ctx = RequestContext.getCurrentContext();
             HttpServletRequest request = ctx.getRequest();
             HttpServletResponse response = ctx.getResponse();
-            Object accessDenied = request.getAttribute(AccessControl.ACCESS_DENIED);
-            if (accessDenied != null) {
-                response.setHeader("X-Access-Denied", accessDenied.toString());
-            }
-            Map headers = ctx.getZuulRequestHeaders();
-            String requestId = headers.get(ZuulRequestFilter.X_REQUEST_ID).toString();
-            String requestPath = request.getRequestURI();
             int httpStatus = response.getStatus();
-            Map<String, Object> msg = Maps.newHashMap();
-            msg.put("accessId", requestId);
-            msg.put("path", requestPath);
-            msg.put("save", "update");
-            msg.put("httpStatus", httpStatus);
-            msg.put("responseTime", new Date());
-            gatewayAccessLogsService.saveLogs(msg);
+            Object object = request.getAttribute(ZuulRequestFilter.PRE_REQUEST_ID);
+            if (object != null) {
+                String requestId = object.toString();
+                String key = ZuulRequestFilter.PRE_REQUEST_ID_CACHE_PREFIX + requestId;
+                Object cache = redisTemplate.opsForValue().get(key);
+                if (cache != null) {
+                    Map<String, Object> log = (Map) cache;
+                    log.put("accessId", requestId);
+                    log.put("httpStatus", httpStatus);
+                    log.put("responseTime", new Date());
+                    gatewayAccessLogsService.saveLogs(log);
+                    redisTemplate.delete(key);
+                }
+            }
         } catch (Exception e) {
-            log.error("修改访问日志异常:{}", e);
+            log.error("访问日志异常:{}", e);
         }
         return null;
     }

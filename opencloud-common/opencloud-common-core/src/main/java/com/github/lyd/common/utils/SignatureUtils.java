@@ -15,8 +15,10 @@ import java.util.Set;
 @Slf4j
 public class SignatureUtils {
 
-    //和服务器时间差值在10分钟以上不予处理
-    private final static long MAX_EXPIRE = 10 * 60;
+    /**
+     * 5分钟有效期
+     */
+    private final static long MAX_EXPIRE = 5 * 60;
 
     public static void main(String[] args) {
         //参数签名算法测试例子

@@ -33,17 +33,10 @@ public class MessageHandler {
     public void accessLogsQueue(@Payload Map access) {
         try {
             if (access != null) {
-                GatewayAccessLogs gatewayAccessLogs = BeanConvertUtils.mapToObject(access, GatewayAccessLogs.class);
-                if (gatewayAccessLogs != null) {
-                    if ("insert".equals(access.get("save"))) {
-                        gatewayLogsMapper.insertSelective(gatewayAccessLogs);
-                    } else {
-                        GatewayAccessLogs logs = gatewayLogsMapper.selectByPrimaryKey(gatewayAccessLogs.getAccessId());
-                        if (logs != null) {
-                            gatewayAccessLogs.setUseTime(gatewayAccessLogs.getResponseTime().getTime() - logs.getRequestTime().getTime());
-                            gatewayLogsMapper.updateByPrimaryKeySelective(gatewayAccessLogs);
-                        }
-                    }
+                GatewayAccessLogs logs = BeanConvertUtils.mapToObject(access, GatewayAccessLogs.class);
+                if (logs != null && logs.getAccessId() != null) {
+                    logs.setUseTime(logs.getResponseTime().getTime() - logs.getRequestTime().getTime());
+                    gatewayLogsMapper.insertSelective(logs);
                 }
             }
         } catch (Exception e) {

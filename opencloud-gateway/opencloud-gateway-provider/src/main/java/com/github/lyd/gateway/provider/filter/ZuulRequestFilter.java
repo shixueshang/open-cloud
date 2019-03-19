@@ -5,19 +5,19 @@ import com.github.lyd.common.gen.SnowflakeIdGenerator;
 import com.github.lyd.common.security.OpenAuthUser;
 import com.github.lyd.common.security.OpenHelper;
 import com.github.lyd.common.utils.WebUtils;
-import com.github.lyd.gateway.provider.service.GatewayAccessLogsService;
 import com.google.common.collect.Maps;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * zuul代理前置过滤器
@@ -27,13 +27,14 @@ import java.util.Map;
 @Slf4j
 public class ZuulRequestFilter extends ZuulFilter {
 
-    public static final String X_REQUEST_ID = "x-request-id";
+    public static final String PRE_REQUEST_ID = "pre_request_id";
 
-    @Autowired
-    private GatewayAccessLogsService gatewayAccessLogsService;
+    public static final String PRE_REQUEST_ID_CACHE_PREFIX = "pre_request_id:";
 
     @Autowired
     private SnowflakeIdGenerator snowflakeIdGenerator;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     /**
      * 是否应该执行该过滤器，如果是false，则不执行该filter
@@ -59,7 +60,7 @@ public class ZuulRequestFilter extends ZuulFilter {
      */
     @Override
     public int filterOrder() {
-        return FilterConstants.PRE_DECORATION_FILTER_ORDER+1;
+        return FilterConstants.PRE_DECORATION_FILTER_ORDER + 1;
     }
 
     /**
@@ -69,10 +70,7 @@ public class ZuulRequestFilter extends ZuulFilter {
     public Object run() {
         RequestContext ctx = RequestContext.getCurrentContext();
         HttpServletRequest request = ctx.getRequest();
-        HttpServletResponse response = ctx.getResponse();
         try {
-            Long requestId = snowflakeIdGenerator.nextId();
-            ctx.addZuulRequestHeader(X_REQUEST_ID, String.valueOf(requestId));
             Map headers = WebUtils.getHttpHeaders(request);
             Map data = WebUtils.getParameterMap(request);
             String requestPath = request.getRequestURI();
@@ -80,26 +78,28 @@ public class ZuulRequestFilter extends ZuulFilter {
             String ip = WebUtils.getIpAddr(request);
             String userAgent = request.getHeader(HttpHeaders.USER_AGENT);
             String serverIp = WebUtils.getLocalIpAddress();
-            int httpStatus = response.getStatus();
-            Map<String, Object> msg = Maps.newHashMap();
-            msg.put("accessId", requestId);
-            msg.put("save", "insert");
-            msg.put("headers", JSONObject.toJSON(headers));
-            msg.put("path", requestPath);
-            msg.put("params", JSONObject.toJSON(data));
-            msg.put("ip", ip);
-            msg.put("method", method);
-            msg.put("httpStatus", httpStatus);
-            msg.put("requestTime", new Date());
-            msg.put("userAgent",userAgent);
-            msg.put("serverIp",serverIp);
+            Long requestId = snowflakeIdGenerator.nextId();
+            request.setAttribute(PRE_REQUEST_ID, String.valueOf(requestId));
+            Map<String, Object> map = Maps.newHashMap();
+            map.put("accessId", requestId);
+            map.put("headers", JSONObject.toJSON(headers));
+            map.put("path", requestPath);
+            map.put("params", JSONObject.toJSON(data));
+            map.put("ip", ip);
+            map.put("method", method);
+            map.put("requestTime", new Date());
+            map.put("userAgent", userAgent);
+            map.put("serverIp", serverIp);
             OpenAuthUser user = OpenHelper.getAuthUser();
-            if(user!=null){
-                msg.put("authentication",JSONObject.toJSONString(user));
+            if (user != null) {
+                map.put("authentication", JSONObject.toJSONString(user));
             }
-            gatewayAccessLogsService.saveLogs(msg);
+            // 3分钟过期
+            String key = ZuulRequestFilter.PRE_REQUEST_ID_CACHE_PREFIX + requestId;
+            // 放入redis缓存
+            redisTemplate.opsForValue().set(key, map, 3, TimeUnit.MINUTES);
         } catch (Exception e) {
-            log.error("添加访问日志异常:{}", e);
+            log.error("访问日志异常:{}", e);
         }
 
         return null;

@@ -3,12 +3,14 @@ package com.github.lyd.gateway.provider.filter;
 import com.github.lyd.base.client.model.AccessAuthority;
 import com.github.lyd.common.constants.CommonConstants;
 import com.github.lyd.common.constants.ResultEnum;
+import com.github.lyd.common.exception.OpenExceptionHandler;
 import com.github.lyd.common.security.OpenGrantedAuthority;
 import com.github.lyd.common.utils.StringUtils;
 import com.github.lyd.common.utils.WebUtils;
 import com.github.lyd.gateway.client.model.GatewayIpLimitApisDto;
 import com.github.lyd.gateway.provider.configuration.ApiGatewayProperties;
 import com.github.lyd.gateway.provider.locator.AccessLocator;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -22,10 +24,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
- * 访问控制
+ * 自定义动态访问控制
  *
  * @author liuyadu
  */
+@Slf4j
 @Service
 public class AccessControl {
 
@@ -39,7 +42,6 @@ public class AccessControl {
 
     private Set<String> noAuthorityAllow = new HashSet<>();
 
-    public static final String ACCESS_DENIED = "x.access.denied";
 
     public AccessControl(AccessLocator accessLocator, ApiGatewayProperties apiGatewayProperties) {
         this.accessLocator = accessLocator;
@@ -56,6 +58,9 @@ public class AccessControl {
 
     /**
      * 访问控制
+     * 1.IP黑名单
+     * 2.IP白名单
+     * 3.权限控制
      *
      * @param request
      * @param authentication
@@ -67,23 +72,26 @@ public class AccessControl {
         }
         String requestPath = getRequestPath(request);
         String remoteIpAddress = WebUtils.getIpAddr(request);
-        if (isPermitAll(requestPath)) {
-            return true;
-        }
         // 1.ip黑名单检测
         boolean deny = matchIpBlacklist(requestPath, remoteIpAddress);
         if (deny) {
             // 拒绝
-            request.setAttribute(ACCESS_DENIED, ResultEnum.ACCESS_DENIED_BLACK_IP_LIMITED.getMessage());
+            log.debug("==> access_denied:path={},message={}", requestPath, ResultEnum.ACCESS_DENIED_BLACK_IP_LIMITED.getMessage());
+            request.setAttribute(OpenExceptionHandler.ACCESS_DENIED, ResultEnum.ACCESS_DENIED_BLACK_IP_LIMITED.getMessage());
             return false;
         }
 
-        // 2.ip白名单检测
+        // 2.是否直接放行
+        if (isPermitAll(requestPath)) {
+            return true;
+        }
+
+        // 3.ip白名单检测
         boolean[] matchIpWhiteListResult = matchIpWhiteList(requestPath, remoteIpAddress);
         boolean hasWhiteList = matchIpWhiteListResult[0];
         boolean allow = matchIpWhiteListResult[1];
 
-        // 3.判断api是否需要认证
+        // 4.判断api是否需要认证
         boolean isAuth = isAuthAccess(requestPath);
 
         if (hasWhiteList) {
@@ -99,7 +107,8 @@ public class AccessControl {
                 }
             } else {
                 // IP白名单检测通过,拒绝
-                request.setAttribute(ACCESS_DENIED, ResultEnum.ACCESS_DENIED_WHITE_IP_LIMITED.getMessage());
+                log.debug("==> access_denied:path={},message={}", requestPath, ResultEnum.ACCESS_DENIED_WHITE_IP_LIMITED.getMessage());
+                request.setAttribute(OpenExceptionHandler.ACCESS_DENIED, ResultEnum.ACCESS_DENIED_WHITE_IP_LIMITED.getMessage());
                 return false;
             }
 
@@ -172,7 +181,8 @@ public class AccessControl {
                             OpenGrantedAuthority customer = (OpenGrantedAuthority) authority;
                             if (customer.getIsExpired() != null && customer.getIsExpired()) {
                                 // 授权已过期
-                                request.setAttribute(ACCESS_DENIED, ResultEnum.ACCESS_DENIED_AUTHORITY_EXPIRED.getMessage());
+                                log.debug("==> access_denied:path={},message={}", requestPath, ResultEnum.ACCESS_DENIED_AUTHORITY_EXPIRED.getMessage());
+                                request.setAttribute(OpenExceptionHandler.ACCESS_DENIED, ResultEnum.ACCESS_DENIED_AUTHORITY_EXPIRED.getMessage());
                                 return false;
                             }
                         }

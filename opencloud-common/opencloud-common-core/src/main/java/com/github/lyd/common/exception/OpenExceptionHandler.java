@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Locale;
 
 /**
- * 统一异常管理
+ * 统一异常处理器
  *
  * @author LYD
  * @date 2017/7/3
@@ -43,6 +43,7 @@ public class OpenExceptionHandler {
      */
     private static Locale locale = LocaleContextHolder.getLocale();
     private static final String KEY = "x.servlet.exception.code";
+    public static final String ACCESS_DENIED = "x.access.denied";
 
     /**
      * 统一异常处理
@@ -126,9 +127,9 @@ public class OpenExceptionHandler {
         } else {
             code = ResultEnum.INVALID_REQUEST;
         }
-        if(code.equals(ResultEnum.ACCESS_DENIED)){
+        if (code.equals(ResultEnum.ACCESS_DENIED)) {
             response.setStatus(HttpStatus.FORBIDDEN.value());
-        }else{
+        } else {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
         }
         //放入请求域
@@ -203,7 +204,7 @@ public class OpenExceptionHandler {
 
 
     /**
-     * 解析异常
+     * 静态解析异常。可以直接调用
      *
      * @param ex
      * @param request
@@ -211,6 +212,11 @@ public class OpenExceptionHandler {
      * @return
      */
     public static ResultBody resolveException(Exception ex, HttpServletRequest request, HttpServletResponse response) {
+        Object accessDenied = request.getAttribute(ACCESS_DENIED);
+        if (accessDenied != null) {
+            String message = accessDenied.toString();
+            ex = new AccessDeniedException(message, ex.getCause());
+        }
         ResultBody resultBody = null;
         if (ex instanceof AuthenticationException) {
             resultBody = authenticationException(ex, request, response);
@@ -224,28 +230,39 @@ public class OpenExceptionHandler {
         return resultBody;
     }
 
-    private static ResultBody buildBody(Exception ex, HttpServletRequest request, HttpServletResponse response) {
-        String exception = ex.getMessage();
+    /**
+     * 构建返回结果对象
+     *
+     * @param exception
+     * @param request
+     * @param response
+     * @return
+     */
+    private static ResultBody buildBody(Exception exception, HttpServletRequest request, HttpServletResponse response) {
         String path = request.getRequestURI();
         String method = request.getMethod();
+        String message = exception.getMessage();
         ResultEnum resultCode = (ResultEnum) request.getAttribute(KEY);
         if (resultCode == null) {
             resultCode = ResultEnum.ERROR;
         }
+        int code = resultCode.getCode();
+        String error = resultCode.getMessage();
         //提示消息
-        String message = "";
-        if (resultCode.getCode() == ResultEnum.ALERT.getCode()
-                || resultCode.getCode() == ResultEnum.SIGNATURE_DENIED.getCode()) {
-            message = i18n(ex.getMessage());
-        } else {
-            message = i18n(resultCode.getMessage());
-        }
-        log.error("错误解析:method={},path={},code={},message={},exception={}", method, path, resultCode.getCode(), message, (ex instanceof OpenException ? ex.getMessage() : ex));
-        return ResultBody.failed(resultCode.getCode(), message).setPath(path);
+        String msgI18n = i18n(error, message);
+        log.error("==> 错误解析:method={},path={},code={},error={},exception={}", method, path, code, error, exception);
+        return ResultBody.failed(code, msgI18n).setError(error).setPath(path);
     }
 
-    private static String i18n(String message) {
+    /**
+     * 提示信息国际化
+     *
+     * @param error
+     * @param message
+     * @return
+     */
+    private static String i18n(String error, String message) {
         MessageSource messageSource = SpringContextHolder.getBean(MessageSource.class);
-        return messageSource.getMessage(message, null, message, locale);
+        return messageSource.getMessage(error, null, message, locale);
     }
 }

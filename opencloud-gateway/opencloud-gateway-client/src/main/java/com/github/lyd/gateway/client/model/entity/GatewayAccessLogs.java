@@ -8,6 +8,7 @@ import java.util.Date;
 
 /**
  * 开放网关-访问日志
+ * @author liuyadu
  */
 @Table(name = "gateway_access_logs")
 public class GatewayAccessLogs implements Serializable {
