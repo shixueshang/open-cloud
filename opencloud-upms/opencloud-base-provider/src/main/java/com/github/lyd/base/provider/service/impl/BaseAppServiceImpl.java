@@ -82,8 +82,12 @@ public class BaseAppServiceImpl implements BaseAppService {
     @Cacheable(value = "apps", key = "'client:'+#appId")
     public BaseClientDetails getAppClientInfo(String appId) {
         try {
+            BaseApp app = getAppInfo(appId);
             BaseClientDetails clientDetails = (BaseClientDetails) jdbcClientDetailsService.loadClientByClientId(appId);
-            clientDetails.setAuthorities(baseAuthorityService.findAppGrantedAuthority(appId));
+            if (app.getStatus().intValue() == 1) {
+                // 启用的应用才加载权限
+                clientDetails.setAuthorities(baseAuthorityService.findAppGrantedAuthority(appId));
+            }
             return clientDetails;
         } catch (Exception e) {
             log.error("clientDetailsClient.getClient error:{}", e.getMessage());
@@ -100,6 +104,9 @@ public class BaseAppServiceImpl implements BaseAppService {
     @Override
     public BaseClientDetails updateAppClientInfo(BaseClientDetails baseClientDetails) {
         BaseApp app = getAppInfo(baseClientDetails.getClientId());
+        if (app.getIsPersist().equals(BaseConstants.ENABLED)) {
+            throw new OpenAlertException(String.format("保留数据,不允许修改"));
+        }
         Map<String, Object> info = Maps.newHashMap();
         info.put("appName", app.getAppName());
         info.put("appNameEn", app.getAppNameEn());
@@ -163,6 +170,9 @@ public class BaseAppServiceImpl implements BaseAppService {
         BaseApp appInfo = getAppInfo(app.getAppId());
         if (appInfo == null) {
             throw new OpenAlertException(app.getAppId() + "应用不存在!");
+        }
+        if (app.getIsPersist().equals(BaseConstants.ENABLED)) {
+            throw new OpenAlertException(String.format("保留数据,不允许修改"));
         }
         app.setUpdateTime(new Date());
         baseAppMapper.updateByPrimaryKeySelective(appInfo);
