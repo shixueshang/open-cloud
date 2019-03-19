@@ -74,6 +74,9 @@ open-cloud
     
 ├── opencloud-zipkin  -- 链路追踪 
 ```
+#### 系统结构图
+
+![springcloud](/docs/springcloud.png)  
 
 #### 数据模型
 
