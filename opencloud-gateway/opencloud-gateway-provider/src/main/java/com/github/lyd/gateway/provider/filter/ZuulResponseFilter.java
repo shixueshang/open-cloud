@@ -7,12 +7,9 @@ import com.netflix.zuul.context.RequestContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
-import org.springframework.util.StreamUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.Map;
 
@@ -68,10 +65,6 @@ public class ZuulResponseFilter extends ZuulFilter {
             Map headers = ctx.getZuulRequestHeaders();
             String requestId = headers.get(ZuulRequestFilter.X_REQUEST_ID).toString();
             String requestPath = request.getRequestURI();
-            InputStream out = ctx.getResponseDataStream();
-            String outBody = StreamUtils.copyToString(out, Charset.forName("UTF-8"));
-            //重要！！！
-            ctx.setResponseBody(outBody);
             int httpStatus = response.getStatus();
             Map<String, Object> msg = Maps.newHashMap();
             msg.put("accessId", requestId);
