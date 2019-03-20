@@ -46,7 +46,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         boolean enable = account.getUserProfile().getStatus().intValue() == BaseConstants.USER_STATE_NORMAL ? true : false;
         boolean accountNonExpired = true;
         Map userProfile = BeanConvertUtils.objectToMap(account.getUserProfile());
-        userProfile.remove("authorities");
         return new OpenAuthUser(AUTH_SERVICE_ID, account.getUserId(), account.getAccount(), account.getPassword(), account.getUserProfile().getAuthorities(), accountNonLocked, accountNonExpired, enable, credentialsNonExpired, userProfile);
     }
 }

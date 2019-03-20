@@ -95,6 +95,7 @@ public class ZuulRequestFilter extends ZuulFilter {
             map.put("serverIp", serverIp);
             OpenAuthUser user = OpenHelper.getAuthUser();
             if (user != null) {
+                user.getUserProfile().remove("authorities");
                 map.put("authentication", JSONObject.toJSONString(user));
             }
             // 3分钟过期
