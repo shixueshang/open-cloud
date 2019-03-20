@@ -10,6 +10,9 @@ import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+import java.util.Map;
+
 /**
  * @author: liuyadu
  * @date: 2018/11/12 16:26
@@ -27,6 +30,11 @@ public class ClientDetailsServiceImpl implements ClientDetailsService {
     public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
         BaseClientDetails details = baseAppRemoteService.getAppClientInfo(clientId).getData();
         if (details != null) {
+            Map info = details.getAdditionalInformation();
+            if (info != null && (info.get("status") == null || !info.get("status").equals(1))) {
+                // 客户端未启用,返回权限为空,禁止调用接口
+                details.setAuthorities(Collections.emptyList());
+            }
             return details;
         }
         return null;

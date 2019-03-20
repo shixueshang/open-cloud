@@ -162,14 +162,14 @@ public class BaseRoleServiceImpl implements BaseRoleService {
     }
 
     /**
-     * 成员分配角色
+     * 用户添加角色
      *
      * @param userId
      * @param roles
      * @return
      */
     @Override
-    public void saveMemberRoles(Long userId, String... roles) {
+    public void saveUserRoles(Long userId, String... roles) {
         if (userId == null || roles == null) {
             return;
         }
@@ -181,7 +181,7 @@ public class BaseRoleServiceImpl implements BaseRoleService {
             throw new OpenAlertException("默认用户无需分配!");
         }
         // 先清空,在添加
-        removeMemberRoles(userId);
+        removeUserRoles(userId);
         if (roles.length > 0) {
             List<BaseRoleUser> list = Lists.newArrayList();
             for (String roleId : roles) {
@@ -193,6 +193,44 @@ public class BaseRoleServiceImpl implements BaseRoleService {
             // 批量保存
             baseRoleUserMapper.insertList(list);
         }
+    }
+
+    /**
+     * 角色添加成员
+     *
+     * @param roleId
+     * @param userIds
+     */
+    @Override
+    public void saveRoleUsers(Long roleId, String... userIds) {
+        if (roleId == null || userIds == null) {
+            return;
+        }
+        // 先清空,在添加
+        removeRoleUsers(roleId);
+        if (userIds.length > 0) {
+            List<BaseRoleUser> list = Lists.newArrayList();
+            for (String userId : userIds) {
+                BaseRoleUser roleUser = new BaseRoleUser();
+                roleUser.setUserId(Long.parseLong(userId));
+                roleUser.setRoleId(roleId);
+                list.add(roleUser);
+            }
+            // 批量保存
+            baseRoleUserMapper.insertList(list);
+        }
+    }
+
+    /**
+     * 查询角色成员
+     *
+     * @return
+     */
+    @Override
+    public List<BaseRoleUser> findRoleUsers(Long roleId) {
+        ExampleBuilder builder = new ExampleBuilder(BaseRoleUser.class);
+        Example example = builder.criteria().andEqualTo("roleId", roleId).end().build();
+        return baseRoleUserMapper.selectByExample(example);
     }
 
     /**
@@ -230,7 +268,7 @@ public class BaseRoleServiceImpl implements BaseRoleService {
      * @return
      */
     @Override
-    public void removeRoleMembers(Long roleId) {
+    public void removeRoleUsers(Long roleId) {
         ExampleBuilder builder = new ExampleBuilder(BaseRoleUser.class);
         Example example = builder.criteria().andEqualTo("roleId", roleId).end().build();
         baseRoleUserMapper.deleteByExample(example);
@@ -243,7 +281,7 @@ public class BaseRoleServiceImpl implements BaseRoleService {
      * @return
      */
     @Override
-    public void removeMemberRoles(Long userId) {
+    public void removeUserRoles(Long userId) {
         ExampleBuilder builder = new ExampleBuilder(BaseRoleUser.class);
         Example example = builder.criteria().andEqualTo("userId", userId).end().build();
         baseRoleUserMapper.deleteByExample(example);

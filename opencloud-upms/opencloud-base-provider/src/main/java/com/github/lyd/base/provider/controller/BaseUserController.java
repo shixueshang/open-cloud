@@ -145,14 +145,19 @@ public class BaseUserController {
         return ResultBody.success();
     }
 
-
+    /**
+     * 用户分配角色
+     * @param userId
+     * @param roleIds
+     * @return
+     */
     @ApiOperation(value = "用户分配角色", notes = "用户分配角色")
     @PostMapping("/user/roles/add")
     public ResultBody addUserRoles(
             @RequestParam(value = "userId") Long userId,
             @RequestParam(value = "roleIds", required = false) String roleIds
     ) {
-        baseRoleService.saveMemberRoles(userId, StringUtils.isNotBlank(roleIds) ? roleIds.split(",") : new String[]{});
+        baseRoleService.saveUserRoles(userId, StringUtils.isNotBlank(roleIds) ? roleIds.split(",") : new String[]{});
         return ResultBody.success();
     }
 

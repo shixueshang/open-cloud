@@ -24,7 +24,7 @@ public interface BaseResourceApiService {
      * 查询列表
      * @return
      */
-    List<BaseResourceApi> findAllList();
+    List<BaseResourceApi> findAllList(String serviceId);
 
     /**
      * 根据主键获取接口

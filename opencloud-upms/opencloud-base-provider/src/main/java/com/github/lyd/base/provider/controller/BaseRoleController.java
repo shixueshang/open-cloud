@@ -1,10 +1,12 @@
 package com.github.lyd.base.provider.controller;
 
 import com.github.lyd.base.client.model.entity.BaseRole;
+import com.github.lyd.base.client.model.entity.BaseRoleUser;
 import com.github.lyd.base.provider.service.BaseRoleService;
 import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.model.PageParams;
 import com.github.lyd.common.model.ResultBody;
+import com.github.lyd.common.utils.StringUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -159,6 +161,36 @@ public class BaseRoleController {
     ) {
         baseRoleService.removeRole(roleId);
         return ResultBody.success();
+    }
+
+    /**
+     * 角色添加成员
+     * @param roleId
+     * @param userIds
+     * @return
+     */
+    @ApiOperation(value = "角色添加成员", notes = "角色添加成员")
+    @PostMapping("/role/users/add")
+    public ResultBody addUserRoles(
+            @RequestParam(value = "roleId") Long roleId,
+            @RequestParam(value = "userIds", required = false) String userIds
+    ) {
+        baseRoleService.saveRoleUsers(roleId, StringUtils.isNotBlank(userIds) ? userIds.split(",") : new String[]{});
+        return ResultBody.success();
+    }
+
+    /**
+     * 查询角色成员
+     *
+     * @param roleId
+     * @return
+     */
+    @ApiOperation(value = "查询角色成员", notes = "查询角色成员")
+    @PostMapping("/role/users")
+    public ResultBody<List<BaseRoleUser>> getRoleUsers(
+            @RequestParam(value = "roleId") Long roleId
+    ) {
+        return ResultBody.success(baseRoleService.findRoleUsers(roleId));
     }
 
 }

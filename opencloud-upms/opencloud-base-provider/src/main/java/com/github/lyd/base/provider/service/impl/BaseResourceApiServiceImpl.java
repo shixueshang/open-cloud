@@ -57,9 +57,9 @@ public class BaseResourceApiServiceImpl implements BaseResourceApiService {
      * @return
      */
     @Override
-    public List<BaseResourceApi> findAllList() {
+    public List<BaseResourceApi> findAllList(String serviceId) {
         ExampleBuilder builder = new ExampleBuilder(BaseResourceApi.class);
-        Example example = builder.criteria().end().build();
+        Example example = builder.criteria().andEqualTo("serviceId",serviceId).end().build();
         example.orderBy("apiId").asc().orderBy("priority").asc();
         List<BaseResourceApi> list = baseResourceApiMapper.selectByExample(example);
         return list;

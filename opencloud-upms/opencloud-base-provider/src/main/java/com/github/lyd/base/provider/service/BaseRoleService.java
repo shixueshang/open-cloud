@@ -1,6 +1,7 @@
 package com.github.lyd.base.provider.service;
 
 import com.github.lyd.base.client.model.entity.BaseRole;
+import com.github.lyd.base.client.model.entity.BaseRoleUser;
 import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.model.PageParams;
 
@@ -70,13 +71,27 @@ public interface BaseRoleService {
     Boolean isExist(String roleCode);
 
     /**
-     * 角色授权组员
+     * 用户添加角色
      *
      * @param userId
      * @param roles
      * @return
      */
-    void saveMemberRoles(Long userId, String... roles);
+    void saveUserRoles(Long userId, String... roles);
+
+    /**
+     * 角色添加成员
+     *
+     * @param roleId
+     * @param userIds
+     */
+    void saveRoleUsers(Long roleId, String... userIds);
+
+    /**
+     * 查询角色成员
+     * @return
+     */
+    List<BaseRoleUser> findRoleUsers(Long roleId);
 
     /**
      * 获取角色所有授权组员数量
@@ -100,7 +115,7 @@ public interface BaseRoleService {
      * @param roleId
      * @return
      */
-    void removeRoleMembers(Long roleId);
+    void removeRoleUsers(Long roleId);
 
     /**
      * 移除组员的所有角色
@@ -108,7 +123,7 @@ public interface BaseRoleService {
      * @param userId
      * @return
      */
-    void removeMemberRoles(Long userId);
+    void removeUserRoles(Long userId);
 
     /**
      * 检测是否存在

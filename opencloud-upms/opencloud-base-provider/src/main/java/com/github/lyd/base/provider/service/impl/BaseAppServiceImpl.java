@@ -1,5 +1,6 @@
 package com.github.lyd.base.provider.service.impl;
 
+import com.github.lyd.auth.client.constants.AuthConstants;
 import com.github.lyd.base.client.constants.BaseConstants;
 import com.github.lyd.base.client.model.entity.BaseApp;
 import com.github.lyd.base.provider.mapper.BaseAppMapper;
@@ -9,8 +10,8 @@ import com.github.lyd.common.exception.OpenAlertException;
 import com.github.lyd.common.mapper.ExampleBuilder;
 import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.model.PageParams;
+import com.github.lyd.common.utils.BeanConvertUtils;
 import com.github.lyd.common.utils.RandomValueUtils;
-import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -82,12 +83,8 @@ public class BaseAppServiceImpl implements BaseAppService {
     @Cacheable(value = "apps", key = "'client:'+#appId")
     public BaseClientDetails getAppClientInfo(String appId) {
         try {
-            BaseApp app = getAppInfo(appId);
             BaseClientDetails clientDetails = (BaseClientDetails) jdbcClientDetailsService.loadClientByClientId(appId);
-            if (app.getStatus().intValue() == 1) {
-                // 启用的应用才加载权限
-                clientDetails.setAuthorities(baseAuthorityService.findAppGrantedAuthority(appId));
-            }
+            clientDetails.setAuthorities(baseAuthorityService.findAppGrantedAuthority(appId));
             return clientDetails;
         } catch (Exception e) {
             log.error("clientDetailsClient.getClient error:{}", e.getMessage());
@@ -104,16 +101,7 @@ public class BaseAppServiceImpl implements BaseAppService {
     @Override
     public BaseClientDetails updateAppClientInfo(BaseClientDetails baseClientDetails) {
         BaseApp app = getAppInfo(baseClientDetails.getClientId());
-        if (app.getIsPersist().equals(BaseConstants.ENABLED)) {
-            throw new OpenAlertException(String.format("保留数据,不允许修改"));
-        }
-        Map<String, Object> info = Maps.newHashMap();
-        info.put("appName", app.getAppName());
-        info.put("appNameEn", app.getAppNameEn());
-        info.put("appIcon", app.getAppIcon());
-        info.put("appType", app.getAppType());
-        info.put("appOs", app.getAppOs());
-        info.put("website", app.getWebsite());
+        Map info = BeanConvertUtils.objectToMap(app);
         baseClientDetails.setAdditionalInformation(info);
         jdbcClientDetailsService.updateClientDetails(baseClientDetails);
         return baseClientDetails;
@@ -139,18 +127,14 @@ public class BaseAppServiceImpl implements BaseAppService {
             app.setIsPersist(0);
         }
         baseAppMapper.insertSelective(app);
-        Map<String, Object> info = Maps.newHashMap();
-        info.put("appName", app.getAppName());
-        info.put("appNameEn", app.getAppNameEn());
-        info.put("appIcon", app.getAppIcon());
-        info.put("appType", app.getAppType());
-        info.put("appOs", app.getAppOs());
-        info.put("website", app.getWebsite());
+        Map info = BeanConvertUtils.objectToMap(app);
         // 功能授权
         BaseClientDetails client = new BaseClientDetails();
         client.setClientId(app.getAppId());
         client.setClientSecret(app.getAppSecret());
         client.setAdditionalInformation(info);
+        client.setAccessTokenValiditySeconds(AuthConstants.ACCESS_TOKEN_VALIDITY_SECONDS);
+        client.setRefreshTokenValiditySeconds(AuthConstants.REFRESH_TOKEN_VALIDITY_SECONDS);
         jdbcClientDetailsService.addClientDetails(client);
         return app;
     }
@@ -171,18 +155,9 @@ public class BaseAppServiceImpl implements BaseAppService {
         if (appInfo == null) {
             throw new OpenAlertException(app.getAppId() + "应用不存在!");
         }
-        if (app.getIsPersist().equals(BaseConstants.ENABLED)) {
-            throw new OpenAlertException(String.format("保留数据,不允许修改"));
-        }
         app.setUpdateTime(new Date());
-        baseAppMapper.updateByPrimaryKeySelective(appInfo);
-        Map<String, Object> info = Maps.newHashMap();
-        info.put("appName", app.getAppName());
-        info.put("appNameEn", app.getAppNameEn());
-        info.put("appIcon", app.getAppIcon());
-        info.put("appType", app.getAppType());
-        info.put("appOs", app.getAppOs());
-        info.put("website", app.getWebsite());
+        baseAppMapper.updateByPrimaryKeySelective(app);
+        Map info = BeanConvertUtils.objectToMap(app);
         // 修改客户端信息
         BaseClientDetails client = (BaseClientDetails) jdbcClientDetailsService.loadClientByClientId(app.getAppId());
         client.setAdditionalInformation(info);

@@ -57,8 +57,8 @@ public class BaseApiController {
      */
     @ApiOperation(value = "获取所有接口列表", notes = "获取所有接口列表")
     @PostMapping("/api/all")
-    public ResultBody<List<BaseResourceApi>> getApiAllList() {
-        return ResultBody.success(apiService.findAllList());
+    public ResultBody<List<BaseResourceApi>> getApiAllList(String serviceId) {
+        return ResultBody.success(apiService.findAllList(serviceId));
     }
 
     /**
