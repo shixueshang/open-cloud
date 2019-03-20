@@ -23,7 +23,7 @@ public class FeignAutoConfiguration {
     @ConditionalOnMissingBean(FeignRequestInterceptor.class)
     public RequestInterceptor feignRequestInterceptor() {
        FeignRequestInterceptor interceptor = new FeignRequestInterceptor();
-        log.info("初始化FeignRequestInterceptor:{}", interceptor);
+        log.info("bean [{}]", interceptor);
         return  interceptor;
     }
 

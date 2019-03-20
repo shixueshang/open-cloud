@@ -28,7 +28,7 @@ import java.time.Duration;
 public class RedisCacheAutoConfiguration {
 
     public RedisCacheAutoConfiguration() {
-        log.info("初始化缓存配置");
+        log.info("init redis cache");
     }
 
 

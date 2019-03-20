@@ -16,7 +16,7 @@ public class SmsExchanger implements MessageExchanger {
 
     public SmsExchanger(SmsSender smsSender) {
         if (smsSender != null) {
-            log.info("初始化短信通知组件");
+            log.info("init sms sender");
         }
         this.smsSender = smsSender;
     }

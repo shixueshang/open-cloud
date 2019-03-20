@@ -27,7 +27,7 @@ public class MailSenderImpl {
 
 
     public MailSenderImpl(){
-        log.info("初始化邮件组件");
+        log.info("init email sender");
     }
 
     /**

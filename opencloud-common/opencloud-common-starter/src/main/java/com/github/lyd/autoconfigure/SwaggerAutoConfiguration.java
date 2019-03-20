@@ -47,7 +47,7 @@ public class SwaggerAutoConfiguration {
     public SwaggerAutoConfiguration(SwaggerProperties swaggerProperties, MessageSource messageSource) {
         this.swaggerProperties = swaggerProperties;
         this.messageSource = messageSource;
-        log.info("初始化Swagger2:{}", swaggerProperties);
+        log.info("swagger2 [{}]", swaggerProperties);
     }
 
 

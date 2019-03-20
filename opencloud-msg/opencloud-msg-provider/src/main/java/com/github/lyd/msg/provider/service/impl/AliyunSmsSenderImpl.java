@@ -25,7 +25,7 @@ public class AliyunSmsSenderImpl implements SmsSender {
     private String accessKeySecret;
 
     public AliyunSmsSenderImpl(){
-        log.info("初始化阿里云接口:" + this);
+        log.info("init aliyunSMS sender:" + this);
     }
 
     @Override

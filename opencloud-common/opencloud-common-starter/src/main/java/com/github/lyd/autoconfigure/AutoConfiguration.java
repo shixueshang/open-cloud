@@ -62,7 +62,7 @@ public class AutoConfiguration {
     @ConditionalOnMissingBean(BCryptPasswordEncoder.class)
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         BCryptPasswordEncoder encoder =  new BCryptPasswordEncoder();
-        log.info("初始化加密工具类:{}",encoder);
+        log.info("bean [{}]",encoder);
         return encoder;
     }
 
@@ -76,7 +76,7 @@ public class AutoConfiguration {
     @ConditionalOnMissingBean(SpringContextHolder.class)
     public SpringContextHolder springContextHolder() {
         SpringContextHolder holder = new SpringContextHolder();
-        log.info("初始化Spring上下文工具类:{}",holder);
+        log.info("bean [{}]",holder);
         return holder;
     }
 
@@ -89,7 +89,7 @@ public class AutoConfiguration {
     @ConditionalOnMissingBean(OpenExceptionHandler.class)
     public OpenExceptionHandler exceptionHandler() {
         OpenExceptionHandler exceptionHandler = new OpenExceptionHandler();
-        log.info("初始化全局异常处理器:{}", exceptionHandler);
+        log.info("bean [{}]", exceptionHandler);
         return exceptionHandler;
     }
 
@@ -103,7 +103,7 @@ public class AutoConfiguration {
     @ConditionalOnMissingBean(IdGenProperties.class)
     public SnowflakeIdGenerator snowflakeIdWorker(IdGenProperties properties) {
         SnowflakeIdGenerator snowflakeIdGenerator = new SnowflakeIdGenerator(properties.getWorkId(), properties.getCenterId());
-        log.info("初始化SnowflakeId生成器:{},{}", properties, snowflakeIdGenerator);
+        log.info("bean [{}] properties [{}]", snowflakeIdGenerator,properties);
         return snowflakeIdGenerator;
     }
 
@@ -117,7 +117,7 @@ public class AutoConfiguration {
     @ConditionalOnMissingBean(AnnotationScan.class)
     public AnnotationScan annotationScan(AmqpTemplate amqpTemplate) {
         AnnotationScan scan = new AnnotationScan(amqpTemplate);
-        log.info("初始化自定义注解扫描类{}", scan);
+        log.info("bean [{}]", scan);
         return scan;
     }
 
@@ -131,7 +131,7 @@ public class AutoConfiguration {
     @ConditionalOnMissingBean(OpenRestTemplate.class)
     public OpenRestTemplate openRestTemplate(CommonProperties commonProperties) {
         OpenRestTemplate restTemplate = new OpenRestTemplate(commonProperties);
-        log.info("初始化自定义请求工具类:{}", restTemplate);
+        log.info("bean [{}]", restTemplate);
         return restTemplate;
     }
 

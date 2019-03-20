@@ -23,7 +23,7 @@ public class XssAutoConfiguration {
     @Bean
     public FilterRegistrationBean xxsFilter() {
         FilterRegistrationBean bean = new FilterRegistrationBean(new XssFilter());
-        log.info("初始化XxsFilter:{}",bean);
+        log.info("bean [{}]",bean);
         return bean;
     }
     /**
@@ -42,7 +42,7 @@ public class XssAutoConfiguration {
         xssModule.addSerializer(new XssStringJsonSerializer());
         objectMapper.registerModule(xssModule);
         //返回
-        log.info("初始化XxsJacksonObjectMapper:{}",objectMapper);
+        log.info("bean [{}]",objectMapper);
         return objectMapper;
     }
 

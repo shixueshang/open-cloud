@@ -95,7 +95,7 @@ public class ApiGatewayConfiguration {
     @Bean
     public ZuulRouteLocator zuulRouteLocator(ZuulProperties zuulProperties, ServerProperties serverProperties, GatewayRouteService gatewayRouteService) {
         zuulRoutesLocator = new ZuulRouteLocator(serverProperties.getServlet().getContextPath(), zuulProperties, gatewayRouteService);
-        log.info("初始化ZuulRoutesLocator:{}", zuulRoutesLocator);
+        log.info("ZuulRoutesLocator:{}", zuulRoutesLocator);
         return zuulRoutesLocator;
     }
 
@@ -107,7 +107,7 @@ public class ApiGatewayConfiguration {
     @Bean
     public GatewayRefreshRemoteListener gatewayRefreshRemoteListener() {
         GatewayRefreshRemoteListener rateLimitRefreshRemoteListener = new GatewayRefreshRemoteListener(zuulRoutesLocator, accessLocator);
-        log.info("初始化GatewayRefreshRemoteListener:{}", rateLimitRefreshRemoteListener);
+        log.info("bean [{}]", rateLimitRefreshRemoteListener);
         return rateLimitRefreshRemoteListener;
     }
 
@@ -123,7 +123,7 @@ public class ApiGatewayConfiguration {
     @ConditionalOnClass({Endpoint.class})
     public GatewayRefreshBusEndpoint gatewayRefreshBusEndpoint(ApplicationContext context, BusProperties bus) {
         GatewayRefreshBusEndpoint endpoint = new GatewayRefreshBusEndpoint(context, bus.getId());
-        log.info("初始化GatewayRefreshBusEndpoint:{}", endpoint);
+        log.info("bean [{}]", endpoint);
         return endpoint;
     }
 
