@@ -88,6 +88,12 @@ public class GatewayAccessLogs implements Serializable {
     @Column(name = "server_ip")
     private String serverIp;
 
+    /**
+     * 服务名
+     */
+    @Column(name = "service_id")
+    private String serviceId;
+
     private static final long serialVersionUID = 1L;
 
     /**
@@ -296,5 +302,13 @@ public class GatewayAccessLogs implements Serializable {
 
     public void setServerIp(String serverIp) {
         this.serverIp = serverIp;
+    }
+
+    public String getServiceId() {
+        return serviceId;
+    }
+
+    public void setServiceId(String serviceId) {
+        this.serviceId = serviceId;
     }
 }

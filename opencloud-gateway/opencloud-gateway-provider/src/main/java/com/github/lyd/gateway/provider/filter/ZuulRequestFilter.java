@@ -69,10 +69,12 @@ public class ZuulRequestFilter extends ZuulFilter {
     @Override
     public Object run() {
         RequestContext ctx = RequestContext.getCurrentContext();
+
         HttpServletRequest request = ctx.getRequest();
         try {
             Map headers = WebUtils.getHttpHeaders(request);
             Map data = WebUtils.getParameterMap(request);
+            Object serviceId = ctx.get(FilterConstants.SERVICE_ID_KEY);
             String requestPath = request.getRequestURI();
             String method = request.getMethod();
             String ip = WebUtils.getIpAddr(request);
@@ -82,6 +84,7 @@ public class ZuulRequestFilter extends ZuulFilter {
             request.setAttribute(PRE_REQUEST_ID, String.valueOf(requestId));
             Map<String, Object> map = Maps.newHashMap();
             map.put("accessId", requestId);
+            map.put("serviceId",serviceId);
             map.put("headers", JSONObject.toJSON(headers));
             map.put("path", requestPath);
             map.put("params", JSONObject.toJSON(data));

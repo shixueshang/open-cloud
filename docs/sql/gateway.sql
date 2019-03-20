@@ -34,8 +34,11 @@ CREATE TABLE `gateway_access_logs` (
                                      `access_desc` varchar(255) DEFAULT NULL COMMENT '异常',
                                      `authentication` text COMMENT '认证信息',
                                      `server_ip` varchar(255) DEFAULT NULL COMMENT '服务器IP',
+                                     `service_id` varchar(100) DEFAULT NULL COMMENT '服务名',
                                      PRIMARY KEY (`access_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='开放网关-访问日志';
+SET FOREIGN_KEY_CHECKS=1;
+
 
 -- ----------------------------
 -- Records of gateway_access_logs

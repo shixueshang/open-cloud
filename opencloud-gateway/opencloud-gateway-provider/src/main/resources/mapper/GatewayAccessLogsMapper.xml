@@ -8,6 +8,7 @@
     <id column="access_id" jdbcType="BIGINT" property="accessId" />
     <result column="path" jdbcType="VARCHAR" property="path" />
     <result column="method" jdbcType="VARCHAR" property="method" />
+    <result column="service_id" jdbcType="VARCHAR" property="serviceId" />
     <result column="ip" jdbcType="VARCHAR" property="ip" />
     <result column="http_status" jdbcType="VARCHAR" property="httpStatus" />
     <result column="request_time" jdbcType="TIMESTAMP" property="requestTime" />
