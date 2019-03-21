@@ -13,7 +13,8 @@
     <packaging>pom</packaging>
     <description>通用核心组件</description>
     <modules>
-        <module>opencloud-common-starter</module>
         <module>opencloud-common-core</module>
+        <module>opencloud-common-starter</module>
+        <module>opencloud-tenant-starter</module>
     </modules>
 </project>

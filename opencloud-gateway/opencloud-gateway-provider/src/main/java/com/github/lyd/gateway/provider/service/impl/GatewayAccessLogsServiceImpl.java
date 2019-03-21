@@ -77,14 +77,19 @@ public class GatewayAccessLogsServiceImpl implements GatewayAccessLogsService {
      * 分页查询
      *
      * @param pageParams
-     * @param keyword
      * @return
      */
     @Override
-    public PageList<GatewayAccessLogs> findListPage(PageParams pageParams, String keyword) {
+    public PageList<GatewayAccessLogs> findListPage(PageParams pageParams) {
         PageHelper.startPage(pageParams.getPage(), pageParams.getLimit(), pageParams.getOrderBy());
+        GatewayAccessLogs query =  pageParams.mapToObject(GatewayAccessLogs.class);
         ExampleBuilder builder = new ExampleBuilder(GatewayAccessLogs.class);
-        Example example = builder.criteria().end().build();
+        Example example = builder.criteria()
+                .andLikeRight("path",query.getPath())
+                .andEqualTo("ip",query.getIp())
+                .andEqualTo("serverIp",query.getServerIp())
+                .andEqualTo("serviceId",query.getServiceId())
+                .end().build();
         example.orderBy("accessId").desc();
         List<GatewayAccessLogs> list = gatewayLogsMapper.selectByExample(example);
         return new PageList(list);

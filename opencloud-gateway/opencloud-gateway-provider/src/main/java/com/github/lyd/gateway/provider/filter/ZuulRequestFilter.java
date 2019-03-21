@@ -83,6 +83,7 @@ public class ZuulRequestFilter extends ZuulFilter {
             Long requestId = snowflakeIdGenerator.nextId();
             request.setAttribute(PRE_REQUEST_ID, String.valueOf(requestId));
             Map<String, Object> map = Maps.newHashMap();
+
             map.put("accessId", requestId);
             map.put("serviceId",serviceId);
             map.put("headers", JSONObject.toJSON(headers));

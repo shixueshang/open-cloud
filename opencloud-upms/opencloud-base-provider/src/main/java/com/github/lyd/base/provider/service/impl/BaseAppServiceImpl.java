@@ -12,6 +12,7 @@ import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.model.PageParams;
 import com.github.lyd.common.utils.BeanConvertUtils;
 import com.github.lyd.common.utils.RandomValueUtils;
+import com.github.pagehelper.PageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -52,11 +53,16 @@ public class BaseAppServiceImpl implements BaseAppService {
      * @return
      */
     @Override
-    public PageList<BaseApp> findListPage(PageParams pageParams, String keyword) {
+    public PageList<BaseApp> findListPage(PageParams pageParams) {
+        PageHelper.startPage(pageParams.getPage(), pageParams.getLimit(), pageParams.getOrderBy());
+        BaseApp query =  pageParams.mapToObject(BaseApp.class);
         ExampleBuilder builder = new ExampleBuilder(BaseApp.class);
         Example example = builder.criteria()
-                .orLike("appName", keyword)
-                .orLike("appNameEn", keyword).end().build();
+                .andEqualTo("userId", query.getUserId())
+                .andEqualTo("appType", query.getAppType())
+                .andEqualTo("appId", query.getAppId())
+                .andLikeRight("appName", query.getAppName())
+                .andLikeRight("appNameEn", query.getAppName()).end().build();
         List<BaseApp> list = baseAppMapper.selectByExample(example);
         return new PageList(list);
     }

@@ -14,6 +14,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 /**
  * 网关流量控制
  *
@@ -36,18 +38,9 @@ public class GatewayRateLimitController {
      * @return
      */
     @ApiOperation(value = "获取分页接口列表", notes = "获取分页接口列表")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "page", value = "当前页码", paramType = "form"),
-            @ApiImplicitParam(name = "limit", value = "显示条数:最大999", paramType = "form"),
-            @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
-    })
-    @PostMapping("/gateway/limit/rate")
-    public ResultBody<PageList<GatewayRateLimit>> getRateLimitListPage(
-            @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
-            @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit,
-            @RequestParam(name = "keyword", required = false) String keyword
-    ) {
-        return ResultBody.success(gatewayRateLimitService.findListPage(new PageParams(page, limit), keyword));
+    @GetMapping("/gateway/limit/rate")
+    public ResultBody<PageList<GatewayRateLimit>> getRateLimitListPage(@RequestParam Map map) {
+        return ResultBody.success(gatewayRateLimitService.findListPage(new PageParams(map)));
     }
 
     /**
@@ -60,7 +53,7 @@ public class GatewayRateLimitController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "policyId", value = "策略ID", paramType = "form"),
     })
-    @PostMapping("/gateway/limit/rate/api/list")
+    @GetMapping("/gateway/limit/rate/api/list")
     public ResultBody<PageList<GatewayRateLimit>> getRateLimitApiList(
             @RequestParam("policyId") Long policyId
     ) {

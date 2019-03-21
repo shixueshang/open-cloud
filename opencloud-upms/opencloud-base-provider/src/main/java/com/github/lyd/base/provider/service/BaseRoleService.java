@@ -18,10 +18,9 @@ public interface BaseRoleService {
      * 分页查询
      *
      * @param pageParams
-     * @param keyword
      * @return
      */
-    PageList<BaseRole> findListPage(PageParams pageParams, String keyword);
+    PageList<BaseRole> findListPage(PageParams pageParams);
 
     /**
      * 查询列表

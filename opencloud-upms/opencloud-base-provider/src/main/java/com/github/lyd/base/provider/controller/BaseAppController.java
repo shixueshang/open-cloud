@@ -15,6 +15,7 @@ import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.Map;
 
 /**
  * 系统用户信息
@@ -33,18 +34,9 @@ public class BaseAppController implements BaseAppRemoteApi {
      * @return
      */
     @ApiOperation(value = "获取分页应用列表", notes = "获取分页应用列表")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "page", value = "当前页码", paramType = "form"),
-            @ApiImplicitParam(name = "limit", value = "显示条数:最大999", paramType = "form"),
-            @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
-    })
-    @PostMapping("/app")
-    public ResultBody<PageList<BaseApp>> getAppListPage(
-            @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
-            @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit,
-            @RequestParam(name = "keyword", required = false) String keyword
-    ) {
-        PageList<BaseApp> pageList = baseAppService.findListPage(new PageParams(page, limit), keyword);
+    @GetMapping("/app")
+    public ResultBody<PageList<BaseApp>> getAppListPage(@RequestParam Map map) {
+        PageList<BaseApp> pageList = baseAppService.findListPage(new PageParams(map));
         return ResultBody.success(pageList);
     }
 
@@ -78,6 +70,7 @@ public class BaseAppController implements BaseAppRemoteApi {
             @ApiImplicitParam(name = "appId", value = "应用ID", defaultValue = "1", required = true, paramType = "path"),
     })
     @GetMapping("/app/client/{appId}")
+    @Override
     public ResultBody<BaseClientDetails> getAppClientInfo(
             @PathVariable("appId") String appId
     ) {

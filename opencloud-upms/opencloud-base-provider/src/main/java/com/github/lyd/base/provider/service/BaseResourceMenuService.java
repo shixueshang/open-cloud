@@ -15,10 +15,9 @@ public interface BaseResourceMenuService {
      * 分页查询
      *
      * @param pageParams
-     * @param keyword
      * @return
      */
-    PageList<BaseResourceMenu> findListPage(PageParams pageParams, String keyword);
+    PageList<BaseResourceMenu> findListPage(PageParams pageParams);
 
     /**
      * 查询列表

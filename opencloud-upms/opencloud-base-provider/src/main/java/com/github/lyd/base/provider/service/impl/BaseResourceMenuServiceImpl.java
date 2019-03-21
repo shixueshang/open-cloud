@@ -42,16 +42,16 @@ public class BaseResourceMenuServiceImpl implements BaseResourceMenuService {
      * 分页查询
      *
      * @param pageParams
-     * @param keyword
      * @return
      */
     @Override
-    public PageList<BaseResourceMenu> findListPage(PageParams pageParams, String keyword) {
+    public PageList<BaseResourceMenu> findListPage(PageParams pageParams) {
         PageHelper.startPage(pageParams.getPage(), pageParams.getLimit(), pageParams.getOrderBy());
+        BaseResourceMenu query =  pageParams.mapToObject(BaseResourceMenu.class);
         ExampleBuilder builder = new ExampleBuilder(BaseResourceMenu.class);
         Example example = builder.criteria()
-                .orLike("menuCode", keyword)
-                .orLike("menuName", keyword).end().build();
+                .andLikeRight("menuCode", query.getMenuCode())
+                .andLikeRight("menuName", query.getMenuName()).end().build();
         example.orderBy("menuId").asc().orderBy("priority").asc();
         List<BaseResourceMenu> list = baseResourceMenuMapper.selectByExample(example);
         return new PageList(list);

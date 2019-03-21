@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author liuyadu
@@ -31,18 +32,9 @@ public class BaseRoleController {
      * @return
      */
     @ApiOperation(value = "获取分页角色列表", notes = "获取分页角色列表")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "page", value = "当前页码", paramType = "form"),
-            @ApiImplicitParam(name = "limit", value = "显示条数:最大999", paramType = "form"),
-            @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
-    })
-    @PostMapping("/role")
-    public ResultBody<PageList<BaseRole>> getRoleListPage(
-            @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
-            @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit,
-            @RequestParam(name = "keyword", required = false) String keyword
-    ) {
-        return ResultBody.success(baseRoleService.findListPage(new PageParams(page, limit), keyword));
+    @GetMapping("/role")
+    public ResultBody<PageList<BaseRole>> getRoleListPage(@RequestParam Map map) {
+        return ResultBody.success(baseRoleService.findListPage(new PageParams(map)));
     }
 
     /**
@@ -51,7 +43,7 @@ public class BaseRoleController {
      * @return
      */
     @ApiOperation(value = "获取所有角色列表", notes = "获取所有角色列表")
-    @PostMapping("/role/all")
+    @GetMapping("/role/all")
     public ResultBody<List<BaseRole>> getRoleAllList() {
         return ResultBody.success(baseRoleService.findList());
     }
@@ -186,7 +178,7 @@ public class BaseRoleController {
      * @return
      */
     @ApiOperation(value = "查询角色成员", notes = "查询角色成员")
-    @PostMapping("/role/users")
+    @GetMapping("/role/users")
     public ResultBody<List<BaseRoleUser>> getRoleUsers(
             @RequestParam(value = "roleId") Long roleId
     ) {

@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author liuyadu
@@ -35,18 +36,9 @@ public class BaseOperationController {
      * @return
      */
     @ApiOperation(value = "获取分页操作列表", notes = "获取分页操作列表")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "page", value = "当前页码", paramType = "form"),
-            @ApiImplicitParam(name = "limit", value = "显示条数:最大999", paramType = "form"),
-            @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
-    })
-    @PostMapping("/operation")
-    public ResultBody<PageList<BaseOperationAuthority>> getOperationListPage(
-            @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
-            @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit,
-            @RequestParam(name = "keyword", required = false) String keyword
-    ) {
-        return ResultBody.success(baseResourceOperationService.findListPage(new PageParams(page, limit), keyword));
+    @GetMapping("/operation")
+    public ResultBody<PageList<BaseOperationAuthority>> getOperationListPage(@RequestParam Map map) {
+        return ResultBody.success(baseResourceOperationService.findListPage(new PageParams(map)));
     }
 
 
@@ -60,7 +52,7 @@ public class BaseOperationController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
     })
-    @PostMapping("/operation/menu")
+    @GetMapping("/operation/menu")
     public ResultBody<List<BaseOperationAuthority>> getOperationAllList(Long menuId) {
         return ResultBody.success(baseResourceOperationService.findListByMenuId(menuId));
     }
@@ -155,7 +147,7 @@ public class BaseOperationController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "operationId", required = true, value = "操作ID", paramType = "form")
     })
-    @PostMapping("/operation/api")
+    @GetMapping("/operation/api")
     public ResultBody<BaseResourceOperationApi> getOperationApi(
             @RequestParam(value = "operationId") Long operationId
     ) {

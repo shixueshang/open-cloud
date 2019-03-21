@@ -36,16 +36,21 @@ public class BaseResourceApiServiceImpl implements BaseResourceApiService {
      * 分页查询
      *
      * @param pageParams
-     * @param keyword
      * @return
      */
     @Override
-    public PageList<BaseResourceApi> findListPage(PageParams pageParams, String keyword) {
+    public PageList<BaseResourceApi> findListPage(PageParams pageParams) {
         PageHelper.startPage(pageParams.getPage(), pageParams.getLimit(), pageParams.getOrderBy());
+        BaseResourceApi query = pageParams.mapToObject(BaseResourceApi.class);
         ExampleBuilder builder = new ExampleBuilder(BaseResourceApi.class);
         Example example = builder.criteria()
-                .orLike("apiCode", keyword)
-                .orLike("apiName", keyword).end().build();
+                .andLikeRight("path", query.getPath())
+                .andLikeRight("apiName", query.getApiName())
+                .andLikeRight("apiCode", query.getApiCode())
+                .andEqualTo("status", query.getStatus())
+                .andEqualTo("isAuth", query.getIsAuth())
+                .andEqualTo("isOpen", query.getIsOpen())
+                .end().build();
         example.orderBy("apiId").asc().orderBy("priority").asc();
         List<BaseResourceApi> list = baseResourceApiMapper.selectByExample(example);
         return new PageList(list);
@@ -59,7 +64,7 @@ public class BaseResourceApiServiceImpl implements BaseResourceApiService {
     @Override
     public List<BaseResourceApi> findAllList(String serviceId) {
         ExampleBuilder builder = new ExampleBuilder(BaseResourceApi.class);
-        Example example = builder.criteria().andEqualTo("serviceId",serviceId).end().build();
+        Example example = builder.criteria().andEqualTo("serviceId", serviceId).end().build();
         example.orderBy("apiId").asc().orderBy("priority").asc();
         List<BaseResourceApi> list = baseResourceApiMapper.selectByExample(example);
         return list;

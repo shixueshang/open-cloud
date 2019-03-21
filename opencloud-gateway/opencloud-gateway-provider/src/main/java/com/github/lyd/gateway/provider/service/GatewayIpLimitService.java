@@ -18,10 +18,9 @@ public interface GatewayIpLimitService {
      * 分页查询
      *
      * @param pageParams
-     * @param keyword
      * @return
      */
-    PageList<GatewayIpLimit> findListPage(PageParams pageParams, String keyword);
+    PageList<GatewayIpLimit> findListPage(PageParams pageParams);
 
     /**
      * 查询白名单

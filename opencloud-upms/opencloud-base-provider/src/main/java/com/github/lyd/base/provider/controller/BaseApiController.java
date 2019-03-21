@@ -6,14 +6,12 @@ import com.github.lyd.common.http.OpenRestTemplate;
 import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.model.PageParams;
 import com.github.lyd.common.model.ResultBody;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author liuyadu
@@ -32,21 +30,12 @@ public class BaseApiController {
      * @return
      */
     @ApiOperation(value = "获取分页接口列表", notes = "获取分页接口列表")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "page", value = "当前页码", paramType = "form"),
-            @ApiImplicitParam(name = "limit", value = "显示条数:最大999", paramType = "form"),
-            @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
-    })
-    @PostMapping("/api")
-    public ResultBody<PageList<BaseResourceApi>> getApiList(
-            @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
-            @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit,
-            @RequestParam(name = "keyword", required = false) String keyword
-    ) {
+    @GetMapping(value = "/api")
+    public ResultBody<PageList<BaseResourceApi>> getApiList(@RequestParam Map map) {
         BaseResourceApi query = new BaseResourceApi();
         query.setIsOpen(1);
         int openApiCount = apiService.getCount(query);
-        return ResultBody.success(apiService.findListPage(new PageParams(page, limit), keyword)).putExtra("openApiCount", openApiCount);
+        return ResultBody.success(apiService.findListPage(new PageParams(map))).putExtra("openApiCount", openApiCount);
     }
 
 
@@ -56,7 +45,7 @@ public class BaseApiController {
      * @return
      */
     @ApiOperation(value = "获取所有接口列表", notes = "获取所有接口列表")
-    @PostMapping("/api/all")
+    @GetMapping("/api/all")
     public ResultBody<List<BaseResourceApi>> getApiAllList(String serviceId) {
         return ResultBody.success(apiService.findAllList(serviceId));
     }

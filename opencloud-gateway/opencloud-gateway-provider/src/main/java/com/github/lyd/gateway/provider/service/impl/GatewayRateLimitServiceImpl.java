@@ -4,6 +4,7 @@ import com.github.lyd.common.mapper.ExampleBuilder;
 import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.model.PageParams;
 import com.github.lyd.gateway.client.model.GatewayRateLimitApisDto;
+import com.github.lyd.gateway.client.model.entity.GatewayIpLimit;
 import com.github.lyd.gateway.client.model.entity.GatewayRateLimit;
 import com.github.lyd.gateway.client.model.entity.GatewayRateLimitApi;
 import com.github.lyd.gateway.provider.mapper.GatewayRateLimitApisMapper;
@@ -37,14 +38,16 @@ public class GatewayRateLimitServiceImpl implements GatewayRateLimitService {
      * 分页查询
      *
      * @param pageParams
-     * @param keyword
      * @return
      */
     @Override
-    public PageList<GatewayRateLimit> findListPage(PageParams pageParams, String keyword) {
+    public PageList<GatewayRateLimit> findListPage(PageParams pageParams) {
         PageHelper.startPage(pageParams.getPage(), pageParams.getLimit(), pageParams.getOrderBy());
-        ExampleBuilder builder = new ExampleBuilder(GatewayRateLimit.class);
-        Example example = builder.criteria().end().build();
+        GatewayRateLimit query = pageParams.mapToObject(GatewayRateLimit.class);
+        ExampleBuilder builder = new ExampleBuilder(GatewayIpLimit.class);
+        Example example = builder.criteria().
+                andLikeRight("policyName", query.getPolicyName()).
+                andEqualTo("limitType", query.getLimitType()).end().build();
         List<GatewayRateLimit> list = gatewayRateLimitMapper.selectByExample(example);
         return new PageList(list);
     }

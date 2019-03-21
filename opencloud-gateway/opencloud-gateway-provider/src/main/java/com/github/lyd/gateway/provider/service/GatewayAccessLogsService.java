@@ -14,10 +14,9 @@ public interface GatewayAccessLogsService {
      * 分页查询
      *
      * @param pageParams
-     * @param keyword
      * @return
      */
-    PageList<GatewayAccessLogs> findListPage(PageParams pageParams, String keyword);
+    PageList<GatewayAccessLogs> findListPage(PageParams pageParams);
 
     /**
      * 保存日志

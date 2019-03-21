@@ -16,10 +16,9 @@ public interface BaseResourceOperationService {
      * 分页查询
      *
      * @param pageParams
-     * @param keyword
      * @return
      */
-    PageList<BaseResourceOperation> findListPage(PageParams pageParams, String keyword);
+    PageList<BaseResourceOperation> findListPage(PageParams pageParams);
 
     /**
      * 根据主键获取操作

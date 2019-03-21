@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author liuyadu
@@ -38,18 +39,9 @@ public class BaseMenuController {
      * @return
      */
     @ApiOperation(value = "获取分页菜单资源列表", notes = "获取分页菜单资源列表")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "page", value = "当前页码", paramType = "form"),
-            @ApiImplicitParam(name = "limit", value = "显示条数:最大999", paramType = "form"),
-            @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
-    })
-    @PostMapping("/menu")
-    public ResultBody<PageList<BaseResourceMenu>> getMenuListPage(
-            @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
-            @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit,
-            @RequestParam(name = "keyword", required = false) String keyword
-    ) {
-        return ResultBody.success(baseResourceMenuService.findListPage(new PageParams(page, limit), keyword));
+    @GetMapping("/menu")
+    public ResultBody<PageList<BaseResourceMenu>> getMenuListPage(@RequestParam Map map) {
+        return ResultBody.success(baseResourceMenuService.findListPage(new PageParams(map)));
     }
 
     /**
@@ -58,7 +50,7 @@ public class BaseMenuController {
      * @return
      */
     @ApiOperation(value = "菜单所有资源列表", notes = "菜单所有资源列表")
-    @PostMapping("/menu/all")
+    @GetMapping("/menu/all")
     public ResultBody<List<BaseResourceMenu>> getMenuAllList() {
         return ResultBody.success(baseResourceMenuService.findAllList());
     }
@@ -74,7 +66,7 @@ public class BaseMenuController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "menuId", value = "menuId", paramType = "form"),
     })
-    @PostMapping("/menu/operation")
+    @GetMapping("/menu/operation")
     public ResultBody<List<BaseResourceOperation>> getMenuOperationList(Long menuId) {
         return ResultBody.success(baseResourceOperationService.findListByMenuId(menuId));
     }

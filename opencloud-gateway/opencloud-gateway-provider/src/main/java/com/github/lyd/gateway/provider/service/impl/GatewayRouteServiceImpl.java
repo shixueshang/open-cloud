@@ -33,11 +33,10 @@ public class GatewayRouteServiceImpl implements GatewayRouteService {
      * 分页查询
      *
      * @param pageParams
-     * @param keyword
      * @return
      */
     @Override
-    public PageList<GatewayRoute> findListPage(PageParams pageParams, String keyword) {
+    public PageList<GatewayRoute> findListPage(PageParams pageParams) {
         PageHelper.startPage(pageParams.getPage(), pageParams.getLimit(), pageParams.getOrderBy());
         ExampleBuilder builder = new ExampleBuilder(GatewayRoute.class);
         Example example = builder.criteria().end().build();

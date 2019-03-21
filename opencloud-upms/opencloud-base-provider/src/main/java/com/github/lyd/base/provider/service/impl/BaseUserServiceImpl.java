@@ -1,12 +1,12 @@
 package com.github.lyd.base.provider.service.impl;
 
-import com.github.lyd.base.client.model.entity.BaseResourceOperation;
 import com.github.lyd.base.client.model.entity.BaseUser;
 import com.github.lyd.base.provider.mapper.BaseUserMapper;
 import com.github.lyd.base.provider.service.BaseUserService;
 import com.github.lyd.common.mapper.ExampleBuilder;
 import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.model.PageParams;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,19 +56,25 @@ public class BaseUserServiceImpl implements BaseUserService {
      * 分页查询
      *
      * @param pageParams
-     * @param keyword
      * @return
      */
     @Override
-    public PageList<BaseUser> findListPage(PageParams pageParams, String keyword) {
-        ExampleBuilder builder = new ExampleBuilder(BaseResourceOperation.class);
-        Example example = builder.build();
+    public PageList<BaseUser> findListPage(PageParams pageParams) {
+        PageHelper.startPage(pageParams.getPage(), pageParams.getLimit(), pageParams.getOrderBy());
+        BaseUser query = pageParams.mapToObject(BaseUser.class);
+        ExampleBuilder builder = new ExampleBuilder(BaseUser.class);
+        Example example = builder.criteria()
+                .andEqualTo("userId", query.getUserId())
+                .andEqualTo("userType", query.getUserType())
+                .andEqualTo("userName", query.getUserName())
+                .andEqualTo("mobile", query.getMobile()).end().build();
         List<BaseUser> list = baseUserMapper.selectByExample(example);
         return new PageList(list);
     }
 
     /**
      * 查询列表
+     *
      * @return
      */
     @Override

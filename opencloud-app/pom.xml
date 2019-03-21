@@ -8,11 +8,11 @@
         <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
     <artifactId>opencloud-app</artifactId>
     <packaging>pom</packaging>
     <modules>
         <module>opencloud-admin-provider</module>
+        <module>tenant-service-demo</module>
     </modules>
 
 

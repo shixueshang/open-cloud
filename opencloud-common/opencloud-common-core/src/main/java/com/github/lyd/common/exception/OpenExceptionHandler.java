@@ -250,7 +250,7 @@ public class OpenExceptionHandler {
         String error = resultCode.getMessage();
         //提示消息
         String msgI18n = i18n(error, message);
-        log.error("==> 错误解析:method={},path={},code={},error={},exception={}", method, path, code, error, exception);
+        log.error("==> 错误解析:method[{}] path[{}] code[{}] error[{}] message[{}] exception{}", method, path, code, error,msgI18n, exception);
         return ResultBody.failed(code, msgI18n).setError(error).setPath(path);
     }
 

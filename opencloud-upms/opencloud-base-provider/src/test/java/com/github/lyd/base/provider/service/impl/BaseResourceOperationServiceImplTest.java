@@ -17,7 +17,7 @@ public class BaseResourceOperationServiceImplTest extends BaseTest {
 
     @Test
     public void findListPage() throws Exception {
-        baseResourceOperationService.findListPage(new PageParams(1, 10), "");
+        baseResourceOperationService.findListPage(new PageParams());
     }
 
     @Test

@@ -42,13 +42,18 @@ public class BaseRoleServiceImpl implements BaseRoleService {
      * 分页查询
      *
      * @param pageParams
-     * @param keyword
      * @return
      */
     @Override
-    public PageList<BaseRole> findListPage(PageParams pageParams, String keyword) {
+    public PageList<BaseRole> findListPage(PageParams pageParams) {
         PageHelper.startPage(pageParams.getPage(), pageParams.getLimit(), pageParams.getOrderBy());
-        List<BaseRole> list = baseRoleMapper.selectRoleList(null);
+        BaseRole query = pageParams.mapToObject(BaseRole.class);
+        ExampleBuilder builder = new ExampleBuilder(BaseRole.class);
+        Example example = builder.criteria()
+                .andEqualTo("roleCode", query.getRoleCode())
+                .andEqualTo("roleName", query.getRoleName()).end().build();
+        example.orderBy("roleId").asc();
+        List<BaseRole> list = baseRoleMapper.selectByExample(example);
         return new PageList(list);
     }
 

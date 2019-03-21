@@ -18,10 +18,9 @@ public interface GatewayRateLimitService {
      * 分页查询
      *
      * @param pageParams
-     * @param keyword
      * @return
      */
-    PageList<GatewayRateLimit> findListPage(PageParams pageParams, String keyword);
+    PageList<GatewayRateLimit> findListPage(PageParams pageParams);
 
     /**
      * 查询接口流量限制

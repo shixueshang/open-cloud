@@ -35,10 +35,9 @@ public interface BaseUserService {
      * 分页查询
      *
      * @param pageParams
-     * @param keyword
      * @return
      */
-    PageList<BaseUser> findListPage(PageParams pageParams, String keyword);
+    PageList<BaseUser> findListPage(PageParams pageParams);
 
     /**
      * 查询列表

@@ -42,10 +42,13 @@ public class GatewayIpLimitServiceImpl implements GatewayIpLimitService {
      * @return
      */
     @Override
-    public PageList<GatewayIpLimit> findListPage(PageParams pageParams, String keyword) {
+    public PageList<GatewayIpLimit> findListPage(PageParams pageParams) {
         PageHelper.startPage(pageParams.getPage(), pageParams.getLimit(), pageParams.getOrderBy());
+        GatewayIpLimit query = pageParams.mapToObject(GatewayIpLimit.class);
         ExampleBuilder builder = new ExampleBuilder(GatewayIpLimit.class);
-        Example example = builder.criteria().end().build();
+        Example example = builder.criteria().
+                andLikeRight("policyName", query.getPolicyName()).
+                andEqualTo("policyType", query.getPolicyType()).end().build();
         List<GatewayIpLimit> list = gatewayIpLimitMapper.selectByExample(example);
         return new PageList(list);
     }

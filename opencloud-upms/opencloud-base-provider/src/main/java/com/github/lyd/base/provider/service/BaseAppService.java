@@ -16,10 +16,9 @@ public interface BaseAppService {
      * 查询应用列表
      *
      * @param pageParams
-     * @param keyword
      * @return
      */
-    PageList<BaseApp> findListPage(PageParams pageParams, String keyword);
+    PageList<BaseApp> findListPage(PageParams pageParams);
 
     /**
      * 获取app信息

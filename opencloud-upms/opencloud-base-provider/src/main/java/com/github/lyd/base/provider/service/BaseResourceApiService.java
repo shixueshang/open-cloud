@@ -15,10 +15,9 @@ public interface BaseResourceApiService {
      * 分页查询
      *
      * @param pageParams
-     * @param keyword
      * @return
      */
-    PageList<BaseResourceApi> findListPage(PageParams pageParams, String keyword);
+    PageList<BaseResourceApi> findListPage(PageParams pageParams);
 
     /**
      * 查询列表

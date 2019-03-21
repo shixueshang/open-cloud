@@ -11,15 +11,15 @@ import com.github.lyd.common.model.PageParams;
 import com.github.lyd.common.model.ResultBody;
 import com.github.lyd.common.utils.StringUtils;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 系统用户信息
@@ -42,18 +42,9 @@ public class BaseUserController {
      * @return
      */
     @ApiOperation(value = "系统分页用户列表", notes = "系统分页用户列表")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "page", value = "当前页码", paramType = "form"),
-            @ApiImplicitParam(name = "limit", value = "显示条数:最大999", paramType = "form"),
-            @ApiImplicitParam(name = "keyword", value = "查询字段", paramType = "form"),
-    })
-    @PostMapping("/user")
-    public ResultBody<PageList<BaseUser>> getUserList(
-            @RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
-            @RequestParam(value = "limit", required = false, defaultValue = "10") Integer limit,
-            @RequestParam(name = "keyword", required = false) String keyword
-    ) {
-        return ResultBody.success(baseUserService.findListPage(new PageParams(page, limit), keyword));
+    @GetMapping("/user")
+    public ResultBody<PageList<BaseUser>> getUserList(@RequestParam Map map) {
+        return ResultBody.success(baseUserService.findListPage(new PageParams(map)));
     }
 
     /**
@@ -61,7 +52,7 @@ public class BaseUserController {
      * @return
      */
     @ApiOperation(value = "获取所有用户列表", notes = "获取所有用户列表")
-    @PostMapping("/user/all")
+    @GetMapping("/user/all")
     public ResultBody<List<BaseRole>> getUserAllList() {
         return ResultBody.success(baseUserService.findList());
     }
@@ -168,7 +159,7 @@ public class BaseUserController {
      * @return
      */
     @ApiOperation(value = "获取用户已分配角色", notes = "获取用户已分配角色")
-    @PostMapping("/user/roles")
+    @GetMapping("/user/roles")
     public ResultBody<List<BaseRole>> getUserRoles(
             @RequestParam(value = "userId") Long userId
     ) {

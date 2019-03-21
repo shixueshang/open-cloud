@@ -1,5 +1,6 @@
 package com.github.lyd.common.utils;
 
+import com.github.lyd.common.constants.CommonConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
 
@@ -40,17 +41,18 @@ public class SignatureUtils {
      * @throws Exception
      */
     public static void validateParams(Map<String, String> paramsMap) throws Exception {
-        Assert.notNull(paramsMap.get("clientId"), "clientId不能为空");
-        Assert.notNull(paramsMap.get("nonce"), "nonce不能为空");
-        Assert.notNull(paramsMap.get("timestamp"), "timestamp不能为空");
-        Assert.notNull(paramsMap.get("signType"), "signType不能为空");
-        if (!SignatureUtils.SignType.contains(paramsMap.get("signType"))) {
+        Assert.notNull(paramsMap.get(CommonConstants.SIGN_CLIENT_ID_KEY), "clientId不能为空");
+        Assert.notNull(paramsMap.get(CommonConstants.SIGN_NONCE_KEY), "nonce不能为空");
+        Assert.notNull(paramsMap.get(CommonConstants.SIGN_TIMESTAMP_KEY), "timestamp不能为空");
+        Assert.notNull(paramsMap.get(CommonConstants.SIGN_SIGN_TYPE_KEY), "signType不能为空");
+        Assert.notNull(paramsMap.get(CommonConstants.SIGN_SIGN_KEY), "sign不能为空");
+        if (!SignatureUtils.SignType.contains(paramsMap.get(CommonConstants.SIGN_SIGN_TYPE_KEY))) {
             throw new IllegalArgumentException(String.format("signType必须为:%s,%s", SignatureUtils.SignType.MD5, SignatureUtils.SignType.SHA256));
         }
         try {
-            DateUtils.parseDate(paramsMap.get("timestamp"), "yyyyMMddHHmmss");
+            DateUtils.parseDate(paramsMap.get(CommonConstants.SIGN_TIMESTAMP_KEY), "yyyyMMddHHmmss");
         } catch (ParseException e) {
-            throw new IllegalArgumentException("timestamp 格式必须为:yyyyMMddHHmmss");
+            throw new IllegalArgumentException("timestamp格式必须为:yyyyMMddHHmmss");
         }
     }
 
@@ -62,8 +64,8 @@ public class SignatureUtils {
     public static boolean validateSign(Map<String, String> paramMap, String clientSecret) {
         try {
             validateParams(paramMap);
-            String sign = paramMap.get("sign");
-            String timestamp = paramMap.get("timestamp");
+            String sign = paramMap.get(CommonConstants.SIGN_SIGN_KEY);
+            String timestamp = paramMap.get(CommonConstants.SIGN_TIMESTAMP_KEY);
             Long clientTimestamp = Long.parseLong(timestamp);
             //判断时间戳 timestamp=201808091113
             if ((DateUtils.getTimestamp() - clientTimestamp) > MAX_EXPIRE) {
@@ -104,7 +106,7 @@ public class SignatureUtils {
         String[] keyArray = keySet.toArray(new String[keySet.size()]);
         Arrays.sort(keyArray);
         StringBuilder sb = new StringBuilder();
-        String signType = paramMap.get("signType");
+        String signType = paramMap.get(CommonConstants.SIGN_SIGN_TYPE_KEY);
         SignType type = null;
         if (StringUtils.isNotBlank(signType)) {
             type = SignType.valueOf(signType);
@@ -113,7 +115,7 @@ public class SignatureUtils {
             type = SignType.MD5;
         }
         for (String k : keyArray) {
-            if (k.equals("sign") || k.equals("clientSecret")) {
+            if (k.equals(CommonConstants.SIGN_SIGN_KEY) || k.equals(CommonConstants.SIGN_CLIENT_SECRET_KEY)) {
                 continue;
             }
             if (paramMap.get(k).trim().length() > 0) {
@@ -122,7 +124,7 @@ public class SignatureUtils {
             }
         }
         //暂时不需要个人认证
-        sb.append("clientSecret=").append(clientSecret);
+        sb.append(CommonConstants.SIGN_CLIENT_SECRET_KEY+"=").append(clientSecret);
         String signStr = "";
         //加密
         switch (type) {

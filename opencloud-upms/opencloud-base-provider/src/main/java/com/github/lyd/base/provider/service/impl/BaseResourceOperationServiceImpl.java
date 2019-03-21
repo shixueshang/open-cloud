@@ -44,16 +44,16 @@ public class BaseResourceOperationServiceImpl implements BaseResourceOperationSe
      * 分页查询
      *
      * @param pageParams
-     * @param keyword
      * @return
      */
     @Override
-    public PageList<BaseResourceOperation> findListPage(PageParams pageParams, String keyword) {
+    public PageList<BaseResourceOperation> findListPage(PageParams pageParams) {
         PageHelper.startPage(pageParams.getPage(), pageParams.getLimit(), pageParams.getOrderBy());
+        BaseResourceOperation query =  pageParams.mapToObject(BaseResourceOperation.class);
         ExampleBuilder builder = new ExampleBuilder(BaseResourceOperation.class);
         Example example = builder.criteria()
-                .orLike("operationCode", keyword)
-                .orLike("operationName", keyword).end().build();
+                .andLikeRight("operationCode", query.getOperationCode())
+                .andLikeRight("operationName", query.getOperationName()).end().build();
         example.orderBy("operationId").asc().orderBy("priority").asc();
         List<BaseResourceOperation> list = baseResourceOperationMapper.selectByExample(example);
         return new PageList(list);

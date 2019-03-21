@@ -14,6 +14,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.lang.reflect.Method;
 import java.util.Iterator;
@@ -70,8 +71,12 @@ public class AnnotationScan implements ApplicationListener<ApplicationReadyEvent
                 if (StringUtils.isBlank(path)) {
                     continue;
                 }
+                if (method.isAnnotationPresent(ApiIgnore.class)) {
+                    // 忽略的接口不扫描
+                    continue;
+                }
                 //api 资源
-                String code = method.getDeclaringClass().getName()+"."+method.getName();
+                String code = method.getDeclaringClass().getName() + "." + method.getName();
                 String name = "";
                 String desc = "";
                 List<Map> policies = Lists.newArrayList();
@@ -97,7 +102,7 @@ public class AnnotationScan implements ApplicationListener<ApplicationReadyEvent
                 resource.put("path", path);
                 resource.put("apiDesc", desc);
                 resource.put("isOpen", isOpen);
-                resource.put("requestMethod",requestMethod);
+                resource.put("requestMethod", requestMethod);
                 list.add(resource);
             }
         }
@@ -106,7 +111,6 @@ public class AnnotationScan implements ApplicationListener<ApplicationReadyEvent
             amqpTemplate.convertAndSend(MqConstants.QUEUE_SCAN_API_RESOURCE, list);
         }
     }
-
 
 
     private String getPath(Method method) {
@@ -132,15 +136,15 @@ public class AnnotationScan implements ApplicationListener<ApplicationReadyEvent
         } else if (method.isAnnotationPresent(PostMapping.class)) {
             requestMethod.append("post");
         } else if (method.isAnnotationPresent(RequestMapping.class)) {
-             RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
-             if(requestMapping.method()!=null && requestMapping.method().length>0){
-                 for (RequestMethod m: requestMapping.method()) {
-                     requestMethod.append(m.name().toLowerCase()).append(",");
-                 }
-                 requestMethod.deleteCharAt(requestMethod.length()-1);
-             }else {
-                 requestMethod.append("get").append(",").append("post");
-             }
+            RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
+            if (requestMapping.method() != null && requestMapping.method().length > 0) {
+                for (RequestMethod m : requestMapping.method()) {
+                    requestMethod.append(m.name().toLowerCase()).append(",");
+                }
+                requestMethod.deleteCharAt(requestMethod.length() - 1);
+            } else {
+                requestMethod.append("get").append(",").append("post");
+            }
 
         } else if (method.isAnnotationPresent(PutMapping.class)) {
             requestMethod.append("put");

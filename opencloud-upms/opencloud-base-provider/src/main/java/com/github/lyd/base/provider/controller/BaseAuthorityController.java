@@ -170,7 +170,7 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "roleId", value = "角色ID", defaultValue = "", required = true, paramType = "form")
     })
-    @PostMapping("/authority/granted/role")
+    @GetMapping("/authority/granted/role")
     public ResultBody<List<GrantedAuthority>> getGrantedRoleAuthority(Long roleId) {
         List<OpenGrantedAuthority> result = baseAuthorityService.findRoleGrantedAuthority(roleId);
         return ResultBody.success(result);
@@ -187,7 +187,7 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "用户ID", defaultValue = "", required = true, paramType = "form")
     })
-    @PostMapping("/authority/granted/user")
+    @GetMapping("/authority/granted/user")
     public ResultBody<List<GrantedAuthority>> getGrantedUserAuthority(
             @RequestParam(value = "userId") Long userId
     ) {
@@ -207,7 +207,7 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "appId", value = "应用Id", defaultValue = "", required = true, paramType = "form")
     })
-    @PostMapping("/authority/granted/app")
+    @GetMapping("/authority/granted/app")
     public ResultBody<List<OpenGrantedAuthority>> getGrantedAppAuthority(
             @RequestParam(value = "appId") String appId
     ) {
