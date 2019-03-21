@@ -49,6 +49,7 @@ public class BaseUserServiceImpl implements BaseUserService {
         if (baseUser == null || baseUser.getUserId() == null) {
             return null;
         }
+        baseUserMapper.updateByPrimaryKeySelective(baseUser);
         return baseUser;
     }
 
