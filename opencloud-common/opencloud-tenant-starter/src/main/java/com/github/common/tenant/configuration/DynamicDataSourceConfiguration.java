@@ -2,7 +2,6 @@ package com.github.common.tenant.configuration;
 
 import com.github.common.tenant.datasource.DynamicDataSourceAspect;
 import com.github.common.tenant.datasource.DynamicDataSourceContextHolder;
-import com.github.common.tenant.datasource.DynamicDataSourceProperties;
 import com.github.common.tenant.datasource.DynamicRoutingDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +15,6 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -25,7 +23,7 @@ import java.util.Map;
  * @description:
  */
 @Configuration
-@EnableConfigurationProperties(value = {DynamicDataSourceProperties.class,OpenTenantProperties.class})
+@EnableConfigurationProperties(value = {OpenTenantProperties.class})
 public class DynamicDataSourceConfiguration {
     private static final Logger logger = LoggerFactory.getLogger(DynamicDataSourceConfiguration.class);
 
@@ -34,33 +32,33 @@ public class DynamicDataSourceConfiguration {
     @ConditionalOnMissingBean(DynamicDataSourceAspect.class)
     @Bean
     public DynamicDataSourceAspect dynamicDataSourceAspect(OpenTenantProperties openSaasProperties){
-        logger.info("Current tenant is [{}]",openSaasProperties.getTenantId());
+        logger.info("==> Current tenant is [{}]",openSaasProperties.getTenantId());
        return new DynamicDataSourceAspect(openSaasProperties);
     }
 
-    @ConditionalOnProperty(value = "opencloud.db",matchIfMissing = true)
+    @ConditionalOnProperty(value = "opencloud.tenant",matchIfMissing = true)
     @Bean("dynamicDataSource")
-    public DataSource dynamicDataSource(DataSourceProperties dataSourceProperties, DynamicDataSourceProperties openDataSourceProperties) {
+    public DataSource dynamicDataSource(DataSourceProperties dataSourceProperties,OpenTenantProperties openSaasProperties) {
         DynamicRoutingDataSource dynamicRoutingDataSource = new DynamicRoutingDataSource();
-        Map<Object, Object> dataSourceMap = new HashMap<>(2);
+        Map<Object, Object> dataSourceMap = new HashMap<>();
         if (dataSourceProperties != null) {
             // 默认数据源配置
-            openDataSourceProperties.getDatasource().put("master", dataSourceProperties);
+            DataSourceBuilder builder = DataSourceBuilder.create().driverClassName(dataSourceProperties.getDriverClassName());
+            builder.url(dataSourceProperties.getUrl());
+            builder.username(dataSourceProperties.getUsername());
+            builder.password(dataSourceProperties.getPassword());
+            builder.type(dataSourceProperties.getType());
+            dataSourceMap.put("master", builder.build());
         }
 
-        // 构建数据源
-        Iterator<Map.Entry<String, DataSourceProperties>> it = openDataSourceProperties.getDatasource().entrySet().iterator();
-
-        while (it.hasNext()) {
-            Map.Entry<String, DataSourceProperties> entry = it.next();
-            DataSourceProperties properties = entry.getValue();
-            DataSourceBuilder builder = DataSourceBuilder.create().driverClassName(properties.getDriverClassName());
-            builder.url(properties.getUrl());
-            builder.username(properties.getUsername());
-            builder.password(properties.getPassword());
-            builder.type(properties.getType());
-            DataSource dataSource = builder.build();
-            dataSourceMap.put(entry.getKey() , dataSource);
+        if(openSaasProperties!=null){
+            // 租户数据源配置
+            DataSourceBuilder builder = DataSourceBuilder.create().driverClassName(openSaasProperties.getDatasource().getDriverClassName());
+            builder.url(openSaasProperties.getDatasource().getUrl());
+            builder.username(openSaasProperties.getDatasource().getUsername());
+            builder.password(openSaasProperties.getDatasource().getPassword());
+            builder.type(openSaasProperties.getDatasource().getType());
+            dataSourceMap.put(openSaasProperties.getTenantId(),builder.build());
         }
         // 设置master 为默认数据源
         dynamicRoutingDataSource.setDefaultTargetDataSource(dataSourceMap.get("master"));

@@ -13,9 +13,8 @@
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
-            <artifactId>opencloud-common-starter</artifactId>
-            <groupId>com.github.lyd</groupId>
-            <version>${opencloud.common.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
             <artifactId>opencloud-tenant-starter</artifactId>

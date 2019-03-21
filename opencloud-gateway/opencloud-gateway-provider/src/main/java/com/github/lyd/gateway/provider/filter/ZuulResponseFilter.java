@@ -9,7 +9,6 @@ import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.Map;
 
@@ -48,7 +47,7 @@ public class ZuulResponseFilter extends ZuulFilter {
      */
     @Override
     public int filterOrder() {
-        return FilterConstants.SEND_RESPONSE_FILTER_ORDER + 1;
+        return FilterConstants.SEND_RESPONSE_FILTER_ORDER + 2;
     }
 
     /**
@@ -59,8 +58,7 @@ public class ZuulResponseFilter extends ZuulFilter {
         try {
             RequestContext ctx = RequestContext.getCurrentContext();
             HttpServletRequest request = ctx.getRequest();
-            HttpServletResponse response = ctx.getResponse();
-            int httpStatus = response.getStatus();
+            int httpStatus = ctx.getResponseStatusCode();
             Object object = request.getAttribute(ZuulRequestFilter.PRE_REQUEST_ID);
             if (object != null) {
                 String requestId = object.toString();

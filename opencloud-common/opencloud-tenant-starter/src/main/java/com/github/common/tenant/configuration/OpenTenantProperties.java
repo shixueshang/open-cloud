@@ -1,8 +1,9 @@
 package com.github.common.tenant.configuration;
 
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author: liuyadu
@@ -17,19 +18,24 @@ public class OpenTenantProperties {
     private String tenantId;
 
     /**
+     * 租户数据源
+     */
+    private DataSourceProperties datasource;
+
+    /**
      * 共享表名,不区分租户
      */
-    private List<String> shareTables;
+    private Set<String> shareTables;
 
     /**
      * 当前模块表名,区分租户
      */
-    private List<String> moduleTables;
+    private Set<String> moduleTables;
 
     /**
      * 模块安装sql文件路径,可用于动态部署当前模块
      */
-    private List<String> initSql;
+    private String initSql;
 
     public String getTenantId() {
         return tenantId;
@@ -39,37 +45,45 @@ public class OpenTenantProperties {
         this.tenantId = tenantId;
     }
 
-    public List<String> getShareTables() {
+    public Set<String> getShareTables() {
         return shareTables;
     }
 
-    public void setShareTables(List<String> shareTables) {
+    public void setShareTables(Set<String> shareTables) {
         this.shareTables = shareTables;
     }
 
-    public List<String> getModuleTables() {
+    public Set<String> getModuleTables() {
         return moduleTables;
     }
 
-    public void setModuleTables(List<String> moduleTables) {
+    public void setModuleTables(Set<String> moduleTables) {
         this.moduleTables = moduleTables;
     }
 
-    public List<String> getInitSql() {
+    public String getInitSql() {
         return initSql;
     }
 
-    public void setInitSql(List<String> initSql) {
+    public void setInitSql(String initSql) {
         this.initSql = initSql;
+    }
+
+    public DataSourceProperties getDatasource() {
+        return datasource;
+    }
+
+    public void setDatasource(DataSourceProperties datasource) {
+        this.datasource = datasource;
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("OpenTenantProperties{");
-        sb.append("tenantId='").append(tenantId).append('\'');
-        sb.append(", shareTables=").append(shareTables);
-        sb.append(", moduleTables=").append(moduleTables);
-        sb.append('}');
-        return sb.toString();
+        return "OpenTenantProperties{" +
+                "tenantId='" + tenantId + '\'' +
+                ", shareTables=" + shareTables +
+                ", moduleTables=" + moduleTables +
+                ", initSql='" + initSql + '\'' +
+                '}';
     }
 }

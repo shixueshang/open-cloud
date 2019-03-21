@@ -47,9 +47,9 @@ public class DynamicDataSourceAspect {
      */
     @Before("daoAspect()")
     public void switchDataSource(JoinPoint point) {
-        if (openSaasProperties.gettenant() != null) {
-            DynamicDataSourceContextHolder.setDataSourceKey(openSaasProperties.gettenant());
-            logger.info("Switch DataSource to [{}] in Method [{}] tenant is [{}]", DynamicDataSourceContextHolder.getDataSourceKey(), point.getSignature(),openSaasProperties.gettenant());
+        if (openSaasProperties.getTenantId() != null) {
+            DynamicDataSourceContextHolder.setDataSourceKey(openSaasProperties.getTenantId());
+            logger.info("==> Switch DataSource to [{}] in Method [{}] tenant is [{}]", DynamicDataSourceContextHolder.getDataSourceKey(), point.getSignature(),openSaasProperties.getTenantId());
         }else{
             DynamicDataSourceContextHolder.setDataSourceKey("master");
         }
@@ -63,7 +63,7 @@ public class DynamicDataSourceAspect {
     @After("daoAspect())")
     public void restoreDataSource(JoinPoint point) {
         DynamicDataSourceContextHolder.clearDataSourceKey();
-        logger.info("Restore DataSource to [{}] in Method [{}]", DynamicDataSourceContextHolder.getDataSourceKey(), point.getSignature());
+        logger.info("==> Restore DataSource to [{}] in Method [{}]", DynamicDataSourceContextHolder.getDataSourceKey(), point.getSignature());
     }
 
 
