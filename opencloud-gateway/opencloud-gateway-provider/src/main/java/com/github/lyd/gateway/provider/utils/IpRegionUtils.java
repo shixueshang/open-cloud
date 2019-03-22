@@ -1,5 +1,6 @@
 package com.github.lyd.gateway.provider.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.lionsoul.ip2region.DataBlock;
 import org.lionsoul.ip2region.DbConfig;
 import org.lionsoul.ip2region.DbSearcher;
@@ -9,6 +10,7 @@ import org.springframework.util.ResourceUtils;
 import java.io.File;
 import java.lang.reflect.Method;
 
+@Slf4j
 public class IpRegionUtils {
     public static String getRegion(String ip) {
 
@@ -17,6 +19,7 @@ public class IpRegionUtils {
 
             File file = ResourceUtils.getFile(ResourceUtils.CLASSPATH_URL_PREFIX + "data/ip2region.db");
             if (file.exists() == false) {
+                        log.error("file not exists[{}]",file.getAbsoluteFile());
                 return null;
             }
 
@@ -44,6 +47,7 @@ public class IpRegionUtils {
 
                 DataBlock dataBlock = null;
                 if (Util.isIpAddress(ip) == false) {
+                    log.error("not ip address [{}]",ip);
                    return null;
                 }
 
@@ -55,7 +59,7 @@ public class IpRegionUtils {
                 e.printStackTrace();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+          log.error("ip region error {}",e);
         }
 
         return null;
