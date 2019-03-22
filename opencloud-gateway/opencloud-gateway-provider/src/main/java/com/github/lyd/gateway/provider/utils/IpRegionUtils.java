@@ -19,13 +19,13 @@ public class IpRegionUtils {
         try {
             //db
 
-            File file = ResourceUtils.getFile(ResourceUtils.CLASSPATH_URL_PREFIX + "data/ip2region.db");
-            String dbPath = file.getPath();
+            String dbPath = IpRegionUtils.class.getClassLoader().getResource( "data/ip2region.db").getPath();
+            File file = ResourceUtils.getFile(dbPath);
             if (!file.exists()) {
                 String tmpDir = System.getProperties().getProperty("java.io.tmpdir");
                 dbPath = tmpDir + "ip2region.db";
                 File tmpFile = new File(dbPath);
-                InputStream inputStream = IpRegionUtils.class.getClassLoader().getResourceAsStream(ResourceUtils.CLASSPATH_URL_PREFIX + "data/ip2region.db");
+                InputStream inputStream = IpRegionUtils.class.getClassLoader().getResourceAsStream("data/ip2region.db");
                 FileUtils.copyInputStreamToFile(inputStream, tmpFile);
             }
 
@@ -69,4 +69,7 @@ public class IpRegionUtils {
         return null;
     }
 
+    public static void main(String[] args) {
+        System.out.println(getRegion("183.25.128.12"));
+    }
 }
