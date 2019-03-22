@@ -1,11 +1,11 @@
 package com.github.lyd.gateway.provider.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.lionsoul.ip2region.DataBlock;
 import org.lionsoul.ip2region.DbConfig;
 import org.lionsoul.ip2region.DbSearcher;
 import org.lionsoul.ip2region.Util;
-import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -16,11 +16,13 @@ public class IpRegionUtils {
 
         try {
             //db
-
-            File file = ResourceUtils.getFile(ResourceUtils.CLASSPATH_URL_PREFIX + "data/ip2region.db");
+            String dbPath = IpRegionUtils.class.getResource("/data/ip2region.db").getPath();
+            File file = new File(dbPath);
             if (file.exists() == false) {
-                        log.error("file not exists[{}]",file.getAbsoluteFile());
-                return null;
+                String tmpDir = System.getProperties().getProperty("java.io.tmpdir");
+                dbPath = tmpDir + "ip2region.db";
+                file = new File(dbPath);
+                FileUtils.copyInputStreamToFile(IpRegionUtils.class.getClassLoader().getResourceAsStream("classpath:data/ip2region.db"), file);
             }
 
             //查询算法
@@ -29,7 +31,7 @@ public class IpRegionUtils {
             //DbSearcher.MEMORY_ALGORITYM //Memory
             try {
                 DbConfig config = new DbConfig();
-                DbSearcher searcher = new DbSearcher(config, file.getAbsolutePath());
+                DbSearcher searcher = new DbSearcher(config, dbPath);
 
                 //define the method
                 Method method = null;
@@ -47,8 +49,7 @@ public class IpRegionUtils {
 
                 DataBlock dataBlock = null;
                 if (Util.isIpAddress(ip) == false) {
-                    log.error("not ip address [{}]",ip);
-                   return null;
+                    System.out.println("Error: Invalid ip address");
                 }
 
                 dataBlock = (DataBlock) method.invoke(searcher, ip);
@@ -58,10 +59,9 @@ public class IpRegionUtils {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } catch (Exception e) {
-          log.error("ip region error {}",e);
+        }catch (Exception e) {
+            e.printStackTrace();
         }
-
         return null;
     }
 
