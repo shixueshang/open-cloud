@@ -13,7 +13,6 @@
                extends="com.github.lyd.base.provider.mapper.BaseResourceMenuMapper.BaseResultMap">
         <result column="authority_id" jdbcType="BIGINT" property="authorityId"/>
         <result column="authority" jdbcType="VARCHAR" property="authority"/>
-        <result column="service_id" jdbcType="VARCHAR" property="serviceId"/>
         <collection property="operationList" column="{menuId=menu_id,roleId=role_id}"
                     select="com.github.lyd.base.provider.mapper.BaseAuthorityMapper.selectOperationAuthority"/>
     </resultMap>
@@ -39,7 +38,6 @@
             a.authority_id,
             a.authority,
             a.`status`,
-            a.service_id,
             m.*,
             rp.role_id,
             rp.expire_time
