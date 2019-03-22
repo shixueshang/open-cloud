@@ -25,7 +25,7 @@ public class IpRegionUtils {
                 String tmpDir = System.getProperties().getProperty("java.io.tmpdir");
                 dbPath = tmpDir + "ip2region.db";
                 File tmpFile = new File(dbPath);
-                InputStream inputStream = IpRegionUtils.class.getClassLoader().getResourceAsStream("data/ip2region.db");
+                InputStream inputStream = IpRegionUtils.class.getClassLoader().getResourceAsStream(ResourceUtils.CLASSPATH_URL_PREFIX + "data/ip2region.db");
                 FileUtils.copyInputStreamToFile(inputStream, tmpFile);
             }
 
