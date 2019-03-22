@@ -53,7 +53,7 @@ public class IpRegionUtils {
 
                 DataBlock dataBlock = null;
                 if (Util.isIpAddress(ip) == false) {
-                    System.out.println("Error: Invalid ip address");
+                   log.error("Error: Invalid ip address");
                 }
 
                 dataBlock = (DataBlock) method.invoke(searcher, ip);
@@ -61,15 +61,12 @@ public class IpRegionUtils {
                 return dataBlock.getRegion();
 
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Error:{}",e);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error:{}",e);
         }
         return null;
     }
 
-    public static void main(String[] args) {
-        System.out.println(getRegion("183.25.128.12"));
-    }
 }
