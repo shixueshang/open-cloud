@@ -69,8 +69,4 @@ public class IpRegionUtils {
         return null;
     }
 
-    public static void main(String[] args) {
-        System.out.println(getRegion("183.25.128.12"));
-    }
-
 }
