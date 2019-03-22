@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.lyd.common.gen.SnowflakeIdGenerator;
 import com.github.lyd.common.security.OpenAuthUser;
 import com.github.lyd.common.security.OpenHelper;
-import com.github.lyd.common.utils.WebUtils;
 import com.google.common.collect.Maps;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
@@ -12,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpHeaders;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -72,28 +70,12 @@ public class ZuulRequestFilter extends ZuulFilter {
 
         HttpServletRequest request = ctx.getRequest();
         try {
-            Map headers = WebUtils.getHttpHeaders(request);
-            Map data = WebUtils.getParameterMap(request);
-            Object serviceId = ctx.get(FilterConstants.SERVICE_ID_KEY);
-            String requestPath = request.getRequestURI();
-            String method = request.getMethod();
-            String ip = WebUtils.getIpAddr(request);
-            String userAgent = request.getHeader(HttpHeaders.USER_AGENT);
-            String serverIp = WebUtils.getLocalIpAddress();
+
             Long requestId = snowflakeIdGenerator.nextId();
             request.setAttribute(PRE_REQUEST_ID, String.valueOf(requestId));
             Map<String, Object> map = Maps.newHashMap();
-
             map.put("accessId", requestId);
-            map.put("serviceId",serviceId);
-            map.put("headers", JSONObject.toJSON(headers));
-            map.put("path", requestPath);
-            map.put("params", JSONObject.toJSON(data));
-            map.put("ip", ip);
-            map.put("method", method);
             map.put("requestTime", new Date());
-            map.put("userAgent", userAgent);
-            map.put("serverIp", serverIp);
             OpenAuthUser user = OpenHelper.getAuthUser();
             if (user != null) {
                 user.getUserProfile().remove("authorities");
@@ -106,7 +88,6 @@ public class ZuulRequestFilter extends ZuulFilter {
         } catch (Exception e) {
             log.error("访问日志异常:{}", e);
         }
-
         return null;
     }
 

@@ -1,5 +1,7 @@
 package com.github.lyd.gateway.provider.filter;
 
+import com.alibaba.fastjson.JSONObject;
+import com.github.lyd.common.utils.WebUtils;
 import com.github.lyd.gateway.provider.service.GatewayAccessLogsService;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
@@ -7,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpHeaders;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -62,12 +65,28 @@ public class ZuulResponseFilter extends ZuulFilter {
             Object object = request.getAttribute(ZuulRequestFilter.PRE_REQUEST_ID);
             if (object != null) {
                 String requestId = object.toString();
+                Object serviceId = ctx.get(FilterConstants.SERVICE_ID_KEY);
                 String key = ZuulRequestFilter.PRE_REQUEST_ID_CACHE_PREFIX + requestId;
+                Map headers = WebUtils.getHttpHeaders(request);
+                Map data = WebUtils.getParameterMap(request);
+                String requestPath = request.getRequestURI();
+                String method = request.getMethod();
+                String ip = WebUtils.getIpAddr(request);
+                String userAgent = request.getHeader(HttpHeaders.USER_AGENT);
+                String serverIp = WebUtils.getLocalIpAddress();
                 Object cache = redisTemplate.opsForValue().get(key);
                 if (cache != null) {
                     Map<String, Object> log = (Map) cache;
                     log.put("accessId", requestId);
+                    log.put("serviceId", serviceId);
                     log.put("httpStatus", httpStatus);
+                    log.put("headers", JSONObject.toJSON(headers));
+                    log.put("path", requestPath);
+                    log.put("params", JSONObject.toJSON(data));
+                    log.put("ip", ip);
+                    log.put("method", method);
+                    log.put("userAgent", userAgent);
+                    log.put("serverIp", serverIp);
                     log.put("responseTime", new Date());
                     gatewayAccessLogsService.saveLogs(log);
                     redisTemplate.delete(key);
