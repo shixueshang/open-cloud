@@ -4,6 +4,7 @@ import com.github.lyd.common.constants.MqConstants;
 import com.github.lyd.common.utils.BeanConvertUtils;
 import com.github.lyd.gateway.client.model.entity.GatewayAccessLogs;
 import com.github.lyd.gateway.provider.mapper.GatewayLogsMapper;
+import com.github.lyd.gateway.provider.utils.IpRegionUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,9 @@ public class MessageHandler {
             if (access != null) {
                 GatewayAccessLogs logs = BeanConvertUtils.mapToObject(access, GatewayAccessLogs.class);
                 if (logs != null && logs.getAccessId() != null) {
+                    if(logs.getIp()!=null){
+                        logs.setRegion(IpRegionUtils.getRegion(logs.getIp()));
+                    }
                     logs.setUseTime(logs.getResponseTime().getTime() - logs.getRequestTime().getTime());
                     gatewayLogsMapper.insertSelective(logs);
                 }

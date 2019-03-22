@@ -72,10 +72,10 @@ public class GatewayAccessLogs implements Serializable {
     private String userAgent;
 
     /**
-     *
+     *区域
      */
-    @Column(name = "access_desc")
-    private String accessDesc;
+    @Column(name = "region")
+    private String region;
 
     /**
      * 认证用户信息
@@ -280,12 +280,12 @@ public class GatewayAccessLogs implements Serializable {
         this.userAgent = userAgent;
     }
 
-    public String getAccessDesc() {
-        return accessDesc;
+    public String getRegion() {
+        return region;
     }
 
-    public void setAccessDesc(String accessDesc) {
-        this.accessDesc = accessDesc;
+    public void setRegion(String region) {
+        this.region = region;
     }
 
     public String getAuthentication() {

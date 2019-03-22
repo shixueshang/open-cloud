@@ -17,7 +17,7 @@
     <result column="params" jdbcType="LONGVARCHAR" property="params" />
     <result column="headers" jdbcType="LONGVARCHAR" property="headers" />
     <result column="user_agent" jdbcType="LONGVARCHAR" property="userAgent" />
-    <result column="access_desc" jdbcType="VARCHAR" property="accessDesc" />
+    <result column="region" jdbcType="VARCHAR" property="region" />
     <result column="authentication" jdbcType="LONGVARCHAR" property="authentication" ></result>
     <result column="server_ip" jdbcType="VARCHAR" property="serverIp" />
   </resultMap>

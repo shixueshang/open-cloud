@@ -31,7 +31,7 @@ CREATE TABLE `gateway_access_logs` (
                                      `response_time` datetime DEFAULT NULL,
                                      `use_time` bigint(20) DEFAULT NULL,
                                      `user_agent` varchar(255) DEFAULT NULL,
-                                     `access_desc` varchar(255) DEFAULT NULL COMMENT '异常',
+                                     `region` varchar(255) DEFAULT NULL COMMENT '区域',
                                      `authentication` text COMMENT '认证信息',
                                      `server_ip` varchar(255) DEFAULT NULL COMMENT '服务器IP',
                                      `service_id` varchar(100) DEFAULT NULL COMMENT '服务名',
