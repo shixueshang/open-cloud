@@ -163,6 +163,101 @@ open-cloud
     ./docs/bin/startup.sh {start|stop|restart|status} open-admin-provider.jar
     ```
     
+#### 集成开发  
+1.创建新maven项目
+   ```xml
+         <!-- 引入公共包 -->
+         <dependency>
+                    <artifactId>opencloud-common-starter</artifactId>
+                    <groupId>com.github.lyd</groupId>
+                    <version>${opencloud.common.version}</version>
+         </dependency>
+   ```
+    
+2.配置 bootstrap.properties 或bootstrap.yml
+   ```properties 
+        #服务器配置
+        server.port=4560
+        #spring配置
+        spring.profiles.active=${profile.name}
+        spring.application.name=my-service
+        #Nacos配置中心
+        spring.cloud.nacos.config.server-addr=127.0.0.1:8848
+        #Nacos共享配置
+        spring.cloud.nacos.config.shared-dataids=common.properties,db.properties,redis.properties,rabbitmq.properties
+        spring.cloud.nacos.config.refreshable-dataids=common.properties
+        spring.cloud.nacos.config.namespace=${config.namespace}
+        #Nacos服务发现
+        spring.cloud.nacos.discovery.server-addr=127.0.0.1:8848
+        spring.cloud.nacos.discovery.metadata.name=消息服务
+        
+        # springCloud资源服务器默认配置,默认使用common公共的客户端ID。也可以使用新的客户端ID
+        security.oauth2.client.client-id=${opencloud.common.client-id}
+        security.oauth2.client.client-secret=${opencloud.common.client-secret}
+        security.oauth2.client.scope=${opencloud.common.scope}
+        security.oauth2.client.access-token-uri=${opencloud.common.access-token-uri}
+        security.oauth2.client.user-authorization-uri=${opencloud.common.user-authorization-uri}
+        security.oauth2.resource.token-info-uri=${opencloud.common.token-info-uri}
+        security.oauth2.resource.user-info-uri=${opencloud.common.user-info-uri}
+
+        #自定义API文档
+        opencloud.swagger2.enabled=true
+        opencloud.swagger2.title=消息服务
+        opencloud.swagger2.description=消息服务
+   ```
+3. 创建MyServiceApplication.java
+   ```java
+        //开启feign RPC远程调用
+       @EnableFeignClients
+       // 开启服务发现
+       @EnableDiscoveryClient
+       @SpringBootApplication
+       public class MyServiceApplication {
+       
+           public static void main(String[] args) {
+               SpringApplication.run(MyServiceApplication.class, args);
+           }
+       }
+   ```
+4.创建ResourceServerConfiguration.java 资源服务配置
+
+   ```java
+        @Configuration
+        @EnableResourceServer
+        public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
+            @Autowired
+            private ResourceServerProperties properties;
+        
+            @Override
+            public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
+                // 构建远程获取token,这里是为了支持自定义用户信息转换器
+                resources.tokenServices(OpenHelper.buildRemoteTokenServices(properties));
+            }
+        
+            @Override
+            public void configure(HttpSecurity http) throws Exception {
+                http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                        .and()
+                        .authorizeRequests()
+                        // 内部访问直接放行
+                        .antMatchers("/v1/**").permitAll()
+                        // 只有拥有actuator权限可执行远程端点
+                        .requestMatchers(EndpointRequest.toAnyEndpoint()).hasAnyAuthority(CommonConstants.AUTHORITY_ACTUATOR)
+                        .anyRequest().authenticated()
+                        .and()
+                         //认证鉴权错误处理,为了统一异常处理。每个资源服务器都应该加上。
+                        .exceptionHandling()
+                        .accessDeniedHandler(new OpenAccessDeniedHandler())
+                        .authenticationEntryPoint(new OpenAuthenticationEntryPoint())
+                        .and()
+                        .csrf().disable();
+            }
+        
+        }
+   ```
+   
+5.启动项目  
+
 #### 第三方接口调用 
    
 #### 更新日志
