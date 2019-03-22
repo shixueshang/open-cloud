@@ -47,6 +47,7 @@ public class BaseResourceApiServiceImpl implements BaseResourceApiService {
                 .andLikeRight("path", query.getPath())
                 .andLikeRight("apiName", query.getApiName())
                 .andLikeRight("apiCode", query.getApiCode())
+                .andEqualTo("serviceId", query.getServiceId())
                 .andEqualTo("status", query.getStatus())
                 .andEqualTo("isAuth", query.getIsAuth())
                 .andEqualTo("isOpen", query.getIsOpen())

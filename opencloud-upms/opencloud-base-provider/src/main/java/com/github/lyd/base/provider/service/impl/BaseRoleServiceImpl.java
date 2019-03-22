@@ -50,8 +50,8 @@ public class BaseRoleServiceImpl implements BaseRoleService {
         BaseRole query = pageParams.mapToObject(BaseRole.class);
         ExampleBuilder builder = new ExampleBuilder(BaseRole.class);
         Example example = builder.criteria()
-                .andEqualTo("roleCode", query.getRoleCode())
-                .andEqualTo("roleName", query.getRoleName()).end().build();
+                .andLikeRight("roleCode", query.getRoleCode())
+                .andLikeRight("roleName", query.getRoleName()).end().build();
         example.orderBy("roleId").asc();
         List<BaseRole> list = baseRoleMapper.selectByExample(example);
         return new PageList(list);
