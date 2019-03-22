@@ -37,8 +37,8 @@ public class GatewayAccessLogsServiceImpl implements GatewayAccessLogsService {
 
     @JsonIgnore
     private Set<String> ignores = new HashSet<>(Arrays.asList(new String[]{
-            "/**/oauth/**",
-            "/base/access/logs/**"
+            "/auth/oauth/check_token/**",
+            "/gateway/access/logs/**"
     }));
 
     /**
