@@ -6,8 +6,10 @@ import org.lionsoul.ip2region.DataBlock;
 import org.lionsoul.ip2region.DbConfig;
 import org.lionsoul.ip2region.DbSearcher;
 import org.lionsoul.ip2region.Util;
+import org.springframework.util.ResourceUtils;
 
 import java.io.File;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 
 @Slf4j
@@ -16,13 +18,15 @@ public class IpRegionUtils {
 
         try {
             //db
-            String dbPath = IpRegionUtils.class.getResource("/data/ip2region.db").getPath();
-            File file = new File(dbPath);
-            if (file.exists() == false) {
+
+            File file = ResourceUtils.getFile(ResourceUtils.CLASSPATH_URL_PREFIX + "data/ip2region.db");
+            String dbPath = file.getPath();
+            if (!file.exists()) {
                 String tmpDir = System.getProperties().getProperty("java.io.tmpdir");
                 dbPath = tmpDir + "ip2region.db";
-                file = new File(dbPath);
-                FileUtils.copyInputStreamToFile(IpRegionUtils.class.getClassLoader().getResourceAsStream("classpath:data/ip2region.db"), file);
+                File tmpFile = new File(dbPath);
+                InputStream inputStream = IpRegionUtils.class.getClassLoader().getResourceAsStream("data/ip2region.db");
+                FileUtils.copyInputStreamToFile(inputStream, tmpFile);
             }
 
             //查询算法
@@ -59,10 +63,14 @@ public class IpRegionUtils {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(getRegion("183.25.128.12"));
     }
 
 }
