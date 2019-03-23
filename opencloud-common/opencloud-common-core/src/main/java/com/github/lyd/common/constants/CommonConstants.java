@@ -5,6 +5,13 @@ package com.github.lyd.common.constants;
  */
 public class CommonConstants {
     /**
+     * 自定义错误
+     */
+    public static final String X_ERROR = "x.servlet.exception.code";
+    public static final String X_ERROR_CODE = "x.servlet.exception.error";
+    public static final String X_ERROR_MESSAGE = "x.servlet.exception.message";
+    public static final String X_ACCESS_DENIED = "x.access.denied";
+    /**
      * 默认超级管理员账号
      */
     public final static String ROOT = "admin";

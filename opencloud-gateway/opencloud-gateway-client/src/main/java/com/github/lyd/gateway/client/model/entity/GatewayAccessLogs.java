@@ -94,6 +94,11 @@ public class GatewayAccessLogs implements Serializable {
     @Column(name = "service_id")
     private String serviceId;
 
+    /**
+     * 错误信息
+     */
+    private String error;
+
     private static final long serialVersionUID = 1L;
 
     /**
@@ -310,5 +315,13 @@ public class GatewayAccessLogs implements Serializable {
 
     public void setServiceId(String serviceId) {
         this.serviceId = serviceId;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 }

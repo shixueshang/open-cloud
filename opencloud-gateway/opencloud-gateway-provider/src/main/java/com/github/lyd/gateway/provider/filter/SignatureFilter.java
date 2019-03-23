@@ -1,6 +1,5 @@
 package com.github.lyd.gateway.provider.filter;
 
-import com.alibaba.fastjson.JSONObject;
 import com.github.lyd.base.client.model.entity.BaseApp;
 import com.github.lyd.common.constants.CommonConstants;
 import com.github.lyd.common.exception.OpenSignatureDeniedHandler;
@@ -14,9 +13,6 @@ import com.github.lyd.common.utils.WebUtils;
 import com.github.lyd.gateway.provider.configuration.ApiGatewayProperties;
 import com.github.lyd.gateway.provider.service.feign.BaseAppRemoteService;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,8 +22,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.nio.charset.Charset;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -78,66 +73,6 @@ public class SignatureFilter implements Filter {
         return false;
     }
 
-    /**
-     * 获取请求Body
-     *
-     * @param request
-     * @return
-     */
-    public String getBodyString(final ServletRequest request) {
-        StringBuilder sb = new StringBuilder();
-        InputStream inputStream = null;
-        BufferedReader reader = null;
-        try {
-            inputStream = cloneInputStream(request.getInputStream());
-            reader = new BufferedReader(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
-            String line = "";
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return sb.toString();
-    }
-
-    /**
-     * 复制输入流
-     *
-     * @param inputStream
-     * @return</br>
-     */
-    public InputStream cloneInputStream(ServletInputStream inputStream) {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        byte[] buffer = new byte[1024];
-        int len;
-        try {
-            while ((len = inputStream.read(buffer)) > -1) {
-                byteArrayOutputStream.write(buffer, 0, len);
-            }
-            byteArrayOutputStream.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        InputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
-        return byteArrayInputStream;
-    }
-
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
@@ -149,16 +84,7 @@ public class SignatureFilter implements Filter {
                 //开始验证签名
                 String appId = auth.getAuthAppId();
                 if (systemAppClient != null && appId != null) {
-                    String contentType = request.getHeader(HttpHeaders.CONTENT_TYPE);
-                    Map params = Maps.newHashMap();
-                    if (MediaType.APPLICATION_JSON_VALUE.equals(contentType) || MediaType.APPLICATION_JSON_UTF8_VALUE.equals(contentType)) {
-                        // json类型参数
-                        String body = getBodyString(request);
-                        params = JSONObject.parseObject(body, Map.class);
-                    } else {
-                        // 普通表单请求参数
-                        params = WebUtils.getParameterMap(request);
-                    }
+                    Map params =  WebUtils.getParameterMap(request);
                     // 验证请求参数
                     SignatureUtils.validateParams(params);
                     // 获取客户端信息

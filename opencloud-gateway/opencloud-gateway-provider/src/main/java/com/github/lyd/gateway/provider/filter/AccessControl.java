@@ -3,7 +3,6 @@ package com.github.lyd.gateway.provider.filter;
 import com.github.lyd.base.client.model.AccessAuthority;
 import com.github.lyd.common.constants.CommonConstants;
 import com.github.lyd.common.constants.ResultEnum;
-import com.github.lyd.common.exception.OpenExceptionHandler;
 import com.github.lyd.common.security.OpenGrantedAuthority;
 import com.github.lyd.common.utils.StringUtils;
 import com.github.lyd.common.utils.WebUtils;
@@ -77,7 +76,7 @@ public class AccessControl {
         if (deny) {
             // 拒绝
             log.debug("==> access_denied:path={},message={}", requestPath, ResultEnum.ACCESS_DENIED_BLACK_IP_LIMITED.getMessage());
-            request.setAttribute(OpenExceptionHandler.ACCESS_DENIED, ResultEnum.ACCESS_DENIED_BLACK_IP_LIMITED.getMessage());
+            request.setAttribute(CommonConstants.X_ACCESS_DENIED, ResultEnum.ACCESS_DENIED_BLACK_IP_LIMITED.getMessage());
             return false;
         }
 
@@ -108,7 +107,7 @@ public class AccessControl {
             } else {
                 // IP白名单检测通过,拒绝
                 log.debug("==> access_denied:path={},message={}", requestPath, ResultEnum.ACCESS_DENIED_WHITE_IP_LIMITED.getMessage());
-                request.setAttribute(OpenExceptionHandler.ACCESS_DENIED, ResultEnum.ACCESS_DENIED_WHITE_IP_LIMITED.getMessage());
+                request.setAttribute(CommonConstants.X_ACCESS_DENIED, ResultEnum.ACCESS_DENIED_WHITE_IP_LIMITED.getMessage());
                 return false;
             }
 
@@ -182,7 +181,7 @@ public class AccessControl {
                             if (customer.getIsExpired() != null && customer.getIsExpired()) {
                                 // 授权已过期
                                 log.debug("==> access_denied:path={},message={}", requestPath, ResultEnum.ACCESS_DENIED_AUTHORITY_EXPIRED.getMessage());
-                                request.setAttribute(OpenExceptionHandler.ACCESS_DENIED, ResultEnum.ACCESS_DENIED_AUTHORITY_EXPIRED.getMessage());
+                                request.setAttribute(CommonConstants.X_ACCESS_DENIED, ResultEnum.ACCESS_DENIED_AUTHORITY_EXPIRED.getMessage());
                                 return false;
                             }
                         }

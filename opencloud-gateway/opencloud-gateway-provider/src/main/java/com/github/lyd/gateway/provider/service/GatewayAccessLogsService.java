@@ -4,7 +4,8 @@ import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.model.PageParams;
 import com.github.lyd.gateway.client.model.entity.GatewayAccessLogs;
 
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 网关访问日志
@@ -19,8 +20,9 @@ public interface GatewayAccessLogsService {
     PageList<GatewayAccessLogs> findListPage(PageParams pageParams);
 
     /**
-     * 保存日志
-     * @param map
+     * 保存访问日志
+     * @param request
+     * @param response
      */
-    void  saveLogs(Map map);
+    void  saveLogs(HttpServletRequest request, HttpServletResponse response);
 }

@@ -20,5 +20,6 @@
     <result column="region" jdbcType="VARCHAR" property="region" />
     <result column="authentication" jdbcType="LONGVARCHAR" property="authentication" ></result>
     <result column="server_ip" jdbcType="VARCHAR" property="serverIp" />
+    <result column="error" jdbcType="VARCHAR" property="error" />
   </resultMap>
 </mapper>

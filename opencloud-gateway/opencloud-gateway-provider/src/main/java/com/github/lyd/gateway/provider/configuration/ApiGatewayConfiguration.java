@@ -3,7 +3,6 @@ package com.github.lyd.gateway.provider.configuration;
 import com.github.lyd.gateway.provider.endpoint.GatewayRefreshBusEndpoint;
 import com.github.lyd.gateway.provider.event.GatewayRefreshRemoteListener;
 import com.github.lyd.gateway.provider.filter.ZuulErrorFilter;
-import com.github.lyd.gateway.provider.filter.ZuulRequestFilter;
 import com.github.lyd.gateway.provider.filter.ZuulResponseFilter;
 import com.github.lyd.gateway.provider.locator.AccessLocator;
 import com.github.lyd.gateway.provider.locator.ZuulRouteLocator;
@@ -39,16 +38,6 @@ public class ApiGatewayConfiguration {
 
     private ZuulRouteLocator zuulRoutesLocator;
     private AccessLocator accessLocator;
-
-    /**
-     * 请求过滤器
-     *
-     * @return
-     */
-    @Bean
-    public ZuulFilter zuulRequestFilter() {
-        return new ZuulRequestFilter();
-    }
 
     /**
      * 响应过滤器

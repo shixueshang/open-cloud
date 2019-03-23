@@ -1,5 +1,6 @@
 package com.github.lyd.common.exception;
 
+import com.github.lyd.common.constants.CommonConstants;
 import com.github.lyd.common.constants.ResultEnum;
 import com.github.lyd.common.model.ResultBody;
 import com.github.lyd.common.utils.SpringContextHolder;
@@ -41,8 +42,7 @@ public class OpenExceptionHandler {
      * 国际化配置
      */
     private static Locale locale = Locale.SIMPLIFIED_CHINESE;
-    private static final String KEY = "x.servlet.exception.code";
-    public static final String ACCESS_DENIED = "x.access.denied";
+
 
     /**
      * 统一异常处理
@@ -79,7 +79,7 @@ public class OpenExceptionHandler {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
         }
         //放入请求域
-        request.setAttribute(KEY, code);
+        request.setAttribute(CommonConstants.X_ERROR_CODE, code);
         return buildBody(ex, request, response);
     }
 
@@ -132,7 +132,7 @@ public class OpenExceptionHandler {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
         }
         //放入请求域
-        request.setAttribute(KEY, code);
+        request.setAttribute(CommonConstants.X_ERROR_CODE, code);
         return buildBody(ex, request, response);
     }
 
@@ -157,7 +157,7 @@ public class OpenExceptionHandler {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         }
         //放入请求域
-        request.setAttribute(KEY, code);
+        request.setAttribute(CommonConstants.X_ERROR_CODE, code);
         return buildBody(ex, request, response);
     }
 
@@ -197,7 +197,7 @@ public class OpenExceptionHandler {
             code = ResultEnum.ACCESS_DENIED;
             response.setStatus(HttpStatus.FORBIDDEN.value());
         }
-        request.setAttribute(KEY, code);
+        request.setAttribute(CommonConstants.X_ERROR_CODE, code);
         return buildBody(ex, request, response);
     }
 
@@ -211,7 +211,7 @@ public class OpenExceptionHandler {
      * @return
      */
     public static ResultBody resolveException(Exception ex, HttpServletRequest request, HttpServletResponse response) {
-        Object accessDenied = request.getAttribute(ACCESS_DENIED);
+        Object accessDenied = request.getAttribute(CommonConstants.X_ACCESS_DENIED);
         if (accessDenied != null) {
             String message = accessDenied.toString();
             ex = new AccessDeniedException(message, ex.getCause());
@@ -241,15 +241,19 @@ public class OpenExceptionHandler {
         String path = request.getRequestURI();
         String method = request.getMethod();
         String message = exception.getMessage();
-        ResultEnum resultCode = (ResultEnum) request.getAttribute(KEY);
+        ResultEnum resultCode = (ResultEnum) request.getAttribute(CommonConstants.X_ERROR_CODE);
         if (resultCode == null) {
             resultCode = ResultEnum.ERROR;
         }
         int code = resultCode.getCode();
         String error = resultCode.getMessage();
-        //提示消息
+        // 提示信息
         String msgI18n = i18n(error, message);
-        log.error("==> 错误解析:method[{}] path[{}] code[{}] error[{}] message[{}] exception{}", method, path, code, error,msgI18n, exception);
+        // 错误,放入请求域
+        request.setAttribute(CommonConstants.X_ERROR, error);
+        // 错误消息,放入请求域
+        request.setAttribute(CommonConstants.X_ERROR_MESSAGE, msgI18n);
+        log.error("==> 错误解析:method[{}] path[{}] code[{}] error[{}] message[{}] exception{}", method, path, code, error, msgI18n, exception);
         return ResultBody.failed(code, msgI18n).setError(error).setPath(path);
     }
 
