@@ -69,4 +69,23 @@ public class BaseUserUserAccountController implements BaseUserAccountRemoteApi {
     }
 
 
+    /**
+     * 重置密码
+     * @param userId
+     * @param oldPassword
+     * @param newPassword
+     * @return
+     */
+    @ApiOperation(value = "重置密码", notes = "重置密码")
+    @PostMapping("/account/reset/password")
+    @Override
+    public ResultBody resetPassword(
+            @RequestParam(value = "userId") Long userId,
+            @RequestParam(value = "oldPassword") String oldPassword,
+            @RequestParam(value = "newPassword") String newPassword
+    ) {
+        baseUserAccountService.resetPassword(userId, oldPassword, newPassword);
+        return ResultBody.success();
+    }
+
 }

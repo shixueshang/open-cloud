@@ -65,6 +65,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                         "/account/logs/add",
                         "/authority/access/list",
                         "/authority/granted/app",
+                        "/account/reset/password",
                         "/app/{appId}",
                         "/app/client/{appId}").permitAll()
                 .anyRequest().authenticated()

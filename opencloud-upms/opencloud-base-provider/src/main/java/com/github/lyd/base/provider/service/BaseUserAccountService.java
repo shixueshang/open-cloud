@@ -23,6 +23,7 @@ public interface BaseUserAccountService {
 
     /**
      * 绑定账号
+     *
      * @param account
      * @param password
      * @return
@@ -70,7 +71,7 @@ public interface BaseUserAccountService {
     BaseUserAccountDto login(String account);
 
     /**
-     * 更新系统用户密码
+     * 重置用户密码
      *
      * @param userId
      * @param oldPassword
@@ -78,6 +79,14 @@ public interface BaseUserAccountService {
      * @return
      */
     void resetPassword(Long userId, String oldPassword, String newPassword);
+
+    /**
+     * 重置用户密码
+     *
+     * @param userId
+     * @param password
+     */
+    void resetPassword(Long userId, String password);
 
     /**
      * 添加登录日志
@@ -98,6 +107,7 @@ public interface BaseUserAccountService {
 
     /**
      * 检查账号是否存在
+     *
      * @param account
      * @param accountType
      * @return

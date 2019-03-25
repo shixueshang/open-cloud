@@ -21,6 +21,7 @@ public interface BaseUserAccountRemoteApi {
 
     /**
      * 注册第三方登录账号
+     *
      * @param account
      * @param password
      * @param accountType
@@ -30,6 +31,21 @@ public interface BaseUserAccountRemoteApi {
     ResultBody registerThirdPartyAccount(
             @RequestParam(value = "account") String account,
             @RequestParam(value = "password") String password,
-            @RequestParam(value = "accountType")  String accountType
+            @RequestParam(value = "accountType") String accountType
+    );
+
+    /**
+     * 修改密码
+     *
+     * @param userId
+     * @param oldPassword
+     * @param newPassword
+     * @return
+     */
+    @PostMapping("/account/reset/password")
+    ResultBody resetPassword(
+            @RequestParam(value = "userId") Long userId,
+            @RequestParam(value = "oldPassword") String oldPassword,
+            @RequestParam(value = "newPassword") String newPassword
     );
 }

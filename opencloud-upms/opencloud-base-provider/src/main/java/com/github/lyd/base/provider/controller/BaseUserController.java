@@ -9,6 +9,7 @@ import com.github.lyd.base.provider.service.BaseUserService;
 import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.model.PageParams;
 import com.github.lyd.common.model.ResultBody;
+import com.github.lyd.common.security.OpenHelper;
 import com.github.lyd.common.utils.StringUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -49,6 +50,7 @@ public class BaseUserController {
 
     /**
      * 获取所有用户列表
+     *
      * @return
      */
     @ApiOperation(value = "获取所有用户列表", notes = "获取所有用户列表")
@@ -137,7 +139,25 @@ public class BaseUserController {
     }
 
     /**
+     * 修改用户密码
+     *
+     * @param userId
+     * @param password
+     * @return
+     */
+    @ApiOperation(value = "修改用户密码", notes = "修改用户密码")
+    @PostMapping("/user/update/password")
+    public ResultBody updatePassword(
+            @RequestParam(value = "userId") Long userId,
+            @RequestParam(value = "password") String password
+    ) {
+        baseUserAccountService.resetPassword(userId, password);
+        return ResultBody.success();
+    }
+
+    /**
      * 用户分配角色
+     *
      * @param userId
      * @param roleIds
      * @return
@@ -164,5 +184,43 @@ public class BaseUserController {
             @RequestParam(value = "userId") Long userId
     ) {
         return ResultBody.success(baseRoleService.getUserRoles(userId));
+    }
+
+    /**
+     * 修改当前登录用户密码
+     *
+     * @return
+     */
+    @ApiOperation(value = "修改当前登录用户密码", notes = "修改当前登录用户密码")
+    @GetMapping("/user/me/rest/password")
+    public ResultBody restMyPassword(@RequestParam(value = "oldPassword") String oldPassword,
+                                     @RequestParam(value = "newPassword") String newPassword
+    ) {
+        baseUserAccountService.resetPassword(OpenHelper.getAuthUser().getUserId(), oldPassword, newPassword);
+        return ResultBody.success();
+    }
+
+    /**
+     * 修改当前登录用户基本信息
+     *
+     * @param nickName
+     * @param userDesc
+     * @param avatar
+     * @return
+     */
+    @ApiOperation(value = "修改当前登录用户基本信息", notes = "修改当前登录用户基本信息")
+    @PostMapping("/user/me/update")
+    public ResultBody updateMyUserInfo(
+            @RequestParam(value = "nickName") String nickName,
+            @RequestParam(value = "userDesc", required = false) String userDesc,
+            @RequestParam(value = "avatar", required = false) String avatar
+    ) {
+        BaseUserDto user = new BaseUserDto();
+        user.setUserId(OpenHelper.getAuthUser().getUserId());
+        user.setNickName(nickName);
+        user.setUserDesc(userDesc);
+        user.setAvatar(avatar);
+        baseUserService.updateUser(user);
+        return ResultBody.success();
     }
 }

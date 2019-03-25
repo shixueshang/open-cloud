@@ -92,7 +92,7 @@ public class BaseUserAccountServiceImpl implements BaseUserAccountService {
         profileDto.setRegisterTime(profileDto.getCreateTime());
         //保存系统用户信息
         BaseUser baseUser = baseUserService.addUser(profileDto);
-        if(baseUser==null){
+        if (baseUser == null) {
             return null;
         }
         //默认注册用户名账户
@@ -132,7 +132,7 @@ public class BaseUserAccountServiceImpl implements BaseUserAccountService {
         user.setRegisterTime(user.getCreateTime());
         user.setStatus(BaseConstants.USER_STATE_NORMAL);
         BaseUser baseUser = baseUserService.addUser(user);
-        if(baseUser==null){
+        if (baseUser == null) {
             return null;
         }
         //加密
@@ -228,7 +228,7 @@ public class BaseUserAccountServiceImpl implements BaseUserAccountService {
             BaseUser baseUser = baseUserService.getUserByUserId(baseUserAccount.getUserId());
 
             // 加入用户权限
-            List<OpenGrantedAuthority> userGrantedAuthority = baseAuthorityService.findUserGrantedAuthority(baseUserAccount.getUserId(),  CommonConstants.ROOT.equals(baseUser.getUserName()));
+            List<OpenGrantedAuthority> userGrantedAuthority = baseAuthorityService.findUserGrantedAuthority(baseUserAccount.getUserId(), CommonConstants.ROOT.equals(baseUser.getUserName()));
             if (userGrantedAuthority != null && userGrantedAuthority.size() > 0) {
                 authorities.addAll(userGrantedAuthority);
             }
@@ -255,7 +255,7 @@ public class BaseUserAccountServiceImpl implements BaseUserAccountService {
                     addLoginLog(log);
                 }
             } catch (Exception e) {
-                log.error("添加登录日志失败:{}",e);
+                log.error("添加登录日志失败:{}", e);
             }
         }
         return baseUserAccountDto;
@@ -324,7 +324,7 @@ public class BaseUserAccountServiceImpl implements BaseUserAccountService {
 
 
     /**
-     * 更新系统用户密码
+     * 重置用户密码
      *
      * @param userId
      * @param oldPassword
@@ -339,6 +339,9 @@ public class BaseUserAccountServiceImpl implements BaseUserAccountService {
         BaseUser userProfile = baseUserService.getUserByUserId(userId);
         if (userProfile == null) {
             throw new OpenAlertException("用户信息不存在!");
+        }
+        if (CommonConstants.ROOT.equals(userProfile.getUserName())) {
+            throw new OpenAlertException("默认用户不允许修改!");
         }
         ExampleBuilder builder = new ExampleBuilder(BaseUserAccount.class);
         Example example = builder.criteria()
@@ -357,6 +360,39 @@ public class BaseUserAccountServiceImpl implements BaseUserAccountService {
         baseUserAccount.setPassword(passwordEncoder.encode(newPassword));
         baseUserAccountMapper.updateByPrimaryKey(baseUserAccount);
     }
+
+
+    /**
+     * 重置用户密码
+     * @param userId
+     * @param password
+     */
+    @Override
+    public void resetPassword(Long userId, String password) {
+        if (userId == null || StringUtils.isBlank(password)) {
+            return;
+        }
+        BaseUser userProfile = baseUserService.getUserByUserId(userId);
+        if (userProfile == null) {
+            throw new OpenAlertException("用户信息不存在!");
+        }
+        if (CommonConstants.ROOT.equals(userProfile.getUserName())) {
+            throw new OpenAlertException("默认用户不允许修改!");
+        }
+        ExampleBuilder builder = new ExampleBuilder(BaseUserAccount.class);
+        Example example = builder.criteria()
+                .andEqualTo("userId", userId)
+                .andEqualTo("account", userProfile.getUserName())
+                .andEqualTo("accountType", BaseConstants.USER_ACCOUNT_TYPE_USERNAME)
+                .end().build();
+        BaseUserAccount baseUserAccount = baseUserAccountMapper.selectOneByExample(example);
+        if (baseUserAccount == null) {
+            return;
+        }
+        baseUserAccount.setPassword(passwordEncoder.encode(password));
+        baseUserAccountMapper.updateByPrimaryKey(baseUserAccount);
+    }
+
 
     /**
      * 更新系统用户登录Ip
