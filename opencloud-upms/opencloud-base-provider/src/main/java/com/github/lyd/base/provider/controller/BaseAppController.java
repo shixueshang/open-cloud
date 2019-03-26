@@ -50,7 +50,7 @@ public class BaseAppController implements BaseAppRemoteApi {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "appId", value = "应用ID", defaultValue = "1", required = true, paramType = "path"),
     })
-    @GetMapping("/app/{appId}")
+    @GetMapping("/app/{appId}/info")
     @Override
     public ResultBody<BaseApp> getApp(
             @PathVariable("appId") String appId
@@ -69,7 +69,7 @@ public class BaseAppController implements BaseAppRemoteApi {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "appId", value = "应用ID", defaultValue = "1", required = true, paramType = "path"),
     })
-    @GetMapping("/app/client/{appId}")
+    @GetMapping("/app/client/{appId}/info")
     @Override
     public ResultBody<BaseClientDetails> getAppClientInfo(
             @PathVariable("appId") String appId

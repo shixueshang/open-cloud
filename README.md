@@ -259,7 +259,54 @@ open-cloud
 5.启动项目  
 
 #### 第三方接口调用 
-   
+### 1.创建应用信息
+
+![创建应用信息](https://images.gitee.com/uploads/images/2019/0326/151715_1eee9886_791541.png "创建应用信息")
+### 2.配置开发信息
+
+![配置开发信息](https://images.gitee.com/uploads/images/2019/0326/151725_e0743ddb_791541.png "配置开发信息")
+### 3.授权功能,默认必须勾选获取当前登录信息接口
+
+![授权功能](https://images.gitee.com/uploads/images/2019/0326/151739_09519ffd_791541.png "授权功能")
+
+
+### 4.使用postman测试调用
+例：
+应用信息生成的
+AppId： 1553588629729
+AppSecret： 1a616ba3f91141efa1c4f4a1ce725e2c
+
+
+1. 授权码模式(authorization_code) 需要用户认证
+- 获取code
+浏览器访问
+```
+ http://localhost:8211/oauth/authorize?response_type=code&client_id=1553588629729&redirect_uri=http://www.baidu.com
+```
+未登录将进入登录页，输入系统用户登录信息
+![输入图片说明](https://images.gitee.com/uploads/images/2019/0326/155530_44c6779e_791541.png "login.png")
+用户确认授权信息
+![输入图片说明](https://images.gitee.com/uploads/images/2019/0326/160746_443dc237_791541.png "confrim.png")
+重定向到回调地址,获得code
+![输入图片说明](https://images.gitee.com/uploads/images/2019/0326/160915_4f078abf_791541.png "code.png")
+
+- 使用postman通过code获取access_token，
+![输入图片说明](https://images.gitee.com/uploads/images/2019/0326/170307_a233d434_791541.png "token.png")
+
+- 使用access_token获取已授权资源
+![输入图片说明](https://images.gitee.com/uploads/images/2019/0326/170316_82f0029c_791541.png "res.png")
+
+2. 客户端模式(client_credentials)
+```
+ http://localhost:8211/oauth/token?response_type=code&client_id=1553588629729&redirect_uri=http://www.baidu.com
+```
+- 获取客户端token
+![输入图片说明](https://images.gitee.com/uploads/images/2019/0326/182121_6cb1d676_791541.png "ctoken.png")
+- 访问未授权资源提示权限不足!
+![输入图片说明](https://images.gitee.com/uploads/images/2019/0326/182231_9185e368_791541.png "ctoken1.png")
+- 访问已授权资源,正常返回数据(如果授权完,还提示权限不足，由于上次令牌存在缓存信息,重新获取token即可)
+![输入图片说明](https://images.gitee.com/uploads/images/2019/0326/182343_dc4305d0_791541.png "ctoken2.png")
+
 #### 更新日志
     v-1.0.0 2019-03-18
         1. 重构项目结构

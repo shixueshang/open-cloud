@@ -92,7 +92,7 @@ public class GatewayIpLimitController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "policyId", required = true, value = "策略ID", paramType = "path"),
     })
-    @GetMapping("/gateway/limit/ip/{policyId}")
+    @GetMapping("/gateway/limit/ip/{policyId}/info")
     public ResultBody<GatewayIpLimit> getIpLimit(@PathVariable("policyId") Long policyId) {
         return ResultBody.success(gatewayIpLimitService.getIpLimitPolicy(policyId));
     }

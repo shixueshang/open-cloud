@@ -67,7 +67,7 @@ public class BaseOperationController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "operationId", required = true, value = "操作Id", paramType = "path"),
     })
-    @GetMapping("/operation/{operationId}")
+    @GetMapping("/operation/{operationId}/info")
     public ResultBody<BaseOperationAuthority> getOperation(@PathVariable("operationId") Long operationId) {
         return ResultBody.success(baseResourceOperationService.getOperation(operationId));
     }

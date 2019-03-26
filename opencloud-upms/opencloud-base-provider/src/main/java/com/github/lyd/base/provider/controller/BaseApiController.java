@@ -60,7 +60,7 @@ public class BaseApiController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "apiId", required = true, value = "ApiId", paramType = "path"),
     })
-    @GetMapping("/api/{apiId}")
+    @GetMapping("/api/{apiId}/info")
     public ResultBody<BaseResourceApi> getApi(@PathVariable("apiId") Long apiId) {
         return ResultBody.success(apiService.getApi(apiId));
     }

@@ -58,7 +58,7 @@ public class BaseRoleController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "roleId", value = "角色ID", defaultValue = "", required = true, paramType = "path")
     })
-    @GetMapping("/role/{roleId}")
+    @GetMapping("/role/{roleId}/info")
     public ResultBody<BaseRole> getRole(@PathVariable(value = "roleId") Long roleId) {
         BaseRole result = baseRoleService.getRole(roleId);
         return ResultBody.success(result);

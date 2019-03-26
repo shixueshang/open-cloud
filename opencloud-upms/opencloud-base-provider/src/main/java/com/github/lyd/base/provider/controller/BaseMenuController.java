@@ -81,7 +81,7 @@ public class BaseMenuController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "menuId", required = true, value = "menuId"),
     })
-    @GetMapping("/menu/{menuId}")
+    @GetMapping("/menu/{menuId}/info")
     public ResultBody<BaseResourceMenu> getMenu(@PathVariable("menuId") Long menuId) {
         return ResultBody.success(baseResourceMenuService.getMenu(menuId));
     }

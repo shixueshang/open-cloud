@@ -17,7 +17,7 @@ public interface BaseAppRemoteApi {
      * @param appId 应用Id
      * @return
      */
-    @GetMapping("/app/{appId}")
+    @GetMapping("/app/{appId}/info")
     ResultBody<BaseApp> getApp(@PathVariable("appId") String appId);
 
     /**
@@ -25,6 +25,6 @@ public interface BaseAppRemoteApi {
      * @param appId
      * @return
      */
-    @GetMapping("/app/client/{appId}")
+    @GetMapping("/app/client/{appId}/info")
     ResultBody<BaseClientDetails> getAppClientInfo(@PathVariable("appId") String appId);
 }

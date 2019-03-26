@@ -53,7 +53,7 @@ public class GatewayRouteController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "routeId", required = true, value = "路由ID", paramType = "path"),
     })
-    @GetMapping("/gateway/route/{routeId}")
+    @GetMapping("/gateway/route/{routeId}/info")
     public ResultBody<GatewayRoute> getRoute(@PathVariable("routeId") Long routeId) {
         return ResultBody.success(gatewayRouteService.getRoute(routeId));
     }

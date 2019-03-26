@@ -66,8 +66,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                         "/authority/access/list",
                         "/authority/granted/app",
                         "/account/reset/password",
-                        "/app/{appId}",
-                        "/app/client/{appId}").permitAll()
+                        "/app/*/info",
+                        "/app/client/*/info").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 //认证鉴权错误处理,为了统一异常处理。每个资源服务器都应该加上。
