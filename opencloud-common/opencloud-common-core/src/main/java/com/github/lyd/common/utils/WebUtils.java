@@ -467,6 +467,13 @@ public class WebUtils {
         if (ip == null || ip.length() == 0 || unknown.equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
         }
+        //对于通过多个代理的情况，第一个IP为客户端真实IP,多个IP按照','分割
+        if (ip != null && ip.length() > 0) {
+            String[] ips = ip.split(",");
+            if (ips.length > 0) {
+                ip = ips[0];
+            }
+        }
         return ip;
     }
 
