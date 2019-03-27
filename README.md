@@ -25,6 +25,10 @@
 默认登录账号:admin 123456
 测试登录账号:test 123456
 
+#### 欢迎吐槽 
+学习交流群:760809808  <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=b45f53bc72df5935af588df50a0f651285020356d1daa05f90ee3fb95a0607c9"><img  border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="open-cloud学习交流群" title="open-cloud学习交流群"></a>  
+![760809808](/docs/1548831206525.png)  
+
 #### 代码仓库
 
 ##### 请随手给个Star! 感谢支持！
@@ -314,7 +318,4 @@ AppSecret： 1a616ba3f91141efa1c4f4a1ce725e2c
         3. 重构授权逻辑
         4. 提取公共配置,并迁移到Nacos配置中心
         5. 优化功能
-#### 问题反馈 
-交流群:760809808  <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=b45f53bc72df5935af588df50a0f651285020356d1daa05f90ee3fb95a0607c9"><img  border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="open-cloud学习交流群" title="open-cloud学习交流群"></a>  
-![760809808](/docs/1548831206525.png)  
 
