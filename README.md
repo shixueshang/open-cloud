@@ -302,7 +302,7 @@ AppSecret： 1a616ba3f91141efa1c4f4a1ce725e2c
 
 2. 客户端模式(client_credentials)
 ```
- http://localhost:8211/oauth/token?response_type=code&client_id=1553588629729&redirect_uri=http://www.baidu.com
+ http://localhost:8211/oauth/token?grant_type=client_credentials&client_id=1553588629729&client_secret=1a616ba3f91141efa1c4f4a1ce725e2c
 ```
 - 获取客户端token
 ![输入图片说明](https://images.gitee.com/uploads/images/2019/0326/182121_6cb1d676_791541.png "ctoken.png")
