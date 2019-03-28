@@ -93,18 +93,6 @@ open-cloud
       <td><img src="https://images.gitee.com/uploads/images/2019/0328/130152_c96b3171_791541.png"/></td>
       <td><img src="https://images.gitee.com/uploads/images/2019/0328/130201_0db637b1_791541.png"/></td>
   </tr>
-  <tr>
-      <td><img src="https://images.gitee.com/uploads/images/2019/0328/130211_cd9ddb75_791541.png"/></td>
-      <td><img src="https://images.gitee.com/uploads/images/2019/0328/130221_2a7981e9_791541.png"/></td>
-  </tr>
-  <tr>
-      <td><img src="https://images.gitee.com/uploads/images/2019/0328/130230_f92ce88a_791541.png"/></td>
-      <td><img src="https://images.gitee.com/uploads/images/2019/0328/130242_7a25f1e5_791541.png"/></td>
-  </tr>
-  <tr>
-      <td><img src="https://images.gitee.com/uploads/images/2019/0328/130256_2874fa40_791541.png"/></td>
-      <td><img src="https://images.gitee.com/uploads/images/2019/0328/130306_5d533140_791541.png"/></td>
-  </tr>
 </table>
 
 #### 数据模型
