@@ -76,7 +76,7 @@ public class AccessControl {
         if (deny) {
             // 拒绝
             log.debug("==> access_denied:path={},message={}", requestPath, ResultEnum.ACCESS_DENIED_BLACK_IP_LIMITED.getMessage());
-            request.setAttribute(CommonConstants.X_ACCESS_DENIED, ResultEnum.ACCESS_DENIED_BLACK_IP_LIMITED.getMessage());
+            request.setAttribute(CommonConstants.X_ACCESS_DENIED, ResultEnum.ACCESS_DENIED_BLACK_IP_LIMITED);
             return false;
         }
 
@@ -107,7 +107,7 @@ public class AccessControl {
             } else {
                 // IP白名单检测通过,拒绝
                 log.debug("==> access_denied:path={},message={}", requestPath, ResultEnum.ACCESS_DENIED_WHITE_IP_LIMITED.getMessage());
-                request.setAttribute(CommonConstants.X_ACCESS_DENIED, ResultEnum.ACCESS_DENIED_WHITE_IP_LIMITED.getMessage());
+                request.setAttribute(CommonConstants.X_ACCESS_DENIED, ResultEnum.ACCESS_DENIED_WHITE_IP_LIMITED);
                 return false;
             }
 
@@ -181,7 +181,7 @@ public class AccessControl {
                             if (customer.getIsExpired() != null && customer.getIsExpired()) {
                                 // 授权已过期
                                 log.debug("==> access_denied:path={},message={}", requestPath, ResultEnum.ACCESS_DENIED_AUTHORITY_EXPIRED.getMessage());
-                                request.setAttribute(CommonConstants.X_ACCESS_DENIED, ResultEnum.ACCESS_DENIED_AUTHORITY_EXPIRED.getMessage());
+                                request.setAttribute(CommonConstants.X_ACCESS_DENIED, ResultEnum.ACCESS_DENIED_AUTHORITY_EXPIRED);
                                 return false;
                             }
                         }

@@ -195,6 +195,10 @@ public class OpenExceptionHandler {
             response.setStatus(HttpStatus.BAD_REQUEST.value());
         } else if (ex instanceof AccessDeniedException) {
             code = ResultEnum.ACCESS_DENIED;
+            Object accessDenied = request.getAttribute(CommonConstants.X_ACCESS_DENIED);
+            if (accessDenied != null) {
+                code = (ResultEnum)accessDenied;
+            }
             response.setStatus(HttpStatus.FORBIDDEN.value());
         }
         request.setAttribute(CommonConstants.X_ERROR_CODE, code);
@@ -211,11 +215,6 @@ public class OpenExceptionHandler {
      * @return
      */
     public static ResultBody resolveException(Exception ex, HttpServletRequest request, HttpServletResponse response) {
-        Object accessDenied = request.getAttribute(CommonConstants.X_ACCESS_DENIED);
-        if (accessDenied != null) {
-            String message = accessDenied.toString();
-            ex = new AccessDeniedException(message, ex.getCause());
-        }
         ResultBody resultBody = null;
         if (ex instanceof AuthenticationException) {
             resultBody = authenticationException(ex, request, response);
