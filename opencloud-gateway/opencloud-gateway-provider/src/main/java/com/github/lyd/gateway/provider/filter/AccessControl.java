@@ -197,7 +197,8 @@ public class AccessControl {
         // 匹配动态权限
         for (Iterator<String> iter = accessLocator.getAllConfigAttribute().keySet().iterator(); iter.hasNext(); ) {
             String url = iter.next();
-            if (!"all".equals(url) && pathMatch.match(url, requestPath)) {
+            // 防止匹配错误 忽略/**
+            if (!"/**".equals(url) && pathMatch.match(url, requestPath)) {
                 // 返回匹配到权限
                 return accessLocator.getAllConfigAttribute().get(url);
             }

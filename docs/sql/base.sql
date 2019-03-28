@@ -88,6 +88,7 @@ CREATE TABLE `base_authority` (
 -- ----------------------------
 -- Records of base_authority
 -- ----------------------------
+INSERT INTO `base_authority` VALUES ('1', 'all', null, '1', null, '1');
 INSERT INTO `base_authority` VALUES ('2', 'actuator', null, '2', null, '1');
 INSERT INTO `base_authority` VALUES ('3', 'menu:system', '1', null, null, '1');
 INSERT INTO `base_authority` VALUES ('4', 'menu:gatewayIpLimit', '2', null, null, '1');
@@ -303,6 +304,7 @@ CREATE TABLE `base_resource_api` (
 -- ----------------------------
 -- Records of base_resource_api
 -- ----------------------------
+INSERT INTO `base_resource_api` VALUES ('1', 'all', '全部', 'default', '所有请求', 'get,post', 'opencloud-gateway-provider', '/**', '0', '1', '2019-03-07 21:52:17', '2019-03-14 21:41:28', '1', '1', '1');
 INSERT INTO `base_resource_api` VALUES ('2', 'actuator', '监控端点', 'default', '监控端点', 'post', 'opencloud-gateway-provider', '/actuator/**', '0', '1', '2019-03-07 21:52:17', '2019-03-14 21:41:28', '1', '1', '1');
 INSERT INTO `base_resource_api` VALUES ('560160742251167744', 'com.github.lyd.base.provider.controller.BaseApiController.addApi', '添加接口资源', 'default', '添加接口资源', 'post', 'opencloud-base-provider', '/api/add', '0', '1', '2019-03-26 17:58:48', '2019-03-26 18:09:26', '1', '0', '1');
 INSERT INTO `base_resource_api` VALUES ('560160743131971584', 'com.github.lyd.base.provider.controller.BaseApiController.removeApi', '移除接口资源', 'default', '移除接口资源', 'post', 'opencloud-base-provider', '/api/remove', '0', '1', '2019-03-26 17:58:48', '2019-03-26 18:09:26', '1', '0', '1');
