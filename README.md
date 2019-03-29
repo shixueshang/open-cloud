@@ -79,8 +79,7 @@ open-cloud
 ├── opencloud-bpm     -- 公共工作流模块...  
     ├── opencloud-bpm-client   -- 工作流接口
     ├── opencloud-bpm-provider -- 工作流服务(port = 8255)
-    
-├── opencloud-zipkin  -- 链路追踪 
+     
 ```
 #### 系统结构图
 

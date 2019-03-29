@@ -14,7 +14,6 @@
         <module>opencloud-gateway</module>
         <module>opencloud-upms</module>
         <module>opencloud-msg</module>
-        <module>opencloud-zipkin</module>
         <module>opencloud-bpm</module>
         <module>opencloud-app</module>
         <module>opencloud-scheduler</module>
