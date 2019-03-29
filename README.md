@@ -72,6 +72,10 @@ open-cloud
     ├── opencloud-msg-client    -- 消息服务接口
     ├── opencloud-msg-provider  -- 消息服务(port = 8266)  
     
+├── opencloud-scheduler         -- 任务调度模块 
+    ├── opencloud-scheduler-client    -- 任务调度接口
+    ├── opencloud-scheduler-provider  -- 任务调度服务(port = 8501)  
+    
 ├── opencloud-bpm     -- 公共工作流模块...  
     ├── opencloud-bpm-client   -- 工作流接口
     ├── opencloud-bpm-provider -- 工作流服务(port = 8255)
@@ -125,6 +129,7 @@ open-cloud
     + docs/sql/oauth2.sql
     + docs/sql/base.sql
     + docs/sql/gateway.sql
+    + docs/sql/quartz.sql
     + docs/sql/zipkin.sql
     
 3. 导入Nacos公共配置

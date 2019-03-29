@@ -17,6 +17,7 @@
         <module>opencloud-zipkin</module>
         <module>opencloud-bpm</module>
         <module>opencloud-app</module>
+        <module>opencloud-scheduler</module>
     </modules>
     <!-- 环境 -->
     <profiles>
@@ -105,6 +106,7 @@
         <opencloud.auth-client.version>1.0.0-SNAPSHOT</opencloud.auth-client.version>
         <opencloud.msg-client.version>1.0.0-SNAPSHOT</opencloud.msg-client.version>
         <opencloud.bpm-client.version>1.0.0-SNAPSHOT</opencloud.bpm-client.version>
+        <opencloud.scheduler-client.version>1.0.0-SNAPSHOT</opencloud.scheduler-client.version>
     </properties>
     <!--公共依赖-->
     <dependencies>
