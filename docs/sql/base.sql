@@ -204,6 +204,12 @@ INSERT INTO `base_authority` VALUES ('562313038342914048', 'operation:jobIndexCr
 INSERT INTO `base_authority` VALUES ('562313038397440000', 'operation:jobIndexEdit', null, null, '562313038359691264', '1');
 INSERT INTO `base_authority` VALUES ('562313038456160256', 'operation:jobIndexRemove', null, null, '562313038422605824', '1');
 INSERT INTO `base_authority` VALUES ('562313038514880512', 'operation:jobIndexDetail', null, null, '562313038481326080', '1');
+INSERT INTO `base_authority` VALUES ('562424844877037568', 'menu:schedulerLogs', '562424844814123008', null, null, '1');
+INSERT INTO `base_authority` VALUES ('562424844927369216', 'operation:schedulerLogsBrowse', null, null, '562424844898009088', '1');
+INSERT INTO `base_authority` VALUES ('562424845002866688', 'operation:schedulerLogsCreate', null, null, '562424844939952128', '1');
+INSERT INTO `base_authority` VALUES ('562424845044809728', 'operation:schedulerLogsEdit', null, null, '562424845015449600', '1');
+INSERT INTO `base_authority` VALUES ('562424845095141376', 'operation:schedulerLogsRemove', null, null, '562424845069975552', '1');
+INSERT INTO `base_authority` VALUES ('562424845141278720', 'operation:schedulerLogsDetail', null, null, '562424845111918592', '1');
 INSERT INTO `base_authority` VALUES ('562298893052674048', '67891590cf678b5f53fe0ee963b04a35', null, '562298892914262016', null, '1');
 INSERT INTO `base_authority` VALUES ('562298893149143040', 'fb54713e6051971c14802f0d5a68c27f', null, '562298893107200000', null, '1');
 INSERT INTO `base_authority` VALUES ('562298893249806336', 'e92303031cec6acc0663eb3dc21872bf', null, '562298893199474688', null, '1');
@@ -468,6 +474,7 @@ INSERT INTO `base_resource_menu` VALUES ('555410979983196160', '4', 'nacos', '�
 INSERT INTO `base_resource_menu` VALUES ('555507213116899328', '13', 'gatewayRateLimit', '流量控制', 'API限流', '/', 'gateway/rate-limit/index', 'md-document', '_self', '666', '1', '2019-03-13 21:47:20', '2019-03-13 22:13:10', '0', 'opencloud-base-provider');
 INSERT INTO `base_resource_menu` VALUES ('562312836991156224', '0', 'scheduler', '任务调度', '任务调度', '/', '', 'md-document', '_self', '0', '1', '2019-04-01 16:30:27', '2019-04-01 16:30:27', '1', 'opencloud-base-provider');
 INSERT INTO `base_resource_menu` VALUES ('562313038200307712', '562312836991156224', 'jobIndex', '定时任务', '定时任务列表', '/', 'scheduler/job/index', 'md-document', '_self', '0', '1', '2019-04-01 16:31:15', '2019-04-01 16:36:35', '1', 'opencloud-base-provider');
+INSERT INTO `base_resource_menu` VALUES ('562424844814123008', '562312836991156224', 'schedulerLogs', '执行日志', '任务调度日志', '/', 'scheduler/logs/index', 'md-document', '_self', '0', '1', '2019-04-01 23:55:32', '2019-04-02 00:11:24', '0', 'opencloud-base-provider');
 
 -- ----------------------------
 -- Table structure for base_resource_operation
@@ -588,6 +595,11 @@ INSERT INTO `base_resource_operation` VALUES ('562313038305165312', 'jobIndexCre
 INSERT INTO `base_resource_operation` VALUES ('562313038359691264', 'jobIndexEdit', '编辑', '编辑数据', '562313038200307712', '0', '1', '2019-04-01 16:31:15', '2019-04-01 16:31:15', '1', null, 'opencloud-base-provider');
 INSERT INTO `base_resource_operation` VALUES ('562313038422605824', 'jobIndexRemove', '删除', '删除数据', '562313038200307712', '0', '1', '2019-04-01 16:31:15', '2019-04-01 16:31:15', '1', null, 'opencloud-base-provider');
 INSERT INTO `base_resource_operation` VALUES ('562313038481326080', 'jobIndexDetail', '详情', '查看详情', '562313038200307712', '0', '1', '2019-04-01 16:31:15', '2019-04-01 16:31:15', '1', null, 'opencloud-base-provider');
+INSERT INTO `base_resource_operation` VALUES ('562424844898009088', 'schedulerLogsBrowse', '浏览', '查看列表', '562424844814123008', '0', '1', '2019-04-01 23:55:32', '2019-04-01 23:55:32', '1', null, 'opencloud-base-provider');
+INSERT INTO `base_resource_operation` VALUES ('562424844939952128', 'schedulerLogsCreate', '创建', '新增数据', '562424844814123008', '0', '1', '2019-04-01 23:55:32', '2019-04-01 23:55:32', '1', null, 'opencloud-base-provider');
+INSERT INTO `base_resource_operation` VALUES ('562424845015449600', 'schedulerLogsEdit', '编辑', '编辑数据', '562424844814123008', '0', '1', '2019-04-01 23:55:32', '2019-04-01 23:55:32', '1', null, 'opencloud-base-provider');
+INSERT INTO `base_resource_operation` VALUES ('562424845069975552', 'schedulerLogsRemove', '删除', '删除数据', '562424844814123008', '0', '1', '2019-04-01 23:55:32', '2019-04-01 23:55:32', '1', null, 'opencloud-base-provider');
+INSERT INTO `base_resource_operation` VALUES ('562424845111918592', 'schedulerLogsDetail', '详情', '查看详情', '562424844814123008', '0', '1', '2019-04-01 23:55:32', '2019-04-01 23:55:32', '1', null, 'opencloud-base-provider');
 -- ----------------------------
 -- Table structure for base_resource_operation_api
 -- ----------------------------
