@@ -288,6 +288,7 @@ CREATE TABLE `base_resource_api` (
                                    `api_category` varchar(20) COLLATE utf8_bin DEFAULT 'default' COMMENT '接口分类:default-默认分类',
                                    `api_desc` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '资源描述',
                                    `request_method` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '请求方式',
+                                   `content_type` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '响应类型',
                                    `service_id` varchar(100) COLLATE utf8_bin NOT NULL COMMENT '服务ID',
                                    `path` varchar(200) COLLATE utf8_bin DEFAULT NULL COMMENT '请求路径',
                                    `priority` bigint(20) NOT NULL DEFAULT '0' COMMENT '优先级',
