@@ -100,6 +100,23 @@ public class BaseResourceApi implements Serializable {
      */
     @Column(name = "request_method")
     private String requestMethod;
+    /**
+     * 响应类型
+     */
+    @Column(name = "content_type")
+    private String contentType;
+
+    /**
+     * 类名
+     */
+    @Column(name = "class_name")
+    private String className;
+
+    /**
+     * 方法名
+     */
+    @Column(name = "method_name")
+    private String methodName;
 
     /**
      * 获取资源ID
@@ -281,5 +298,29 @@ public class BaseResourceApi implements Serializable {
 
     public void setRequestMethod(String requestMethod) {
         this.requestMethod = requestMethod;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public String getMethodName() {
+        return methodName;
+    }
+
+    public void setMethodName(String methodName) {
+        this.methodName = methodName;
     }
 }

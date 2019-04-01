@@ -519,6 +519,37 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         return passwordStr;
     }
 
+    /**
+     * 获取堆栈异常
+     * @param e
+     * @return
+     */
+    public static String getStackMsg(Exception e) {
+        if(e==null){return null;}
+        StringBuffer sb = new StringBuffer();
+        StackTraceElement[] stackArray = e.getStackTrace();
+        for (int i = 0; i < stackArray.length; i++) {
+            StackTraceElement element = stackArray[i];
+            sb.append(element.toString() + "\n");
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 获取堆栈异常
+     * @param e
+     * @return
+     */
+    public static String getStackMsg(Throwable e) {
+        if(e==null){return null;}
+        StringBuffer sb = new StringBuffer();
+        StackTraceElement[] stackArray = e.getStackTrace();
+        for (int i = 0; i < stackArray.length; i++) {
+            StackTraceElement element = stackArray[i];
+            sb.append(element.toString() + "\n");
+        }
+        return sb.toString();
+    }
 
     public static void main(String[] args) {
         if (StringUtils.matchEmail("515608851@qq.com")) {

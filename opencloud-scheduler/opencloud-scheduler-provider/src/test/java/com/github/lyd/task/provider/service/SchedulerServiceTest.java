@@ -33,6 +33,14 @@ public class SchedulerServiceTest extends BaseTest {
     public void addCronJob() throws Exception {
         String cron = "3 * * * * ? *";
         TaskInfo taskInfo = new TaskInfo();
+        Map data= Maps.newHashMap();
+        String serviceId = "opencloud-base-provider";
+        data.put("serviceId",serviceId);
+        data.put("method","get");
+        data.put("path","/test");
+        data.put("contentType","application/x-www-form-urlencoded");
+        data.put("alarmMail","515608851@qq.com");
+        taskInfo.setData(data);
         taskInfo.setJobName("定时任务测试");
         taskInfo.setJobDescription("定时任务描述3秒执行一次");
         taskInfo.setJobClassName(HttpExecuteJob.class.getName());
@@ -50,6 +58,8 @@ public class SchedulerServiceTest extends BaseTest {
         data.put("serviceId",serviceId);
         data.put("method","get");
         data.put("path","/test");
+        data.put("contentType","application/x-www-form-urlencoded");
+        data.put("alarmMail","515608851@qq.com");
         taskInfo.setData(data);
         taskInfo.setJobName("定时任务测试");
         taskInfo.setJobDescription("定时任务描述3秒2222222执行一次");

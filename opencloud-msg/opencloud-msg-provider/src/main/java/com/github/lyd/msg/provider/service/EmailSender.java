@@ -1,4 +1,4 @@
-package com.github.lyd.msg.provider.service.impl;
+package com.github.lyd.msg.provider.service;
 
 import com.github.lyd.msg.client.model.EmailNotify;
 import freemarker.template.Template;
@@ -19,16 +19,12 @@ import java.util.List;
  * @author woodev
  */
 @Slf4j
-public class MailSenderImpl {
+public class EmailSender {
 
 	private JavaMailSenderImpl javaMailSender;
 
 	private FreeMarkerConfigurer freeMarkerConfigurer;
 
-
-    public MailSenderImpl(){
-        log.info("init email sender");
-    }
 
     /**
      * 发送邮件

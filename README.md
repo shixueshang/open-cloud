@@ -156,10 +156,10 @@ open-cloud
     ```
     
 5. 本地启动
-     + AuthApplication
-     + BaseApplication
-     + GatewayApplication
-     + AdminApplication   
+     + AuthApplication (必须)
+     + BaseApplication (必须)
+     + GatewayApplication (必须)
+     + AdminApplication   (结合运营后台)
    4个服务启动成功后。就可以依赖这些服务进行微服务开发了。  
    访问 http://localhost:8888
      

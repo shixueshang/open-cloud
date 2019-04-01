@@ -22,6 +22,11 @@
             <groupId>com.github.lyd</groupId>
             <version>${opencloud.scheduler-client.version}</version>
         </dependency>
+        <dependency>
+            <artifactId>opencloud-msg-client</artifactId>
+            <groupId>com.github.lyd</groupId>
+            <version>${opencloud.msg-client.version}</version>
+        </dependency>
         <!-- quartz -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

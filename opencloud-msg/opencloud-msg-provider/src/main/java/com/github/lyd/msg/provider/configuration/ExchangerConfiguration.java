@@ -3,11 +3,9 @@ package com.github.lyd.msg.provider.configuration;
 import com.github.lyd.msg.provider.exchanger.EmailExchanger;
 import com.github.lyd.msg.provider.exchanger.SmsExchanger;
 import com.github.lyd.msg.provider.exchanger.WebSocketExchanger;
-import com.github.lyd.msg.provider.locator.MailSenderLocator;
 import com.github.lyd.msg.provider.service.SmsSender;
-import com.github.lyd.msg.provider.service.impl.MailSenderImpl;
+import com.github.lyd.msg.provider.service.EmailSender;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,22 +13,21 @@ import org.springframework.context.annotation.Configuration;
  * @author woodev
  */
 @Configuration
-@EnableAutoConfiguration
 @AutoConfigureAfter({SmsConfiguration.class, MailConfiguration.class})
 public class ExchangerConfiguration {
 
     @Bean
-    public SmsExchanger smsNotifcationExchanger(SmsSender smsSender){
+    public SmsExchanger smsExchanger(SmsSender smsSender){
         return new SmsExchanger(smsSender);
     }
 
     @Bean
-    public EmailExchanger emailNoficationExchanger(MailSenderImpl mailSender, MailSenderLocator mailSenderLocator){
-        return new EmailExchanger(mailSender,mailSenderLocator);
+    public EmailExchanger emailExchanger(EmailSender emailSender){
+        return new EmailExchanger(emailSender);
     }
 
     @Bean
-    public WebSocketExchanger webSocketNotificationExchanger(){
+    public WebSocketExchanger webSocketExchanger(){
         return new WebSocketExchanger();
     }
 }
