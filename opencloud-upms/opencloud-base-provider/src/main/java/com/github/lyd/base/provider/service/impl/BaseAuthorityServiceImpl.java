@@ -199,7 +199,7 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
     @Override
     public Boolean isGranted(Long resourceId, ResourceType resourceType) {
         BaseAuthority authority = getAuthority(resourceId, resourceType);
-        if (authority == null) {
+        if (authority == null || authority.getAuthorityId()==null) {
             return false;
         }
         BaseRoleAuthority roleAuthority = new BaseRoleAuthority();
