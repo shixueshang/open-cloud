@@ -61,17 +61,17 @@ public class SchedulerController {
             @ApiImplicitParam(name = "cron", value = "cron表达式", required = true, paramType = "form"),
             @ApiImplicitParam(name = "serviceId", value = "服务名", required = true, paramType = "form"),
             @ApiImplicitParam(name = "path", value = "请求路径", required = true, paramType = "form"),
-            @ApiImplicitParam(name = "method", value = "请求类型", required = true, paramType = "form"),
+            @ApiImplicitParam(name = "method", value = "请求类型", required = false, paramType = "form"),
             @ApiImplicitParam(name = "contentType", value = "响应类型", required = false, paramType = "form"),
             @ApiImplicitParam(name = "alarmMail", value = "告警邮箱", required = false, paramType = "form"),
     })
-    @GetMapping("/job/add/http")
+    @PostMapping("/job/add/http")
     public ResultBody addHttpJob(@RequestParam(name = "jobName") String jobName,
                                  @RequestParam(name = "jobDescription") String jobDescription,
                                  @RequestParam(name = "cron") String cron,
                                  @RequestParam(name = "serviceId") String serviceId,
                                  @RequestParam(name = "path") String path,
-                                 @RequestParam(name = "method") String method,
+                                 @RequestParam(name = "method", required = false) String method,
                                  @RequestParam(name = "contentType", required = false) String contentType,
                                  @RequestParam(name = "alarmMail", required = false) String alarmMail) {
         TaskInfo taskInfo = new TaskInfo();
@@ -111,7 +111,7 @@ public class SchedulerController {
             @ApiImplicitParam(name = "cron", value = "cron表达式", required = true, paramType = "form"),
             @ApiImplicitParam(name = "serviceId", value = "服务名", required = true, paramType = "form"),
             @ApiImplicitParam(name = "path", value = "请求路径", required = true, paramType = "form"),
-            @ApiImplicitParam(name = "method", value = "请求类型", required = true, paramType = "form"),
+            @ApiImplicitParam(name = "method", value = "请求类型", required = false, paramType = "form"),
             @ApiImplicitParam(name = "contentType", value = "响应类型", required = false, paramType = "form"),
             @ApiImplicitParam(name = "alarmMail", value = "告警邮箱", required = false, paramType = "form"),
     })
@@ -121,7 +121,7 @@ public class SchedulerController {
                                     @RequestParam(name = "cron") String cron,
                                     @RequestParam(name = "serviceId") String serviceId,
                                     @RequestParam(name = "path") String path,
-                                    @RequestParam(name = "method") String method,
+                                    @RequestParam(name = "method", required = false) String method,
                                     @RequestParam(name = "contentType", required = false) String contentType,
                                     @RequestParam(name = "alarmMail", required = false) String alarmMail) {
         TaskInfo taskInfo = new TaskInfo();

@@ -60,22 +60,18 @@ public class SchedulerService {
                         Integer repeatCount = 0;
                         Date startDate = null;
                         Date endDate = null;
-                        JobDataMap dataMap = null;
                         if (trigger instanceof CronTrigger) {
                             CronTrigger cronTrigger = (CronTrigger) trigger;
                             cronExpression = cronTrigger.getCronExpression();
-                            dataMap = cronTrigger.getJobDataMap();
-                            createTime = (Date) dataMap.get("createTime");
                         } else if (trigger instanceof SimpleTrigger) {
                             SimpleTrigger simpleTrigger = (SimpleTrigger) trigger;
                             milliSeconds = simpleTrigger.getRepeatInterval();
                             repeatCount = simpleTrigger.getRepeatCount();
                             startDate = simpleTrigger.getStartTime();
                             endDate = simpleTrigger.getEndTime();
-                            dataMap = simpleTrigger.getJobDataMap();
-                            createTime = (Date) dataMap.get("createTime");
                         }
                         TaskInfo info = new TaskInfo();
+                        info.setData(jobDetail.getJobDataMap());
                         info.setJobName(jobKey.getName());
                         info.setJobGroupName(jobKey.getGroup());
                         info.setJobClassName(jobDetail.getJobClass().getName());
@@ -87,7 +83,6 @@ public class SchedulerService {
                         info.setStartDate(startDate);
                         info.setMilliSeconds(milliSeconds);
                         info.setEndDate(endDate);
-                        info.setData(dataMap);
                         list.add(info);
                     }
                 }

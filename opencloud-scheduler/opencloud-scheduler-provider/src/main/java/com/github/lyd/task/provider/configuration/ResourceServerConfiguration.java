@@ -1,4 +1,4 @@
-package com.github.lyd.msg.provider.configuration;
+package com.github.lyd.task.provider.configuration;
 
 import com.github.lyd.common.constants.CommonConstants;
 import com.github.lyd.common.exception.OpenAccessDeniedHandler;

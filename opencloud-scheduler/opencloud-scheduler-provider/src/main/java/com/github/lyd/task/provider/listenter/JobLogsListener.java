@@ -52,7 +52,7 @@ public class JobLogsListener implements JobListener {
         JobDetail detail = job.getJobDetail();
         JobDataMap dataMap = detail.getJobDataMap();
         String name = detail.getKey().getName();
-        log.debug("==> jobWasExecuted key[{}] runTime[{}] exception=[{}]", detail.getKey(), job.getJobRunTime(), e.getMessage());
+        log.debug("==> jobWasExecuted key[{}] runTime[{}] exception=[{}]", detail.getKey(), job.getJobRunTime(), e);
         String alarmMail = dataMap.getString("alarmMail");
         String targetClass = detail.getJobClass().getName();
         String description = detail.getDescription();

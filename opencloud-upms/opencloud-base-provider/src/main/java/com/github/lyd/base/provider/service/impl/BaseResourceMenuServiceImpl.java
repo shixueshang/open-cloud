@@ -104,6 +104,7 @@ public class BaseResourceMenuServiceImpl implements BaseResourceMenuService {
      * @param menu
      * @return
      */
+    @Override
     public BaseResourceMenu addMenu(BaseResourceMenu menu) {
         if (isExist(menu.getMenuCode())) {
             throw new OpenAlertException(String.format("%s编码已存在!", menu.getMenuCode()));
@@ -180,6 +181,7 @@ public class BaseResourceMenuServiceImpl implements BaseResourceMenuService {
      * @param menu
      * @return
      */
+    @Override
     public BaseResourceMenu updateMenu(BaseResourceMenu menu) {
         BaseResourceMenu saved = getMenu(menu.getMenuId());
         if (saved == null) {
