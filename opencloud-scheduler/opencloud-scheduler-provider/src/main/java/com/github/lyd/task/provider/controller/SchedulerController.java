@@ -1,9 +1,12 @@
 package com.github.lyd.task.provider.controller;
 
 import com.github.lyd.common.model.PageList;
+import com.github.lyd.common.model.PageParams;
 import com.github.lyd.common.model.ResultBody;
 import com.github.lyd.task.client.model.TaskInfo;
+import com.github.lyd.task.client.model.entity.SchedulerJobLogs;
 import com.github.lyd.task.provider.job.HttpExecuteJob;
+import com.github.lyd.task.provider.service.SchedulerJobLogsService;
 import com.github.lyd.task.provider.service.SchedulerService;
 import com.google.common.collect.Maps;
 import io.swagger.annotations.ApiImplicitParam;
@@ -28,6 +31,20 @@ import java.util.Map;
 public class SchedulerController {
     @Autowired
     private SchedulerService schedulerService;
+    @Autowired
+    private SchedulerJobLogsService schedulerJobLogsService;
+
+    /**
+     * 获取任务执行日志列表
+     * @param map
+     * @return
+     */
+    @ApiOperation(value = "获取任务执行日志列表", notes = "获取任务执行日志列表")
+    @GetMapping(value = "/job/logs")
+    public ResultBody<PageList<SchedulerJobLogs>> getJobLogList(@RequestParam Map map) {
+        PageList<SchedulerJobLogs> result = schedulerJobLogsService.findListPage(new PageParams(map));
+        return ResultBody.success(result);
+    }
 
     /**
      * 获取任务列表
@@ -36,7 +53,7 @@ public class SchedulerController {
      */
     @ApiOperation(value = "获取任务列表", notes = "获取任务列表")
     @GetMapping(value = "/job")
-    public ResultBody<PageList<TaskInfo>> getApiList(@RequestParam Map map) {
+    public ResultBody<PageList<TaskInfo>> getJobList(@RequestParam Map map) {
         List<TaskInfo> list = schedulerService.getJobList();
         return ResultBody.success(new PageList<>(list));
     }

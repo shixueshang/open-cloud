@@ -41,11 +41,11 @@ public class NotifyHttpLogsServiceImpl implements NotifyHttpLogsService {
     /**
      * 根据主键获取日志
      *
-     * @param msgId
+     * @param logId
      * @return
      */
     @Override
-    public NotifyHttpLogs getLog(String msgId) {
-        return notifyHttpLogsMapper.selectByPrimaryKey(msgId);
+    public NotifyHttpLogs getLog(String logId) {
+        return notifyHttpLogsMapper.selectByPrimaryKey(logId);
     }
 }

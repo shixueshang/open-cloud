@@ -1,6 +1,7 @@
 package com.github.lyd.task.provider.configuration;
 
 import com.github.lyd.task.provider.listenter.JobLogsListener;
+import com.github.lyd.task.provider.service.SchedulerJobLogsService;
 import com.github.lyd.task.provider.service.feign.EmailRemoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.quartz.SchedulerFactoryBeanCustomizer;
@@ -28,8 +29,8 @@ public class SchedulerConfiguration implements SchedulerFactoryBeanCustomizer {
     }
 
     @Bean
-    public JobLogsListener jobLogsListener(EmailRemoteService emailRemoteService) {
-        return new JobLogsListener(emailRemoteService);
+    public JobLogsListener jobLogsListener(EmailRemoteService emailRemoteService, SchedulerJobLogsService schedulerJobLogsService) {
+        return new JobLogsListener(emailRemoteService,schedulerJobLogsService);
     }
 
 }

@@ -46,7 +46,6 @@ public class HttpExecuteJob implements Job {
             oAuth2RestTemplate = openRestTemplate.buildOauth2ClientRequest();
         }
         JobDataMap dataMap = jobExecutionContext.getJobDetail().getJobDataMap();
-        log.debug("==> dataMap[{}]", dataMap);
         String serviceId = dataMap.getString("serviceId");
         String method = dataMap.getString("method");
         method = StringUtils.isBlank(method) ? "POST" : method;

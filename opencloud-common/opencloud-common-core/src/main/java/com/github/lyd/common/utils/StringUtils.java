@@ -3,6 +3,8 @@ package com.github.lyd.common.utils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -519,36 +521,17 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         return passwordStr;
     }
 
-    /**
-     * 获取堆栈异常
-     * @param e
-     * @return
-     */
-    public static String getStackMsg(Exception e) {
-        if(e==null){return null;}
-        StringBuffer sb = new StringBuffer();
-        StackTraceElement[] stackArray = e.getStackTrace();
-        for (int i = 0; i < stackArray.length; i++) {
-            StackTraceElement element = stackArray[i];
-            sb.append(element.toString() + "\n");
-        }
-        return sb.toString();
-    }
 
     /**
-     * 获取堆栈异常
-     * @param e
-     * @return
+     * 将 Exception 转化为 String
      */
-    public static String getStackMsg(Throwable e) {
-        if(e==null){return null;}
-        StringBuffer sb = new StringBuffer();
-        StackTraceElement[] stackArray = e.getStackTrace();
-        for (int i = 0; i < stackArray.length; i++) {
-            StackTraceElement element = stackArray[i];
-            sb.append(element.toString() + "\n");
+    public static String getExceptionToString(Throwable e) {
+        if (e == null){
+            return "";
         }
-        return sb.toString();
+        StringWriter stringWriter = new StringWriter();
+        e.printStackTrace(new PrintWriter(stringWriter));
+        return stringWriter.toString();
     }
 
     public static void main(String[] args) {

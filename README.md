@@ -128,7 +128,7 @@ open-cloud
     + docs/sql/oauth2.sql
     + docs/sql/base.sql
     + docs/sql/gateway.sql
-    + docs/sql/quartz.sql
+    + docs/sql/quartz.sql && scheduler.sql
     + docs/sql/zipkin.sql
     
 3. 导入Nacos公共配置

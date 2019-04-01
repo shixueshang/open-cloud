@@ -466,8 +466,8 @@ INSERT INTO `base_resource_menu` VALUES ('14', '0', 'help', '帮助文档', '帮
 INSERT INTO `base_resource_menu` VALUES ('15', '14', 'wiki', '使用手册', 'wiki', 'https://', 'gitee.com/liuyadu/open-cloud/wikis/pages', 'md-document', '_blank', '0', '1', '2019-02-25 01:02:44', '2019-03-13 23:02:49', '0', 'opencloud-base-provider');
 INSERT INTO `base_resource_menu` VALUES ('555410979983196160', '4', 'nacos', '服务与配置', '服务与配置', 'http://', 'localhost:8848/nacos/index.html', 'md-pulse', '_blank', '0', '1', '2019-03-13 15:24:56', '2019-03-18 04:42:58', '0', 'opencloud-base-provider');
 INSERT INTO `base_resource_menu` VALUES ('555507213116899328', '13', 'gatewayRateLimit', '流量控制', 'API限流', '/', 'gateway/rate-limit/index', 'md-document', '_self', '666', '1', '2019-03-13 21:47:20', '2019-03-13 22:13:10', '0', 'opencloud-base-provider');
-INSERT INTO `base_resource_menu` VALUES ('562312836991156224', '0', 'scheduler', '任务调度', '任务调度', '/', '', 'md-document', '_self', '0', '1', '2019-04-01 16:30:27', '2019-04-01 16:30:27', '0', 'opencloud-base-provider');
-INSERT INTO `base_resource_menu` VALUES ('562313038200307712', '562312836991156224', 'jobIndex', '定时任务', '定时任务列表', '/', 'scheduler/job/index', 'md-document', '_self', '0', '1', '2019-04-01 16:31:15', '2019-04-01 16:36:35', '0', 'opencloud-base-provider');
+INSERT INTO `base_resource_menu` VALUES ('562312836991156224', '0', 'scheduler', '任务调度', '任务调度', '/', '', 'md-document', '_self', '0', '1', '2019-04-01 16:30:27', '2019-04-01 16:30:27', '1', 'opencloud-base-provider');
+INSERT INTO `base_resource_menu` VALUES ('562313038200307712', '562312836991156224', 'jobIndex', '定时任务', '定时任务列表', '/', 'scheduler/job/index', 'md-document', '_self', '0', '1', '2019-04-01 16:31:15', '2019-04-01 16:36:35', '1', 'opencloud-base-provider');
 
 -- ----------------------------
 -- Table structure for base_resource_operation

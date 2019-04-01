@@ -30,8 +30,8 @@ public interface NotifyHttpLogsService {
     /**
      * 根据主键获取日志
      *
-     * @param msgId
+     * @param logId
      * @return
      */
-    NotifyHttpLogs getLog(String msgId);
+    NotifyHttpLogs getLog(String logId);
 }

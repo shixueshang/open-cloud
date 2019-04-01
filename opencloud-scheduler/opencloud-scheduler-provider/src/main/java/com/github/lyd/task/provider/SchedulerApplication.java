@@ -7,6 +7,7 @@ import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
+import tk.mybatis.spring.annotation.MapperScan;
 
 
 /**
@@ -16,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 @EnableFeignClients
 @EnableDiscoveryClient
 @SpringBootApplication
+@MapperScan(basePackages = "com.github.lyd.task.provider.mapper")
 public class SchedulerApplication {
 
     /**
