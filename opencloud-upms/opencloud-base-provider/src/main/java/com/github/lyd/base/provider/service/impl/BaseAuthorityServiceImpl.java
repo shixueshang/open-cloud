@@ -211,7 +211,7 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
         BaseAppAuthority appAuthority = new BaseAppAuthority();
         appAuthority.setAuthorityId(authority.getAuthorityId());
         int appGrantedCount = baseAppAuthorityMapper.selectCount(appAuthority);
-        return roleGrantedCount == 0 && userGrantedCount == 0 && appGrantedCount == 0;
+        return roleGrantedCount > 0 || userGrantedCount > 0 || appGrantedCount > 0;
     }
 
     /**
