@@ -16,23 +16,23 @@ Date: 2019-04-01 22:30:01
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
--- Table structure for qrtz_blob_triggers
+-- Table structure for QRTZ_BLOB_TRIGGERS
 -- ----------------------------
-DROP TABLE IF EXISTS `qrtz_blob_triggers`;
-CREATE TABLE `qrtz_blob_triggers` (
+DROP TABLE IF EXISTS `QRTZ_BLOB_TRIGGERS`;
+CREATE TABLE `QRTZ_BLOB_TRIGGERS` (
                                     `SCHED_NAME` varchar(120) NOT NULL,
                                     `TRIGGER_NAME` varchar(200) NOT NULL,
                                     `TRIGGER_GROUP` varchar(200) NOT NULL,
                                     `BLOB_DATA` blob,
                                     PRIMARY KEY (`SCHED_NAME`,`TRIGGER_NAME`,`TRIGGER_GROUP`),
-                                    CONSTRAINT `QRTZ_BLOB_TRIGGERS_ibfk_1` FOREIGN KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) REFERENCES `qrtz_triggers` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`)
+                                    CONSTRAINT `QRTZ_BLOB_TRIGGERS_ibfk_1` FOREIGN KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) REFERENCES `QRTZ_TRIGGERS` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Table structure for qrtz_calendars
+-- Table structure for QRTZ_CALENDARS
 -- ----------------------------
-DROP TABLE IF EXISTS `qrtz_calendars`;
-CREATE TABLE `qrtz_calendars` (
+DROP TABLE IF EXISTS `QRTZ_CALENDARS`;
+CREATE TABLE `QRTZ_CALENDARS` (
                                 `SCHED_NAME` varchar(120) NOT NULL,
                                 `CALENDAR_NAME` varchar(200) NOT NULL,
                                 `CALENDAR` blob NOT NULL,
@@ -40,24 +40,24 @@ CREATE TABLE `qrtz_calendars` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Table structure for qrtz_cron_triggers
+-- Table structure for QRTZ_CRON_TRIGGERS
 -- ----------------------------
-DROP TABLE IF EXISTS `qrtz_cron_triggers`;
-CREATE TABLE `qrtz_cron_triggers` (
+DROP TABLE IF EXISTS `QRTZ_CRON_TRIGGERS`;
+CREATE TABLE `QRTZ_CRON_TRIGGERS` (
                                     `SCHED_NAME` varchar(120) NOT NULL,
                                     `TRIGGER_NAME` varchar(200) NOT NULL,
                                     `TRIGGER_GROUP` varchar(200) NOT NULL,
                                     `CRON_EXPRESSION` varchar(200) NOT NULL,
                                     `TIME_ZONE_ID` varchar(80) DEFAULT NULL,
                                     PRIMARY KEY (`SCHED_NAME`,`TRIGGER_NAME`,`TRIGGER_GROUP`),
-                                    CONSTRAINT `QRTZ_CRON_TRIGGERS_ibfk_1` FOREIGN KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) REFERENCES `qrtz_triggers` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`)
+                                    CONSTRAINT `QRTZ_CRON_TRIGGERS_ibfk_1` FOREIGN KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) REFERENCES `QRTZ_TRIGGERS` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Table structure for qrtz_fired_triggers
+-- Table structure for QRTZ_FIRED_TRIGGERS
 -- ----------------------------
-DROP TABLE IF EXISTS `qrtz_fired_triggers`;
-CREATE TABLE `qrtz_fired_triggers` (
+DROP TABLE IF EXISTS `QRTZ_FIRED_TRIGGERS`;
+CREATE TABLE `QRTZ_FIRED_TRIGGERS` (
                                      `SCHED_NAME` varchar(120) NOT NULL,
                                      `ENTRY_ID` varchar(95) NOT NULL,
                                      `TRIGGER_NAME` varchar(200) NOT NULL,
@@ -75,10 +75,10 @@ CREATE TABLE `qrtz_fired_triggers` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Table structure for qrtz_job_details
+-- Table structure for QRTZ_JOB_DETAILS
 -- ----------------------------
-DROP TABLE IF EXISTS `qrtz_job_details`;
-CREATE TABLE `qrtz_job_details` (
+DROP TABLE IF EXISTS `QRTZ_JOB_DETAILS`;
+CREATE TABLE `QRTZ_JOB_DETAILS` (
                                   `SCHED_NAME` varchar(120) NOT NULL,
                                   `JOB_NAME` varchar(200) NOT NULL,
                                   `JOB_GROUP` varchar(200) NOT NULL,
@@ -93,30 +93,30 @@ CREATE TABLE `qrtz_job_details` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Table structure for qrtz_locks
+-- Table structure for QRTZ_LOCKS
 -- ----------------------------
-DROP TABLE IF EXISTS `qrtz_locks`;
-CREATE TABLE `qrtz_locks` (
+DROP TABLE IF EXISTS `QRTZ_LOCKS`;
+CREATE TABLE `QRTZ_LOCKS` (
                             `SCHED_NAME` varchar(120) NOT NULL,
                             `LOCK_NAME` varchar(40) NOT NULL,
                             PRIMARY KEY (`SCHED_NAME`,`LOCK_NAME`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Table structure for qrtz_paused_trigger_grps
+-- Table structure for QRTZ_PAUSED_TRIGGER_GRPS
 -- ----------------------------
-DROP TABLE IF EXISTS `qrtz_paused_trigger_grps`;
-CREATE TABLE `qrtz_paused_trigger_grps` (
+DROP TABLE IF EXISTS `QRTZ_PAUSED_TRIGGER_GRPS`;
+CREATE TABLE `QRTZ_PAUSED_TRIGGER_GRPS` (
                                           `SCHED_NAME` varchar(120) NOT NULL,
                                           `TRIGGER_GROUP` varchar(200) NOT NULL,
                                           PRIMARY KEY (`SCHED_NAME`,`TRIGGER_GROUP`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Table structure for qrtz_scheduler_state
+-- Table structure for QRTZ_SCHEDULER_STATE
 -- ----------------------------
-DROP TABLE IF EXISTS `qrtz_scheduler_state`;
-CREATE TABLE `qrtz_scheduler_state` (
+DROP TABLE IF EXISTS `QRTZ_SCHEDULER_STATE`;
+CREATE TABLE `QRTZ_SCHEDULER_STATE` (
                                       `SCHED_NAME` varchar(120) NOT NULL,
                                       `INSTANCE_NAME` varchar(200) NOT NULL,
                                       `LAST_CHECKIN_TIME` bigint(13) NOT NULL,
@@ -125,10 +125,10 @@ CREATE TABLE `qrtz_scheduler_state` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Table structure for qrtz_simple_triggers
+-- Table structure for QRTZ_SIMPLE_TRIGGERS
 -- ----------------------------
-DROP TABLE IF EXISTS `qrtz_simple_triggers`;
-CREATE TABLE `qrtz_simple_triggers` (
+DROP TABLE IF EXISTS `QRTZ_SIMPLE_TRIGGERS`;
+CREATE TABLE `QRTZ_SIMPLE_TRIGGERS` (
                                       `SCHED_NAME` varchar(120) NOT NULL,
                                       `TRIGGER_NAME` varchar(200) NOT NULL,
                                       `TRIGGER_GROUP` varchar(200) NOT NULL,
@@ -136,14 +136,14 @@ CREATE TABLE `qrtz_simple_triggers` (
                                       `REPEAT_INTERVAL` bigint(12) NOT NULL,
                                       `TIMES_TRIGGERED` bigint(10) NOT NULL,
                                       PRIMARY KEY (`SCHED_NAME`,`TRIGGER_NAME`,`TRIGGER_GROUP`),
-                                      CONSTRAINT `QRTZ_SIMPLE_TRIGGERS_ibfk_1` FOREIGN KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) REFERENCES `qrtz_triggers` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`)
+                                      CONSTRAINT `QRTZ_SIMPLE_TRIGGERS_ibfk_1` FOREIGN KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) REFERENCES `QRTZ_TRIGGERS` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Table structure for qrtz_simprop_triggers
+-- Table structure for QRTZ_SIMPROP_TRIGGERS
 -- ----------------------------
-DROP TABLE IF EXISTS `qrtz_simprop_triggers`;
-CREATE TABLE `qrtz_simprop_triggers` (
+DROP TABLE IF EXISTS `QRTZ_SIMPROP_TRIGGERS`;
+CREATE TABLE `QRTZ_SIMPROP_TRIGGERS` (
                                        `SCHED_NAME` varchar(120) NOT NULL,
                                        `TRIGGER_NAME` varchar(200) NOT NULL,
                                        `TRIGGER_GROUP` varchar(200) NOT NULL,
@@ -159,14 +159,14 @@ CREATE TABLE `qrtz_simprop_triggers` (
                                        `BOOL_PROP_1` varchar(1) DEFAULT NULL,
                                        `BOOL_PROP_2` varchar(1) DEFAULT NULL,
                                        PRIMARY KEY (`SCHED_NAME`,`TRIGGER_NAME`,`TRIGGER_GROUP`),
-                                       CONSTRAINT `QRTZ_SIMPROP_TRIGGERS_ibfk_1` FOREIGN KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) REFERENCES `qrtz_triggers` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`)
+                                       CONSTRAINT `QRTZ_SIMPROP_TRIGGERS_ibfk_1` FOREIGN KEY (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`) REFERENCES `QRTZ_TRIGGERS` (`SCHED_NAME`, `TRIGGER_NAME`, `TRIGGER_GROUP`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Table structure for qrtz_triggers
+-- Table structure for QRTZ_TRIGGERS
 -- ----------------------------
-DROP TABLE IF EXISTS `qrtz_triggers`;
-CREATE TABLE `qrtz_triggers` (
+DROP TABLE IF EXISTS `QRTZ_TRIGGERS`;
+CREATE TABLE `QRTZ_TRIGGERS` (
                                `SCHED_NAME` varchar(120) NOT NULL,
                                `TRIGGER_NAME` varchar(200) NOT NULL,
                                `TRIGGER_GROUP` varchar(200) NOT NULL,
@@ -185,6 +185,6 @@ CREATE TABLE `qrtz_triggers` (
                                `JOB_DATA` blob,
                                PRIMARY KEY (`SCHED_NAME`,`TRIGGER_NAME`,`TRIGGER_GROUP`),
                                KEY `SCHED_NAME` (`SCHED_NAME`,`JOB_NAME`,`JOB_GROUP`),
-                               CONSTRAINT `QRTZ_TRIGGERS_ibfk_1` FOREIGN KEY (`SCHED_NAME`, `JOB_NAME`, `JOB_GROUP`) REFERENCES `qrtz_job_details` (`SCHED_NAME`, `JOB_NAME`, `JOB_GROUP`)
+                               CONSTRAINT `QRTZ_TRIGGERS_ibfk_1` FOREIGN KEY (`SCHED_NAME`, `JOB_NAME`, `JOB_GROUP`) REFERENCES `QRTZ_JOB_DETAILS` (`SCHED_NAME`, `JOB_NAME`, `JOB_GROUP`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 SET FOREIGN_KEY_CHECKS=1;
