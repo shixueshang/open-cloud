@@ -1,5 +1,6 @@
 package com.github.lyd.task.provider.controller;
 
+import com.github.lyd.common.model.PageList;
 import com.github.lyd.common.model.ResultBody;
 import com.github.lyd.task.client.model.TaskInfo;
 import com.github.lyd.task.provider.job.HttpExecuteJob;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,6 +28,18 @@ import java.util.Map;
 public class SchedulerController {
     @Autowired
     private SchedulerService schedulerService;
+
+    /**
+     * 获取任务列表
+     *
+     * @return
+     */
+    @ApiOperation(value = "获取任务列表", notes = "获取任务列表")
+    @GetMapping(value = "/job")
+    public ResultBody<PageList<TaskInfo>> getApiList(@RequestParam Map map) {
+        List<TaskInfo> list = schedulerService.getJobList();
+        return ResultBody.success(new PageList<>(list));
+    }
 
     /**
      * 添加远程调度任务
@@ -58,7 +72,7 @@ public class SchedulerController {
                                  @RequestParam(name = "serviceId") String serviceId,
                                  @RequestParam(name = "path") String path,
                                  @RequestParam(name = "method") String method,
-                                 @RequestParam(name = "contentType",required = false) String contentType,
+                                 @RequestParam(name = "contentType", required = false) String contentType,
                                  @RequestParam(name = "alarmMail", required = false) String alarmMail) {
         TaskInfo taskInfo = new TaskInfo();
         Map data = Maps.newHashMap();
@@ -108,7 +122,7 @@ public class SchedulerController {
                                     @RequestParam(name = "serviceId") String serviceId,
                                     @RequestParam(name = "path") String path,
                                     @RequestParam(name = "method") String method,
-                                    @RequestParam(name = "contentType",required = false) String contentType,
+                                    @RequestParam(name = "contentType", required = false) String contentType,
                                     @RequestParam(name = "alarmMail", required = false) String alarmMail) {
         TaskInfo taskInfo = new TaskInfo();
         Map data = Maps.newHashMap();
