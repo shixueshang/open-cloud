@@ -76,7 +76,7 @@ public class JobLogsListener implements JobListener {
             if (StringUtils.isNotBlank(alarmMail)) {
                 String title = String.format("[%s]任务执行异常-%s", jobName, DateUtils.formatDateTime(new Date()));
                 try {
-                    emailRemoteService.sendEmail(alarmMail, title, exception);
+                    emailRemoteService.sendEmail(alarmMail, title, e.getMessage());
                 } catch (Exception em) {
                     log.error("==> send alarmMail error:{}", em);
                 }
