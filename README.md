@@ -67,7 +67,8 @@ open-cloud
     
 ├── opencloud-app    -- 应用服务模块
     ├── opencloud-admin-provider  -- 运营后台服务(port = 8301)  
-
+    ├── app-uaa-provider-demo  -- 移动应用用户认证中心(多认证中心演示)(port = 7211)  
+     
 ├── opencloud-msg     -- 公共消息模块 
     ├── opencloud-msg-client    -- 消息服务接口
     ├── opencloud-msg-provider  -- 消息服务(port = 8266)  
@@ -279,6 +280,19 @@ open-cloud
    
 5.启动项目  
 
+#### 多认证中心
+1. 平台系统用户认证中心(opencloud-auth-provider) 
+2. 移动应用用户认证中心(app-uaa-provider-demo) 
+3. 用户认证中心2 - 用户认证中心2
+4. 用户认证中心N - 根据实际应用可创建多个用户中心
+
+针对不同应用的用户数据是单独存储，所以需要建立不同的认证中心提供用户认证。
++ 采用oauth2认证方式,实现APP的统一认证登陆.
++ 区分用户数据源,只读取APP的用户信息
++ 该服务共享客户端oauth_client_details数据源.
++ 统一获取用户信息 OpenHelper.getAuthUser().认证中心标识-authCenterId.
++ 可拓展,手机验证码等登陆方式.
+
 #### 第三方接口调用 
 ### 1.创建应用信息
 
@@ -297,8 +311,17 @@ open-cloud
 AppId： 1553588629729
 AppSecret： 1a616ba3f91141efa1c4f4a1ce725e2c
 
+1. 多认证中心,密码模式  
+  移动应用用户认证中心：localhost:7211/oauth/token  
++ 首先配置客户端密码
+![输入图片说明](https://images.gitee.com/uploads/images/2019/0403/181809_ef6893fb_791541.png "QQ截图20190403181710.png")
++ 输入用户username和password
+![输入图片说明](https://images.gitee.com/uploads/images/2019/0403/181820_f59fb7b9_791541.png "QQ截图20190403181721.png")
++ 获取用户信息
+![输入图片说明](https://images.gitee.com/uploads/images/2019/0403/181844_702a05b7_791541.png "QQ截图20190403181733.png")
 
-1. 授权码模式(authorization_code) 需要用户认证
+
+2. 授权码模式(authorization_code) 需要用户认证
 - 获取code
 浏览器访问
 ```
@@ -317,7 +340,7 @@ AppSecret： 1a616ba3f91141efa1c4f4a1ce725e2c
 - 使用access_token获取已授权资源
 ![输入图片说明](https://images.gitee.com/uploads/images/2019/0326/170316_82f0029c_791541.png "res.png")
 
-2. 客户端模式(client_credentials)
+3. 客户端模式(client_credentials)
 ```
  http://localhost:8211/oauth/token?grant_type=client_credentials&client_id=1553588629729&client_secret=1a616ba3f91141efa1c4f4a1ce725e2c
 ```

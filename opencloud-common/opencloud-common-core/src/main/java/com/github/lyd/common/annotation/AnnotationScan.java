@@ -59,7 +59,7 @@ public class AnnotationScan implements ApplicationListener<ApplicationReadyEvent
         amqpTemplate = applicationContext.getBean(RabbitTemplate.class);
         Environment env = applicationContext.getEnvironment();
         String serviceId = env.getProperty("spring.application.name", "application");
-        log.info("ApplicationReadyEvent:{}", serviceId);
+        log.info("ApplicationReadyEvent:[{}]", serviceId);
         RequestMappingHandlerMapping mapping = applicationContext.getBean(RequestMappingHandlerMapping.class);
         // 获取url与类和方法的对应信息
         Map<RequestMappingInfo, HandlerMethod> map = mapping.getHandlerMethods();

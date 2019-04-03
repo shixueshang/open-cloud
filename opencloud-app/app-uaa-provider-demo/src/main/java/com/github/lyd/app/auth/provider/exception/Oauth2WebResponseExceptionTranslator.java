@@ -1,4 +1,4 @@
-package com.github.lyd.auth.provider.exception;
+package com.github.lyd.app.auth.provider.exception;
 
 import com.github.lyd.common.exception.OpenExceptionHandler;
 import com.github.lyd.common.model.ResultBody;

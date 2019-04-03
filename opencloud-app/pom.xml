@@ -13,6 +13,7 @@
     <modules>
         <module>opencloud-admin-provider</module>
         <module>tenant-service-demo</module>
+        <module>app-uaa-provider-demo</module>
     </modules>
 
 

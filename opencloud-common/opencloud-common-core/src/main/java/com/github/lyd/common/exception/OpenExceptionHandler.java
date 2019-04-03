@@ -7,6 +7,7 @@ import com.github.lyd.common.utils.SpringContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
@@ -41,7 +42,7 @@ public class OpenExceptionHandler {
     /**
      * 国际化配置
      */
-    private static Locale locale = Locale.SIMPLIFIED_CHINESE;
+    private static Locale locale = LocaleContextHolder.getLocale();
 
 
     /**
