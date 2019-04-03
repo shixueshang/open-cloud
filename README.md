@@ -130,7 +130,6 @@ open-cloud
     + docs/sql/base.sql
     + docs/sql/gateway.sql
     + docs/sql/quartz.sql && scheduler.sql
-    + docs/sql/zipkin.sql
     
 3. 导入Nacos公共配置
     + 访问 http://localhost:8848/nacos/index.html 
