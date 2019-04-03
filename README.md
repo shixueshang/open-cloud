@@ -287,11 +287,11 @@ open-cloud
 4. 用户认证中心N - 根据实际应用可创建多个用户中心
 
 针对不同应用的用户数据是单独存储，所以需要建立不同的认证中心提供用户认证。
-+ 采用oauth2认证方式,实现APP的统一认证登陆.
-+ 区分用户数据源,只读取APP的用户信息
-+ 该服务共享客户端oauth_client_details数据源.
-+ 统一获取用户信息 OpenHelper.getAuthUser().认证中心标识-authCenterId.
-+ 可拓展,手机验证码等登陆方式.
++ 采用oauth2统一协议,每个APP拥有独立的认证授权中心.
++ 区分用户数据源
++ 共享客户端oauth_client_details信息.
++ 统一方法获取OpenHelper.getAuthUser().认证中心标识-authCenterId.
++ 个性定制,可单独提供手机验证码等方式登陆.
 
 #### 第三方接口调用 
 ### 1.创建应用信息
