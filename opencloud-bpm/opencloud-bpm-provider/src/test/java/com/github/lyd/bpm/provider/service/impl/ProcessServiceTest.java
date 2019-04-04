@@ -2,7 +2,6 @@ package com.github.lyd.bpm.provider.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.github.lyd.common.model.PageList;
-import com.github.lyd.common.model.PageParams;
 import com.github.lyd.common.test.BaseTest;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.junit.Test;
@@ -19,7 +18,7 @@ public class ProcessServiceTest extends BaseTest {
 
     @Test
     public void findProcessDefinition() throws Exception {
-        PageList<ProcessDefinition> result = processService.findProcessDefinition(new PageParams());
+        PageList<ProcessDefinition> result = processService.findProcessDefinition("",1,10);
         System.out.println(JSONObject.toJSONString(result));
     }
 
