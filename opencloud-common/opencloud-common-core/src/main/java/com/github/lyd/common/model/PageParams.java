@@ -33,6 +33,7 @@ public class PageParams implements Serializable {
     }
 
     public PageParams() {
+        requestMap = Maps.newHashMap();
     }
 
     public PageParams(Map map) {
@@ -115,5 +116,13 @@ public class PageParams implements Serializable {
 
     public <T> T mapToObject(Class<T> t) {
         return BeanConvertUtils.mapToObject(this.requestMap, t);
+    }
+
+    public Map<String, Object> getRequestMap() {
+        return requestMap;
+    }
+
+    public void setRequestMap(Map<String, Object> requestMap) {
+        this.requestMap = requestMap;
     }
 }

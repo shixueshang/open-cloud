@@ -210,6 +210,18 @@ INSERT INTO `base_authority` VALUES ('562424845002866688', 'operation:schedulerL
 INSERT INTO `base_authority` VALUES ('562424845044809728', 'operation:schedulerLogsEdit', null, null, '562424845015449600', '1');
 INSERT INTO `base_authority` VALUES ('562424845095141376', 'operation:schedulerLogsRemove', null, null, '562424845069975552', '1');
 INSERT INTO `base_authority` VALUES ('562424845141278720', 'operation:schedulerLogsDetail', null, null, '562424845111918592', '1');
+INSERT INTO `base_authority` VALUES ('563401746500550656', 'menu:message', '563401746425053184', null, null, '1');
+INSERT INTO `base_authority` VALUES ('563401746630574080', 'operation:messageBrowse', null, null, '563401746550882304', '1');
+INSERT INTO `base_authority` VALUES ('563401746727043072', 'operation:messageCreate', null, null, '563401746672517120', '1');
+INSERT INTO `base_authority` VALUES ('563401746781569024', 'operation:messageEdit', null, null, '563401746752208896', '1');
+INSERT INTO `base_authority` VALUES ('563401746836094976', 'operation:messageRemove', null, null, '563401746806734848', '1');
+INSERT INTO `base_authority` VALUES ('563401746894815232', 'operation:messageDetail', null, null, '563401746861260800', '1');
+INSERT INTO `base_authority` VALUES ('563401986389573632', 'menu:notifyHttpLogs', '563401986347630592', null, null, '1');
+INSERT INTO `base_authority` VALUES ('563401986465071104', 'operation:notifyHttpLogsBrowse', null, null, '563401986423128064', '1');
+INSERT INTO `base_authority` VALUES ('563401986515402752', 'operation:notifyHttpLogsCreate', null, null, '563401986486042624', '1');
+INSERT INTO `base_authority` VALUES ('563401986582511616', 'operation:notifyHttpLogsEdit', null, null, '563401986544762880', '1');
+INSERT INTO `base_authority` VALUES ('563401986649620480', 'operation:notifyHttpLogsRemove', null, null, '563401986611871744', '1');
+INSERT INTO `base_authority` VALUES ('563401986720923648', 'operation:notifyHttpLogsDetail', null, null, '563401986674786304', '1');
 INSERT INTO `base_authority` VALUES ('562298893052674048', '67891590cf678b5f53fe0ee963b04a35', null, '562298892914262016', null, '1');
 INSERT INTO `base_authority` VALUES ('562298893149143040', 'fb54713e6051971c14802f0d5a68c27f', null, '562298893107200000', null, '1');
 INSERT INTO `base_authority` VALUES ('562298893249806336', 'e92303031cec6acc0663eb3dc21872bf', null, '562298893199474688', null, '1');
@@ -475,7 +487,8 @@ INSERT INTO `base_resource_menu` VALUES ('555507213116899328', '13', 'gatewayRat
 INSERT INTO `base_resource_menu` VALUES ('562312836991156224', '0', 'scheduler', '任务调度', '任务调度', '/', '', 'md-document', '_self', '0', '1', '2019-04-01 16:30:27', '2019-04-01 16:30:27', '1', 'opencloud-base-provider');
 INSERT INTO `base_resource_menu` VALUES ('562313038200307712', '562312836991156224', 'jobIndex', '定时任务', '定时任务列表', '/', 'scheduler/job/index', 'md-document', '_self', '0', '1', '2019-04-01 16:31:15', '2019-04-01 16:36:35', '1', 'opencloud-base-provider');
 INSERT INTO `base_resource_menu` VALUES ('562424844814123008', '562312836991156224', 'schedulerLogs', '执行日志', '任务调度日志', '/', 'scheduler/logs/index', 'md-document', '_self', '0', '1', '2019-04-01 23:55:32', '2019-04-02 00:11:24', '0', 'opencloud-base-provider');
-
+INSERT INTO `base_resource_menu` VALUES ('563401746425053184', '0', 'message', '消息管理', '消息管理', '/', '', 'md-document', '_self', '0', '1', '2019-04-04 16:37:23', '2019-04-04 16:37:23', '0', 'opencloud-base-provider');
+INSERT INTO `base_resource_menu` VALUES ('563401986347630592', '563401746425053184', 'notifyHttpLogs', '通知日志', '通知日志', '/', 'msg/http-logs/index', 'md-document', '_self', '0', '1', '2019-04-04 16:38:21', '2019-04-04 16:39:32', '0', 'opencloud-base-provider');
 -- ----------------------------
 -- Table structure for base_resource_operation
 -- ----------------------------
@@ -600,6 +613,16 @@ INSERT INTO `base_resource_operation` VALUES ('562424844939952128', 'schedulerLo
 INSERT INTO `base_resource_operation` VALUES ('562424845015449600', 'schedulerLogsEdit', '编辑', '编辑数据', '562424844814123008', '0', '1', '2019-04-01 23:55:32', '2019-04-01 23:55:32', '1', null, 'opencloud-base-provider');
 INSERT INTO `base_resource_operation` VALUES ('562424845069975552', 'schedulerLogsRemove', '删除', '删除数据', '562424844814123008', '0', '1', '2019-04-01 23:55:32', '2019-04-01 23:55:32', '1', null, 'opencloud-base-provider');
 INSERT INTO `base_resource_operation` VALUES ('562424845111918592', 'schedulerLogsDetail', '详情', '查看详情', '562424844814123008', '0', '1', '2019-04-01 23:55:32', '2019-04-01 23:55:32', '1', null, 'opencloud-base-provider');
+INSERT INTO `base_resource_operation` VALUES ('563401746550882304', 'messageBrowse', '浏览', '查看列表', '563401746425053184', '0', '1', '2019-04-04 16:37:23', '2019-04-04 16:37:23', '1', null, 'opencloud-base-provider');
+INSERT INTO `base_resource_operation` VALUES ('563401746672517120', 'messageCreate', '创建', '新增数据', '563401746425053184', '0', '1', '2019-04-04 16:37:23', '2019-04-04 16:37:23', '1', null, 'opencloud-base-provider');
+INSERT INTO `base_resource_operation` VALUES ('563401746752208896', 'messageEdit', '编辑', '编辑数据', '563401746425053184', '0', '1', '2019-04-04 16:37:23', '2019-04-04 16:37:23', '1', null, 'opencloud-base-provider');
+INSERT INTO `base_resource_operation` VALUES ('563401746806734848', 'messageRemove', '删除', '删除数据', '563401746425053184', '0', '1', '2019-04-04 16:37:23', '2019-04-04 16:37:23', '1', null, 'opencloud-base-provider');
+INSERT INTO `base_resource_operation` VALUES ('563401746861260800', 'messageDetail', '详情', '查看详情', '563401746425053184', '0', '1', '2019-04-04 16:37:23', '2019-04-04 16:37:23', '1', null, 'opencloud-base-provider');
+INSERT INTO `base_resource_operation` VALUES ('563401986423128064', 'notifyHttpLogsBrowse', '浏览', '查看列表', '563401986347630592', '0', '1', '2019-04-04 16:38:21', '2019-04-04 16:38:21', '1', null, 'opencloud-base-provider');
+INSERT INTO `base_resource_operation` VALUES ('563401986486042624', 'notifyHttpLogsCreate', '创建', '新增数据', '563401986347630592', '0', '1', '2019-04-04 16:38:21', '2019-04-04 16:38:21', '1', null, 'opencloud-base-provider');
+INSERT INTO `base_resource_operation` VALUES ('563401986544762880', 'notifyHttpLogsEdit', '编辑', '编辑数据', '563401986347630592', '0', '1', '2019-04-04 16:38:21', '2019-04-04 16:38:21', '1', null, 'opencloud-base-provider');
+INSERT INTO `base_resource_operation` VALUES ('563401986611871744', 'notifyHttpLogsRemove', '删除', '删除数据', '563401986347630592', '0', '1', '2019-04-04 16:38:21', '2019-04-04 16:38:21', '1', null, 'opencloud-base-provider');
+INSERT INTO `base_resource_operation` VALUES ('563401986674786304', 'notifyHttpLogsDetail', '详情', '查看详情', '563401986347630592', '0', '1', '2019-04-04 16:38:21', '2019-04-04 16:38:21', '1', null, 'opencloud-base-provider');
 -- ----------------------------
 -- Table structure for base_resource_operation_api
 -- ----------------------------

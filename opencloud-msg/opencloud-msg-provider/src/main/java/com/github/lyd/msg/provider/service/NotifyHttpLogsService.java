@@ -1,6 +1,8 @@
 package com.github.lyd.msg.provider.service;
 
 
+import com.github.lyd.common.model.PageList;
+import com.github.lyd.common.model.PageParams;
 import com.github.lyd.msg.client.model.entity.NotifyHttpLogs;
 
 /**
@@ -34,4 +36,13 @@ public interface NotifyHttpLogsService {
      * @return
      */
     NotifyHttpLogs getLog(String logId);
+
+    /**
+     * 分页查询
+     *
+     * @param pageParams
+     * @return
+     */
+    PageList<NotifyHttpLogs> findListPage(PageParams pageParams);
+
 }

@@ -1,17 +1,20 @@
 package com.github.lyd.msg.provider.controller;
 
+import com.github.lyd.common.model.PageList;
+import com.github.lyd.common.model.PageParams;
 import com.github.lyd.common.model.ResultBody;
 import com.github.lyd.msg.client.api.HttpNotifyRemoteApi;
 import com.github.lyd.msg.client.model.HttpNotify;
+import com.github.lyd.msg.client.model.entity.NotifyHttpLogs;
 import com.github.lyd.msg.provider.service.DelayMessageService;
+import com.github.lyd.msg.provider.service.NotifyHttpLogsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 /**
  * @author woodev
@@ -22,6 +25,8 @@ public class HttpNotifyController implements HttpNotifyRemoteApi {
 
     @Autowired
     private DelayMessageService delayMessageService;
+    @Autowired
+    private NotifyHttpLogsService notifyHttpLogsService;
 
     @ApiOperation(value = "发送HTTP异步通知",notes = "发送HTTP异步通知")
     @PostMapping("/http/notify")
@@ -37,5 +42,16 @@ public class HttpNotifyController implements HttpNotifyRemoteApi {
         }
     }
 
+
+    /**
+     * 获取分页异步通知列表
+     *
+     * @return
+     */
+    @ApiOperation(value = "获取分页异步通知列表", notes = "获取分页异步通知列表")
+    @GetMapping("/http/notify/logs")
+    public ResultBody<PageList<NotifyHttpLogs>> getNotifyHttpLogListPage(@RequestParam Map map) {
+        return ResultBody.success(notifyHttpLogsService.findListPage(new PageParams(map)));
+    }
 
 }
