@@ -12,6 +12,11 @@
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
+            <artifactId>opencloud-bpm-client</artifactId>
+            <groupId>com.github.lyd</groupId>
+            <version>${opencloud.bpm-client.version}</version>
+        </dependency>
+        <dependency>
             <artifactId>opencloud-common-starter</artifactId>
             <groupId>com.github.lyd</groupId>
             <version>${opencloud.common.version}</version>
@@ -27,10 +32,6 @@
                 <exclusion>
                     <groupId>tk.mybatis</groupId>
                     <artifactId>mapper-spring-boot-starter</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.github.pagehelper</groupId>
-                    <artifactId>pagehelper-spring-boot-starter</artifactId>
                 </exclusion>
                 <exclusion>
                     <groupId>com.alibaba</groupId>
