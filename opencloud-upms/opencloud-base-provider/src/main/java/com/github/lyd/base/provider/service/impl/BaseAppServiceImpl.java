@@ -103,7 +103,7 @@ public class BaseAppServiceImpl implements BaseAppService {
      *
      * @param baseClientDetails
      */
-    @CachePut(value = "apps", key = "'client:'+#baseClientDetails.clientId")
+    @CacheEvict(value = {"apps"}, key = "'client:'+#baseClientDetails.clientId")
     @Override
     public BaseClientDetails updateAppClientInfo(BaseClientDetails baseClientDetails) {
         BaseApp app = getAppInfo(baseClientDetails.getClientId());
