@@ -131,7 +131,7 @@ open-cloud
     + docs/sql/gateway.sql
     + docs/sql/quartz.sql && scheduler.sql
     
-3. 导入Nacos公共配置
+3. 导入Nacos公共配置 
     + 访问 http://localhost:8848/nacos/index.html 
     + 新建配置 
         + docs/config/db.properties  > db.properties
