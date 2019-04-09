@@ -120,7 +120,7 @@ open-cloud
     + Java1.8
     + 阿里巴巴Nacos服务发现和注册中心 <a href="https://nacos.io/zh-cn/">nacos.io</a>
     + Redis
-    + RabbitMq （选装rabbitmq_delayed_message_exchange插件 <a href="https://www.rabbitmq.com/community-plugins.html" target="_blank">下载地址</a>）
+    + RabbitMq （需安装rabbitmq_delayed_message_exchange插件 <a href="https://www.rabbitmq.com/community-plugins.html" target="_blank">下载地址</a>）
     + Mysql
     + Maven
     + Nodejs
