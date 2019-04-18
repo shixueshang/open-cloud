@@ -5,6 +5,7 @@ import com.github.lyd.base.client.model.entity.BaseResourceMenu;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 菜单权限
@@ -50,5 +51,23 @@ public class BaseMenuAuthority extends BaseResourceMenu implements Serializable 
 
     public void setOperationList(List<BaseOperationAuthority> operationList) {
         this.operationList = operationList;
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if(!(obj instanceof BaseMenuAuthority)) {
+            return false;
+        }
+        BaseMenuAuthority a = (BaseMenuAuthority) obj;
+        return this.authorityId.equals(a.getAuthorityId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(authorityId);
     }
 }

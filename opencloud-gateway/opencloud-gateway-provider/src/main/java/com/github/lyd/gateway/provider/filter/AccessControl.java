@@ -170,9 +170,9 @@ public class AccessControl {
             }
             Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
             Iterator var6 = attributes.iterator();
-            Iterator var8 = authorities.iterator();
             while (var6.hasNext()) {
                 ConfigAttribute attribute = (ConfigAttribute) var6.next();
+                Iterator var8 = authorities.iterator();
                 while (var8.hasNext()) {
                     GrantedAuthority authority = (GrantedAuthority) var8.next();
                     if (attribute.getAttribute().equals(authority.getAuthority())) {

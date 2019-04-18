@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.github.lyd.base.client.model.entity.BaseResourceApi;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.util.Objects;
 
 /**
  * API权限
@@ -43,5 +43,22 @@ public class BaseApiAuthority extends BaseResourceApi implements Serializable {
 
     public void setAuthority(String authority) {
         this.authority = authority;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if(!(obj instanceof BaseApiAuthority)) {
+            return false;
+        }
+        BaseApiAuthority a = (BaseApiAuthority) obj;
+        return this.authorityId.equals(a.getAuthorityId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(authorityId);
     }
 }

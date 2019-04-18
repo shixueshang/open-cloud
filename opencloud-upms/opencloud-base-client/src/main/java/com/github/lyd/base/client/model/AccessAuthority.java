@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 /**
  * 访问权限
+ * @author liuyadu
  */
 public class AccessAuthority implements Serializable {
     private static final long serialVersionUID = -320031660125425711L;

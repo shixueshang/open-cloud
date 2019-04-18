@@ -3,6 +3,8 @@ package com.github.lyd.base.client.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.github.lyd.base.client.model.entity.BaseResourceOperation;
 
+import java.util.Objects;
+
 /**
  * 功能权限
  * @author liuyadu
@@ -21,10 +23,6 @@ public class BaseOperationAuthority extends BaseResourceOperation {
      */
     private String authority;
 
-    /**
-     * 服务名
-     */
-    private String serviceId;
 
     /**
      * 是否需要安全认证
@@ -47,14 +45,6 @@ public class BaseOperationAuthority extends BaseResourceOperation {
         this.authority = authority;
     }
 
-    public String getServiceId() {
-        return serviceId;
-    }
-
-    public void setServiceId(String serviceId) {
-        this.serviceId = serviceId;
-    }
-
     public Boolean getAuth() {
         return isAuth;
     }
@@ -62,5 +52,20 @@ public class BaseOperationAuthority extends BaseResourceOperation {
     public void setAuth(Boolean auth) {
         isAuth = auth;
     }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if(!(obj instanceof BaseOperationAuthority)) {
+            return false;
+        }
+        BaseOperationAuthority a = (BaseOperationAuthority) obj;
+        return this.authorityId.equals(a.getAuthorityId());
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(authorityId);
+    }
 }

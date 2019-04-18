@@ -16,6 +16,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 
 import javax.servlet.ServletException;
@@ -56,6 +57,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .logout().permitAll()
                 // /logout退出清除cookie
                 .addLogoutHandler(new CookieClearingLogoutHandler("token", "remember-me"))
+                .addLogoutHandler(new SecurityContextLogoutHandler())
                 .logoutSuccessHandler(new LogoutSuccessHandler())
                 .and()
                 // 认证鉴权错误处理,为了统一异常处理。每个资源服务器都应该加上。
