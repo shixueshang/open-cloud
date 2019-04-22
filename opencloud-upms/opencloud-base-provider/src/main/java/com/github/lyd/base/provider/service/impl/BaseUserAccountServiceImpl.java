@@ -117,14 +117,14 @@ public class BaseUserAccountServiceImpl implements BaseUserAccountService {
      * @return
      */
     @Override
-    public BaseUserAccount register(String account, String password, String accountType) {
+    public BaseUserAccount register(String account, String password, String accountType,String nickName) {
         if (isExist(account, accountType)) {
             return null;
         }
         BaseUserDto user = new BaseUserDto();
-        String name = accountType + "_" + RandomValueUtils.randomAlphanumeric(16);
+        String name = accountType + "_" + RandomValueUtils.randomNumeric(16);
         user.setPassword(password);
-        user.setNickName(name);
+        user.setNickName(nickName);
         user.setUserName(name);
         user.setUserType(BaseConstants.USER_TYPE_PLATFORM);
         user.setCreateTime(new Date());

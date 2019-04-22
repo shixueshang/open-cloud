@@ -112,7 +112,7 @@ public class IndexController {
         if (accessToken != null) {
             String openId = qqAuthService.getOpenId(token);
             if (openId != null) {
-                baseUserAccountRemoteService.registerThirdPartyAccount(openId, openId, AuthConstants.LOGIN_QQ);
+                baseUserAccountRemoteService.registerThirdPartyAccount(openId, openId, AuthConstants.LOGIN_QQ,"");
                 token = getToken(openId, openId, AuthConstants.LOGIN_QQ, headers);
             }
         }
@@ -132,7 +132,7 @@ public class IndexController {
         if (accessToken != null) {
             String openId = wechatAuthService.getOpenId(token);
             if (openId != null) {
-                baseUserAccountRemoteService.registerThirdPartyAccount(openId, openId, AuthConstants.LOGIN_WECHAT);
+                baseUserAccountRemoteService.registerThirdPartyAccount(openId, openId, AuthConstants.LOGIN_WECHAT,"");
                 token = getToken(openId, openId, AuthConstants.LOGIN_WECHAT, headers);
             }
         }
@@ -153,8 +153,9 @@ public class IndexController {
         if (accessToken != null) {
             JSONObject userInfo = giteeAuthService.getUserInfo(accessToken, null);
             String openId = userInfo.getString("id");
+            String name = userInfo.getString("name");
             if (openId != null) {
-                baseUserAccountRemoteService.registerThirdPartyAccount(openId, openId, AuthConstants.LOGIN_GITEE);
+                baseUserAccountRemoteService.registerThirdPartyAccount(openId, openId, AuthConstants.LOGIN_GITEE,name);
                 token = getToken(openId, openId, AuthConstants.LOGIN_GITEE, headers);
             }
         }

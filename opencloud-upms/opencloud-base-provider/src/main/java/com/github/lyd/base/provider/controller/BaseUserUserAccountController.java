@@ -58,10 +58,11 @@ public class BaseUserUserAccountController implements BaseUserAccountRemoteApi {
     public ResultBody registerThirdPartyAccount(
             @RequestParam(value = "account") String account,
             @RequestParam(value = "password") String password,
-            @RequestParam(value = "accountType") String accountType
+            @RequestParam(value = "accountType") String accountType,
+            @RequestParam(value = "nickName") String nickName
     ) {
         Long userId = null;
-        BaseUserAccount baseUserAccount = baseUserAccountService.register(account, password, accountType);
+        BaseUserAccount baseUserAccount = baseUserAccountService.register(account, password, accountType,nickName);
         if (baseUserAccount != null) {
             userId = baseUserAccount.getUserId();
         }

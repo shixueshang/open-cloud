@@ -28,7 +28,7 @@ public interface BaseUserAccountService {
      * @param password
      * @return
      */
-    BaseUserAccount register(String account, String password, String accountType);
+    BaseUserAccount register(String account, String password, String accountType,String nickName);
 
     /**
      * 绑定系统用户名账户

@@ -31,7 +31,8 @@ public interface BaseUserAccountRemoteApi {
     ResultBody registerThirdPartyAccount(
             @RequestParam(value = "account") String account,
             @RequestParam(value = "password") String password,
-            @RequestParam(value = "accountType") String accountType
+            @RequestParam(value = "accountType") String accountType,
+            @RequestParam(value = "nickName") String nickName
     );
 
     /**
