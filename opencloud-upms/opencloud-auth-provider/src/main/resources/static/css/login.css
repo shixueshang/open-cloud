@@ -13,6 +13,14 @@ input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 1000px #ececec inset;
 }
 
+.m-login-bg{
+    width: 100%;
+    height: 100%;
+    background-image: url('../images/login-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
 
 .m-login {
     width: 390px;
