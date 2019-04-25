@@ -41,6 +41,9 @@
 
 <a target="_blank" href="https://gitee.com/liuyadu/open-cloud/wikis/pages">使用手册</a>  
 
+<a target="_blank" href="https://gitee.com/liuyadu/open-cloud/wikis/jenkins%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90?sort_id=1434524">jenkins持续集成</a>  
+
+<a target="_blank" href="https://gitee.com/liuyadu/open-cloud/wikis/nginx%E9%83%A8%E7%BD%B2%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE?sort_id=1434529">nginx部署前端项目</a>  
 
 #### 代码结构
 ``` lua
