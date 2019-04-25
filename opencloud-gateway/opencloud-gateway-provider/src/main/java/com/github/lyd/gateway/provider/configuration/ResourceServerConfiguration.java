@@ -18,6 +18,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
@@ -27,12 +29,14 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
 import org.springframework.security.oauth2.provider.expression.OAuth2WebSecurityExpressionHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * oauth2资源服务器配置
@@ -112,7 +116,11 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
         @Override
         public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
             try {
-                restTemplate.getForEntity(defaultTargetUrl, String.class);
+                Map headerMap =  WebUtils.getHttpHeaders(request);
+                HttpHeaders httpHeaders = new HttpHeaders();
+                httpHeaders.setAll(headerMap);
+                HttpEntity<MultiValueMap<String, Object>> requestObj = new HttpEntity(null, httpHeaders);
+                restTemplate.postForObject(defaultTargetUrl,requestObj, String.class);
             } catch (Exception e) {
                 log.error("sso logout error:", e);
             }

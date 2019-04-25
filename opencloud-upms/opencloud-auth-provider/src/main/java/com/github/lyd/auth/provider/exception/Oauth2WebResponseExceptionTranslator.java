@@ -23,6 +23,6 @@ public class Oauth2WebResponseExceptionTranslator implements WebResponseExceptio
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
         ResultBody responseData = OpenExceptionHandler.resolveException(e, request, response);
-        return ResponseEntity.status(401).body(responseData);
+        return ResponseEntity.status(200).body(responseData);
     }
 }
