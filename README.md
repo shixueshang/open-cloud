@@ -134,10 +134,10 @@ open-cloud
 3. 导入配置中心,Nacos公共配置 
     + 访问 http://localhost:8848/nacos/index.html 
     + 新建配置 
-        + docs/config/db.properties  > db.properties
-        + docs/config/rabbitmq.properties > rabbitmq.properties
-        + docs/config/redis.properties > redis.properties
-        + docs/config/common.properties  > common.properties  
+        + 项目目录/docs/config/db.properties >  db.properties
+        + 项目目录/docs/config/rabbitmq.properties > rabbitmq.properties
+        + 项目目录/docs/config/redis.properties > redis.properties
+        + 项目目录/docs/config/common.properties  > common.properties  
      如图:
      ![输入图片说明](https://gitee.com/uploads/images/2019/0425/231436_fce24434_791541.png "nacos.png")
 4. 修改主pom.xml  
