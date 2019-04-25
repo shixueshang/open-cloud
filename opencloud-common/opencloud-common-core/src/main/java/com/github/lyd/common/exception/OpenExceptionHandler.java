@@ -249,7 +249,7 @@ public class OpenExceptionHandler {
         request.setAttribute(CommonConstants.X_ERROR_MESSAGE, msgI18n);
         // 状态码
         response.setStatus(httpStatus);
-        log.error("==> 错误解析:method[{}] path[{}] code[{}] error[{}] message[{}] exception{}", method, path, code, error, msgI18n, exception);
+        log.error("==> 错误解析:method[{}] path[{}] code[{}] error[{}] message[{}] httpStatus[{}] exception{} ", method, path, code, error, msgI18n,httpStatus, exception);
         return ResultBody.failed(code, msgI18n).setError(error).setPath(path).setHttpStatus(httpStatus);
     }
 
