@@ -15,6 +15,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.authentication.BearerTokenExtractor;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler;
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 
@@ -36,6 +38,9 @@ import java.io.IOException;
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
     @Autowired
     private ResourceServerProperties properties;
+    @Autowired
+    private DefaultTokenServices defaultTokenServices;
+    private BearerTokenExtractor tokenExtractor = new BearerTokenExtractor();
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
         resources.tokenServices(OpenHelper.buildRemoteTokenServices(properties));
@@ -69,7 +74,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     }
 
 
-    static class LogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
+    public class LogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
         public LogoutSuccessHandler() {
             // 重定向到原地址
             this.setUseReferer(true);
@@ -77,6 +82,18 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
         @Override
         public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+            try {
+                // 解密请求头
+                authentication =  tokenExtractor.extract(request);
+                if(authentication!=null && authentication.getPrincipal()!=null){
+                    String tokenValue = authentication.getPrincipal().toString();
+                    log.debug("revokeToken tokenValue:{}",tokenValue);
+                    // 移除token
+                    defaultTokenServices.revokeToken(tokenValue);
+                }
+            }catch (Exception e){
+                log.error("revokeToken error:{}",e);
+            }
             super.onLogoutSuccess(request, response, authentication);
         }
     }
