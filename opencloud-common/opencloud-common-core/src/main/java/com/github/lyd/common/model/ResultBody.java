@@ -5,10 +5,8 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.github.lyd.common.constants.ResultEnum;
 import com.google.common.collect.Maps;
-import org.springframework.context.i18n.LocaleContextHolder;
 
 import java.io.Serializable;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -39,6 +37,11 @@ public class ResultBody<T> implements Serializable {
      * 返回数据
      */
     private T data;
+
+    /**
+     * http状态码
+     */
+    private int httpStatus;
 
     /**
      * 附加数据
@@ -163,17 +166,27 @@ public class ResultBody<T> implements Serializable {
         return this;
     }
 
+    @JSONField(serialize = false, deserialize = false)
+    @JsonIgnore
+    public int getHttpStatus() {
+        return httpStatus;
+    }
+
+    public void setHttpStatus(int httpStatus) {
+        this.httpStatus = httpStatus;
+    }
+
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("ResultBody{");
-        sb.append("code=").append(code);
-        sb.append(", error='").append(error).append('\'');
-        sb.append(", message='").append(message).append('\'');
-        sb.append(", path='").append(path).append('\'');
-        sb.append(", data=").append(data);
-        sb.append(", extra=").append(extra);
-        sb.append(", timestamp=").append(timestamp);
-        sb.append('}');
-        return sb.toString();
+        return "ResultBody{" +
+                "code=" + code +
+                ", error='" + error + '\'' +
+                ", message='" + message + '\'' +
+                ", path='" + path + '\'' +
+                ", data=" + data +
+                ", httpStatus=" + httpStatus +
+                ", extra=" + extra +
+                ", timestamp=" + timestamp +
+                '}';
     }
 }
