@@ -137,8 +137,9 @@ open-cloud
         + docs/config/db.properties  > db.properties
         + docs/config/rabbitmq.properties > rabbitmq.properties
         + docs/config/redis.properties > redis.properties
-        + docs/config/common.properties  > common.properties
-        
+        + docs/config/common.properties  > common.properties  
+     如图:
+     ![输入图片说明](https://gitee.com/uploads/images/2019/0425/231436_fce24434_791541.png "nacos.png")
 4. 修改主pom.xml  
 
     初始化
