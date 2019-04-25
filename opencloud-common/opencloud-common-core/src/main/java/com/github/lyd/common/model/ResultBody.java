@@ -172,8 +172,9 @@ public class ResultBody<T> implements Serializable {
         return httpStatus;
     }
 
-    public void setHttpStatus(int httpStatus) {
+    public ResultBody setHttpStatus(int httpStatus) {
         this.httpStatus = httpStatus;
+        return this;
     }
 
     @Override
