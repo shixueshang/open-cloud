@@ -96,7 +96,7 @@
         <apache.commons.beanutils>1.9.3</apache.commons.beanutils>
         <google.guava.version>19.0</google.guava.version>
         <httpclient.version>4.5.2</httpclient.version>
-        <swagger2.version>2.7.0</swagger2.version>
+        <swagger2.version>2.9.2</swagger2.version>
 
         <!--自定义版本-->
         <opencloud.common.version>1.0.0-SNAPSHOT</opencloud.common.version>

@@ -5,17 +5,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.github.lyd.common.configuration.CorsProperties;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.boot.autoconfigure.jackson.JacksonProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -25,13 +23,24 @@ import java.util.TimeZone;
 
 /**
  * @author liuyadu
+ * @Order(101)排序很重要,否则多个WebSecurityConfigurerAdapter会报错
  */
-@EnableConfigurationProperties(CorsProperties.class)
-@Slf4j
-public class WebMvcConfiguration implements WebMvcConfigurer {
+@Order(101)
+public class WebMvcConfiguration extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
 
-    @Autowired(required = false)
-    private CorsProperties corsProperties;
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers(
+                "/",
+                "/error",
+                "/v2/api-docs/**",
+                "/swagger-resources/**",
+                "/webjars/**",
+                "/swagger-ui.html",
+                "/doc.html",
+                "/favicon.ico");
+    }
 
     /**
      * 资源处理器
@@ -41,7 +50,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
-        registry.addResourceHandler("swagger-ui.html")
+        registry.addResourceHandler("swagger-ui.html","doc.html")
                 .addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
@@ -90,5 +99,6 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
         jackson2HttpMessageConverter.setObjectMapper(objectMapper);
         return new HttpMessageConverters(jackson2HttpMessageConverter);
     }
+
 
 }

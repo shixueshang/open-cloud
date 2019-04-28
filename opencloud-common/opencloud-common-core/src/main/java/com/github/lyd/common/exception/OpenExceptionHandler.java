@@ -57,6 +57,7 @@ public class OpenExceptionHandler {
     @ExceptionHandler({AuthenticationException.class})
     public static ResultBody authenticationException(Exception ex, HttpServletRequest request, HttpServletResponse response) {
         ResultEnum code = ResultEnum.ERROR;
+        int httpStatus = HttpStatus.OK.value();
         if (ex instanceof UsernameNotFoundException) {
             code = ResultEnum.USERNAME_NOT_FOUND;
         } else if (ex instanceof BadCredentialsException) {
@@ -71,10 +72,11 @@ public class OpenExceptionHandler {
             code = ResultEnum.CREDENTIALS_EXPIRED;
         } else if (ex instanceof InsufficientAuthenticationException) {
             code = ResultEnum.UNAUTHORIZED;
+            httpStatus=HttpStatus.UNAUTHORIZED.value();
         }
         //放入请求域
         request.setAttribute(CommonConstants.X_ERROR_CODE, code);
-        return buildBody(ex, request, response, HttpStatus.UNAUTHORIZED.value());
+        return buildBody(ex, request, response, httpStatus);
     }
 
     /**
@@ -97,12 +99,15 @@ public class OpenExceptionHandler {
             code = ResultEnum.INVALID_GRANT;
             if ("Bad credentials".equals(ex.getMessage())) {
                 code = ResultEnum.BAD_CREDENTIALS;
+                httpStatus = HttpStatus.OK.value();
             }
             if ("User is disabled".equals(ex.getMessage())) {
                 code = ResultEnum.ACCOUNT_DISABLED;
+                httpStatus = HttpStatus.OK.value();
             }
             if ("User account is locked".equals(ex.getMessage())) {
                 code = ResultEnum.ACCOUNT_LOCKED;
+                httpStatus = HttpStatus.OK.value();
             }
         } else if (ex instanceof InvalidScopeException) {
             code = ResultEnum.INVALID_SCOPE;
@@ -140,15 +145,12 @@ public class OpenExceptionHandler {
     @ExceptionHandler({OpenException.class})
     public static ResultBody openException(Exception ex, HttpServletRequest request, HttpServletResponse response) {
         ResultEnum code = ResultEnum.ERROR;
-        int httpStatus = HttpStatus.UNAUTHORIZED.value();
+        int httpStatus = HttpStatus.OK.value();
         if (ex instanceof OpenAlertException) {
             code = ResultEnum.ALERT;
         }
         if (ex instanceof OpenSignatureException) {
             code = ResultEnum.SIGNATURE_DENIED;
-            httpStatus = HttpStatus.BAD_REQUEST.value();
-        } else {
-            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR.value();
         }
         //放入请求域
         request.setAttribute(CommonConstants.X_ERROR_CODE, code);
@@ -181,7 +183,6 @@ public class OpenExceptionHandler {
             code = ResultEnum.MEDIA_TYPE_NOT_ACCEPTABLE;
         } else if (ex instanceof MethodArgumentNotValidException) {
             BindingResult bindingResult = ((MethodArgumentNotValidException) ex).getBindingResult();
-            httpStatus = HttpStatus.BAD_REQUEST.value();
             code = ResultEnum.ALERT;
             return ResultBody.failed(code.getCode(), bindingResult.getFieldError().getDefaultMessage());
         } else if (ex instanceof IllegalArgumentException) {
