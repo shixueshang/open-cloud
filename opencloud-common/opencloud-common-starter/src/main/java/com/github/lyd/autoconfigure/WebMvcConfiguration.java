@@ -34,6 +34,7 @@ public class WebMvcConfiguration extends WebSecurityConfigurerAdapter implements
         web.ignoring().antMatchers(
                 "/",
                 "/error",
+                "/static/**",
                 "/v2/api-docs/**",
                 "/swagger-resources/**",
                 "/webjars/**",
