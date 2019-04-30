@@ -1,0 +1,21 @@
+management:
+    endpoints:
+        web:
+            exposure:
+                include: refresh,health
+opencloud:
+    swagger2:
+        description: \u5DE5\u4F5C\u6D41\u670D\u52A1
+        enabled: true
+        title: \u5DE5\u4F5C\u6D41\u670D\u52A1
+spring:
+    activiti:
+        check-process-definitions: false
+        database-schema: ACT
+        database-schema-update: true
+        history-level: full
+    datasource:
+        driver-class-name: com.mysql.jdbc.Driver
+        password: root
+        url: jdbc:mysql://localhost:3306/open-platform-bpm?useSSL=false&useUnicode=true&characterEncoding=utf-8
+        username: root

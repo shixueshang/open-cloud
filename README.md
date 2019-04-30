@@ -69,8 +69,8 @@ open-cloud
     ├── opencloud-auth-provider  -- 平台认证服务(port = 8211)  
     
 ├── opencloud-app    -- 应用服务模块
-    ├── opencloud-admin-provider  -- 运营后台服务(port = 8301)  
-    ├── app-uaa-provider-demo  -- 移动应用用户认证中心(多认证中心演示)(port = 7211)  
+    ├── app-admin  -- 运营后台服务(port = 8301)  
+    ├── app-auth-demo  -- 移动应用用户认证中心(多认证中心演示)(port = 7211)  
      
 ├── opencloud-msg     -- 公共消息模块 
     ├── opencloud-msg-client    -- 消息服务接口
@@ -137,10 +137,10 @@ open-cloud
 3. 导入配置中心,Nacos公共配置 
     + 访问 http://localhost:8848/nacos/index.html 
     + 新建配置 
-        + 项目目录/docs/config/db.properties >  db.properties
-        + 项目目录/docs/config/rabbitmq.properties > rabbitmq.properties
-        + 项目目录/docs/config/redis.properties > redis.properties
-        + 项目目录/docs/config/common.properties  > common.properties  
+        + 项目目录/docs/config/db.yml >  db.yml
+        + 项目目录/docs/config/rabbitmq.yml > rabbitmq.yml
+        + 项目目录/docs/config/redis.yml > redis.yml
+        + 项目目录/docs/config/common.yml  > common.yml  
      如图:
      ![输入图片说明](https://gitee.com/uploads/images/2019/0425/231436_fce24434_791541.png "nacos.png")
 4. 修改主pom.xml  
@@ -209,8 +209,8 @@ open-cloud
         #Nacos配置中心
         spring.cloud.nacos.config.server-addr=127.0.0.1:8848
         #Nacos共享配置
-        spring.cloud.nacos.config.shared-dataids=common.properties,db.properties,redis.properties,rabbitmq.properties
-        spring.cloud.nacos.config.refreshable-dataids=common.properties
+        spring.cloud.nacos.config.shared-dataids=common.yml,db.yml,redis.yml,rabbitmq.yml
+        spring.cloud.nacos.config.refreshable-dataids=common.yml
         spring.cloud.nacos.config.namespace=${config.namespace}
         #Nacos服务发现
         spring.cloud.nacos.discovery.server-addr=127.0.0.1:8848
@@ -293,7 +293,7 @@ open-cloud
 + 采用oauth2统一协议,每个APP拥有独立的认证授权中心.
 + 区分用户数据源
 + 共享客户端oauth_client_details信息.
-+ 统一方法获取OpenHelper.getAuthUser().认证中心标识-authCenterId.
++ 统一方法获取OpenHelper.getUser().认证中心标识-authCenterId.
 + 个性定制,可单独提供手机验证码等方式登陆.
 
 #### 第三方接口调用 

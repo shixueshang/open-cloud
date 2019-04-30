@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.github.lyd.gateway.provider.mapper.GatewayRateLimitApisMapper">
-    <resultMap id="BaseResultMap" type="com.github.lyd.gateway.client.model.entity.GatewayRateLimitApi">
+<mapper namespace="com.opencloud.gateway.provider.mapper.GatewayRateLimitApisMapper">
+    <resultMap id="BaseResultMap" type="com.opencloud.gateway.client.model.entity.GatewayRateLimitApi">
         <!--
           WARNING - @mbg.generated
         -->
@@ -9,8 +9,8 @@
         <result column="api_id" jdbcType="BIGINT" property="apiId"/>
     </resultMap>
 
-    <resultMap id="IpLimitApisDto" extends="com.github.lyd.gateway.provider.mapper.GatewayIpLimitApisMapper.ApiResultMap"
-               type="com.github.lyd.gateway.client.model.GatewayRateLimitApisDto">
+    <resultMap id="IpLimitApisDto" extends="com.opencloud.gateway.provider.mapper.GatewayIpLimitApisMapper.ApiResultMap"
+               type="com.opencloud.gateway.client.model.GatewayRateLimitApisDto">
         <!--
           WARNING - @mbg.generated
         -->

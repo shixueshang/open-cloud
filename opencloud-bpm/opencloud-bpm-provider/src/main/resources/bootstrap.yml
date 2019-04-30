@@ -1,0 +1,25 @@
+server:
+    port: 8288
+spring:
+    application:
+        name: opencloud-bpm-provider
+    cloud:
+        nacos:
+           #Nacos\u914D\u7F6E\u4E2D\u5FC3
+            config:
+                fileExtension: yml
+                namespace: ${config.namespace}
+                refreshable-dataids: common.yml
+                server-addr: ${config.server-addr}
+                #\u516C\u5171\u914D\u7F6E
+                shared-dataids: common.yml,redis.yml,rabbitmq.yml
+            #Nacos\u670D\u52A1\u53D1\u73B0
+            discovery:
+                metadata:
+                    name: \u5DE5\u4F5C\u6D41\u670D\u52A1
+                server-addr: ${discovery.server-addr}
+    #\u89E3\u51B3\uFF1A\u591A\u4E2A\u63A5\u53E3\u4E0A\u7684@FeignClient(\u201D\u76F8\u540C\u670D\u52A1\u540D\u201D)\u4F1A\u62A5\u9519\uFF0Coverriding is disabled
+    main:
+        allow-bean-definition-overriding: true
+    profiles:
+        active: ${profile.name}

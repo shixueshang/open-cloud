@@ -1,7 +1,7 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.github.lyd.autoconfigure.AutoConfiguration,\
-  com.github.lyd.autoconfigure.FeignAutoConfiguration,\
-  com.github.lyd.autoconfigure.MqAutoConfiguration,\
-  com.github.lyd.autoconfigure.SwaggerAutoConfiguration,\
-  com.github.lyd.autoconfigure.WebMvcConfiguration,\
-  com.github.lyd.autoconfigure.XssAutoConfiguration,\
-  com.github.lyd.autoconfigure.RedisCacheAutoConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.opencloud.autoconfigure.AutoConfiguration,\
+  com.opencloud.autoconfigure.FeignAutoConfiguration,\
+  com.opencloud.autoconfigure.MqAutoConfiguration,\
+  com.opencloud.autoconfigure.SwaggerAutoConfiguration,\
+  com.opencloud.autoconfigure.WebMvcConfiguration,\
+  com.opencloud.autoconfigure.XssAutoConfiguration,\
+  com.opencloud.autoconfigure.RedisCacheAutoConfiguration

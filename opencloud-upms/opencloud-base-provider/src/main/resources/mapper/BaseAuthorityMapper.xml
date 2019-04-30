@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.github.lyd.base.provider.mapper.BaseAuthorityMapper">
-    <resultMap id="BaseResultMap" type="com.github.lyd.base.client.model.entity.BaseAuthority">
+<mapper namespace="com.opencloud.base.provider.mapper.BaseAuthorityMapper">
+    <resultMap id="BaseResultMap" type="com.opencloud.base.client.model.entity.BaseAuthority">
         <!--
           WARNING - @mbg.generated
         -->
@@ -13,36 +13,36 @@
         <result column="status" property="status" jdbcType="TINYINT"/>
     </resultMap>
 
-    <resultMap id="AccessAuthority" type="com.github.lyd.base.client.model.AccessAuthority">
+    <resultMap id="AccessAuthority" type="com.opencloud.base.client.model.AccessAuthority">
         <result column="path" jdbcType="VARCHAR" property="path"/>
         <result column="authority" jdbcType="VARCHAR" property="authority"/>
         <result column="service_id" jdbcType="TIMESTAMP" property="serviceId"/>
         <result column="is_auth" jdbcType="INTEGER" property="isAuth"/>
     </resultMap>
 
-    <resultMap id="OpenGrantedAuthority" type="com.github.lyd.common.security.OpenGrantedAuthority">
+    <resultMap id="OpenGrantedAuthority" type="com.opencloud.common.security.OpenGrantedAuthority">
         <result column="authority_id" jdbcType="BIGINT" property="authorityId"/>
         <result column="authority" jdbcType="VARCHAR" property="authority"/>
         <result column="expire_time" jdbcType="TIMESTAMP" property="expireTime"/>
         <result column="owner" jdbcType="VARCHAR" property="owner"/>
     </resultMap>
 
-    <resultMap id="BaseMenuAuthority" type="com.github.lyd.base.client.model.BaseMenuAuthority"
-               extends="com.github.lyd.base.provider.mapper.BaseResourceMenuMapper.BaseResultMap">
+    <resultMap id="BaseMenuAuthority" type="com.opencloud.base.client.model.BaseMenuAuthority"
+               extends="com.opencloud.base.provider.mapper.BaseResourceMenuMapper.BaseResultMap">
         <result column="authority_id" jdbcType="BIGINT" property="authorityId"/>
         <result column="authority" jdbcType="VARCHAR" property="authority"/>
         <collection property="operationList" column="{menuId=menu_id,status=status}" select="selectOperationAuthority"/>
     </resultMap>
 
-    <resultMap id="BaseOperationAuthority" type="com.github.lyd.base.client.model.BaseOperationAuthority"
-               extends="com.github.lyd.base.provider.mapper.BaseResourceOperationMapper.BaseResultMap">
+    <resultMap id="BaseOperationAuthority" type="com.opencloud.base.client.model.BaseOperationAuthority"
+               extends="com.opencloud.base.provider.mapper.BaseResourceOperationMapper.BaseResultMap">
         <result column="authority_id" jdbcType="BIGINT" property="authorityId"/>
         <result column="authority" jdbcType="VARCHAR" property="authority"/>
         <result column="service_id" jdbcType="VARCHAR" property="serviceId"/>
     </resultMap>
 
-    <resultMap id="BaseApiAuthority" type="com.github.lyd.base.client.model.BaseApiAuthority"
-               extends="com.github.lyd.base.provider.mapper.BaseResourceApiMapper.BaseResultMap">
+    <resultMap id="BaseApiAuthority" type="com.opencloud.base.client.model.BaseApiAuthority"
+               extends="com.opencloud.base.provider.mapper.BaseResourceApiMapper.BaseResultMap">
         <result column="authority_id" jdbcType="BIGINT" property="authorityId"/>
         <result column="authority" jdbcType="VARCHAR" property="authority"/>
     </resultMap>

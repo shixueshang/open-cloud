@@ -11,9 +11,9 @@
     <artifactId>opencloud-app</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>opencloud-admin-provider</module>
-        <module>tenant-service-demo</module>
-        <module>app-uaa-provider-demo</module>
+        <module>app-auth-demo</module>
+        <module>app-admin</module>
+        <module>tenant-demo</module>
     </modules>
 
 

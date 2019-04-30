@@ -1,0 +1,31 @@
+management:
+    endpoints:
+        web:
+            exposure:
+                include: refresh,health
+opencloud:
+    swagger2:
+        description: \u4EFB\u52A1\u8C03\u5EA6\u670D\u52A1
+        enabled: true
+        title: \u4EFB\u52A1\u8C03\u5EA6\u670D\u52A1
+spring:
+    quartz:
+        job-store-type: jdbc
+        properties:
+            org:
+                quartz:
+                    jobStore:
+                        class: org.quartz.impl.jdbcjobstore.JobStoreTX
+                        clusterCheckinInterval: 10000
+                        driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+                        isClustered: true
+                        tablePrefix: QRTZ_
+                        useProperties: false
+                    scheduler:
+                        instanceId: AUTO
+                        instanceName: clusteredScheduler
+                    threadPool:
+                        class: org.quartz.simpl.SimpleThreadPool
+                        threadCount: 10
+                        threadPriority: 5
+                        threadsInheritContextClassLoaderOfInitializingThread: true

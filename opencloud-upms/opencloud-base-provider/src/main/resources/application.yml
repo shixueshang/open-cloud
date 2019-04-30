@@ -1,0 +1,10 @@
+management:
+    endpoints:
+        web:
+            exposure:
+                include: refresh,health
+opencloud:
+    swagger2:
+        description: \u5E73\u53F0\u57FA\u7840\u670D\u52A1
+        enabled: true
+        title: \u5E73\u53F0\u57FA\u7840\u670D\u52A1

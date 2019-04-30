@@ -1,0 +1,25 @@
+server:
+    port: 7211
+    servlet:
+        session:
+            cookie:
+                name: APP-OAUTH2SESSION
+spring:
+    application:
+        name: app--provider-demo
+    cloud:
+        nacos:
+            config:
+                fileExtension: yml
+                namespace: ${config.namespace}
+                refreshable-dataids: common.yml
+                server-addr: ${config.server-addr}
+                shared-dataids: common.yml,db.yml,redis.yml,rabbitmq.yml
+            discovery:
+                metadata:
+                    name: APP\u7528\u6237\u4E2D\u5FC3Demo
+                server-addr: ${discovery.server-addr}
+    main:
+        allow-bean-definition-overriding: true
+    profiles:
+        active: ${profile.name}

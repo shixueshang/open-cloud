@@ -50,6 +50,8 @@
         </dependency>
     </dependencies>
     <build>
+        <!-- 打包名称 -->
+        <finalName>${project.name}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

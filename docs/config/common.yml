@@ -1,0 +1,36 @@
+mapper:
+    identity: MYSQL
+    mappers: com.opencloud.common.mapper.CrudMapper
+    not-empty: false
+mybatis:
+    mapper-locations: classpath:mapper/*.xml
+    type-aliases-package: com.github.lyd
+opencloud:
+  # \u516C\u5171\u5BA2\u6237\u7AEF\u914D\u7F6E
+    common:
+        # \u7BA1\u7406\u540E\u53F0\u524D\u7AEF\u8BBF\u95EE\u5730\u5740
+        admin-server-addr: http://localhost:8080
+        # API\u7F51\u5173\u8BBF\u95EE\u5730\u5740
+        api-server-addr: http://localhost:8888
+        # \u5E73\u53F0\u8BA4\u8BC1\u670D\u52A1\u5730\u5740
+        auth-server-addr: http://localhost:8211
+        access-token-uri: ${opencloud.common.api-server-addr}/auth/oauth/token
+        client-id: 1552274783265
+        client-secret: 2cde1eaa60fe4af1987f94caa13f29a2
+        jwt-signing-key: 2cde1eaa60fe4af1987f94caa13f29a2
+        scope: userProfile
+        token-info-uri: ${opencloud.common.api-server-addr}/auth/oauth/check_token
+        user-authorization-uri: ${opencloud.common.auth-server-addr}/oauth/authorize
+        user-info-uri: ${opencloud.common.api-server-addr}/auth/user/me
+    swagger2:
+        access-token-uri: ${opencloud.common.access-token-uri}
+        client-id: ${opencloud.common.client-id}
+        client-secret: ${opencloud.common.client-secret}
+        enabled: true
+        scope: ${opencloud.common.scope}
+        user-authorization-uri: ${opencloud.common.user-authorization-uri}
+pagehelper:
+    helperDialect: mysql
+    params: count=countSql
+    reasonable: false
+    supportMethodsArguments: true

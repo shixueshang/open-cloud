@@ -1,0 +1,21 @@
+management:
+    endpoints:
+        web:
+            exposure:
+                include: refresh,health
+opencloud:
+    swagger2:
+        description: APP\u7528\u6237\u4E2D\u5FC3Demo
+        enabled: true
+        title: APP\u7528\u6237\u4E2D\u5FC3Demo
+spring:
+    mvc:
+        throw-exception-if-no-handler-found: true
+    redis:
+        database: 1
+    thymeleaf:
+        cache: false
+        encoding: UTF-8
+        mode: LEGACYHTML5
+        prefix: classpath:/templates/
+        suffix: .html

@@ -18,6 +18,45 @@
         <module>opencloud-app</module>
         <module>opencloud-scheduler</module>
     </modules>
+    <properties>
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+        <maven-compiler-plugin.version>3.6.2</maven-compiler-plugin.version>
+        <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
+        <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
+        <maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
+        <maven-assembly-plugin.version>3.1.0</maven-assembly-plugin.version>
+        <spring-boot.version>2.1.4.RELEASE</spring-boot.version>
+        <spring-cloud.version>Greenwich.SR1</spring-cloud.version>
+
+        <alibaba.cloud.version>0.2.1.RELEASE</alibaba.cloud.version>
+        <alibaba.fastjson.version>1.2.37</alibaba.fastjson.version>
+        <alibaba.druid.version>1.1.10</alibaba.druid.version>
+
+        <apache.commons-lang3.version>3.3.2</apache.commons-lang3.version>
+        <apache.commons-io.version>2.5</apache.commons-io.version>
+        <apache.commons.beanutils>1.9.3</apache.commons.beanutils>
+
+        <mybatis.version>1.3.1</mybatis.version>
+        <tk.mybatis.version>2.0.4</tk.mybatis.version>
+        <github.pagehelper.version>1.2.10</github.pagehelper.version>
+
+        <com.google.zxing.version>3.1.0</com.google.zxing.version>
+        <google.guava.version>19.0</google.guava.version>
+        <swagger2.version>2.9.2</swagger2.version>
+
+        <!--自定义版本-->
+        <opencloud.common.version>2.0.0-SNAPSHOT</opencloud.common.version>
+        <opencloud.gateway-client.version>2.0.0-SNAPSHOT</opencloud.gateway-client.version>
+        <opencloud.base-client.version>2.0.0-SNAPSHOT</opencloud.base-client.version>
+        <opencloud.auth-client.version>2.0.0-SNAPSHOT</opencloud.auth-client.version>
+        <opencloud.msg-client.version>2.0.0-SNAPSHOT</opencloud.msg-client.version>
+        <opencloud.bpm-client.version>2.0.0-SNAPSHOT</opencloud.bpm-client.version>
+        <opencloud.scheduler-client.version>2.0.0-SNAPSHOT</opencloud.scheduler-client.version>
+    </properties>
+
     <!-- 环境 -->
     <profiles>
         <!-- 开发 -->
@@ -67,69 +106,6 @@
             </properties>
         </profile>
     </profiles>
-    <properties>
-        <java.version>1.8</java.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
-        <maven-compiler-plugin.version>3.6.2</maven-compiler-plugin.version>
-        <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
-        <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
-        <maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
-        <maven-assembly-plugin.version>3.1.0</maven-assembly-plugin.version>
-        <spring-boot.version>2.0.8.RELEASE</spring-boot.version>
-        <spring-cloud.version>Finchley.SR2</spring-cloud.version>
-        <spring-security-oauth2.version>2.3.4.RELEASE</spring-security-oauth2.version>
-        <com.google.zxing.version>3.1.0</com.google.zxing.version>
-        <jjwt.version>0.9.1</jjwt.version>
-
-        <alibaba.cloud.version>0.2.1.RELEASE</alibaba.cloud.version>
-        <alibaba.fastjson.version>1.2.37</alibaba.fastjson.version>
-        <alibaba.druid.version>1.1.10</alibaba.druid.version>
-
-        <mybatis.version>1.3.1</mybatis.version>
-        <tk.mybatis.version>2.0.4</tk.mybatis.version>
-        <github.pagehelper.version>1.2.10</github.pagehelper.version>
-
-        <apache.commons-lang3.version>3.3.2</apache.commons-lang3.version>
-        <apache.commons-io.version>2.5</apache.commons-io.version>
-        <apache.commons.beanutils>1.9.3</apache.commons.beanutils>
-        <google.guava.version>19.0</google.guava.version>
-        <httpclient.version>4.5.2</httpclient.version>
-        <swagger2.version>2.9.2</swagger2.version>
-
-        <!--自定义版本-->
-        <opencloud.common.version>1.0.0-SNAPSHOT</opencloud.common.version>
-        <opencloud.gateway-client.version>1.0.0-SNAPSHOT</opencloud.gateway-client.version>
-        <opencloud.base-client.version>1.0.0-SNAPSHOT</opencloud.base-client.version>
-        <opencloud.auth-client.version>1.0.0-SNAPSHOT</opencloud.auth-client.version>
-        <opencloud.msg-client.version>1.0.0-SNAPSHOT</opencloud.msg-client.version>
-        <opencloud.bpm-client.version>1.0.0-SNAPSHOT</opencloud.bpm-client.version>
-        <opencloud.scheduler-client.version>1.0.0-SNAPSHOT</opencloud.scheduler-client.version>
-    </properties>
-    <!--公共依赖-->
-    <dependencies>
-        <!--监控-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-        <!--测试依赖-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-        <!--自定义配置处理器,配置项提示-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-            <optional>true</optional>
-        </dependency>
-    </dependencies>
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -148,7 +124,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
     <build>
         <resources>
             <!-- 先指定 src/main/resources下所有文件及文件夹为资源文件 -->
