@@ -15,7 +15,7 @@ import com.opencloud.common.constants.CommonConstants;
 import com.opencloud.common.mapper.ExampleBuilder;
 import com.opencloud.common.model.PageList;
 import com.opencloud.common.model.PageParams;
-import com.opencloud.common.security.OpenGrantedAuthority;
+import com.opencloud.common.model.Authority;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -122,7 +122,7 @@ public class BaseUserServiceImpl implements BaseUserService {
     @Override
     public BaseUserDto getUserWithAuthoritiesById(Long userId) {
         // 用户权限列表
-        List<OpenGrantedAuthority> authorities = Lists.newArrayList();
+        List<Authority> authorities = Lists.newArrayList();
         // 用户角色列表
         List<Map> roles = Lists.newArrayList();
         List<BaseRole> rolesList = roleService.getUserRoles(userId);
@@ -135,7 +135,7 @@ public class BaseUserServiceImpl implements BaseUserService {
                 // 用户角色详情
                 roles.add(roleMap);
                 // 加入角色标识
-                OpenGrantedAuthority authority = new OpenGrantedAuthority(BaseConstants.ROLE_PREFIX + role.getRoleCode());
+                Authority authority = new Authority(BaseConstants.ROLE_PREFIX + role.getRoleCode());
                 authority.setOwner("role");
                 authorities.add(authority);
             }
@@ -145,7 +145,7 @@ public class BaseUserServiceImpl implements BaseUserService {
         BaseUser baseUser = getUserById(userId);
 
         // 加入用户权限
-        List<OpenGrantedAuthority> userGrantedAuthority = baseAuthorityService.findUserGrantedAuthority(userId, CommonConstants.ROOT.equals(baseUser.getUserName()));
+        List<Authority> userGrantedAuthority = baseAuthorityService.findUserGrantedAuthority(userId, CommonConstants.ROOT.equals(baseUser.getUserName()));
         if (userGrantedAuthority != null && userGrantedAuthority.size() > 0) {
             authorities.addAll(userGrantedAuthority);
         }

@@ -1,4 +1,4 @@
-package com.opencloud.common.annotation;
+package com.opencloud.autoconfigure.annotation;
 
 import com.google.common.collect.Maps;
 import com.opencloud.common.constants.MqConstants;
@@ -97,7 +97,7 @@ public class AnnotationScan implements ApplicationListener<ApplicationReadyEvent
             String methodName = method.getMethod().getName();
             String fullName = className + "." + methodName;
             // md5码
-            String md5 = EncryptUtils.md5Hex(fullName);
+            String md5 = EncryptUtils.md5Hex(fullName+serviceId);
             String name = "";
             String desc = "";
 

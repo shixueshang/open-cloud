@@ -10,7 +10,7 @@ public class AuthConstants {
     /**
      * 服务名称
      */
-    public static final String AUTH_SERVICE = "opencloud-auth-provider";
+    public static final String AUTH_SERVICE = "com.opencloud.auth.provider";
 
     // token有效期，默认12小时
     public static final int ACCESS_TOKEN_VALIDITY_SECONDS = 60 * 60 * 12;

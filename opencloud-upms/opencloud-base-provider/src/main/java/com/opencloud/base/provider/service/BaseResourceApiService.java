@@ -40,7 +40,7 @@ public interface BaseResourceApiService {
      * @param apiCode
      * @return
      */
-    Boolean isExist(String apiCode,String serviceId);
+    Boolean isExist(String apiCode);
 
     /**
      * 添加接口
@@ -62,10 +62,9 @@ public interface BaseResourceApiService {
      * 查询接口
      *
      * @param apiCode
-     * @param serviceId
      * @return
      */
-    BaseResourceApi getApi(String apiCode, String serviceId);
+    BaseResourceApi getApi(String apiCode);
 
     /**
      * 移除接口

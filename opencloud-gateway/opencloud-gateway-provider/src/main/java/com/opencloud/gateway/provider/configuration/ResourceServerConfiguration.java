@@ -1,9 +1,9 @@
 package com.opencloud.gateway.provider.configuration;
 
-import com.opencloud.common.configuration.CommonProperties;
+import com.opencloud.autoconfigure.configuration.OpenCommonProperties;
 import com.opencloud.common.gen.SnowflakeIdGenerator;
 import com.opencloud.common.model.ResultBody;
-import com.opencloud.common.security.OpenHelper;
+import com.opencloud.autoconfigure.security.OpenHelper;
 import com.opencloud.common.utils.WebUtils;
 import com.opencloud.gateway.provider.exception.GatewayAccessDeniedHandler;
 import com.opencloud.gateway.provider.exception.GatewayAuthenticationEntryPoint;
@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -51,7 +52,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     @Autowired
     private ApiGatewayProperties apiGatewayProperties;
     @Autowired
-    private CommonProperties properties;
+    private OpenCommonProperties properties;
     @Autowired
     private BaseAppRemoteService baseAppRemoteService;
     @Autowired
@@ -61,7 +62,10 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     @Autowired
     private RedisTemplate redisTemplate;
     @Autowired
+    private RedisConnectionFactory redisConnectionFactory;
+    @Autowired
     private GatewayAccessLogsService gatewayAccessLogsService;
+
     private OAuth2WebSecurityExpressionHandler expressionHandler;
 
     @Bean
@@ -73,8 +77,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
-        // 构建远程获取token,这里是为了支持自定义用户信息转换器
-        resources.tokenServices(OpenHelper.buildResourceServerTokenServices(properties));
+        // 构建redis获取token,这里是为了支持自定义用户信息转换器
+        resources.tokenServices(OpenHelper.buildRedisTokenServices(redisConnectionFactory));
         resources.expressionHandler(expressionHandler);
     }
 

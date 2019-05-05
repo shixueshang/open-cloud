@@ -5,9 +5,9 @@ management:
                 include: refresh,health
 opencloud:
     swagger2:
-        description: \u4EFB\u52A1\u8C03\u5EA6\u670D\u52A1
+        description: 任务调度服务
         enabled: true
-        title: \u4EFB\u52A1\u8C03\u5EA6\u670D\u52A1
+        title: 任务调度服务
 spring:
     quartz:
         job-store-type: jdbc

@@ -1,4 +1,4 @@
-package com.opencloud.common.configuration;
+package com.opencloud.autoconfigure.configuration;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

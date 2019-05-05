@@ -1,7 +1,7 @@
 package com.opencloud.task.provider.job;
 
 import com.alibaba.fastjson.JSONObject;
-import com.opencloud.common.http.OpenRestTemplate;
+import com.opencloud.autoconfigure.security.http.OpenRestTemplate;
 import com.opencloud.common.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.Job;

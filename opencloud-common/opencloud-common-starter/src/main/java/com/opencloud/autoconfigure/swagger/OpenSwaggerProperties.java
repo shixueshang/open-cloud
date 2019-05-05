@@ -1,4 +1,4 @@
-package com.opencloud.common.configuration;
+package com.opencloud.autoconfigure.swagger;
 
 import com.google.common.collect.Lists;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -12,7 +12,7 @@ import java.util.List;
  * @date 2018/7/29
  */
 @ConfigurationProperties(prefix = "opencloud.swagger2")
-public class SwaggerProperties {
+public class OpenSwaggerProperties {
     /**
      * 是否启用swagger,生产环境建议关闭
      */
@@ -122,7 +122,7 @@ public class SwaggerProperties {
 
     @Override
     public String toString() {
-        return "SwaggerProperties{" +
+        return "OpenSwaggerProperties{" +
                 "enabled=" + enabled +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +

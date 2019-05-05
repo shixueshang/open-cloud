@@ -6,7 +6,7 @@ import com.opencloud.base.client.model.BaseMenuAuthority;
 import com.opencloud.base.client.model.BaseOperationAuthority;
 import com.opencloud.base.client.model.entity.BaseAuthority;
 import com.opencloud.common.mapper.CrudMapper;
-import com.opencloud.common.security.OpenGrantedAuthority;
+import com.opencloud.common.model.Authority;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -30,7 +30,7 @@ public interface BaseAuthorityMapper extends CrudMapper<BaseAuthority> {
      * @param map
      * @return
      */
-    List<OpenGrantedAuthority> selectAllGrantedAuthority(Map map);
+    List<Authority> selectAllGrantedAuthority(Map map);
 
 
     /**

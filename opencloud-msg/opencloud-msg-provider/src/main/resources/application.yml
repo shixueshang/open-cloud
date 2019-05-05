@@ -10,9 +10,9 @@ opencloud:
             accessKeySecret: xxxxx
         type: aliyun
     swagger2:
-        description: \u5E73\u53F0\u6D88\u606F\u670D\u52A1
+        description: 平台消息服务
         enabled: true
-        title: \u5E73\u53F0\u6D88\u606F\u670D\u52A1
+        title: 平台消息服务
 spring:
     mail:
         host: smtp.qq.com

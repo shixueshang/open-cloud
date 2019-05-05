@@ -5,9 +5,9 @@ management:
                 include: refresh,health
 opencloud:
     swagger2:
-        description: \u5DE5\u4F5C\u6D41\u670D\u52A1
+        description: 平台工作流服务
         enabled: true
-        title: \u5DE5\u4F5C\u6D41\u670D\u52A1
+        title: 平台工作流服务
 spring:
     activiti:
         check-process-definitions: false
@@ -15,7 +15,7 @@ spring:
         database-schema-update: true
         history-level: full
     datasource:
-        driver-class-name: com.mysql.jdbc.Driver
+        driver-class-name: com.mysql.cj.jdbc.Driver
         password: root
-        url: jdbc:mysql://localhost:3306/open-platform-bpm?useSSL=false&useUnicode=true&characterEncoding=utf-8
+        url: jdbc:mysql://localhost:3306/open-platform-bpm?useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
         username: root

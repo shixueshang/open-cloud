@@ -2,7 +2,7 @@ package com.opencloud.base.provider.controller;
 
 import com.opencloud.base.client.model.entity.BaseResourceApi;
 import com.opencloud.base.provider.service.BaseResourceApiService;
-import com.opencloud.common.http.OpenRestTemplate;
+import com.opencloud.autoconfigure.security.http.OpenRestTemplate;
 import com.opencloud.common.model.PageList;
 import com.opencloud.common.model.PageParams;
 import com.opencloud.common.model.ResultBody;

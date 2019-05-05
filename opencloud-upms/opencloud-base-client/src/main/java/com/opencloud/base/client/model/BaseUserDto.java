@@ -2,9 +2,9 @@ package com.opencloud.base.client.model;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.opencloud.base.client.model.entity.BaseUser;
-import com.opencloud.common.security.OpenGrantedAuthority;
 import com.google.common.collect.Lists;
+import com.opencloud.base.client.model.entity.BaseUser;
+import com.opencloud.common.model.Authority;
 
 import javax.persistence.Transient;
 import java.io.Serializable;
@@ -26,7 +26,7 @@ public class BaseUserDto extends BaseUser implements Serializable {
     /**
      * 用户权限
      */
-    private Collection<OpenGrantedAuthority> authorities = Lists.newArrayList();
+    private Collection<Authority> authorities = Lists.newArrayList();
 
     /**
      * 第三方账号
@@ -48,11 +48,11 @@ public class BaseUserDto extends BaseUser implements Serializable {
         this.roles = roles;
     }
 
-    public Collection<OpenGrantedAuthority> getAuthorities() {
+    public Collection<Authority> getAuthorities() {
         return authorities;
     }
 
-    public void setAuthorities(Collection<OpenGrantedAuthority> authorities) {
+    public void setAuthorities(Collection<Authority> authorities) {
         this.authorities = authorities;
     }
 

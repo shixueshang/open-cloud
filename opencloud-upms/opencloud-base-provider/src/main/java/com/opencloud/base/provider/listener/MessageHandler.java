@@ -3,7 +3,7 @@ package com.opencloud.base.provider.listener;
 import com.opencloud.base.client.model.entity.BaseResourceApi;
 import com.opencloud.base.provider.service.BaseResourceApiService;
 import com.opencloud.common.constants.MqConstants;
-import com.opencloud.common.http.OpenRestTemplate;
+import com.opencloud.autoconfigure.security.http.OpenRestTemplate;
 import com.opencloud.common.utils.BeanConvertUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -40,7 +40,7 @@ public class MessageHandler {
                 for (Map map : list) {
                     try {
                         BaseResourceApi api = BeanConvertUtils.mapToObject(map, BaseResourceApi.class);
-                        BaseResourceApi save = baseResourceApiService.getApi(api.getApiCode(), api.getServiceId());
+                        BaseResourceApi save = baseResourceApiService.getApi(api.getApiCode());
                         if (save == null) {
                             api.setIsOpen(0);
                             api.setIsAuth(1);

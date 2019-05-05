@@ -4,7 +4,7 @@ import com.opencloud.base.client.model.entity.BaseResourceMenu;
 import com.opencloud.base.client.model.entity.BaseResourceOperation;
 import com.opencloud.base.provider.service.BaseResourceMenuService;
 import com.opencloud.base.provider.service.BaseResourceOperationService;
-import com.opencloud.common.http.OpenRestTemplate;
+import com.opencloud.autoconfigure.security.http.OpenRestTemplate;
 import com.opencloud.common.model.PageList;
 import com.opencloud.common.model.PageParams;
 import com.opencloud.common.model.ResultBody;

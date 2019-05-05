@@ -26,7 +26,7 @@ package com.opencloud.gateway.provider.configuration;
 
 import com.alibaba.nacos.api.naming.NamingService;
 import com.alibaba.nacos.api.naming.pojo.Instance;
-import com.opencloud.common.configuration.SwaggerProperties;
+import com.opencloud.autoconfigure.swagger.OpenSwaggerProperties;
 import com.opencloud.gateway.provider.locator.ZuulRouteLocator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +51,7 @@ import java.util.List;
 @Slf4j
 public class DocumentationConfiguration implements SwaggerResourcesProvider {
 
-    private SwaggerProperties swaggerProperties;
+    private OpenSwaggerProperties openSwaggerProperties;
 
     private ZuulRouteLocator zuulRoutesLocator;
 
@@ -61,8 +61,8 @@ public class DocumentationConfiguration implements SwaggerResourcesProvider {
     }
 
     @Autowired
-    public DocumentationConfiguration(SwaggerProperties swaggerProperties, ZuulRouteLocator zuulRoutesLocator, NacosDiscoveryProperties nacosDiscoveryProperties) {
-        this.swaggerProperties = swaggerProperties;
+    public DocumentationConfiguration(OpenSwaggerProperties openSwaggerProperties, ZuulRouteLocator zuulRoutesLocator, NacosDiscoveryProperties nacosDiscoveryProperties) {
+        this.openSwaggerProperties = openSwaggerProperties;
         this.zuulRoutesLocator = zuulRoutesLocator;
         this.namingService = nacosDiscoveryProperties.namingServiceInstance();
     }
@@ -70,17 +70,17 @@ public class DocumentationConfiguration implements SwaggerResourcesProvider {
     @Override
     public List<SwaggerResource> get() {
         List<SwaggerResource> resources = new ArrayList<>();
-        resources.add(swaggerResource(swaggerProperties.getTitle(), "/v2/api-docs", "2.0"));
+        resources.add(swaggerResource(openSwaggerProperties.getTitle(), "/v2/api-docs", "2.0"));
         List<Route> routes = zuulRoutesLocator.getRoutes();
         routes.forEach(route -> {
             // 只加载未被忽略的服务
-            if (!swaggerProperties.getIgnores().contains(route.getId())) {
+            if (!openSwaggerProperties.getIgnores().contains(route.getLocation())) {
                 try {
                     // 获取健康服务元数据中文名称 bootstrap.properties -> spring.cloud.nacos.discovery.metadata.name=网关服务
-                    Instance instance = namingService.selectOneHealthyInstance(route.getId());
+                    Instance instance = namingService.selectOneHealthyInstance(route.getLocation());
                     String name = instance.getMetadata().get("name");
                     if (name == null) {
-                        name = route.getId();
+                        name = route.getLocation();
                     }
                     resources.add(swaggerResource(name, route.getFullPath().replace("**", "v2/api-docs"), "2.0"));
                 } catch (Exception e) {

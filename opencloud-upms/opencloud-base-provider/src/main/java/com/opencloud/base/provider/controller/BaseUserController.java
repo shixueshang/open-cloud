@@ -9,7 +9,7 @@ import com.opencloud.base.provider.service.BaseUserService;
 import com.opencloud.common.model.PageList;
 import com.opencloud.common.model.PageParams;
 import com.opencloud.common.model.ResultBody;
-import com.opencloud.common.security.OpenHelper;
+import com.opencloud.autoconfigure.security.OpenHelper;
 import com.opencloud.common.utils.StringUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

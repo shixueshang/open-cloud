@@ -1,4 +1,4 @@
-package com.opencloud.common.interceptor;
+package com.opencloud.autoconfigure.feign.interceptor;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;

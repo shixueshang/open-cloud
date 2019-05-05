@@ -1,6 +1,6 @@
-package com.opencloud.common.http;
+package com.opencloud.autoconfigure.security.http;
 
-import com.opencloud.common.configuration.CommonProperties;
+import com.opencloud.autoconfigure.configuration.OpenCommonProperties;
 import com.opencloud.common.model.ResultBody;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -23,10 +23,10 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 public class OpenRestTemplate extends RestTemplate {
 
-    private CommonProperties commonProperties;
+    private OpenCommonProperties common;
 
-    public OpenRestTemplate(CommonProperties commonProperties) {
-        this.commonProperties = commonProperties;
+    public OpenRestTemplate(OpenCommonProperties common) {
+        this.common = common;
     }
 
     /**
@@ -35,10 +35,22 @@ public class OpenRestTemplate extends RestTemplate {
      * @return
      */
     public OAuth2RestTemplate buildOauth2ClientRequest() {
+        return buildOauth2ClientRequest(common.getClientId(), common.getClientSecret(), common.getAccessTokenUri());
+    }
+
+    /**
+     * 构建网关Oauth2 client_credentials方式请求
+     *
+     * @param clientId
+     * @param clientSecret
+     * @param accessTokenUri
+     * @return
+     */
+    public OAuth2RestTemplate buildOauth2ClientRequest(String clientId, String clientSecret, String accessTokenUri) {
         ClientCredentialsResourceDetails resource = new ClientCredentialsResourceDetails();
-        resource.setClientId(commonProperties.getClientId());
-        resource.setClientSecret(commonProperties.getClientSecret());
-        resource.setAccessTokenUri(commonProperties.getAccessTokenUri());
+        resource.setClientId(clientId);
+        resource.setClientSecret(clientSecret);
+        resource.setAccessTokenUri(accessTokenUri);
         resource.setAuthenticationScheme(AuthenticationScheme.form);
         OAuth2RestTemplate restTemplate = new OAuth2RestTemplate(resource);
         return restTemplate;
@@ -50,17 +62,32 @@ public class OpenRestTemplate extends RestTemplate {
      * @return
      */
     public OAuth2RestTemplate buildOauth2PasswordRequest(String username, String password) {
+        return buildOauth2PasswordRequest(common.getClientId(), common.getClientSecret(), common.getAccessTokenUri(), username, password);
+    }
+
+    /**
+     * 构建网关Oauth2 password方式请求
+     *
+     * @param clientId
+     * @param clientSecret
+     * @param accessTokenUri
+     * @param username
+     * @param password
+     * @return
+     */
+    public OAuth2RestTemplate buildOauth2PasswordRequest(String clientId, String clientSecret, String accessTokenUri, String username, String password) {
         ResourceOwnerPasswordResourceDetails resource = new ResourceOwnerPasswordResourceDetails();
         resource.setUsername(username);
         resource.setPassword(password);
-        resource.setClientId(commonProperties.getClientId());
-        resource.setClientSecret(commonProperties.getClientSecret());
-        resource.setAccessTokenUri(commonProperties.getAccessTokenUri());
+        resource.setClientId(clientId);
+        resource.setClientSecret(clientSecret);
+        resource.setAccessTokenUri(accessTokenUri);
         resource.setAuthenticationScheme(AuthenticationScheme.form);
         resource.setGrantType("password");
         OAuth2RestTemplate restTemplate = new OAuth2RestTemplate(resource);
         return restTemplate;
     }
+
 
     /**
      * 刷新网关
@@ -72,22 +99,22 @@ public class OpenRestTemplate extends RestTemplate {
      */
     public void refreshGateway() {
         try {
-            Assert.notNull(this.commonProperties, "网关信息错误");
+            Assert.notNull(common.getApiServerAddr(), "网关信息错误");
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
             HttpEntity<String> formEntity = new HttpEntity<String>("", headers);
-            ResultBody resultBody = buildOauth2ClientRequest().postForObject(commonProperties.getApiServerAddr().concat("/actuator/refresh-gateway"), formEntity, ResultBody.class);
+            ResultBody resultBody = buildOauth2ClientRequest().postForObject(common.getApiServerAddr().concat("/actuator/refresh-gateway"), formEntity, ResultBody.class);
             log.info("refreshGateway:{}", resultBody);
         } catch (Exception e) {
             log.error("refreshGateway error:{}", e.getMessage());
         }
     }
 
-    public CommonProperties getcommonProperties() {
-        return commonProperties;
+    public OpenCommonProperties getCommon() {
+        return common;
     }
 
-    public void setcommonProperties(CommonProperties commonProperties) {
-        this.commonProperties = commonProperties;
+    public void setCommon(OpenCommonProperties common) {
+        this.common = common;
     }
 }

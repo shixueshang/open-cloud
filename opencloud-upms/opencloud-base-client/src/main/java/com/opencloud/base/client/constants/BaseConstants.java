@@ -10,7 +10,7 @@ public class BaseConstants {
     /**
      * 服务名称
      */
-    public static final String BASE_SERVICE = "opencloud-base-provider";
+    public static final String BASE_SERVICE = "com.opencloud.base.provider";
 
     /**
      * 默认oauth2授权类型

@@ -9,5 +9,5 @@ public class MsgConstants {
     /**
      * 服务名称
      */
-    public static final String MSG_SERVICE = "opencloud-msg-provider";
+    public static final String MSG_SERVICE = "com.opencloud.msg.provider";
 }

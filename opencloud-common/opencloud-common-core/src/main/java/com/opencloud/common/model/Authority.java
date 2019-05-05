@@ -1,4 +1,4 @@
-package com.opencloud.common.security;
+package com.opencloud.common.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,7 +11,7 @@ import java.util.Date;
  * @author liuyadu
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public final class OpenGrantedAuthority implements GrantedAuthority {
+public final class Authority implements GrantedAuthority {
     private static final long serialVersionUID = -4682269495406460314L;
 
     /**
@@ -39,15 +39,15 @@ public final class OpenGrantedAuthority implements GrantedAuthority {
         return false;
     }
 
-    public OpenGrantedAuthority() {
+    public Authority() {
     }
 
-    public OpenGrantedAuthority(String role) {
+    public Authority(String role) {
         Assert.hasText(role, "A granted authority textual representation is required");
         this.authority = role;
     }
 
-    public OpenGrantedAuthority(String role, Date expireTime) {
+    public Authority(String role, Date expireTime) {
         Assert.hasText(role, "A granted authority textual representation is required");
         this.authority = role;
         this.expireTime = expireTime;
@@ -75,7 +75,7 @@ public final class OpenGrantedAuthority implements GrantedAuthority {
         if (this == obj) {
             return true;
         } else {
-            return obj instanceof OpenGrantedAuthority ? this.authority.equals(((OpenGrantedAuthority) obj).authority) : false;
+            return obj instanceof Authority ? this.authority.equals(((Authority) obj).authority) : false;
         }
     }
 

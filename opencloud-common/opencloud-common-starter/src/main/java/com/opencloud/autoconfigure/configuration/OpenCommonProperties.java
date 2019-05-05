@@ -1,4 +1,4 @@
-package com.opencloud.common.configuration;
+package com.opencloud.autoconfigure.configuration;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -10,7 +10,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @description:
  */
 @ConfigurationProperties(prefix = "opencloud.common")
-public class CommonProperties {
+public class OpenCommonProperties {
     /**
      * 网关客户端Id
      */
@@ -150,7 +150,7 @@ public class CommonProperties {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("CommonProperties{");
+        final StringBuilder sb = new StringBuilder("OpenCommonProperties{");
         sb.append("clientId='").append(clientId).append('\'');
         sb.append(", clientSecret='").append(clientSecret).append('\'');
         sb.append(", apiServerAddr='").append(apiServerAddr).append('\'');

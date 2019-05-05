@@ -6,18 +6,17 @@ server:
                 name: APP-OAUTH2SESSION
 spring:
     application:
-        name: app--provider-demo
+        name: com.opencloud.app.auth.provider
     cloud:
         nacos:
             config:
-                fileExtension: yml
                 namespace: ${config.namespace}
-                refreshable-dataids: common.yml
+                refreshable-dataids: common.properties
                 server-addr: ${config.server-addr}
-                shared-dataids: common.yml,db.yml,redis.yml,rabbitmq.yml
+                shared-dataids: common.properties,db.properties,redis.properties,rabbitmq.properties
             discovery:
                 metadata:
-                    name: APP\u7528\u6237\u4E2D\u5FC3Demo
+                    name: APP认证服务Demo
                 server-addr: ${discovery.server-addr}
     main:
         allow-bean-definition-overriding: true

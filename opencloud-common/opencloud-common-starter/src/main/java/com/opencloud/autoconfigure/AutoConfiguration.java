@@ -1,14 +1,14 @@
 package com.opencloud.autoconfigure;
 
 import com.google.common.collect.Lists;
-import com.opencloud.common.annotation.AnnotationScan;
-import com.opencloud.common.configuration.CommonProperties;
-import com.opencloud.common.configuration.CorsProperties;
-import com.opencloud.common.configuration.IdGenProperties;
+import com.opencloud.autoconfigure.annotation.AnnotationScan;
+import com.opencloud.autoconfigure.configuration.CorsProperties;
+import com.opencloud.autoconfigure.configuration.OpenCommonProperties;
+import com.opencloud.autoconfigure.configuration.OpenIdGenProperties;
+import com.opencloud.autoconfigure.security.http.OpenRestTemplate;
 import com.opencloud.common.exception.OpenExceptionHandler;
 import com.opencloud.common.gen.SnowflakeIdGenerator;
 import com.opencloud.common.health.DbHealthIndicator;
-import com.opencloud.common.http.OpenRestTemplate;
 import com.opencloud.common.utils.SpringContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpTemplate;
@@ -31,7 +31,7 @@ import org.springframework.web.filter.CorsFilter;
  */
 @Slf4j
 @Configuration
-@EnableConfigurationProperties({CommonProperties.class, IdGenProperties.class,CorsProperties.class})
+@EnableConfigurationProperties({OpenCommonProperties.class,  OpenIdGenProperties.class,CorsProperties.class})
 public class AutoConfiguration {
 
     @Bean
@@ -100,8 +100,8 @@ public class AutoConfiguration {
      * @return
      */
     @Bean
-    @ConditionalOnMissingBean(IdGenProperties.class)
-    public SnowflakeIdGenerator snowflakeIdWorker(IdGenProperties properties) {
+    @ConditionalOnMissingBean(OpenIdGenProperties.class)
+    public SnowflakeIdGenerator snowflakeIdWorker(OpenIdGenProperties properties) {
         SnowflakeIdGenerator snowflakeIdGenerator = new SnowflakeIdGenerator(properties.getWorkId(), properties.getCenterId());
         log.info("bean [{}] properties [{}]", snowflakeIdGenerator,properties);
         return snowflakeIdGenerator;
@@ -124,13 +124,13 @@ public class AutoConfiguration {
     /**
      * 自定义Oauth2请求类
      *
-     * @param commonProperties
+     * @param openCommonProperties
      * @return
      */
     @Bean
     @ConditionalOnMissingBean(OpenRestTemplate.class)
-    public OpenRestTemplate openRestTemplate(CommonProperties commonProperties) {
-        OpenRestTemplate restTemplate = new OpenRestTemplate(commonProperties);
+    public OpenRestTemplate openRestTemplate(OpenCommonProperties openCommonProperties) {
+        OpenRestTemplate restTemplate = new OpenRestTemplate(openCommonProperties);
         log.info("bean [{}]", restTemplate);
         return restTemplate;
     }

@@ -1,6 +1,6 @@
 package com.opencloud.autoconfigure;
 
-import com.opencloud.common.configuration.SwaggerProperties;
+import com.opencloud.autoconfigure.swagger.OpenSwaggerProperties;
 import com.opencloud.common.utils.DateUtils;
 import com.opencloud.common.utils.RandomValueUtils;
 import com.google.common.collect.Lists;
@@ -35,19 +35,19 @@ import java.util.Locale;
  */
 @Slf4j
 @Configuration
-@EnableConfigurationProperties({SwaggerProperties.class})
+@EnableConfigurationProperties({OpenSwaggerProperties.class})
 @ConditionalOnProperty(prefix = "opencloud.swagger2", name = "enabled", havingValue = "true")
 @Import({Swagger2DocumentationConfiguration.class})
 public class SwaggerAutoConfiguration {
-    private SwaggerProperties swaggerProperties;
+    private OpenSwaggerProperties openSwaggerProperties;
     private static final String SCOPE_PREFIX = "scope.";
     private Locale locale = LocaleContextHolder.getLocale();
     private MessageSource messageSource;
 
-    public SwaggerAutoConfiguration(SwaggerProperties swaggerProperties, MessageSource messageSource) {
-        this.swaggerProperties = swaggerProperties;
+    public SwaggerAutoConfiguration(OpenSwaggerProperties openSwaggerProperties, MessageSource messageSource) {
+        this.openSwaggerProperties = openSwaggerProperties;
         this.messageSource = messageSource;
-        log.info("swagger2 [{}]", swaggerProperties);
+        log.info("swagger2 [{}]", openSwaggerProperties);
     }
 
 
@@ -107,8 +107,8 @@ public class SwaggerAutoConfiguration {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title(swaggerProperties.getTitle())
-                .description(swaggerProperties.getDescription())
+                .title(openSwaggerProperties.getTitle())
+                .description(openSwaggerProperties.getDescription())
                 .version("1.0")
                 .build();
     }
@@ -139,8 +139,8 @@ public class SwaggerAutoConfiguration {
     private List<AuthorizationScope> scopes() {
         List<String> scopes = Lists.newArrayList();
         List list = Lists.newArrayList();
-        if (swaggerProperties.getScope() != null) {
-            scopes.addAll(Lists.newArrayList(swaggerProperties.getScope().split(",")));
+        if (openSwaggerProperties.getScope() != null) {
+            scopes.addAll(Lists.newArrayList(openSwaggerProperties.getScope().split(",")));
         }
         scopes.forEach(s -> {
             list.add(new AuthorizationScope(s, messageSource.getMessage(SCOPE_PREFIX + s, null, s, locale)));
@@ -150,9 +150,9 @@ public class SwaggerAutoConfiguration {
 
     @Bean
     public SecurityConfiguration security() {
-        return new SecurityConfiguration(swaggerProperties.getClientId(),
-                swaggerProperties.getClientSecret(),
-                "realm", swaggerProperties.getClientId(),
+        return new SecurityConfiguration(openSwaggerProperties.getClientId(),
+                openSwaggerProperties.getClientSecret(),
+                "realm", openSwaggerProperties.getClientId(),
                 "", ApiKeyVehicle.HEADER, "", ",");
     }
 
@@ -160,9 +160,9 @@ public class SwaggerAutoConfiguration {
     List<GrantType> grantTypes() {
         List<GrantType> grantTypes = new ArrayList<>();
         TokenRequestEndpoint tokenRequestEndpoint = new TokenRequestEndpoint(
-                swaggerProperties.getUserAuthorizationUri(),
-                swaggerProperties.getClientId(), swaggerProperties.getClientSecret());
-        TokenEndpoint tokenEndpoint = new TokenEndpoint(swaggerProperties.getAccessTokenUri(), "access_token");
+                openSwaggerProperties.getUserAuthorizationUri(),
+                openSwaggerProperties.getClientId(), openSwaggerProperties.getClientSecret());
+        TokenEndpoint tokenEndpoint = new TokenEndpoint(openSwaggerProperties.getAccessTokenUri(), "access_token");
         grantTypes.add(new AuthorizationCodeGrant(tokenRequestEndpoint, tokenEndpoint));
         return grantTypes;
     }

@@ -1,8 +1,8 @@
 package com.opencloud.app.auth.provider.controller;
 
 import com.opencloud.common.model.ResultBody;
-import com.opencloud.common.security.OpenUser;
-import com.opencloud.common.security.OpenHelper;
+import com.opencloud.autoconfigure.security.OpenUser;
+import com.opencloud.autoconfigure.security.OpenHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;

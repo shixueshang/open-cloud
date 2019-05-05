@@ -4,7 +4,7 @@ import com.opencloud.auth.provider.service.feign.BaseUserAccountRemoteService;
 import com.opencloud.base.client.constants.BaseConstants;
 import com.opencloud.base.client.model.BaseUserAccountDto;
 import com.opencloud.common.model.ResultBody;
-import com.opencloud.common.security.OpenUser;
+import com.opencloud.autoconfigure.security.OpenUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

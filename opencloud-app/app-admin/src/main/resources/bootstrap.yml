@@ -1,3 +1,23 @@
+server:
+    port: 8301
+spring:
+    application:
+        name: com.opencloud.admin.provider
+    cloud:
+        nacos:
+            config:
+                namespace: ${config.namespace}
+                refreshable-dataids: common.properties
+                server-addr: ${config.server-addr}
+                shared-dataids: common.properties,db.properties,redis.properties,rabbitmq.properties
+            discovery:
+                metadata:
+                    name: 运营后台服务
+                server-addr: ${discovery.server-addr}
+    main:
+        allow-bean-definition-overriding: true
+    profiles:
+        active: ${profile.name}
 security:
     oauth2:
         client:
@@ -9,24 +29,3 @@ security:
         resource:
             token-info-uri: ${opencloud.common.token-info-uri}
             user-info-uri: ${opencloud.common.user-info-uri}
-server:
-    port: 8301
-spring:
-    application:
-        name: opencloud-admin-provider
-    cloud:
-        nacos:
-            config:
-                fileExtension: yml
-                namespace: ${config.namespace}
-                refreshable-dataids: common.yml
-                server-addr: ${config.server-addr}
-                shared-dataids: common.yml,db.yml,redis.yml,rabbitmq.yml
-            discovery:
-                metadata:
-                    name: \u8FD0\u8425\u540E\u53F0\u670D\u52A1
-                server-addr: ${discovery.server-addr}
-    main:
-        allow-bean-definition-overriding: true
-    profiles:
-        active: ${profile.name}

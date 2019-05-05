@@ -1,7 +1,8 @@
-package com.opencloud.common.security;
+package com.opencloud.autoconfigure.security;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.opencloud.common.model.Authority;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -81,7 +82,7 @@ public class OpenUser implements UserDetails {
     public OpenUser() {
     }
 
-    public OpenUser(String authCenterId, Long userId, String username, String password, Collection<OpenGrantedAuthority> authorities, boolean accountNonLocked, boolean accountNonExpired, boolean enabled, boolean credentialsNonExpired,String nickName,String avatar) {
+    public OpenUser(String authCenterId, Long userId, String username, String password, Collection<Authority> authorities, boolean accountNonLocked, boolean accountNonExpired, boolean enabled, boolean credentialsNonExpired, String nickName, String avatar) {
         this.authCenterId = authCenterId;
         this.userId = userId;
         this.username = username;

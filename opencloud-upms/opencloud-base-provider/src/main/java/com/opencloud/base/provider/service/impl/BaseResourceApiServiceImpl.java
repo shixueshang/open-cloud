@@ -84,11 +84,10 @@ public class BaseResourceApiServiceImpl implements BaseResourceApiService {
 
 
     @Override
-    public Boolean isExist(String apiCode, String serviceId) {
+    public Boolean isExist(String apiCode) {
         ExampleBuilder builder = new ExampleBuilder(BaseResourceApi.class);
         Example example = builder.criteria()
                 .andEqualTo("apiCode", apiCode)
-                .andEqualTo("serviceId", serviceId)
                 .end().build();
         int count = baseResourceApiMapper.selectCountByExample(example);
         return count > 0 ? true : false;
@@ -102,7 +101,7 @@ public class BaseResourceApiServiceImpl implements BaseResourceApiService {
      */
     @Override
     public BaseResourceApi addApi(BaseResourceApi api) {
-        if (isExist(api.getApiCode(), api.getServiceId())) {
+        if (isExist(api.getApiCode())) {
             throw new OpenAlertException(String.format("%s编码已存在!", api.getApiCode()));
         }
         if (api.getPriority() == null) {
@@ -145,7 +144,7 @@ public class BaseResourceApiServiceImpl implements BaseResourceApiService {
         }
         if (!saved.getApiCode().equals(api.getApiCode())) {
             // 和原来不一致重新检查唯一性
-            if (isExist(api.getApiCode(), api.getServiceId())) {
+            if (isExist(api.getApiCode())) {
                 throw new OpenAlertException(String.format("%s编码已存在!", api.getApiCode()));
             }
         }
@@ -166,15 +165,13 @@ public class BaseResourceApiServiceImpl implements BaseResourceApiService {
      * 查询接口
      *
      * @param apiCode
-     * @param serviceId
      * @return
      */
     @Override
-    public BaseResourceApi getApi(String apiCode, String serviceId) {
+    public BaseResourceApi getApi(String apiCode) {
         ExampleBuilder builder = new ExampleBuilder(BaseResourceApi.class);
         Example example = builder.criteria()
                 .andEqualTo("apiCode", apiCode)
-                .andEqualTo("serviceId", serviceId)
                 .end().build();
         return baseResourceApiMapper.selectOneByExample(example);
     }

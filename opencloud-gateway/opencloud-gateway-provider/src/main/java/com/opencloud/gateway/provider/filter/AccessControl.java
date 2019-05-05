@@ -3,7 +3,7 @@ package com.opencloud.gateway.provider.filter;
 import com.opencloud.base.client.model.AccessAuthority;
 import com.opencloud.common.constants.CommonConstants;
 import com.opencloud.common.constants.ResultEnum;
-import com.opencloud.common.security.OpenGrantedAuthority;
+import com.opencloud.common.model.Authority;
 import com.opencloud.common.utils.StringUtils;
 import com.opencloud.common.utils.WebUtils;
 import com.opencloud.gateway.client.model.GatewayIpLimitApisDto;
@@ -49,8 +49,8 @@ public class AccessControl {
             if (apiGatewayProperties.getPermitAll() != null) {
                 permitAll.addAll(Arrays.asList(apiGatewayProperties.getPermitAll().split(",")));
             }
-            if (apiGatewayProperties.getNoAuthorityAllow() != null) {
-                noAuthorityAllow.addAll(Arrays.asList(apiGatewayProperties.getNoAuthorityAllow().split(",")));
+            if (apiGatewayProperties.getNotAuthorityAllow() != null) {
+                noAuthorityAllow.addAll(Arrays.asList(apiGatewayProperties.getNotAuthorityAllow().split(",")));
             }
         }
     }
@@ -176,8 +176,8 @@ public class AccessControl {
                 while (var8.hasNext()) {
                     GrantedAuthority authority = (GrantedAuthority) var8.next();
                     if (attribute.getAttribute().equals(authority.getAuthority())) {
-                        if (authority instanceof OpenGrantedAuthority) {
-                            OpenGrantedAuthority customer = (OpenGrantedAuthority) authority;
+                        if (authority instanceof Authority) {
+                            Authority customer = (Authority) authority;
                             if (customer.getIsExpired() != null && customer.getIsExpired()) {
                                 // 授权已过期
                                 log.debug("==> access_denied:path={},message={}", requestPath, ResultEnum.ACCESS_DENIED_AUTHORITY_EXPIRED.getMessage());

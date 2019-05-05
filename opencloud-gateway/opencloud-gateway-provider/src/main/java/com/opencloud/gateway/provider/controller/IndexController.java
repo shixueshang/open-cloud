@@ -1,6 +1,6 @@
 package com.opencloud.gateway.provider.controller;
 
-import com.opencloud.common.configuration.SwaggerProperties;
+import com.opencloud.autoconfigure.swagger.OpenSwaggerProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class IndexController {
     @Autowired
-    private SwaggerProperties swaggerProperties;
+    private OpenSwaggerProperties openSwaggerProperties;
 
     @GetMapping("/")
     public String index() {
-        if (swaggerProperties.getEnabled()) {
+        if (openSwaggerProperties.getEnabled()) {
             return "redirect:swagger-ui.html";
         }
         return "index";

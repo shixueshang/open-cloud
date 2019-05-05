@@ -3,8 +3,8 @@ package com.opencloud.app.auth.provider.configuration;
 import com.opencloud.app.auth.provider.exception.Oauth2WebResponseExceptionTranslator;
 import com.opencloud.auth.client.config.SocialOAuth2ClientProperties;
 import com.opencloud.auth.client.constants.AuthConstants;
-import com.opencloud.common.configuration.CommonProperties;
-import com.opencloud.common.security.OpenHelper;
+import com.opencloud.autoconfigure.configuration.OpenCommonProperties;
+import com.opencloud.autoconfigure.security.OpenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -46,7 +46,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Autowired
     private RedisConnectionFactory redisConnectionFactory;
     @Autowired
-    private CommonProperties commonProperties;
+    private OpenCommonProperties openCommonProperties;
 
     /**
      * 使用JWT作为token
@@ -67,7 +67,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 
     @Bean
     public JwtAccessTokenConverter tokenEnhancer() throws Exception {
-        return  OpenHelper.buildJwtTokenEnhancer(commonProperties);
+        return  OpenHelper.buildJwtTokenEnhancer(openCommonProperties);
     }
     /**
      * 授权store

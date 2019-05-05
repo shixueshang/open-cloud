@@ -5,7 +5,7 @@ import com.opencloud.auth.client.constants.AuthConstants;
 import com.opencloud.auth.client.config.SocialOAuth2ClientDetails;
 import com.opencloud.auth.client.config.SocialOAuth2ClientProperties;
 import com.opencloud.auth.client.service.ThirdPartyAuthService;
-import com.opencloud.common.http.OpenRestTemplate;
+import com.opencloud.autoconfigure.security.http.OpenRestTemplate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -2,7 +2,7 @@ package com.opencloud.base.provider.mapper;
 
 import com.opencloud.base.client.model.entity.BaseAppAuthority;
 import com.opencloud.common.mapper.CrudMapper;
-import com.opencloud.common.security.OpenGrantedAuthority;
+import com.opencloud.common.model.Authority;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -17,5 +17,5 @@ public interface BaseAppAuthorityMapper extends CrudMapper<BaseAppAuthority> {
      * @param appId
      * @return
      */
-    List<OpenGrantedAuthority> selectAppGrantedAuthority(@Param("appId") String appId);
+    List<Authority> selectAppGrantedAuthority(@Param("appId") String appId);
 }

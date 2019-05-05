@@ -5,6 +5,6 @@ management:
                 include: refresh,health
 opencloud:
     swagger2:
-        description: \u8FD0\u8425\u540E\u53F0\u670D\u52A1
+        description: 运营后台服务
         enabled: true
-        title: \u8FD0\u8425\u540E\u53F0\u670D\u52A1
+        title: 运营后台服务

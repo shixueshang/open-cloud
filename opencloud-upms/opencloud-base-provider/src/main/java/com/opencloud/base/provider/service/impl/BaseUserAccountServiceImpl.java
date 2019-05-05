@@ -4,25 +4,19 @@ import com.opencloud.auth.client.constants.AuthConstants;
 import com.opencloud.base.client.constants.BaseConstants;
 import com.opencloud.base.client.model.BaseUserAccountDto;
 import com.opencloud.base.client.model.BaseUserDto;
-import com.opencloud.base.client.model.entity.BaseRole;
 import com.opencloud.base.client.model.entity.BaseUser;
 import com.opencloud.base.client.model.entity.BaseUserAccount;
 import com.opencloud.base.client.model.entity.BaseUserAccountLogs;
 import com.opencloud.base.provider.mapper.BaaeUserAccountLogsMapper;
 import com.opencloud.base.provider.mapper.BaseUserAccountMapper;
-import com.opencloud.base.provider.service.BaseAuthorityService;
-import com.opencloud.base.provider.service.BaseRoleService;
 import com.opencloud.base.provider.service.BaseUserAccountService;
 import com.opencloud.base.provider.service.BaseUserService;
 import com.opencloud.common.constants.CommonConstants;
 import com.opencloud.common.exception.OpenAlertException;
 import com.opencloud.common.mapper.ExampleBuilder;
-import com.opencloud.common.security.OpenGrantedAuthority;
 import com.opencloud.common.utils.RandomValueUtils;
 import com.opencloud.common.utils.StringUtils;
 import com.opencloud.common.utils.WebUtils;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +28,6 @@ import tk.mybatis.mapper.entity.Example;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 /**

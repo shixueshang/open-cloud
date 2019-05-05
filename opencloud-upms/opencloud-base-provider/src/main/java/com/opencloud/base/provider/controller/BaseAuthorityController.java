@@ -9,8 +9,8 @@ import com.opencloud.base.provider.service.BaseAuthorityService;
 import com.opencloud.base.provider.service.BaseUserService;
 import com.opencloud.common.constants.CommonConstants;
 import com.opencloud.common.model.ResultBody;
-import com.opencloud.common.security.OpenGrantedAuthority;
-import com.opencloud.common.security.OpenHelper;
+import com.opencloud.common.model.Authority;
+import com.opencloud.autoconfigure.security.OpenHelper;
 import com.opencloud.common.utils.StringUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -172,7 +172,7 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
     })
     @GetMapping("/authority/granted/role")
     public ResultBody<List<GrantedAuthority>> getGrantedRoleAuthority(Long roleId) {
-        List<OpenGrantedAuthority> result = baseAuthorityService.findRoleGrantedAuthority(roleId);
+        List<Authority> result = baseAuthorityService.findRoleGrantedAuthority(roleId);
         return ResultBody.success(result);
     }
 
@@ -192,7 +192,7 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
             @RequestParam(value = "userId") Long userId
     ) {
         BaseUser user = baseUserService.getUserById(userId);
-        List<OpenGrantedAuthority> result = baseAuthorityService.findUserGrantedAuthority(userId, CommonConstants.ROOT.equals(user.getUserName()));
+        List<Authority> result = baseAuthorityService.findUserGrantedAuthority(userId, CommonConstants.ROOT.equals(user.getUserName()));
         return ResultBody.success(result);
     }
 
@@ -208,10 +208,10 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
             @ApiImplicitParam(name = "appId", value = "应用Id", defaultValue = "", required = true, paramType = "form")
     })
     @GetMapping("/authority/granted/app")
-    public ResultBody<List<OpenGrantedAuthority>> getGrantedAppAuthority(
+    public ResultBody<List<Authority>> getGrantedAppAuthority(
             @RequestParam(value = "appId") String appId
     ) {
-        List<OpenGrantedAuthority> result = baseAuthorityService.findAppGrantedAuthority(appId);
+        List<Authority> result = baseAuthorityService.findAppGrantedAuthority(appId);
         return ResultBody.success(result);
     }
 

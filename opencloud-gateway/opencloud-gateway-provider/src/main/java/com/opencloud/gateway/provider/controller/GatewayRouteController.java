@@ -1,6 +1,6 @@
 package com.opencloud.gateway.provider.controller;
 
-import com.opencloud.common.http.OpenRestTemplate;
+import com.opencloud.autoconfigure.security.http.OpenRestTemplate;
 import com.opencloud.common.model.PageList;
 import com.opencloud.common.model.PageParams;
 import com.opencloud.common.model.ResultBody;

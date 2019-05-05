@@ -5,7 +5,7 @@ import com.opencloud.base.client.model.AccessAuthority;
 import com.opencloud.base.client.model.BaseApiAuthority;
 import com.opencloud.base.client.model.BaseMenuAuthority;
 import com.opencloud.base.client.model.entity.BaseAuthority;
-import com.opencloud.common.security.OpenGrantedAuthority;
+import com.opencloud.common.model.Authority;
 
 import java.util.Date;
 import java.util.List;
@@ -137,7 +137,7 @@ public interface BaseAuthorityService {
      * @param appId
      * @return
      */
-    List<OpenGrantedAuthority> findAppGrantedAuthority(String appId);
+    List<Authority> findAppGrantedAuthority(String appId);
 
     /**
      * 获取角色已授权权限
@@ -145,7 +145,7 @@ public interface BaseAuthorityService {
      * @param roleId
      * @return
      */
-    List<OpenGrantedAuthority> findRoleGrantedAuthority(Long roleId);
+    List<Authority> findRoleGrantedAuthority(Long roleId);
 
     /**
      * 获取用户已授权权限
@@ -154,7 +154,7 @@ public interface BaseAuthorityService {
      * @param root
      * @return
      */
-    List<OpenGrantedAuthority> findUserGrantedAuthority(Long userId, Boolean root);
+    List<Authority> findUserGrantedAuthority(Long userId, Boolean root);
 
     /**
      * 获取开放对象权限
@@ -162,7 +162,7 @@ public interface BaseAuthorityService {
      * @param type = null 查询全部  type = 1 获取菜单和操作 type = 2 获取API
      * @return
      */
-    List<OpenGrantedAuthority> findGrantedAuthority(String type);
+    List<Authority> findGrantedAuthority(String type);
 
     /**
      * 获取用户已授权权限详情

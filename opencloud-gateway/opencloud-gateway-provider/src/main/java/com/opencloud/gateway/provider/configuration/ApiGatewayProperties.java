@@ -28,7 +28,7 @@ public class ApiGatewayProperties {
     /**
      * 无权限允许访问
      */
-    private String noAuthorityAllow;
+    private String notAuthorityAllow;
 
 
     public Boolean getCheckSign() {
@@ -55,11 +55,11 @@ public class ApiGatewayProperties {
         this.permitAll = permitAll;
     }
 
-    public String getNoAuthorityAllow() {
-        return noAuthorityAllow;
+    public String getNotAuthorityAllow() {
+        return notAuthorityAllow;
     }
 
-    public void setNoAuthorityAllow(String noAuthorityAllow) {
-        this.noAuthorityAllow = noAuthorityAllow;
+    public void setNotAuthorityAllow(String noAuthorityAllow) {
+        this.notAuthorityAllow = noAuthorityAllow;
     }
 }

@@ -35,14 +35,12 @@ opencloud:
                 user-authorization-uri: https://open.weixin.qq.com/connect/qrconnect
                 user-info-uri: https://api.weixin.qq.com/sns/userinfo
     swagger2:
-        description: \u5E73\u53F0\u8BA4\u8BC1\u670D\u52A1
+        description: 平台认证服务
         enabled: true
-        title: \u5E73\u53F0\u8BA4\u8BC1\u670D\u52A1
+        title: 平台认证服务
 spring:
     mvc:
         throw-exception-if-no-handler-found: true
-    redis:
-        database: 1
     thymeleaf:
         cache: false
         encoding: UTF-8

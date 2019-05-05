@@ -1,14 +1,14 @@
 package com.opencloud.base.provider.configuration;
 
-import com.opencloud.common.configuration.CommonProperties;
+import com.opencloud.autoconfigure.security.OpenHelper;
 import com.opencloud.common.constants.CommonConstants;
 import com.opencloud.common.exception.OpenAccessDeniedHandler;
 import com.opencloud.common.exception.OpenAuthenticationEntryPoint;
-import com.opencloud.common.security.OpenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,7 +30,7 @@ import javax.sql.DataSource;
 @EnableResourceServer
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
     @Autowired
-    private CommonProperties properties;
+    private RedisConnectionFactory redisConnectionFactory;
     @Autowired
     private DataSource dataSource;
     @Autowired
@@ -46,8 +46,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
-        // 构建ResourceServerTokenServices服务,这里是为了支持自定义用户信息转换器
-        resources.tokenServices(OpenHelper.buildResourceServerTokenServices(properties));
+        // 构建redis获取token,这里是为了支持自定义用户信息转换器
+        resources.tokenServices(OpenHelper.buildRedisTokenServices(redisConnectionFactory));
     }
 
     @Override

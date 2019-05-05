@@ -1,7 +1,7 @@
 package com.opencloud.msg.provider.listener;
 
 import com.alibaba.fastjson.JSONObject;
-import com.opencloud.common.http.OpenRestTemplate;
+import com.opencloud.autoconfigure.security.http.OpenRestTemplate;
 import com.opencloud.msg.client.model.HttpNotify;
 import com.opencloud.msg.client.model.entity.NotifyHttpLogs;
 import com.opencloud.msg.provider.configuration.RabbitConfiguration;

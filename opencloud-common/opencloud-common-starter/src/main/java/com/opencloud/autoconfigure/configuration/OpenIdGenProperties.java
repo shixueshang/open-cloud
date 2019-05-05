@@ -1,4 +1,4 @@
-package com.opencloud.common.configuration;
+package com.opencloud.autoconfigure.configuration;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @date 2018/7/29
  */
 @ConfigurationProperties(prefix = "opencloud.id")
-public class IdGenProperties {
+public class OpenIdGenProperties {
     /**
      * 工作ID (0~31)
      */
@@ -36,7 +36,7 @@ public class IdGenProperties {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("IdGenProperties{");
+        final StringBuilder sb = new StringBuilder("OpenIdGenProperties{");
         sb.append("workId=").append(workId);
         sb.append(", centerId=").append(centerId);
         sb.append('}');

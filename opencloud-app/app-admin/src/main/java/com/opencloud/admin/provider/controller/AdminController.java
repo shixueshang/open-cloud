@@ -1,7 +1,7 @@
 package com.opencloud.admin.provider.controller;
 
 import com.google.common.collect.Maps;
-import com.opencloud.common.http.OpenRestTemplate;
+import com.opencloud.autoconfigure.security.http.OpenRestTemplate;
 import com.opencloud.common.model.ResultBody;
 import com.opencloud.common.utils.DateUtils;
 import com.opencloud.common.utils.RandomValueUtils;
@@ -12,10 +12,10 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,7 +35,7 @@ public class AdminController {
     @Autowired
     private OpenRestTemplate openRestTemplate;
     @Autowired
-    private ResourceServerProperties resourceServerProperties;
+    private OAuth2ProtectedResourceDetails resourceDetails;
     /**
      * 获取用户访问令牌
      * 基于oauth2密码模式登录
@@ -55,15 +55,15 @@ public class AdminController {
         MultiValueMap<String, Object> postParameters = new LinkedMultiValueMap<>();
         postParameters.add("username", username);
         postParameters.add("password", password);
-        postParameters.add("client_id", resourceServerProperties.getClientId());
-        postParameters.add("client_secret", resourceServerProperties.getClientSecret());
+        postParameters.add("client_id", resourceDetails.getClientId());
+        postParameters.add("client_secret", resourceDetails.getClientSecret());
         postParameters.add("grant_type", "password");
         // 使用客户端的请求头,发起请求
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         // 强制移除 原来的请求头,防止token失效
         headers.remove(HttpHeaders.AUTHORIZATION);
         HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity(postParameters, headers);
-        Map result = openRestTemplate.postForObject(openRestTemplate.getcommonProperties().getAccessTokenUri(), request, Map.class);
+        Map result = openRestTemplate.postForObject(resourceDetails.getAccessTokenUri(), request, Map.class);
         if (result.containsKey("access_token")) {
             return ResultBody.success(result);
         } else {
@@ -87,12 +87,12 @@ public class AdminController {
     public ResultBody sign(HttpServletRequest request) {
         Map params = WebUtils.getParameterMap(request);
         Map appMap = Maps.newHashMap();
-        appMap.put("clientId", resourceServerProperties.getClientId());
+        appMap.put("clientId", resourceDetails.getClientId());
         appMap.put("nonce", RandomValueUtils.uuid().substring(0, 16));
         appMap.put("timestamp", DateUtils.getTimestampStr());
         appMap.put("signType", "SHA256");
         params.putAll(appMap);
-        String sign = SignatureUtils.getSign(params, resourceServerProperties.getClientSecret());
+        String sign = SignatureUtils.getSign(params, resourceDetails.getClientSecret());
         appMap.put("sign", sign);
         return ResultBody.success(appMap);
     }

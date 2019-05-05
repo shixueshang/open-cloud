@@ -3,7 +3,7 @@ package com.opencloud.base.provider.mapper;
 import com.opencloud.base.client.model.BaseMenuAuthority;
 import com.opencloud.base.client.model.entity.BaseRoleAuthority;
 import com.opencloud.common.mapper.CrudMapper;
-import com.opencloud.common.security.OpenGrantedAuthority;
+import com.opencloud.common.model.Authority;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -21,7 +21,7 @@ public interface BaseRoleAuthorityMapper extends CrudMapper<BaseRoleAuthority> {
      * @param roleId
      * @return
      */
-    List<OpenGrantedAuthority> selectRoleGrantedAuthority(@Param("roleId") Long roleId);
+    List<Authority> selectRoleGrantedAuthority(@Param("roleId") Long roleId);
 
     /**
      * 获取角色已授权权限

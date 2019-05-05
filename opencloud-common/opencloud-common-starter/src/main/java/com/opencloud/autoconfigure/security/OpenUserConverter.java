@@ -1,4 +1,4 @@
-package com.opencloud.common.security;
+package com.opencloud.autoconfigure.security;
 
 import com.opencloud.common.utils.BeanConvertUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +39,10 @@ public class OpenUserConverter extends DefaultUserAuthenticationConverter {
             if (USERNAME.equals(key)) {
                 if (map.get(key) instanceof Map) {
                     params.putAll((Map) map.get(key));
-                } else {
+                }
+                else  if (map.get(key) instanceof OpenUser) {
+                   return map.get(key);
+                }else {
                     params.put(key, map.get(key));
                 }
             } else {
@@ -50,17 +53,11 @@ public class OpenUserConverter extends DefaultUserAuthenticationConverter {
         if (params.get(USERNAME) != null) {
             auth.setUsername(params.get(USERNAME).toString());
         }
-        if (params.get(OpenJwtAccessTokenEnhancer.OPEN_ID) != null) {
-            auth.setUserId(Long.parseLong(params.get(OpenJwtAccessTokenEnhancer.OPEN_ID).toString()));
+        if (params.get(SecurityConstants.OPEN_ID) != null) {
+            auth.setUserId(Long.parseLong(params.get(SecurityConstants.OPEN_ID).toString()));
         }
-        if (params.get(OpenJwtAccessTokenEnhancer.CENTER_ID) != null) {
-            auth.setAuthCenterId(params.get(OpenJwtAccessTokenEnhancer.CENTER_ID).toString());
-        }
-        if (params.get(OpenJwtAccessTokenEnhancer.NICK_NAME) != null) {
-            auth.setNickName(params.get(OpenJwtAccessTokenEnhancer.NICK_NAME).toString());
-        }
-        if (params.get(OpenJwtAccessTokenEnhancer.AVATAR) != null) {
-            auth.setAvatar(params.get(OpenJwtAccessTokenEnhancer.AVATAR).toString());
+        if (params.get(SecurityConstants.CENTER_ID) != null) {
+            auth.setAuthCenterId(params.get(SecurityConstants.CENTER_ID).toString());
         }
         auth.setAuthAppId(params.get(AccessTokenConverter.CLIENT_ID).toString());
         auth.setAuthorities(getAuthorities(map));

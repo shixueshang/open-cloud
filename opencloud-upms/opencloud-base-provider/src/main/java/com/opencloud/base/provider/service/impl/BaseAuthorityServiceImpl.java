@@ -17,7 +17,7 @@ import com.opencloud.common.constants.CommonConstants;
 import com.opencloud.common.exception.OpenAlertException;
 import com.opencloud.common.exception.OpenException;
 import com.opencloud.common.mapper.ExampleBuilder;
-import com.opencloud.common.security.OpenGrantedAuthority;
+import com.opencloud.common.model.Authority;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
@@ -403,7 +403,7 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
      * @return
      */
     @Override
-    public List<OpenGrantedAuthority> findAppGrantedAuthority(String appId) {
+    public List<Authority> findAppGrantedAuthority(String appId) {
         return baseAppAuthorityMapper.selectAppGrantedAuthority(appId);
     }
 
@@ -414,7 +414,7 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
      * @return
      */
     @Override
-    public List<OpenGrantedAuthority> findRoleGrantedAuthority(Long roleId) {
+    public List<Authority> findRoleGrantedAuthority(Long roleId) {
         return baseRoleAuthorityMapper.selectRoleGrantedAuthority(roleId);
     }
 
@@ -425,7 +425,7 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
      * @return
      */
     @Override
-    public List<OpenGrantedAuthority> findGrantedAuthority(String type) {
+    public List<Authority> findGrantedAuthority(String type) {
         Map map = Maps.newHashMap();
         map.put("type", type);
         map.put("status", 1);
@@ -440,24 +440,24 @@ public class BaseAuthorityServiceImpl implements BaseAuthorityService {
      * @return
      */
     @Override
-    public List<OpenGrantedAuthority> findUserGrantedAuthority(Long userId, Boolean root) {
+    public List<Authority> findUserGrantedAuthority(Long userId, Boolean root) {
         if (root) {
             // 超级管理员返回所有
             return findGrantedAuthority("1");
         }
-        List<OpenGrantedAuthority> authorities = Lists.newArrayList();
+        List<Authority> authorities = Lists.newArrayList();
         List<BaseRole> rolesList = baseRoleService.getUserRoles(userId);
         if (rolesList != null) {
             for (BaseRole role : rolesList) {
                 // 加入角色已授权
-                List<OpenGrantedAuthority> roleGrantedAuthority = findRoleGrantedAuthority(role.getRoleId());
+                List<Authority> roleGrantedAuthority = findRoleGrantedAuthority(role.getRoleId());
                 if (roleGrantedAuthority != null && roleGrantedAuthority.size() > 0) {
                     authorities.addAll(roleGrantedAuthority);
                 }
             }
         }
         // 加入用户特殊授权
-        List<OpenGrantedAuthority> userGrantedAuthority = baseUserAuthorityMapper.selectUserGrantedAuthority(userId);
+        List<Authority> userGrantedAuthority = baseUserAuthorityMapper.selectUserGrantedAuthority(userId);
         if (userGrantedAuthority != null && userGrantedAuthority.size() > 0) {
             authorities.addAll(userGrantedAuthority);
         }

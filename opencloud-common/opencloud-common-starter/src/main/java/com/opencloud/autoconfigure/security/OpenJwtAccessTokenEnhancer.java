@@ -1,4 +1,4 @@
-package com.opencloud.common.security;
+package com.opencloud.autoconfigure.security;
 
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
@@ -16,10 +16,7 @@ import java.util.Map;
  */
 public class OpenJwtAccessTokenEnhancer extends JwtAccessTokenConverter {
 
-    public final static String OPEN_ID = "openid";
-    public final static String CENTER_ID = "center_id";
-    public final static String NICK_NAME = "nick_name";
-    public final static String AVATAR = "avatar";
+
     /**
      * 生成token
      * @param accessToken
@@ -33,10 +30,8 @@ public class OpenJwtAccessTokenEnhancer extends JwtAccessTokenConverter {
             // 设置额外用户信息
             OpenUser baseUser = ((OpenUser) authentication.getPrincipal());
             final Map<String, Object> additionalInfo = new HashMap<>(8);
-            additionalInfo.put(OPEN_ID, baseUser.getUserId());
-            additionalInfo.put(CENTER_ID, baseUser.getAuthCenterId());
-            additionalInfo.put(NICK_NAME, baseUser.getNickName());
-            additionalInfo.put(AVATAR, baseUser.getAvatar());
+            additionalInfo.put(SecurityConstants.OPEN_ID, baseUser.getUserId());
+            additionalInfo.put(SecurityConstants.CENTER_ID, baseUser.getAuthCenterId());
             defaultOAuth2AccessToken.setAdditionalInformation(additionalInfo);
         }
 
