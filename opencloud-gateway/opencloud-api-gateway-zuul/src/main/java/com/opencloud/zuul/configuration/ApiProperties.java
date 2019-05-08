@@ -2,6 +2,8 @@ package com.opencloud.zuul.configuration;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.util.Set;
+
 /**
  * 自定义网关配置
  *
@@ -9,8 +11,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @date: 2018/11/23 14:40
  * @description:
  */
-@ConfigurationProperties(prefix = "opencloud.api-gateway")
-public class ApiGatewayProperties {
+@ConfigurationProperties(prefix = "opencloud.api")
+public class ApiProperties {
     /**
      * 是否开启签名验证
      */
@@ -21,14 +23,20 @@ public class ApiGatewayProperties {
     private Boolean accessControl = true;
 
     /**
-     * 始终放行
+     * 是否开启swagger调试
      */
-    private String permitAll;
+    private Boolean enableSwaggerUi = false;
 
     /**
-     * 无权限允许访问
+     * 始终放行
      */
-    private String notAuthorityAllow;
+    private Set<String> permitAll;
+
+    /**
+     * 无需鉴权的请求
+     */
+    private Set<String> authorityIgnores;
+
 
 
     public Boolean getCheckSign() {
@@ -47,19 +55,27 @@ public class ApiGatewayProperties {
         this.accessControl = accessControl;
     }
 
-    public String getPermitAll() {
+    public Set<String> getPermitAll() {
         return permitAll;
     }
 
-    public void setPermitAll(String permitAll) {
+    public void setPermitAll(Set<String> permitAll) {
         this.permitAll = permitAll;
     }
 
-    public String getNotAuthorityAllow() {
-        return notAuthorityAllow;
+    public Set<String> getAuthorityIgnores() {
+        return authorityIgnores;
     }
 
-    public void setNotAuthorityAllow(String noAuthorityAllow) {
-        this.notAuthorityAllow = noAuthorityAllow;
+    public void setAuthorityIgnores(Set<String> authorityIgnores) {
+        this.authorityIgnores = authorityIgnores;
+    }
+
+    public Boolean getEnableSwaggerUi() {
+        return enableSwaggerUi;
+    }
+
+    public void setEnableSwaggerUi(Boolean enableSwaggerUi) {
+        this.enableSwaggerUi = enableSwaggerUi;
     }
 }

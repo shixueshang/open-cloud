@@ -7,7 +7,7 @@ import com.opencloud.common.constants.ResultEnum;
 import com.opencloud.common.security.Authority;
 import com.opencloud.common.utils.StringUtils;
 import com.opencloud.common.utils.WebUtils;
-import com.opencloud.zuul.configuration.ApiGatewayProperties;
+import com.opencloud.zuul.configuration.ApiProperties;
 import com.opencloud.zuul.locator.AccessLocator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.ConfigAttribute;
@@ -33,24 +33,24 @@ public class AccessControl {
 
     private AccessLocator accessLocator;
 
-    private ApiGatewayProperties apiGatewayProperties;
+    private ApiProperties apiGatewayProperties;
 
     private static final AntPathMatcher pathMatch = new AntPathMatcher();
 
     private Set<String> permitAll = new HashSet<>();
 
-    private Set<String> noAuthorityAllow = new HashSet<>();
+    private Set<String> authorityIgnores = new HashSet<>();
 
 
-    public AccessControl(AccessLocator accessLocator, ApiGatewayProperties apiGatewayProperties) {
+    public AccessControl(AccessLocator accessLocator, ApiProperties apiGatewayProperties) {
         this.accessLocator = accessLocator;
         this.apiGatewayProperties = apiGatewayProperties;
         if (apiGatewayProperties != null) {
             if (apiGatewayProperties.getPermitAll() != null) {
-                permitAll.addAll(Arrays.asList(apiGatewayProperties.getPermitAll().split(",")));
+                permitAll.addAll(apiGatewayProperties.getPermitAll());
             }
-            if (apiGatewayProperties.getNotAuthorityAllow() != null) {
-                noAuthorityAllow.addAll(Arrays.asList(apiGatewayProperties.getNotAuthorityAllow().split(",")));
+            if (apiGatewayProperties.getAuthorityIgnores() != null) {
+                authorityIgnores.addAll(apiGatewayProperties.getAuthorityIgnores());
             }
         }
     }
@@ -130,7 +130,7 @@ public class AccessControl {
     }
 
     private boolean isNoAuthorityAllow(String requestPath) {
-        Iterator<String> it = noAuthorityAllow.iterator();
+        Iterator<String> it = authorityIgnores.iterator();
         while (it.hasNext()) {
             String path = it.next();
             if (pathMatch.match(path, requestPath)) {

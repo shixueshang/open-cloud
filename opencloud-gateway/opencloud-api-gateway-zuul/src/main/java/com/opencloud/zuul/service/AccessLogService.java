@@ -7,7 +7,6 @@ import com.opencloud.common.constants.MqConstants;
 import com.opencloud.common.security.OpenHelper;
 import com.opencloud.common.security.OpenUser;
 import com.opencloud.common.utils.WebUtils;
-import com.opencloud.zuul.constants.GatewayContants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +29,10 @@ import java.util.*;
 @Slf4j
 @Component
 public class AccessLogService {
+
+    public static final String PRE_REQUEST_ID = "pre_request_id";
+
+    public static final String PRE_REQUEST_ID_CACHE_PREFIX = "pre_request_id:";
 
     @Autowired
     private AmqpTemplate amqpTemplate;
@@ -83,7 +86,7 @@ public class AccessLogService {
             }
             if (object != null) {
                 String requestId = object.toString();
-                String key = GatewayContants.PRE_REQUEST_ID_CACHE_PREFIX + requestId;
+                String key = PRE_REQUEST_ID_CACHE_PREFIX + requestId;
                 Object cache = redisTemplate.opsForValue().get(key);
                 if (cache != null) {
                     Map<String, Object> map = (Map) cache;

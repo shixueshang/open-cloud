@@ -2,7 +2,6 @@ package com.opencloud.zuul.filter;
 
 import com.google.common.collect.Maps;
 import com.opencloud.common.gen.SnowflakeIdGenerator;
-import com.opencloud.zuul.constants.GatewayContants;
 import com.opencloud.zuul.service.AccessLogService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -39,12 +38,12 @@ public class PreRequestFilter extends OncePerRequestFilter {
         log.debug("==> start [{}] path[{}]", start.getTime(),httpServletRequest.getRequestURI());
         try {
             Long requestId = snowflakeIdGenerator.nextId();
-            httpServletRequest.setAttribute(GatewayContants.PRE_REQUEST_ID, String.valueOf(requestId));
+            httpServletRequest.setAttribute(AccessLogService.PRE_REQUEST_ID, String.valueOf(requestId));
             Map<String, Object> map = Maps.newHashMap();
             map.put("accessId", requestId);
             map.put("requestTime", new Date());
             // 3分钟过期
-            String key = GatewayContants.PRE_REQUEST_ID_CACHE_PREFIX + requestId;
+            String key = AccessLogService.PRE_REQUEST_ID_CACHE_PREFIX + requestId;
             // 放入redis缓存
             redisTemplate.opsForValue().set(key, map, 3, TimeUnit.MINUTES);
         } catch (Exception e) {

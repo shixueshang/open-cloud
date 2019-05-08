@@ -46,17 +46,17 @@ import java.util.List;
 @Component
 @Primary
 @Slf4j
-public class DocumentationConfiguration implements SwaggerResourcesProvider {
+public class SwaggerConfiguration implements SwaggerResourcesProvider {
 
     private OpenSwaggerProperties openSwaggerProperties;
 
     private ZuulRouteLocator zuulRoutesLocator;
 
-    public DocumentationConfiguration() {
+    public SwaggerConfiguration() {
     }
 
     @Autowired
-    public DocumentationConfiguration(OpenSwaggerProperties openSwaggerProperties, ZuulRouteLocator zuulRouteLocator) {
+    public SwaggerConfiguration(OpenSwaggerProperties openSwaggerProperties, ZuulRouteLocator zuulRouteLocator) {
         this.openSwaggerProperties = openSwaggerProperties;
         this.zuulRoutesLocator = zuulRouteLocator;
     }

@@ -18,19 +18,21 @@ import java.io.IOException;
  * @author liuyadu
  */
 @Slf4j
-public class GatewayAccessDeniedHandler implements AccessDeniedHandler {
+public class JsonAccessDeniedHandler implements AccessDeniedHandler {
     private AccessLogService accessLogService;
 
-    public GatewayAccessDeniedHandler(AccessLogService accessLogService) {
+    public JsonAccessDeniedHandler(AccessLogService accessLogService) {
         this.accessLogService = accessLogService;
     }
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response,
                        AccessDeniedException exception) throws IOException, ServletException {
-        ResultBody responseData = OpenExceptionHandler.resolveException(exception, request, response);
         // 保存日志
         accessLogService.sendLog(request, response);
-        WebUtils.writeJson(response, responseData);
+        ResultBody resultBody = OpenExceptionHandler.resolveException(exception);
+        resultBody.setPath(request.getRequestURI());
+        response.setStatus(resultBody.getHttpStatus());
+        WebUtils.writeJson(response, resultBody);
     }
 }

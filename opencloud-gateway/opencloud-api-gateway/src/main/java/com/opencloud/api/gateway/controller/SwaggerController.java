@@ -1,4 +1,4 @@
-package com.opencloud.api.gateway.configuration;
+package com.opencloud.api.gateway.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,9 +13,12 @@ import springfox.documentation.swagger.web.UiConfiguration;
 
 import java.util.Optional;
 
+/**
+ * @author liuyadu
+ */
 @RestController
 @RequestMapping("/swagger-resources")
-public class SwaggerHandler {
+public class SwaggerController {
     @Autowired(required = false)
     private SecurityConfiguration securityConfiguration;
     @Autowired(required = false)
@@ -23,7 +26,7 @@ public class SwaggerHandler {
     private final SwaggerResourcesProvider swaggerResources;
 
     @Autowired
-    public SwaggerHandler(SwaggerResourcesProvider swaggerResources) {
+    public SwaggerController(SwaggerResourcesProvider swaggerResources) {
         this.swaggerResources = swaggerResources;
     }
 

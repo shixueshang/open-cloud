@@ -36,7 +36,7 @@ public class WebMvcConfiguration extends WebSecurityConfigurerAdapter implements
                 "/error",
                 "/static/**",
                 "/**/v2/api-docs/**",
-                "/swagger-resources/**",
+                "/**/swagger-resources/**",
                 "/webjars/**",
                 "/swagger-ui.html",
                 "/doc.html",

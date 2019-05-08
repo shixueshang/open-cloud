@@ -18,19 +18,21 @@ import java.io.IOException;
  * @author liuyadu
  */
 @Slf4j
-public class GatewayAuthenticationEntryPoint implements AuthenticationEntryPoint {
+public class JsonAuthenticationEntryPoint implements AuthenticationEntryPoint {
     private AccessLogService accessLogService;
 
-    public GatewayAuthenticationEntryPoint(AccessLogService accessLogService) {
+    public JsonAuthenticationEntryPoint(AccessLogService accessLogService) {
         this.accessLogService = accessLogService;
     }
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException exception) throws IOException, ServletException {
-        ResultBody responseData = OpenExceptionHandler.resolveException(exception, request, response);
         // 保存日志
         accessLogService.sendLog(request, response);
-        WebUtils.writeJson(response, responseData);
+        ResultBody resultBody = OpenExceptionHandler.resolveException(exception);
+        resultBody.setPath(request.getRequestURI());
+        response.setStatus(resultBody.getHttpStatus());
+        WebUtils.writeJson(response, resultBody);
     }
 }

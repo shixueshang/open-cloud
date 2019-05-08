@@ -5,8 +5,8 @@ import com.opencloud.common.gen.SnowflakeIdGenerator;
 import com.opencloud.common.model.ResultBody;
 import com.opencloud.common.security.OpenHelper;
 import com.opencloud.common.utils.WebUtils;
-import com.opencloud.zuul.exception.GatewayAccessDeniedHandler;
-import com.opencloud.zuul.exception.GatewayAuthenticationEntryPoint;
+import com.opencloud.zuul.exception.JsonAccessDeniedHandler;
+import com.opencloud.zuul.exception.JsonAuthenticationEntryPoint;
 import com.opencloud.zuul.filter.PreRequestFilter;
 import com.opencloud.zuul.filter.SignatureFilter;
 import com.opencloud.zuul.service.AccessLogService;
@@ -50,7 +50,7 @@ import java.util.Map;
 @EnableResourceServer
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
     @Autowired
-    private ApiGatewayProperties apiGatewayProperties;
+    private ApiProperties apiGatewayProperties;
     @Autowired
     private OpenCommonProperties properties;
     @Autowired
@@ -95,8 +95,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .and()
                 //认证鉴权错误处理,为了统一异常处理。每个资源服务器都应该加上。
                 .exceptionHandling()
-                .accessDeniedHandler(new GatewayAccessDeniedHandler(accessLogService))
-                .authenticationEntryPoint(new GatewayAuthenticationEntryPoint(accessLogService))
+                .accessDeniedHandler(new JsonAccessDeniedHandler(accessLogService))
+                .authenticationEntryPoint(new JsonAuthenticationEntryPoint(accessLogService))
                 .and()
                 .csrf().disable();
         // 网关日志前置过滤器

@@ -3,7 +3,7 @@ package com.opencloud.zuul.controller;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.opencloud.common.model.ResultBody;
-import com.opencloud.common.swagger.OpenSwaggerProperties;
+import com.opencloud.zuul.configuration.ApiProperties;
 import com.opencloud.zuul.locator.ZuulRouteLocator;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ import java.util.Map;
 @Controller
 public class IndexController {
     @Autowired
-    private OpenSwaggerProperties openSwaggerProperties;
+    private ApiProperties apiProperties;
 
     @Autowired
     private ZuulRouteLocator zuulRoutesLocator;
@@ -34,7 +34,7 @@ public class IndexController {
 
     @GetMapping("/")
     public String index() {
-        if (openSwaggerProperties.getEnabled()) {
+        if (apiProperties.getEnableSwaggerUi()) {
             return "redirect:swagger-ui.html";
         }
         return "index";

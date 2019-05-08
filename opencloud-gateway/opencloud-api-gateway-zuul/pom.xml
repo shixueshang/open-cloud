@@ -8,7 +8,7 @@
         <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>opencloud-gateway-provider</artifactId>
+    <artifactId>opencloud-api-gateway-zuul</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
     <description>API网关服务-Zuul</description>

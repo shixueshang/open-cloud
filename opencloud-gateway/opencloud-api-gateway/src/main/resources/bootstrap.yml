@@ -34,13 +34,37 @@ spring:
                 namespace: ${config.namespace}
                 refreshable-dataids: common.properties
                 server-addr: ${config.server-addr}
-                shared-dataids: common.properties,db.properties,redis.properties,rabbitmq.properties
+                shared-dataids: common.properties,redis.properties,rabbitmq.properties
             discovery:
                 server-addr: ${discovery.server-addr}
     main:
         allow-bean-definition-overriding: true
     profiles:
         active: ${profile.name}
+    thymeleaf:
+        cache: false
+        encoding: UTF-8
+        mode: LEGACYHTML5
+        prefix: classpath:/templates/
+        suffix: .html
+
+filters:
+# 熔断降级配置
+- name: Hystrix
+  args:
+    name : default
+    fallbackUri: 'forward:/fallback'
+
+# hystrix 信号量隔离，3秒后自动超时
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          strategy: SEMAPHORE
+          thread:
+            timeoutInMilliseconds: 60000
+  shareSecurityContext: true
 
 opencloud:
 # 开放api
@@ -50,7 +74,7 @@ opencloud:
       # 访问权限控制
       access-control: true
       # swagger调试
-      enable-swagger: true
+      enable-swagger-ui: true
       # 始终放行
       permit-all:
         - /login/**
@@ -61,7 +85,7 @@ opencloud:
         - /auth/oauth/**
         - /admin/login/token
       # 忽略权限鉴定
-      authorityIgnores:
+      authority-ignores:
         - /auth/user/me
         - /base/authority/granted/me
         - /base/authority/granted/me/menu

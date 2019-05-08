@@ -25,7 +25,7 @@ public class ApiProperties {
     /**
      * 是否开启swagger调试
      */
-    private Boolean enableSwagger = false;
+    private Boolean enableSwaggerUi = false;
 
     /**
      * 始终放行
@@ -54,12 +54,12 @@ public class ApiProperties {
         this.accessControl = accessControl;
     }
 
-    public Boolean getEnableSwagger() {
-        return enableSwagger;
+    public Boolean getEnableSwaggerUi() {
+        return enableSwaggerUi;
     }
 
-    public void setEnableSwagger(Boolean enableSwagger) {
-        this.enableSwagger = enableSwagger;
+    public void setEnableSwaggerUi(Boolean enableSwaggerUi) {
+        this.enableSwaggerUi = enableSwaggerUi;
     }
 
     public Set<String> getPermitAll() {

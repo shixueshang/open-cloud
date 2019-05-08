@@ -12,10 +12,13 @@ import springfox.documentation.swagger.web.SwaggerResourcesProvider;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author liuyadu
+ */
 @Component
 @Primary
 @AllArgsConstructor
-public class SwaggerProvider implements SwaggerResourcesProvider {
+public class SwaggerConfiguration implements SwaggerResourcesProvider {
     public static final String API_URI = "/v2/api-docs";
     private final RouteLocator routeLocator;
     private final GatewayProperties gatewayProperties;

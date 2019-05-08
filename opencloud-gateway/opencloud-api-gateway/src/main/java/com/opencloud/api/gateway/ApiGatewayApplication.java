@@ -29,12 +29,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.bus.jackson.RemoteApplicationEventScan;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.core.userdetails.MapReactiveUserDetailsService;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.server.SecurityWebFilterChain;
 
 
 /**
@@ -50,27 +44,8 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 @RemoteApplicationEventScan(basePackages = "com.opencloud.gateway.provider.event")
 public class ApiGatewayApplication {
 
-
-    @Bean
-    SecurityWebFilterChain springWebFilterChain(ServerHttpSecurity http) throws Exception {
-        return http
-                .httpBasic().disable()
-                .csrf().disable()
-                .authorizeExchange()
-                .anyExchange().permitAll()
-                .and()
-                .build();
-    }
-
-    @Bean
-    public MapReactiveUserDetailsService reactiveUserDetailsService() {
-        UserDetails user = User.withDefaultPasswordEncoder().username("user").password("password").roles("USER").build();
-        return new MapReactiveUserDetailsService(user);
-    }
-
     public static void main(String[] args) {
         SpringApplication.run(ApiGatewayApplication.class, args);
     }
-
 
 }

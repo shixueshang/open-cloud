@@ -58,8 +58,8 @@ public enum ResultEnum {
      * 系统错误
      */
     ERROR(5000, "error"),
-    SERVICE_NOT_FOUND(5004, "service_not_found");
-
+    SERVICE_NOT_FOUND(5003, "service_not_found"),
+    GATEWAY_TIMEOUT(5004, "gateway_timeout");
 
 
     private int code;

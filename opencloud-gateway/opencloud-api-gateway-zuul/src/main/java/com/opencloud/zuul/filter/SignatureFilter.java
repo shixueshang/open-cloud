@@ -10,7 +10,7 @@ import com.opencloud.common.security.OpenUser;
 import com.opencloud.common.security.OpenHelper;
 import com.opencloud.common.utils.SignatureUtils;
 import com.opencloud.common.utils.WebUtils;
-import com.opencloud.zuul.configuration.ApiGatewayProperties;
+import com.opencloud.zuul.configuration.ApiProperties;
 import com.opencloud.zuul.service.feign.BaseAppRemoteService;
 import com.google.common.collect.Lists;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -36,7 +36,7 @@ import java.util.Map;
 public class SignatureFilter implements Filter {
     private SignatureDeniedHandler signatureDeniedHandler;
     private BaseAppRemoteService systemAppClient;
-    private ApiGatewayProperties apiGatewayProperties;
+    private ApiProperties apiGatewayProperties;
     /**
      * 忽略签名
      */
@@ -45,7 +45,7 @@ public class SignatureFilter implements Filter {
             "/**/logout/**"
     );
 
-    public SignatureFilter(BaseAppRemoteService systemAppClient, ApiGatewayProperties apiGatewayProperties) {
+    public SignatureFilter(BaseAppRemoteService systemAppClient, ApiProperties apiGatewayProperties) {
         this.systemAppClient = systemAppClient;
         this.apiGatewayProperties = apiGatewayProperties;
         this.signatureDeniedHandler = new OpenSignatureDeniedHandler();

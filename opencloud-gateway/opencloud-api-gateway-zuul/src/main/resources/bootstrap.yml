@@ -16,6 +16,12 @@ spring:
         allow-bean-definition-overriding: true
     profiles:
         active: ${profile.name}
+    thymeleaf:
+        cache: false
+        encoding: UTF-8
+        mode: LEGACYHTML5
+        prefix: classpath:/templates/
+        suffix: .html
 
 hystrix:
   command:
@@ -32,22 +38,7 @@ hystrix:
   threadpool:
     default:
       coreSize: 1000.0
-management:
-  endpoints:
-    web:
-      exposure:
-        include: refresh,health,refresh-gateway
-opencloud:
-  #网关配置
-  api-gateway:
-    #动态权限控制
-    access-control: true
-    #校验参数签名
-    check-sign: false
-    #无需鉴权准入
-    not-authority-allow: /auth/user/me,/base/authority/granted/me,/base/authority/granted/me/menu
-    #始终方向
-    permit-all: /login/**,/logout,/oauth/*,/auth/login/**,/auth/logout,/auth/oauth/**,/admin/login/token
+
 ribbon:
   ConnectTimeout: 30000
   MaxAutoRetries: 10
@@ -56,6 +47,7 @@ ribbon:
   MaxTotalHttpConnections: 1000
   OkToRetryOnAllOperations: true
   ReadTimeout: 5000
+
 zuul:
   add-host-header: true
   host:
@@ -88,3 +80,33 @@ zuul:
   semaphore:
     max-semaphores: 1000
   sensitive-headers: ''
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh,health,refresh-gateway
+
+opencloud:
+  #网关配置
+  api:
+    #动态权限控制
+    access-control: true
+    #校验参数签名
+    check-sign: false
+    # swagger调试
+    enable-swagger-ui: true
+    # 始终放行
+    permit-all:
+        - /login/**
+        - /logout
+        - /oauth/*
+        - /auth/login/**
+        - /auth/logout
+        - /auth/oauth/**
+        - /admin/login/token
+    # 忽略权限鉴定
+    authority-ignores:
+        - /auth/user/me
+        - /base/authority/granted/me
+        - /base/authority/granted/me/menu

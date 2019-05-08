@@ -39,8 +39,8 @@ import org.springframework.web.filter.CorsFilter;
  */
 @Slf4j
 @Configuration
-@EnableConfigurationProperties({ApiGatewayProperties.class})
-public class ApiGatewayConfiguration {
+@EnableConfigurationProperties({ApiProperties.class})
+public class ApiConfiguration {
     private static final String ALLOWED_HEADERS = "*";
     private static final String ALLOWED_METHODS = "*";
     private static final String ALLOWED_ORIGIN = "*";
