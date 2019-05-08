@@ -1,6 +1,6 @@
 package com.opencloud.autoconfigure;
 
-import com.opencloud.autoconfigure.swagger.OpenSwaggerProperties;
+import com.opencloud.common.swagger.OpenSwaggerProperties;
 import com.opencloud.common.utils.DateUtils;
 import com.opencloud.common.utils.RandomValueUtils;
 import com.google.common.collect.Lists;

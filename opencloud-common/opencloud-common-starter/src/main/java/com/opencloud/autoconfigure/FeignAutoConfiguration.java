@@ -1,6 +1,6 @@
 package com.opencloud.autoconfigure;
 
-import com.opencloud.autoconfigure.feign.interceptor.FeignRequestInterceptor;
+import com.opencloud.common.interceptor.FeignRequestInterceptor;
 import feign.Request;
 import feign.RequestInterceptor;
 import feign.Retryer;

@@ -3,11 +3,8 @@ package com.opencloud.common.exception;
 import com.opencloud.common.constants.CommonConstants;
 import com.opencloud.common.constants.ResultEnum;
 import com.opencloud.common.model.ResultBody;
-import com.opencloud.common.utils.SpringContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.TypeMismatchException;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
@@ -27,7 +24,6 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Locale;
 
 /**
  * 统一异常处理器
@@ -39,10 +35,6 @@ import java.util.Locale;
 @ResponseBody
 @Slf4j
 public class OpenExceptionHandler {
-    /**
-     * 国际化配置
-     */
-    private static Locale locale = LocaleContextHolder.getLocale();
 
 
     /**
@@ -72,7 +64,7 @@ public class OpenExceptionHandler {
             code = ResultEnum.CREDENTIALS_EXPIRED;
         } else if (ex instanceof InsufficientAuthenticationException) {
             code = ResultEnum.UNAUTHORIZED;
-            httpStatus=HttpStatus.UNAUTHORIZED.value();
+            httpStatus = HttpStatus.UNAUTHORIZED.value();
         }
         //放入请求域
         request.setAttribute(CommonConstants.X_ERROR_CODE, code);
@@ -198,7 +190,7 @@ public class OpenExceptionHandler {
             httpStatus = HttpStatus.FORBIDDEN.value();
         }
         request.setAttribute(CommonConstants.X_ERROR_CODE, code);
-        return buildBody(ex, request, response,httpStatus);
+        return buildBody(ex, request, response, httpStatus);
     }
 
 
@@ -234,7 +226,6 @@ public class OpenExceptionHandler {
      */
     private static ResultBody buildBody(Exception exception, HttpServletRequest request, HttpServletResponse response, int httpStatus) {
         String path = request.getRequestURI();
-        String method = request.getMethod();
         String message = exception.getMessage();
         ResultEnum resultCode = (ResultEnum) request.getAttribute(CommonConstants.X_ERROR_CODE);
         if (resultCode == null) {
@@ -242,27 +233,15 @@ public class OpenExceptionHandler {
         }
         int code = resultCode.getCode();
         String error = resultCode.getMessage();
-        // 提示信息
-        String msgI18n = i18n(error, message);
         // 错误,放入请求域
         request.setAttribute(CommonConstants.X_ERROR, error);
         // 错误消息,放入请求域
-        request.setAttribute(CommonConstants.X_ERROR_MESSAGE, msgI18n);
+        request.setAttribute(CommonConstants.X_ERROR_MESSAGE, message);
         // 状态码
         response.setStatus(httpStatus);
-        log.error("==> 错误解析:method[{}] path[{}] code[{}] error[{}] message[{}] httpStatus[{}] exception{} ", method, path, code, error, msgI18n,httpStatus, exception);
-        return ResultBody.failed(code, msgI18n).setError(error).setPath(path).setHttpStatus(httpStatus);
+        ResultBody resultBody = ResultBody.failed(code, message).setError(error).setPath(path).setHttpStatus(httpStatus);
+        log.error("==> 错误解析:{}", resultBody);
+        return resultBody;
     }
 
-    /**
-     * 提示信息国际化
-     *
-     * @param error
-     * @param message
-     * @return
-     */
-    private static String i18n(String error, String message) {
-        MessageSource messageSource = SpringContextHolder.getBean(MessageSource.class);
-        return messageSource.getMessage(error, null, message, locale);
-    }
 }

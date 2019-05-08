@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>open-cloud</artifactId>
+        <groupId>com.opencloud</groupId>
+        <version>1.0.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>opencloud-platform</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+    <description>平台公共服务</description>
+    <modules>
+        <module>opencloud-auth-client</module>
+        <module>opencloud-auth-provider</module>
+        <module>opencloud-base-client</module>
+        <module>opencloud-base-provider</module>
+        <module>opencloud-msg-client</module>
+        <module>opencloud-msg-provider</module>
+        <module>opencloud-bpm-client</module>
+        <module>opencloud-bpm-provider</module>
+        <module>opencloud-scheduler-client</module>
+        <module>opencloud-scheduler-provider</module>
+    </modules>
+</project>

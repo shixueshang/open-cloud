@@ -3,20 +3,16 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.github.lyd</groupId>
+    <groupId>com.opencloud</groupId>
     <artifactId>open-cloud</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0</version>
     <description>微服务开放平台</description>
     <modules>
-        <module>docs/generator</module>
         <module>opencloud-common</module>
         <module>opencloud-gateway</module>
-        <module>opencloud-upms</module>
-        <module>opencloud-msg</module>
-        <module>opencloud-bpm</module>
+        <module>opencloud-platform</module>
         <module>opencloud-app</module>
-        <module>opencloud-scheduler</module>
     </modules>
     <properties>
         <java.version>1.8</java.version>
@@ -39,9 +35,7 @@
         <apache.commons-io.version>2.5</apache.commons-io.version>
         <apache.commons.beanutils>1.9.3</apache.commons.beanutils>
 
-        <mybatis.version>1.3.1</mybatis.version>
-        <tk.mybatis.version>2.0.4</tk.mybatis.version>
-        <github.pagehelper.version>1.2.10</github.pagehelper.version>
+        <mybatis-plus.version>3.1.1</mybatis-plus.version>
 
         <com.google.zxing.version>3.1.0</com.google.zxing.version>
         <google.guava.version>19.0</google.guava.version>
@@ -49,7 +43,6 @@
 
         <!--自定义版本-->
         <opencloud.common.version>2.0.0-SNAPSHOT</opencloud.common.version>
-        <opencloud.gateway-client.version>2.0.0-SNAPSHOT</opencloud.gateway-client.version>
         <opencloud.base-client.version>2.0.0-SNAPSHOT</opencloud.base-client.version>
         <opencloud.auth-client.version>2.0.0-SNAPSHOT</opencloud.auth-client.version>
         <opencloud.msg-client.version>2.0.0-SNAPSHOT</opencloud.msg-client.version>

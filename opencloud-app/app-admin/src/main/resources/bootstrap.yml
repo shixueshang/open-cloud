@@ -2,7 +2,7 @@ server:
     port: 8301
 spring:
     application:
-        name: com.opencloud.admin.provider
+        name: ${artifactId}
     cloud:
         nacos:
             config:
@@ -11,8 +11,6 @@ spring:
                 server-addr: ${config.server-addr}
                 shared-dataids: common.properties,db.properties,redis.properties,rabbitmq.properties
             discovery:
-                metadata:
-                    name: 运营后台服务
                 server-addr: ${discovery.server-addr}
     main:
         allow-bean-definition-overriding: true
@@ -29,3 +27,14 @@ security:
         resource:
             token-info-uri: ${opencloud.common.token-info-uri}
             user-info-uri: ${opencloud.common.user-info-uri}
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: refresh,health
+opencloud:
+    swagger2:
+        description: 运营后台服务
+        enabled: true
+        title: 运营后台服务

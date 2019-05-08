@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>open-cloud</artifactId>
-        <groupId>com.github.lyd</groupId>
+        <groupId>com.opencloud</groupId>
         <version>0.2.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -12,7 +12,4 @@
     <version>0.2.0</version>
     <packaging>pom</packaging>
     <description>文档</description>
-    <modules>
-        <module>generator</module>
-    </modules>
 </project>

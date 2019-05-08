@@ -3,10 +3,14 @@ package com.opencloud.common.model;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.opencloud.common.constants.ResultEnum;
 import com.google.common.collect.Maps;
+import com.opencloud.common.constants.ResultEnum;
+import com.opencloud.common.utils.SpringContextHolder;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 import java.io.Serializable;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -105,7 +109,7 @@ public class ResultBody<T> implements Serializable {
     }
 
     public String getMessage() {
-        return message;
+        return i18n(this.error,this.message);
     }
 
     public ResultBody setMessage(String message) {
@@ -189,5 +193,22 @@ public class ResultBody<T> implements Serializable {
                 ", extra=" + extra +
                 ", timestamp=" + timestamp +
                 '}';
+    }
+
+    /**
+     * 国际化配置
+     */
+    private static Locale locale = LocaleContextHolder.getLocale();
+
+    /**
+     * 提示信息国际化
+     *
+     * @param message
+     * @param defaultMessage
+     * @return
+     */
+    private static String i18n(String message, String defaultMessage) {
+        MessageSource messageSource = SpringContextHolder.getBean(MessageSource.class);
+        return messageSource.getMessage(message, null, defaultMessage, locale);
     }
 }

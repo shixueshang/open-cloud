@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>open-cloud</artifactId>
-        <groupId>com.github.lyd</groupId>
+        <groupId>com.opencloud</groupId>
         <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -13,7 +13,8 @@
     <version>1.0.0</version>
     <description>API网关</description>
     <modules>
-        <module>opencloud-gateway-client</module>
-        <module>opencloud-gateway-provider</module>
+        <module>opencloud-api-gateway</module>
+        <module>opencloud-api-gateway-zuul</module>
+        <module>opencloud-api-sdk</module>
     </modules>
 </project>

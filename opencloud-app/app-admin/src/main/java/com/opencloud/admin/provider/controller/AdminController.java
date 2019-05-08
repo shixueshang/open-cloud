@@ -1,7 +1,7 @@
 package com.opencloud.admin.provider.controller;
 
 import com.google.common.collect.Maps;
-import com.opencloud.autoconfigure.security.http.OpenRestTemplate;
+import com.opencloud.common.security.http.OpenRestTemplate;
 import com.opencloud.common.model.ResultBody;
 import com.opencloud.common.utils.DateUtils;
 import com.opencloud.common.utils.RandomValueUtils;

@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>opencloud-app</artifactId>
-        <groupId>com.github.lyd</groupId>
+        <groupId>com.opencloud</groupId>
         <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <artifactId>opencloud-common-starter</artifactId>
-            <groupId>com.github.lyd</groupId>
+            <groupId>com.opencloud</groupId>
             <version>${opencloud.common.version}</version>
         </dependency>
         <dependency>
@@ -28,12 +28,12 @@
             <version>1.9.22</version>
         </dependency>
         <dependency>
-            <groupId>com.github.lyd</groupId>
+            <groupId>com.opencloud</groupId>
             <artifactId>opencloud-auth-client</artifactId>
             <version>${opencloud.auth-client.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.github.lyd</groupId>
+            <groupId>com.opencloud</groupId>
             <artifactId>opencloud-base-client</artifactId>
             <version>${opencloud.base-client.version}</version>
         </dependency>

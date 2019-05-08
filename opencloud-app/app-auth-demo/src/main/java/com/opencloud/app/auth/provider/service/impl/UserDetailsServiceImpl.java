@@ -1,6 +1,6 @@
 package com.opencloud.app.auth.provider.service.impl;
 
-import com.opencloud.autoconfigure.security.OpenUser;
+import com.opencloud.common.security.OpenUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;

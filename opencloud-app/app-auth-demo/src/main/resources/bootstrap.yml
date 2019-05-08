@@ -6,7 +6,7 @@ server:
                 name: APP-OAUTH2SESSION
 spring:
     application:
-        name: com.opencloud.app.auth.provider
+        name: ${artifactId}
     cloud:
         nacos:
             config:
@@ -15,10 +15,30 @@ spring:
                 server-addr: ${config.server-addr}
                 shared-dataids: common.properties,db.properties,redis.properties,rabbitmq.properties
             discovery:
-                metadata:
-                    name: APP认证服务Demo
                 server-addr: ${discovery.server-addr}
     main:
         allow-bean-definition-overriding: true
     profiles:
         active: ${profile.name}
+    mvc:
+        throw-exception-if-no-handler-found: true
+    redis:
+        database: 1
+    thymeleaf:
+        cache: false
+        encoding: UTF-8
+        mode: LEGACYHTML5
+        prefix: classpath:/templates/
+        suffix: .html
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: refresh,health
+opencloud:
+    swagger2:
+        description: APP认证服务Demo
+        enabled: true
+        title: APP认证服务Demo
+

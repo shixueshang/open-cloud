@@ -1,0 +1,39 @@
+server:
+    port: 8288
+spring:
+    application:
+        name: ${artifactId}
+    cloud:
+        nacos:
+            config:
+                namespace: ${config.namespace}
+                refreshable-dataids: common.properties
+                server-addr: ${config.server-addr}
+                shared-dataids: common.properties,redis.properties,rabbitmq.properties
+            discovery:
+                server-addr: ${discovery.server-addr}
+    main:
+        allow-bean-definition-overriding: true
+    profiles:
+        active: ${profile.name}
+    activiti:
+        check-process-definitions: false
+        database-schema: ACT
+        database-schema-update: true
+        history-level: full
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        password: root
+        url: jdbc:mysql://localhost:3306/open-platform-bpm?useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC
+        username: root
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: refresh,health
+opencloud:
+    swagger2:
+        description: 平台工作流服务
+        enabled: true
+        title: 平台工作流服务

@@ -1,6 +1,6 @@
 package com.opencloud.admin.provider.configuration;
 
-import com.opencloud.autoconfigure.security.OpenHelper;
+import com.opencloud.common.security.OpenHelper;
 import com.opencloud.common.constants.CommonConstants;
 import com.opencloud.common.exception.OpenAccessDeniedHandler;
 import com.opencloud.common.exception.OpenAuthenticationEntryPoint;

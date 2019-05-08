@@ -1,0 +1,90 @@
+server:
+    port: 8888
+spring:
+    application:
+        name: ${artifactId}
+    cloud:
+        nacos:
+            config:
+                namespace: ${config.namespace}
+                refreshable-dataids: common.properties
+                server-addr: ${config.server-addr}
+                shared-dataids: common.properties,db.properties,redis.properties,rabbitmq.properties
+            discovery:
+                server-addr: ${discovery.server-addr}
+    main:
+        allow-bean-definition-overriding: true
+    profiles:
+        active: ${profile.name}
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          semaphore:
+            max-semaphores: 1000
+          strategy: SEMAPHORE
+          thread:
+            timeoutInMilliseconds: 60000
+        timeout:
+          enabled: true
+  threadpool:
+    default:
+      coreSize: 1000.0
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh,health,refresh-gateway
+opencloud:
+  #网关配置
+  api-gateway:
+    #动态权限控制
+    access-control: true
+    #校验参数签名
+    check-sign: false
+    #无需鉴权准入
+    not-authority-allow: /auth/user/me,/base/authority/granted/me,/base/authority/granted/me/menu
+    #始终方向
+    permit-all: /login/**,/logout,/oauth/*,/auth/login/**,/auth/logout,/auth/oauth/**,/admin/login/token
+ribbon:
+  ConnectTimeout: 30000
+  MaxAutoRetries: 10
+  MaxAutoRetriesNextServer: 10
+  MaxConnectionsPerHost: 100
+  MaxTotalHttpConnections: 1000
+  OkToRetryOnAllOperations: true
+  ReadTimeout: 5000
+zuul:
+  add-host-header: true
+  host:
+    connect-timeout-millis: 10000
+    max-per-route-connections: 500
+    max-total-connections: 1000
+    socket-timeout-millis: 60000
+  ignored-services: '*'
+  ratelimit:
+    behind-proxy: true
+    enabled: true
+    key-prefix: cloud_rate_limit
+    repository: REDIS
+  routes:
+    opencloud-admin-provider:
+      path: /admin/**
+      serviceId: opencloud-admin-provider
+    opencloud-auth-provider:
+      path: /auth/**
+      serviceId: opencloud-auth-provider
+    opencloud-base-provider:
+      path: /base/**
+      serviceId: opencloud-base-provider
+    opencloud-msg-provider:
+      path: /msg/**
+      serviceId:  opencloud-msg-provider
+    opencloud-scheduler-provider:
+      path: /scheduler/**
+      serviceId: opencloud-scheduler-provider
+  semaphore:
+    max-semaphores: 1000
+  sensitive-headers: ''

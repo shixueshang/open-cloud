@@ -1,0 +1,67 @@
+server:
+    port: 8888
+spring:
+    application:
+        name: ${artifactId}
+    cloud:
+        gateway:
+            discovery:
+                locator:
+                  enabled: false
+                  lowerCaseServiceId: true
+            routes:
+              - id: opencloud-admin-provider
+                uri: lb://opencloud-admin-provider
+                predicates:
+                    - Path=/admin/**
+                filters:
+                    #转发去掉前缀,总要否则swagger无法加载
+                    - StripPrefix=1
+              - id: opencloud-base-provider
+                uri: lb://opencloud-base-provider
+                predicates:
+                    - Path=/base/**
+                filters:
+                    - StripPrefix=1
+              - id: opencloud-auth-provider
+                uri: lb://opencloud-auth-provider
+                predicates:
+                   - Path=/auth/**
+                filters:
+                   - StripPrefix=1
+        nacos:
+            config:
+                namespace: ${config.namespace}
+                refreshable-dataids: common.properties
+                server-addr: ${config.server-addr}
+                shared-dataids: common.properties,db.properties,redis.properties,rabbitmq.properties
+            discovery:
+                server-addr: ${discovery.server-addr}
+    main:
+        allow-bean-definition-overriding: true
+    profiles:
+        active: ${profile.name}
+
+opencloud:
+# 开放api
+  api:
+      # 参数签名验证
+      check-sign: false
+      # 访问权限控制
+      access-control: true
+      # swagger调试
+      enable-swagger: true
+      # 始终放行
+      permit-all:
+        - /login/**
+        - /logout
+        - /oauth/*
+        - /auth/login/**
+        - /auth/logout
+        - /auth/oauth/**
+        - /admin/login/token
+      # 忽略权限鉴定
+      authorityIgnores:
+        - /auth/user/me
+        - /base/authority/granted/me
+        - /base/authority/granted/me/menu
