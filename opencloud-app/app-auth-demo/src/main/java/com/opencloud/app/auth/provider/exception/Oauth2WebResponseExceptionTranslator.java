@@ -9,7 +9,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * 自定义oauth2异常提示
@@ -21,8 +20,8 @@ public class Oauth2WebResponseExceptionTranslator implements WebResponseExceptio
     @Override
     public ResponseEntity translate(Exception e) throws Exception {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
-        ResultBody responseData = OpenExceptionHandler.resolveException(e, request, response);
+        ResultBody responseData = OpenExceptionHandler.resolveException(e);
+        responseData.setPath(request.getRequestURI());
         return ResponseEntity.status(responseData.getHttpStatus()).body(responseData);
     }
 }
