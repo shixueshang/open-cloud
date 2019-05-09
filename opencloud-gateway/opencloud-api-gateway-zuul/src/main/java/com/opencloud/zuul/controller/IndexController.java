@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.opencloud.common.model.ResultBody;
 import com.opencloud.zuul.configuration.ApiProperties;
-import com.opencloud.zuul.locator.ZuulRouteLocator;
+import com.opencloud.zuul.locator.DbRouteLocator;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +27,7 @@ public class IndexController {
     private ApiProperties apiProperties;
 
     @Autowired
-    private ZuulRouteLocator zuulRoutesLocator;
+    private DbRouteLocator zuulRoutesLocator;
 
     @Value("${spring.application.name}")
     private String serviceId;

@@ -26,8 +26,7 @@ package com.opencloud.zuul;
 
 import com.opencloud.zuul.event.GatewayRefreshRemoteApplicationEvent;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.cloud.bus.BusProperties;
 import org.springframework.cloud.bus.jackson.RemoteApplicationEventScan;
@@ -36,8 +35,6 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 
 /**
@@ -52,28 +49,21 @@ import org.springframework.stereotype.Component;
 @EnableDiscoveryClient
 @SpringCloudApplication
 @RemoteApplicationEventScan(basePackages = "com.opencloud.zuul.provider.event")
-public class ZuulGatewayApplication {
+public class ZuulGatewayApplication implements CommandLineRunner {
+    @Autowired
+    private ApplicationContext context;
+    @Autowired
+    private BusProperties bus;
 
     public static void main(String[] args) {
         SpringApplication.run(ZuulGatewayApplication.class, args);
     }
 
-    /**
-     * 项目启动完成加载类
-     */
-    @Component
-    @Order(value = 1)
-    public class MyApplicationRunner implements ApplicationRunner {
-        @Autowired
-        private ApplicationContext context;
-        @Autowired
-        private BusProperties bus;
-
-        @Override
-        public void run(ApplicationArguments var1) throws Exception {
-            context.publishEvent(new GatewayRefreshRemoteApplicationEvent(context, bus.getId(), null));
-        }
-
+    @Override
+    public void run(String... strings) throws Exception {
+        // 消息总线刷新所有网关实例
+        context.publishEvent(new GatewayRefreshRemoteApplicationEvent(context, bus.getId(), null));
     }
+
 
 }

@@ -30,8 +30,7 @@ public class JsonAuthenticationEntryPoint implements AuthenticationEntryPoint {
                          AuthenticationException exception) throws IOException, ServletException {
         // 保存日志
         accessLogService.sendLog(request, response);
-        ResultBody resultBody = OpenExceptionHandler.resolveException(exception);
-        resultBody.setPath(request.getRequestURI());
+        ResultBody resultBody = OpenExceptionHandler.resolveException(exception,request.getRequestURI());
         response.setStatus(resultBody.getHttpStatus());
         WebUtils.writeJson(response, resultBody);
     }

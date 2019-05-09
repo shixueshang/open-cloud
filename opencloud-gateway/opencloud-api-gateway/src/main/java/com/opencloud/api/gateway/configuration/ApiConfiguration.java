@@ -1,9 +1,12 @@
 package com.opencloud.api.gateway.configuration;
 
 import com.opencloud.api.gateway.exception.JsonExceptionHandler;
+import com.opencloud.api.gateway.locator.DbRouteLocator;
+import com.opencloud.api.gateway.service.feign.GatewayRemoteService;
 import com.opencloud.common.utils.SpringContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
@@ -106,5 +109,11 @@ public class ApiConfiguration {
         jsonExceptionHandler.setMessageReaders(serverCodecConfigurer.getReaders());
         log.debug("Init Json Exception Handler Instead Default ErrorWebExceptionHandler Success");
         return jsonExceptionHandler;
+    }
+
+    @Bean
+    @ConditionalOnBean({RouteDefinitionLocator.class})
+    public DbRouteLocator dbRouteLocator(RouteDefinitionLocator routeDefinitionLocator, GatewayRemoteService gatewayRemoteService){
+        return new DbRouteLocator(routeDefinitionLocator,gatewayRemoteService);
     }
 }

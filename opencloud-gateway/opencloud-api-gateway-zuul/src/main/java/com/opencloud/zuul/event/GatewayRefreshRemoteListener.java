@@ -1,6 +1,6 @@
 package com.opencloud.zuul.event;
 
-import com.opencloud.zuul.locator.ZuulRouteLocator;
+import com.opencloud.zuul.locator.DbRouteLocator;
 import com.opencloud.zuul.locator.AccessLocator;
 import org.springframework.context.ApplicationListener;
 
@@ -14,24 +14,24 @@ public class GatewayRefreshRemoteListener implements ApplicationListener<Gateway
     /**
      * 路由加载器
      */
-    private ZuulRouteLocator routesLocator;
+    private DbRouteLocator routesLocator;
 
     /**
      * 权限加载器
      */
     private AccessLocator permissionLocator;
 
-    public GatewayRefreshRemoteListener(ZuulRouteLocator routesLocator, AccessLocator permissionLocator) {
+    public GatewayRefreshRemoteListener(DbRouteLocator routesLocator, AccessLocator permissionLocator) {
         this.routesLocator = routesLocator;
         this.permissionLocator = permissionLocator;
     }
 
 
-    public ZuulRouteLocator getRoutesLocator() {
+    public DbRouteLocator getRoutesLocator() {
         return routesLocator;
     }
 
-    public void setRoutesLocator(ZuulRouteLocator routesLocator) {
+    public void setRoutesLocator(DbRouteLocator routesLocator) {
         this.routesLocator = routesLocator;
     }
 

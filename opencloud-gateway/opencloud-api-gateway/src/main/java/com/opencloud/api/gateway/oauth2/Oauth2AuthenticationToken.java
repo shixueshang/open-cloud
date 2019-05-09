@@ -9,6 +9,9 @@ import org.springframework.security.oauth2.server.resource.authentication.Abstra
 import java.util.Collection;
 import java.util.Map;
 
+/**
+ * @author liuyadu
+ */
 @Transient
 public class Oauth2AuthenticationToken extends AbstractOAuth2TokenAuthenticationToken<OAuth2AccessToken> {
     private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;

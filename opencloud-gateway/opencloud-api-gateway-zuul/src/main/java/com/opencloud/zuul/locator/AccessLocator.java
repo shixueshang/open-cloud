@@ -73,13 +73,13 @@ public class AccessLocator {
     private List<GatewayRateLimitApisDto> rateLimitApiList;
 
     private RateLimitProperties rateLimitProperties;
-    private ZuulRouteLocator zuulRoutesLocator;
+    private DbRouteLocator zuulRoutesLocator;
     private BaseAuthorityRemoteService baseAuthorityRemoteService;
     private GatewayRemoteService gatewayRemoteService;
     private StringToMatchTypeConverter converter;
 
 
-    public AccessLocator(ZuulRouteLocator zuulRoutesLocator, RateLimitProperties rateLimitProperties, BaseAuthorityRemoteService baseAuthorityRemoteService, GatewayRemoteService gatewayRemoteService) {
+    public AccessLocator(DbRouteLocator zuulRoutesLocator, RateLimitProperties rateLimitProperties, BaseAuthorityRemoteService baseAuthorityRemoteService, GatewayRemoteService gatewayRemoteService) {
         this.zuulRoutesLocator = zuulRoutesLocator;
         this.rateLimitProperties = rateLimitProperties;
         this.baseAuthorityRemoteService = baseAuthorityRemoteService;

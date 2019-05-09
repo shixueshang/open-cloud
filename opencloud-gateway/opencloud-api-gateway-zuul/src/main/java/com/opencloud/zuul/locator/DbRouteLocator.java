@@ -23,13 +23,13 @@ import java.util.Map;
  * @description:
  */
 @Slf4j
-public class ZuulRouteLocator extends SimpleRouteLocator {
+public class DbRouteLocator extends SimpleRouteLocator {
 
     private GatewayRemoteService gatewayRemoteService;
     private ZuulProperties properties;
     private List<GatewayRoute> routeList;
 
-    public ZuulRouteLocator(String servletPath, ZuulProperties properties, GatewayRemoteService gatewayRemoteService) {
+    public DbRouteLocator(String servletPath, ZuulProperties properties, GatewayRemoteService gatewayRemoteService) {
         super(servletPath, properties);
         this.properties = properties;
         this.gatewayRemoteService = gatewayRemoteService;

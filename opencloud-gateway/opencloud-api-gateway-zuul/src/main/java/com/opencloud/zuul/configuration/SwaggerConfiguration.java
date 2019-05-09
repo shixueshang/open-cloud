@@ -25,7 +25,7 @@
 package com.opencloud.zuul.configuration;
 
 import com.opencloud.common.swagger.OpenSwaggerProperties;
-import com.opencloud.zuul.locator.ZuulRouteLocator;
+import com.opencloud.zuul.locator.DbRouteLocator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.zuul.filters.Route;
@@ -50,13 +50,13 @@ public class SwaggerConfiguration implements SwaggerResourcesProvider {
 
     private OpenSwaggerProperties openSwaggerProperties;
 
-    private ZuulRouteLocator zuulRoutesLocator;
+    private DbRouteLocator zuulRoutesLocator;
 
     public SwaggerConfiguration() {
     }
 
     @Autowired
-    public SwaggerConfiguration(OpenSwaggerProperties openSwaggerProperties, ZuulRouteLocator zuulRouteLocator) {
+    public SwaggerConfiguration(OpenSwaggerProperties openSwaggerProperties, DbRouteLocator zuulRouteLocator) {
         this.openSwaggerProperties = openSwaggerProperties;
         this.zuulRoutesLocator = zuulRouteLocator;
     }

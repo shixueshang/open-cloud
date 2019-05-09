@@ -8,7 +8,7 @@ import com.opencloud.zuul.event.GatewayRefreshRemoteListener;
 import com.opencloud.zuul.filter.ZuulErrorFilter;
 import com.opencloud.zuul.filter.ZuulResponseFilter;
 import com.opencloud.zuul.locator.AccessLocator;
-import com.opencloud.zuul.locator.ZuulRouteLocator;
+import com.opencloud.zuul.locator.DbRouteLocator;
 import com.opencloud.zuul.service.AccessLogService;
 import com.opencloud.zuul.service.feign.BaseAuthorityRemoteService;
 import com.opencloud.zuul.service.feign.GatewayRemoteService;
@@ -48,7 +48,7 @@ public class ApiConfiguration {
     private static final Long MAX_AGE = 18000L;
 
     @Autowired
-    private ZuulRouteLocator zuulRoutesLocator;
+    private DbRouteLocator zuulRoutesLocator;
     @Autowired
     private RateLimitProperties rateLimitProperties;
     @Autowired
@@ -92,8 +92,8 @@ public class ApiConfiguration {
      * @return
      */
     @Bean
-    public ZuulRouteLocator zuulRouteLocator(ZuulProperties zuulProperties, ServerProperties serverProperties,GatewayRemoteService gatewayRemoteService) {
-        zuulRoutesLocator = new ZuulRouteLocator(serverProperties.getServlet().getContextPath(), zuulProperties, gatewayRemoteService);
+    public DbRouteLocator zuulRouteLocator(ZuulProperties zuulProperties, ServerProperties serverProperties, GatewayRemoteService gatewayRemoteService) {
+        zuulRoutesLocator = new DbRouteLocator(serverProperties.getServlet().getContextPath(), zuulProperties, gatewayRemoteService);
         log.info("ZuulRoutesLocator:{}", zuulRoutesLocator);
         return zuulRoutesLocator;
     }

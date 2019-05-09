@@ -3,23 +3,15 @@ package com.opencloud.common.exception;
 import com.opencloud.common.constants.ResultEnum;
 import com.opencloud.common.model.ResultBody;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.*;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.oauth2.common.exceptions.*;
+import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
+import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.HttpMediaTypeNotAcceptableException;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,8 +39,7 @@ public class OpenExceptionHandler {
      */
     @ExceptionHandler({AuthenticationException.class})
     public static ResultBody authenticationException(Exception ex, HttpServletRequest request, HttpServletResponse response) {
-        ResultBody resultBody = resolveException(ex);
-        resultBody.setPath(request.getRequestURI());
+        ResultBody resultBody = resolveException(ex,request.getRequestURI());
         response.setStatus(resultBody.getHttpStatus());
         return resultBody;
     }
@@ -63,8 +54,7 @@ public class OpenExceptionHandler {
      */
     @ExceptionHandler({OAuth2Exception.class, InvalidTokenException.class})
     public static ResultBody oauth2Exception(Exception ex, HttpServletRequest request, HttpServletResponse response) {
-        ResultBody resultBody = resolveException(ex);
-        resultBody.setPath(request.getRequestURI());
+        ResultBody resultBody = resolveException(ex,request.getRequestURI());
         response.setStatus(resultBody.getHttpStatus());
         return resultBody;
     }
@@ -79,8 +69,7 @@ public class OpenExceptionHandler {
      */
     @ExceptionHandler({OpenException.class})
     public static ResultBody openException(Exception ex, HttpServletRequest request, HttpServletResponse response) {
-        ResultBody resultBody = resolveException(ex);
-        resultBody.setPath(request.getRequestURI());
+        ResultBody resultBody = resolveException(ex,request.getRequestURI());
         response.setStatus(resultBody.getHttpStatus());
         return resultBody;
     }
@@ -95,8 +84,7 @@ public class OpenExceptionHandler {
      */
     @ExceptionHandler({Exception.class})
     public static ResultBody exception(Exception ex, HttpServletRequest request, HttpServletResponse response) {
-        ResultBody resultBody = resolveException(ex);
-        resultBody.setPath(request.getRequestURI());
+        ResultBody resultBody = resolveException(ex,request.getRequestURI());
         response.setStatus(resultBody.getHttpStatus());
         return resultBody;
     }
@@ -108,60 +96,62 @@ public class OpenExceptionHandler {
      * @param ex
      * @return
      */
-    public static ResultBody resolveException(Exception ex) {
+    public static ResultBody resolveException(Exception ex,String path) {
         ResultEnum code = ResultEnum.ERROR;
         int httpStatus = HttpStatus.OK.value();
-        if (ex instanceof AuthenticationException) {
-            if (ex instanceof UsernameNotFoundException) {
+        String superClassName = ex.getClass().getSuperclass().getName();
+        String className = ex.getClass().getName();
+        if (superClassName.contains("AuthenticationException")) {
+            if (className.contains("UsernameNotFoundException")) {
                 code = ResultEnum.USERNAME_NOT_FOUND;
-            } else if (ex instanceof BadCredentialsException) {
+            } else if (className.contains("BadCredentialsException")) {
                 code = ResultEnum.BAD_CREDENTIALS;
-            } else if (ex instanceof AccountExpiredException) {
+            } else if (className.contains("AccountExpiredException")) {
                 code = ResultEnum.ACCOUNT_EXPIRED;
-            } else if (ex instanceof LockedException) {
+            } else if (className.contains("LockedException")) {
                 code = ResultEnum.ACCOUNT_LOCKED;
-            } else if (ex instanceof DisabledException) {
+            } else if (className.contains("DisabledException")) {
                 code = ResultEnum.ACCOUNT_DISABLED;
-            } else if (ex instanceof CredentialsExpiredException) {
+            } else if (className.contains("CredentialsExpiredException")) {
                 code = ResultEnum.CREDENTIALS_EXPIRED;
-            }else{
+            } else {
                 code = ResultEnum.UNAUTHORIZED;
                 httpStatus = HttpStatus.UNAUTHORIZED.value();
             }
-        } else if (ex instanceof OAuth2Exception) {
+        } else if (superClassName.contains("OAuth2Exception")) {
             code = ResultEnum.UNAUTHORIZED;
             httpStatus = HttpStatus.UNAUTHORIZED.value();
-            if (ex instanceof InvalidClientException) {
+            if (className.contains("InvalidClientException")) {
                 code = ResultEnum.INVALID_CLIENT;
-            } else if (ex instanceof UnauthorizedClientException) {
+            } else if (className.contains("UnauthorizedClientException")) {
                 code = ResultEnum.UNAUTHORIZED_CLIENT;
-            } else if (ex instanceof InvalidGrantException) {
+            } else if (className.contains("InvalidGrantException")) {
                 code = ResultEnum.INVALID_GRANT;
-                if ("Bad credentials".equals(ex.getMessage())) {
+                if ("Bad credentials".contains(ex.getMessage())) {
                     code = ResultEnum.BAD_CREDENTIALS;
                     httpStatus = HttpStatus.OK.value();
                 }
-                if ("User is disabled".equals(ex.getMessage())) {
+                if ("User is disabled".contains(ex.getMessage())) {
                     code = ResultEnum.ACCOUNT_DISABLED;
                     httpStatus = HttpStatus.OK.value();
                 }
-                if ("User account is locked".equals(ex.getMessage())) {
+                if ("User account is locked".contains(ex.getMessage())) {
                     code = ResultEnum.ACCOUNT_LOCKED;
                     httpStatus = HttpStatus.OK.value();
                 }
-            } else if (ex instanceof InvalidScopeException) {
+            } else if (className.contains("InvalidScopeException")) {
                 code = ResultEnum.INVALID_SCOPE;
-            } else if (ex instanceof InvalidTokenException) {
+            } else if (className.contains("InvalidTokenException")) {
                 code = ResultEnum.INVALID_TOKEN;
-            } else if (ex instanceof InvalidRequestException) {
+            } else if (className.contains("InvalidRequestException")) {
                 code = ResultEnum.INVALID_REQUEST;
-            } else if (ex instanceof RedirectMismatchException) {
+            } else if (className.contains("RedirectMismatchException")) {
                 code = ResultEnum.REDIRECT_URI_MISMATCH;
-            } else if (ex instanceof UnsupportedGrantTypeException) {
+            } else if (className.contains("UnsupportedGrantTypeException")) {
                 code = ResultEnum.UNSUPPORTED_GRANT_TYPE;
-            } else if (ex instanceof UnsupportedResponseTypeException) {
+            } else if (className.contains("UnsupportedResponseTypeException")) {
                 code = ResultEnum.UNSUPPORTED_RESPONSE_TYPE;
-            } else if (ex instanceof UserDeniedAuthorizationException) {
+            } else if (className.contains("UserDeniedAuthorizationException")) {
                 code = ResultEnum.ACCESS_DENIED;
             } else {
                 code = ResultEnum.INVALID_REQUEST;
@@ -169,44 +159,46 @@ public class OpenExceptionHandler {
             if (code.equals(ResultEnum.ACCESS_DENIED)) {
                 httpStatus = HttpStatus.FORBIDDEN.value();
             }
-        } else if (ex instanceof OpenException) {
+        } else if (superClassName.contains("OpenException")) {
             code = ResultEnum.ERROR;
             httpStatus = HttpStatus.OK.value();
-            if (ex instanceof OpenAlertException) {
+            if (className.contains("OpenAlertException")) {
                 code = ResultEnum.ALERT;
             }
-            if (ex instanceof OpenSignatureException) {
+            if (className.contains("exception.OpenSignatureException")) {
                 code = ResultEnum.SIGNATURE_DENIED;
             }
         } else {
             code = ResultEnum.ERROR;
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR.value();
-            if (ex instanceof HttpMessageNotReadableException || ex instanceof TypeMismatchException || ex instanceof MissingServletRequestParameterException) {
+            if (className.contains("HttpMessageNotReadableException")
+                    || className.contains("TypeMismatchException")
+                    || className.contains("MissingServletRequestParameterException")) {
                 httpStatus = HttpStatus.BAD_REQUEST.value();
                 code = ResultEnum.BAD_REQUEST;
-            } else if (ex instanceof NoHandlerFoundException) {
+            } else if (className.contains("NoHandlerFoundException")) {
                 httpStatus = HttpStatus.NOT_FOUND.value();
                 code = ResultEnum.NOT_FOUND;
-            } else if (ex instanceof HttpRequestMethodNotSupportedException) {
+            } else if (className.contains("HttpRequestMethodNotSupportedException")) {
                 httpStatus = HttpStatus.METHOD_NOT_ALLOWED.value();
                 code = ResultEnum.METHOD_NOT_ALLOWED;
-            } else if (ex instanceof HttpMediaTypeNotAcceptableException) {
+            } else if (className.contains("HttpMediaTypeNotAcceptableException")) {
                 httpStatus = HttpStatus.BAD_REQUEST.value();
                 code = ResultEnum.MEDIA_TYPE_NOT_ACCEPTABLE;
-            } else if (ex instanceof MethodArgumentNotValidException) {
+            } else if (className.contains("MethodArgumentNotValidException")) {
                 BindingResult bindingResult = ((MethodArgumentNotValidException) ex).getBindingResult();
                 code = ResultEnum.ALERT;
                 return ResultBody.failed(code.getCode(), bindingResult.getFieldError().getDefaultMessage());
-            } else if (ex instanceof IllegalArgumentException) {
+            } else if (className.contains("IllegalArgumentException")) {
                 //参数错误
                 code = ResultEnum.ALERT;
                 httpStatus = HttpStatus.BAD_REQUEST.value();
-            } else if (ex instanceof AccessDeniedException) {
+            } else if (className.contains("AccessDeniedException")) {
                 code = ResultEnum.ACCESS_DENIED;
                 httpStatus = HttpStatus.FORBIDDEN.value();
             }
         }
-        return buildBody(ex, code, null, httpStatus);
+        return buildBody(ex, code, path, httpStatus);
     }
 
     /**
