@@ -3,6 +3,7 @@ package com.opencloud.base.provider.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.opencloud.base.client.model.entity.BaseApp;
 import com.opencloud.common.model.PageParams;
+import com.opencloud.common.mybatis.base.service.IBaseService;
 import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 
 /**
@@ -10,7 +11,7 @@ import org.springframework.security.oauth2.provider.client.BaseClientDetails;
  *
  * @author liuyadu
  */
-public interface BaseAppService {
+public interface BaseAppService extends IBaseService<BaseApp> {
 
     /**
      * 查询应用列表
@@ -39,6 +40,7 @@ public interface BaseAppService {
 
     /**
      * 更新应用开发新型
+     *
      * @param baseClientDetails
      */
     BaseClientDetails updateAppClientInfo(BaseClientDetails baseClientDetails);

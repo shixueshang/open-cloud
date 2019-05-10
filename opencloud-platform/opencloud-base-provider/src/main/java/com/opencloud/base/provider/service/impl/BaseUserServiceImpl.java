@@ -3,7 +3,6 @@ package com.opencloud.base.provider.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.opencloud.base.client.constants.BaseConstants;
@@ -16,6 +15,8 @@ import com.opencloud.base.provider.service.BaseRoleService;
 import com.opencloud.base.provider.service.BaseUserService;
 import com.opencloud.common.constants.CommonConstants;
 import com.opencloud.common.model.PageParams;
+import com.opencloud.common.mybatis.base.service.impl.BaseServiceImpl;
+import com.opencloud.common.mybatis.query.CriteriaQuery;
 import com.opencloud.common.security.Authority;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ import java.util.Map;
  */
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class BaseUserServiceImpl implements BaseUserService {
+public class BaseUserServiceImpl extends BaseServiceImpl<BaseUserMapper, BaseUser> implements BaseUserService {
 
     @Autowired
     private BaseUserMapper baseUserMapper;
@@ -79,11 +80,11 @@ public class BaseUserServiceImpl implements BaseUserService {
         BaseUser query = pageParams.mapToObject(BaseUser.class);
         QueryWrapper<BaseUser> queryWrapper = new QueryWrapper();
         queryWrapper.lambda()
-                .eq(ObjectUtils.isNotEmpty(query.getUserId()),BaseUser::getUserId, query.getUserId())
-                .eq(ObjectUtils.isNotEmpty(query.getUserType()),BaseUser::getUserType, query.getUserType())
-                .eq(ObjectUtils.isNotEmpty(query.getUserName()),BaseUser::getUserName, query.getUserName())
-                .eq(ObjectUtils.isNotEmpty(query.getMobile()),BaseUser::getMobile, query.getMobile());
-        return baseUserMapper.selectPage(new Page(pageParams.getPage(),pageParams.getLimit()),queryWrapper);
+                .eq(ObjectUtils.isNotEmpty(query.getUserId()), BaseUser::getUserId, query.getUserId())
+                .eq(ObjectUtils.isNotEmpty(query.getUserType()), BaseUser::getUserType, query.getUserType())
+                .eq(ObjectUtils.isNotEmpty(query.getUserName()), BaseUser::getUserName, query.getUserName())
+                .eq(ObjectUtils.isNotEmpty(query.getMobile()), BaseUser::getMobile, query.getMobile());
+        return baseUserMapper.selectPage(pageParams, queryWrapper);
     }
 
     /**
@@ -164,7 +165,7 @@ public class BaseUserServiceImpl implements BaseUserService {
     public BaseUser getUserByUsername(String username) {
         QueryWrapper<BaseUser> queryWrapper = new QueryWrapper();
         queryWrapper.lambda()
-                .eq(BaseUser::getUserName,username);
+                .eq(BaseUser::getUserName, username);
         BaseUser saved = baseUserMapper.selectOne(queryWrapper);
         return saved;
     }

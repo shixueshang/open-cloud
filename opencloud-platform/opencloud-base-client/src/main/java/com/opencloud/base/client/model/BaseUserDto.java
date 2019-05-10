@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 import com.opencloud.base.client.model.entity.BaseUser;
 import com.opencloud.common.security.Authority;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -15,6 +18,7 @@ import java.util.Map;
  * @date: 2018/11/12 11:35
  * @description:
  */
+@Data
 public class BaseUserDto extends BaseUser implements Serializable {
     private static final long serialVersionUID = 6717800085953996702L;
     /**
@@ -37,36 +41,4 @@ public class BaseUserDto extends BaseUser implements Serializable {
     @JsonIgnore
     @JSONField(serialize = false)
     private String password;
-
-    public Collection<Map> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Collection<Map> roles) {
-        this.roles = roles;
-    }
-
-    public Collection<Authority> getAuthorities() {
-        return authorities;
-    }
-
-    public void setAuthorities(Collection<Authority> authorities) {
-        this.authorities = authorities;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getThirdParty() {
-        return thirdParty;
-    }
-
-    public void setThirdParty(String thirdParty) {
-        this.thirdParty = thirdParty;
-    }
 }

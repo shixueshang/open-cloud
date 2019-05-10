@@ -26,7 +26,6 @@
         <maven-assembly-plugin.version>3.1.0</maven-assembly-plugin.version>
         <spring-boot.version>2.1.4.RELEASE</spring-boot.version>
         <spring-cloud.version>Greenwich.SR1</spring-cloud.version>
-
         <alibaba.cloud.version>0.2.1.RELEASE</alibaba.cloud.version>
         <alibaba.fastjson.version>1.2.37</alibaba.fastjson.version>
         <alibaba.druid.version>1.1.16</alibaba.druid.version>
@@ -36,7 +35,7 @@
         <apache.commons.beanutils>1.9.3</apache.commons.beanutils>
 
         <mybatis-plus.version>3.1.1</mybatis-plus.version>
-
+        <lombok.versin>1.18.0</lombok.versin>
         <com.google.zxing.version>3.1.0</com.google.zxing.version>
         <google.guava.version>19.0</google.guava.version>
         <swagger2.version>2.7.0</swagger2.version>
@@ -102,6 +101,16 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring-boot.version}</version>
@@ -114,6 +123,17 @@
                 <version>${spring-cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <!--工具类-->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>18.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

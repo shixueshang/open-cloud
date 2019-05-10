@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.opencloud.base.client.model.BaseUserDto;
 import com.opencloud.base.client.model.entity.BaseUser;
 import com.opencloud.common.model.PageParams;
+import com.opencloud.common.mybatis.base.service.IBaseService;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
  * @date: 2018/10/24 16:38
  * @description:
  */
-public interface BaseUserService {
+public interface BaseUserService extends IBaseService<BaseUser> {
 
     /**
      * 更新系统用户

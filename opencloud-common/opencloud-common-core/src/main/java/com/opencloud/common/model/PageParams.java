@@ -1,9 +1,10 @@
 package com.opencloud.common.model;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.common.collect.Maps;
 import com.opencloud.common.constants.CommonConstants;
 import com.opencloud.common.utils.BeanConvertUtils;
 import com.opencloud.common.utils.StringUtils;
-import com.google.common.collect.Maps;
 import io.swagger.annotations.ApiModel;
 
 import java.io.Serializable;
@@ -16,7 +17,7 @@ import java.util.Map;
  * @date 2018/07/10
  */
 @ApiModel(value = "分页参数")
-public class PageParams implements Serializable {
+public class PageParams extends Page implements Serializable {
     private static final long serialVersionUID = -1710273706052960025L;
     private int page = CommonConstants.DEFAULT_PAGE;
     private int limit = CommonConstants.DEFAULT_LIMIT;
@@ -44,6 +45,8 @@ public class PageParams implements Serializable {
         this.limit = Integer.parseInt(map.getOrDefault(CommonConstants.PAGE_LIMIT_KEY, CommonConstants.DEFAULT_LIMIT).toString());
         this.sort = (String) map.getOrDefault(CommonConstants.PAGE_SORT_KEY, "");
         this.order = (String) map.getOrDefault(CommonConstants.PAGE_ORDER_KEY, "");
+        super.setCurrent(page);
+        super.setSize(limit);
         map.remove(CommonConstants.PAGE_KEY);
         map.remove(CommonConstants.PAGE_LIMIT_KEY);
         map.remove(CommonConstants.PAGE_SORT_KEY);

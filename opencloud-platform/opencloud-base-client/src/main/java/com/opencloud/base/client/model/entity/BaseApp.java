@@ -4,19 +4,24 @@ package com.opencloud.base.client.model.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.opencloud.common.annotation.TableAlias;
+import com.opencloud.common.mybatis.base.entity.AbstractEntity;
+import org.apache.ibatis.type.Alias;
 
 import java.io.Serializable;
 import java.util.Date;
 
 /**
  * 系统应用-基础信息
+ *
  * @author liuyadu
  */
 @TableName("base_app")
-public class BaseApp implements Serializable {
+@TableAlias("app")
+public class BaseApp extends AbstractEntity {
     private static final long serialVersionUID = -4606067795040222681L;
 
-    @TableId(type= IdType.ID_WORKER)
+    @TableId(type = IdType.ID_WORKER)
     private String appId;
 
     /**
@@ -187,41 +192,6 @@ public class BaseApp implements Serializable {
         this.appDesc = appDesc;
     }
 
-    /**
-     * 获取创建时间
-     *
-     * @return create_time - 创建时间
-     */
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    /**
-     * 设置创建时间
-     *
-     * @param createTime 创建时间
-     */
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    /**
-     * 获取更新时间
-     *
-     * @return update_time - 更新时间
-     */
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    /**
-     * 设置更新时间
-     *
-     * @param updateTime 更新时间
-     */
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
 
     public String getAppIcon() {
         return appIcon;

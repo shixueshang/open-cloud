@@ -39,11 +39,6 @@
             <version>${alibaba.druid.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>${mybatis-plus.version}</version>
-        </dependency>
-        <dependency>
             <artifactId>opencloud-common-core</artifactId>
             <groupId>com.opencloud</groupId>
             <version>${opencloud.common.version}</version>

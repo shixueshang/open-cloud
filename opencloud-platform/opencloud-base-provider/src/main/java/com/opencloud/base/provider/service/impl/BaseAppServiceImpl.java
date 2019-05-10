@@ -1,17 +1,18 @@
 package com.opencloud.base.provider.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.opencloud.auth.client.constants.AuthConstants;
 import com.opencloud.base.client.constants.BaseConstants;
 import com.opencloud.base.client.model.entity.BaseApp;
+import com.opencloud.base.client.model.entity.BaseUser;
 import com.opencloud.base.provider.mapper.BaseAppMapper;
 import com.opencloud.base.provider.service.BaseAppService;
 import com.opencloud.base.provider.service.BaseAuthorityService;
 import com.opencloud.common.exception.OpenAlertException;
 import com.opencloud.common.model.PageParams;
+import com.opencloud.common.mybatis.base.service.impl.BaseServiceImpl;
+import com.opencloud.common.mybatis.query.CriteriaQuery;
 import com.opencloud.common.utils.BeanConvertUtils;
 import com.opencloud.common.utils.RandomValueUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +37,7 @@ import java.util.Map;
 @Slf4j
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class BaseAppServiceImpl implements BaseAppService {
+public class BaseAppServiceImpl extends BaseServiceImpl<BaseAppMapper, BaseApp> implements BaseAppService {
 
     @Autowired
     private BaseAppMapper baseAppMapper;
@@ -53,15 +54,18 @@ public class BaseAppServiceImpl implements BaseAppService {
      */
     @Override
     public IPage<BaseApp> findListPage(PageParams pageParams) {
-        BaseApp query =  pageParams.mapToObject(BaseApp.class);
-        QueryWrapper<BaseApp> queryWrapper = new QueryWrapper();
-        queryWrapper.lambda()
-                .eq(ObjectUtils.isNotEmpty(query.getUserId()),BaseApp::getUserId, query.getUserId())
-                .eq(ObjectUtils.isNotEmpty(query.getAppType()),BaseApp::getAppType, query.getAppType())
-                .eq(ObjectUtils.isNotEmpty(query.getAppId()),BaseApp::getAppId, query.getAppId())
-                .likeRight(ObjectUtils.isNotEmpty(query.getAppName()),BaseApp::getAppName, query.getAppName())
-                .likeRight(ObjectUtils.isNotEmpty(query.getAppNameEn()),BaseApp::getAppNameEn, query.getAppNameEn());
-        return baseAppMapper.selectPage(new Page(pageParams.getPage(),pageParams.getLimit()),queryWrapper);
+        BaseApp query = pageParams.mapToObject(BaseApp.class);
+        CriteriaQuery<BaseApp> cq = new CriteriaQuery(pageParams);
+        cq.lambda()
+                .eq(ObjectUtils.isNotEmpty(query.getUserId()), BaseApp::getUserId, query.getUserId())
+                .eq(ObjectUtils.isNotEmpty(query.getAppType()), BaseApp::getAppType, query.getAppType())
+                .eq(ObjectUtils.isNotEmpty(query.getAppId()), BaseApp::getAppId, query.getAppId())
+                .likeRight(ObjectUtils.isNotEmpty(query.getAppName()), BaseApp::getAppName, query.getAppName())
+                .likeRight(ObjectUtils.isNotEmpty(query.getAppNameEn()), BaseApp::getAppNameEn, query.getAppNameEn());
+        cq.select("app.*,user.user_name");
+        cq.createAlias(BaseUser.class);
+        return pageList(cq);
+        // return baseAppMapper.selectPage(pageParams, queryWrapper);
     }
 
     /**
