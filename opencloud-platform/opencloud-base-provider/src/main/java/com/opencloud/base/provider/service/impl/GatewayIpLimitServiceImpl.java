@@ -5,12 +5,15 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.opencloud.base.client.model.GatewayIpLimitApisDto;
+import com.opencloud.base.client.model.entity.BaseResourceOperation;
 import com.opencloud.base.client.model.entity.GatewayIpLimit;
 import com.opencloud.base.client.model.entity.GatewayIpLimitApi;
+import com.opencloud.base.provider.mapper.BaseResourceOperationMapper;
 import com.opencloud.base.provider.mapper.GatewayIpLimitApisMapper;
 import com.opencloud.base.provider.mapper.GatewayIpLimitMapper;
 import com.opencloud.base.provider.service.GatewayIpLimitService;
 import com.opencloud.common.model.PageParams;
+import com.opencloud.common.mybatis.base.service.impl.BaseServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +28,7 @@ import java.util.List;
 @Slf4j
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class GatewayIpLimitServiceImpl implements GatewayIpLimitService {
+public class GatewayIpLimitServiceImpl extends BaseServiceImpl<GatewayIpLimitMapper, GatewayIpLimit> implements GatewayIpLimitService {
 
     @Autowired
     private GatewayIpLimitMapper gatewayIpLimitMapper;
@@ -46,7 +49,7 @@ public class GatewayIpLimitServiceImpl implements GatewayIpLimitService {
         queryWrapper.lambda()
                 .likeRight(ObjectUtils.isNotEmpty(query.getPolicyName()),GatewayIpLimit::getPolicyName, query.getPolicyName())
                 .eq(ObjectUtils.isNotEmpty(query.getPolicyType()),GatewayIpLimit::getPolicyType, query.getPolicyType());
-        return gatewayIpLimitMapper.selectPage(new Page(pageParams.getPage(),pageParams.getLimit()),queryWrapper);
+        return gatewayIpLimitMapper.selectPage(pageParams,queryWrapper);
     }
 
     /**

@@ -4,7 +4,9 @@ import com.opencloud.base.client.constants.ResourceType;
 import com.opencloud.base.client.model.AccessAuthority;
 import com.opencloud.base.client.model.BaseApiAuthority;
 import com.opencloud.base.client.model.BaseMenuAuthority;
+import com.opencloud.base.client.model.entity.BaseApp;
 import com.opencloud.base.client.model.entity.BaseAuthority;
+import com.opencloud.common.mybatis.base.service.IBaseService;
 import com.opencloud.common.security.Authority;
 
 import java.util.Date;
@@ -15,7 +17,7 @@ import java.util.List;
  *
  * @author liuyadu
  */
-public interface BaseAuthorityService {
+public interface BaseAuthorityService extends IBaseService<BaseAuthority> {
 
     /**
      * 获取访问权限列表

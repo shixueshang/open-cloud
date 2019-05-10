@@ -3,6 +3,7 @@ package com.opencloud.base.client.model.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.opencloud.common.mybatis.base.entity.AbstractEntity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -15,12 +16,12 @@ import java.util.Date;
  * @description:
  */
 @TableName("base_resource_api")
-public class BaseResourceApi implements Serializable {
+public class BaseResourceApi extends AbstractEntity {
     private static final long serialVersionUID = -9099562653030770650L;
     /**
      * 资源ID
      */
-    @TableId(type= IdType.ID_WORKER)
+    @TableId(type = IdType.ID_WORKER)
     private Long apiId;
 
     /**
@@ -212,34 +213,6 @@ public class BaseResourceApi implements Serializable {
 
     public void setStatus(Integer status) {
         this.status = status;
-    }
-
-    /**
-     * @return create_time
-     */
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    /**
-     * @param createTime
-     */
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    /**
-     * @return update_time
-     */
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    /**
-     * @param updateTime
-     */
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
     }
 
     public String getApiCategory() {

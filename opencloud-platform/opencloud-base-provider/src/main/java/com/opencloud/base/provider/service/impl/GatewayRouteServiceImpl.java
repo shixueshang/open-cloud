@@ -2,16 +2,15 @@ package com.opencloud.base.provider.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.opencloud.base.client.constants.BaseConstants;
 import com.opencloud.base.client.model.entity.GatewayRoute;
 import com.opencloud.base.provider.mapper.GatewayRouteMapper;
 import com.opencloud.base.provider.service.GatewayRouteService;
 import com.opencloud.common.exception.OpenAlertException;
 import com.opencloud.common.model.PageParams;
+import com.opencloud.common.mybatis.base.service.impl.BaseServiceImpl;
 import com.opencloud.common.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,10 +22,9 @@ import java.util.List;
 @Slf4j
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class GatewayRouteServiceImpl implements GatewayRouteService {
+public class GatewayRouteServiceImpl extends BaseServiceImpl<GatewayRouteMapper, GatewayRoute> implements GatewayRouteService {
 
-    @Autowired
-    private GatewayRouteMapper gatewayRouteMapper;
+
 
     /**
      * 分页查询
@@ -37,7 +35,7 @@ public class GatewayRouteServiceImpl implements GatewayRouteService {
     @Override
     public IPage<GatewayRoute> findListPage(PageParams pageParams) {
         QueryWrapper<GatewayRoute> queryWrapper = new QueryWrapper();
-        return gatewayRouteMapper.selectPage(new Page(pageParams.getPage(),pageParams.getLimit()),queryWrapper);
+        return page(pageParams, queryWrapper);
     }
 
     /**
@@ -48,8 +46,8 @@ public class GatewayRouteServiceImpl implements GatewayRouteService {
     @Override
     public List<GatewayRoute> findRouteList() {
         QueryWrapper<GatewayRoute> queryWrapper = new QueryWrapper();
-        queryWrapper.lambda().eq(GatewayRoute::getStatus,BaseConstants.ENABLED);
-        List<GatewayRoute> list = gatewayRouteMapper.selectList(queryWrapper);
+        queryWrapper.lambda().eq(GatewayRoute::getStatus, BaseConstants.ENABLED);
+        List<GatewayRoute> list = list(queryWrapper);
         return list;
     }
 
@@ -61,7 +59,7 @@ public class GatewayRouteServiceImpl implements GatewayRouteService {
      */
     @Override
     public GatewayRoute getRoute(Long routeId) {
-        return gatewayRouteMapper.selectById(routeId);
+        return getById(routeId);
     }
 
     /**
@@ -78,7 +76,7 @@ public class GatewayRouteServiceImpl implements GatewayRouteService {
             throw new OpenAlertException(String.format("path已存在!"));
         }
         route.setIsPersist(0);
-        gatewayRouteMapper.insert(route);
+        save(route);
         return route;
     }
 
@@ -105,7 +103,7 @@ public class GatewayRouteServiceImpl implements GatewayRouteService {
                 throw new OpenAlertException("path已存在!");
             }
         }
-        gatewayRouteMapper.updateById(route);
+        updateById(route);
         return route;
     }
 
@@ -120,7 +118,7 @@ public class GatewayRouteServiceImpl implements GatewayRouteService {
         if (saved != null && saved.getIsPersist().equals(BaseConstants.ENABLED)) {
             throw new OpenAlertException(String.format("保留数据,不允许删除"));
         }
-        gatewayRouteMapper.deleteById(routeId);
+        removeById(routeId);
     }
 
     /**
@@ -131,8 +129,8 @@ public class GatewayRouteServiceImpl implements GatewayRouteService {
     @Override
     public Boolean isExist(String path) {
         QueryWrapper<GatewayRoute> queryWrapper = new QueryWrapper();
-        queryWrapper.lambda().eq(GatewayRoute::getPath,path);
-        int count = gatewayRouteMapper.selectCount(queryWrapper);
+        queryWrapper.lambda().eq(GatewayRoute::getPath, path);
+        int count = count(queryWrapper);
         return count > 0;
     }
 }

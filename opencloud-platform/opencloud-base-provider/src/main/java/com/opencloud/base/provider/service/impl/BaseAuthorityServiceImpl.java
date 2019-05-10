@@ -9,14 +9,12 @@ import com.opencloud.base.client.model.AccessAuthority;
 import com.opencloud.base.client.model.BaseApiAuthority;
 import com.opencloud.base.client.model.BaseMenuAuthority;
 import com.opencloud.base.client.model.entity.*;
-import com.opencloud.base.provider.mapper.BaseAppAuthorityMapper;
-import com.opencloud.base.provider.mapper.BaseAuthorityMapper;
-import com.opencloud.base.provider.mapper.BaseRoleAuthorityMapper;
-import com.opencloud.base.provider.mapper.BaseUserAuthorityMapper;
+import com.opencloud.base.provider.mapper.*;
 import com.opencloud.base.provider.service.*;
 import com.opencloud.common.constants.CommonConstants;
 import com.opencloud.common.exception.OpenAlertException;
 import com.opencloud.common.exception.OpenException;
+import com.opencloud.common.mybatis.base.service.impl.BaseServiceImpl;
 import com.opencloud.common.security.Authority;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,7 +36,7 @@ import java.util.Map;
  */
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class BaseAuthorityServiceImpl implements BaseAuthorityService {
+public class BaseAuthorityServiceImpl  extends BaseServiceImpl<BaseAuthorityMapper, BaseAuthority> implements BaseAuthorityService {
 
     @Autowired
     private BaseAuthorityMapper baseAuthorityMapper;

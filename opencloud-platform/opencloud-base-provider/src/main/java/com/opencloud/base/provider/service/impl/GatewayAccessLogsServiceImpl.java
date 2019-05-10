@@ -39,6 +39,6 @@ public class GatewayAccessLogsServiceImpl implements GatewayAccessLogsService {
                 .eq(ObjectUtils.isNotEmpty(query.getIp()),GatewayAccessLogs::getIp, query.getIp())
                 .eq(ObjectUtils.isNotEmpty(query.getServerIp()),GatewayAccessLogs::getServerIp, query.getServerIp())
                 .eq(ObjectUtils.isNotEmpty(query.getServiceId()),GatewayAccessLogs::getServiceId, query.getServiceId());
-        return gatewayLogsMapper.selectPage(new Page(pageParams.getPage(),pageParams.getLimit()),queryWrapper);
+        return gatewayLogsMapper.selectPage(pageParams,queryWrapper);
     }
 }

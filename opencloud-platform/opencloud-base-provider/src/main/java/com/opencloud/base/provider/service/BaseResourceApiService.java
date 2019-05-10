@@ -4,14 +4,16 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.opencloud.base.client.model.entity.BaseResourceApi;
 import com.opencloud.common.model.PageParams;
+import com.opencloud.common.mybatis.base.service.IBaseService;
 
 import java.util.List;
 
 /**
  * 接口资源管理
+ *
  * @author liuyadu
  */
-public interface BaseResourceApiService {
+public interface BaseResourceApiService extends IBaseService<BaseResourceApi>{
     /**
      * 分页查询
      *
@@ -22,6 +24,7 @@ public interface BaseResourceApiService {
 
     /**
      * 查询列表
+     *
      * @return
      */
     List<BaseResourceApi> findAllList(String serviceId);
@@ -78,6 +81,7 @@ public interface BaseResourceApiService {
 
     /**
      * 获取数量
+     *
      * @param queryWrapper
      * @return
      */

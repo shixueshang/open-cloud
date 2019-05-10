@@ -4,6 +4,8 @@ import com.opencloud.base.client.model.BaseUserAccountDto;
 import com.opencloud.base.client.model.BaseUserDto;
 import com.opencloud.base.client.model.entity.BaseUserAccount;
 import com.opencloud.base.client.model.entity.BaseUserAccountLogs;
+import com.opencloud.base.client.model.entity.GatewayIpLimit;
+import com.opencloud.common.mybatis.base.service.IBaseService;
 
 /**
  * 系统用户登录账号管理
@@ -11,7 +13,7 @@ import com.opencloud.base.client.model.entity.BaseUserAccountLogs;
  *
  * @author liuyadu
  */
-public interface BaseUserAccountService {
+public interface BaseUserAccountService extends IBaseService<BaseUserAccount> {
 
     /**
      * 注册账户

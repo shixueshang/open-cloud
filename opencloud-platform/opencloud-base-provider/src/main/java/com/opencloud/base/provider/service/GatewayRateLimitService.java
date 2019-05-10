@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.opencloud.base.client.model.GatewayRateLimitApisDto;
 import com.opencloud.base.client.model.entity.GatewayRateLimit;
 import com.opencloud.base.client.model.entity.GatewayRateLimitApi;
+import com.opencloud.base.client.model.entity.GatewayRoute;
 import com.opencloud.common.model.PageParams;
+import com.opencloud.common.mybatis.base.service.IBaseService;
 
 import java.util.List;
 
@@ -12,7 +14,7 @@ import java.util.List;
  * 访问日志
  * @author liuyadu
  */
-public interface GatewayRateLimitService {
+public interface GatewayRateLimitService extends IBaseService<GatewayRateLimit> {
 
     /**
      * 分页查询

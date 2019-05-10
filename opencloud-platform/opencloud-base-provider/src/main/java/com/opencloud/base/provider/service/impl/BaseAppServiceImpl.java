@@ -63,9 +63,9 @@ public class BaseAppServiceImpl extends BaseServiceImpl<BaseAppMapper, BaseApp> 
                 .likeRight(ObjectUtils.isNotEmpty(query.getAppName()), BaseApp::getAppName, query.getAppName())
                 .likeRight(ObjectUtils.isNotEmpty(query.getAppNameEn()), BaseApp::getAppNameEn, query.getAppNameEn());
         cq.select("app.*,user.user_name");
+        //关联User表
         cq.createAlias(BaseUser.class);
         return pageList(cq);
-        // return baseAppMapper.selectPage(pageParams, queryWrapper);
     }
 
     /**

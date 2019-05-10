@@ -166,6 +166,9 @@ public class CriteriaQuery<T> extends QueryWrapper<T> {
         return likeRight(ObjectUtils.isNotEmpty(val), column, val);
     }
 
+    /**
+     * 指定查询
+     */
     public CriteriaQuery<T> select(String sql) {
         this.select.add(sql);
         return this;

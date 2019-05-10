@@ -3,7 +3,9 @@ package com.opencloud.base.provider.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.opencloud.base.client.model.entity.BaseResourceOperation;
 import com.opencloud.base.client.model.entity.BaseResourceOperationApi;
+import com.opencloud.base.client.model.entity.BaseRole;
 import com.opencloud.common.model.PageParams;
+import com.opencloud.common.mybatis.base.service.IBaseService;
 
 import java.util.List;
 
@@ -11,7 +13,7 @@ import java.util.List;
  * 操作资源管理
  * @author liuyadu
  */
-public interface BaseResourceOperationService {
+public interface BaseResourceOperationService extends IBaseService<BaseResourceOperation> {
     /**
      * 分页查询
      *

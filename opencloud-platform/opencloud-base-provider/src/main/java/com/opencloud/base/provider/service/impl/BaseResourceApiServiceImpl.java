@@ -12,6 +12,7 @@ import com.opencloud.base.provider.service.BaseAuthorityService;
 import com.opencloud.base.provider.service.BaseResourceApiService;
 import com.opencloud.common.exception.OpenAlertException;
 import com.opencloud.common.model.PageParams;
+import com.opencloud.common.mybatis.base.service.impl.BaseServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ import java.util.List;
 @Slf4j
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class BaseResourceApiServiceImpl implements BaseResourceApiService {
+public class BaseResourceApiServiceImpl extends BaseServiceImpl<BaseResourceApiMapper, BaseResourceApi> implements BaseResourceApiService {
     @Autowired
     private BaseResourceApiMapper baseResourceApiMapper;
     @Autowired
@@ -43,14 +44,14 @@ public class BaseResourceApiServiceImpl implements BaseResourceApiService {
         BaseResourceApi query = pageParams.mapToObject(BaseResourceApi.class);
         QueryWrapper<BaseResourceApi> queryWrapper = new QueryWrapper();
         queryWrapper.lambda()
-                .likeRight(ObjectUtils.isNotEmpty(query.getPath()),BaseResourceApi::getPath, query.getPath())
-                .likeRight(ObjectUtils.isNotEmpty(query.getApiName()),BaseResourceApi::getApiName, query.getApiName())
-                .likeRight(ObjectUtils.isNotEmpty(query.getApiCode()),BaseResourceApi::getApiCode, query.getApiCode())
-                .eq(ObjectUtils.isNotEmpty(query.getServiceId()),BaseResourceApi::getServiceId, query.getServiceId())
-                .eq(ObjectUtils.isNotEmpty(query.getStatus()),BaseResourceApi::getStatus, query.getStatus())
-                .eq(ObjectUtils.isNotEmpty(query.getIsAuth()),BaseResourceApi::getIsAuth, query.getIsAuth())
-                .eq(ObjectUtils.isNotEmpty(query.getIsOpen()),BaseResourceApi::getIsOpen, query.getIsOpen());
-        return baseResourceApiMapper.selectPage(new Page(pageParams.getPage(),pageParams.getLimit()),queryWrapper);
+                .likeRight(ObjectUtils.isNotEmpty(query.getPath()), BaseResourceApi::getPath, query.getPath())
+                .likeRight(ObjectUtils.isNotEmpty(query.getApiName()), BaseResourceApi::getApiName, query.getApiName())
+                .likeRight(ObjectUtils.isNotEmpty(query.getApiCode()), BaseResourceApi::getApiCode, query.getApiCode())
+                .eq(ObjectUtils.isNotEmpty(query.getServiceId()), BaseResourceApi::getServiceId, query.getServiceId())
+                .eq(ObjectUtils.isNotEmpty(query.getStatus()), BaseResourceApi::getStatus, query.getStatus())
+                .eq(ObjectUtils.isNotEmpty(query.getIsAuth()), BaseResourceApi::getIsAuth, query.getIsAuth())
+                .eq(ObjectUtils.isNotEmpty(query.getIsOpen()), BaseResourceApi::getIsOpen, query.getIsOpen());
+        return baseResourceApiMapper.selectPage(pageParams, queryWrapper);
     }
 
     /**
@@ -61,7 +62,7 @@ public class BaseResourceApiServiceImpl implements BaseResourceApiService {
     @Override
     public List<BaseResourceApi> findAllList(String serviceId) {
         QueryWrapper<BaseResourceApi> queryWrapper = new QueryWrapper();
-        queryWrapper.lambda().eq(BaseResourceApi::getServiceId,serviceId);
+        queryWrapper.lambda().eq(BaseResourceApi::getServiceId, serviceId);
         List<BaseResourceApi> list = baseResourceApiMapper.selectList(queryWrapper);
         return list;
     }
@@ -81,7 +82,7 @@ public class BaseResourceApiServiceImpl implements BaseResourceApiService {
     @Override
     public Boolean isExist(String apiCode) {
         QueryWrapper<BaseResourceApi> queryWrapper = new QueryWrapper();
-        queryWrapper.lambda().eq(BaseResourceApi::getApiCode,apiCode);
+        queryWrapper.lambda().eq(BaseResourceApi::getApiCode, apiCode);
         int count = getCount(queryWrapper);
         return count > 0 ? true : false;
     }
@@ -163,7 +164,7 @@ public class BaseResourceApiServiceImpl implements BaseResourceApiService {
     @Override
     public BaseResourceApi getApi(String apiCode) {
         QueryWrapper<BaseResourceApi> queryWrapper = new QueryWrapper();
-        queryWrapper.lambda().eq(BaseResourceApi::getApiCode,apiCode);
+        queryWrapper.lambda().eq(BaseResourceApi::getApiCode, apiCode);
         return baseResourceApiMapper.selectOne(queryWrapper);
     }
 

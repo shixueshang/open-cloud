@@ -3,6 +3,7 @@ package com.opencloud.base.provider.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.opencloud.base.client.model.entity.GatewayRoute;
 import com.opencloud.common.model.PageParams;
+import com.opencloud.common.mybatis.base.service.IBaseService;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
  *
  * @author liuyadu
  */
-public interface GatewayRouteService {
+public interface GatewayRouteService extends IBaseService<GatewayRoute> {
     /**
      * 分页查询
      *

@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.opencloud.base.client.model.GatewayIpLimitApisDto;
 import com.opencloud.base.client.model.entity.GatewayIpLimit;
 import com.opencloud.base.client.model.entity.GatewayIpLimitApi;
+import com.opencloud.base.client.model.entity.GatewayRateLimit;
 import com.opencloud.common.model.PageParams;
+import com.opencloud.common.mybatis.base.service.IBaseService;
 
 import java.util.List;
 
@@ -13,7 +15,7 @@ import java.util.List;
  *
  * @author liuyadu
  */
-public interface GatewayIpLimitService {
+public interface GatewayIpLimitService extends IBaseService<GatewayIpLimit> {
     /**
      * 分页查询
      *

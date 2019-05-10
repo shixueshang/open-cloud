@@ -1,11 +1,11 @@
 package com.opencloud.base.provider.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.opencloud.base.client.model.AccessAuthority;
 import com.opencloud.base.client.model.BaseApiAuthority;
 import com.opencloud.base.client.model.BaseMenuAuthority;
 import com.opencloud.base.client.model.BaseOperationAuthority;
 import com.opencloud.base.client.model.entity.BaseAuthority;
+import com.opencloud.common.mybatis.base.mapper.SuperMapper;
 import com.opencloud.common.security.Authority;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -16,7 +16,7 @@ import java.util.Map;
  * @author liuyadu
  */
 @Mapper
-public interface BaseAuthorityMapper extends BaseMapper<BaseAuthority> {
+public interface BaseAuthorityMapper extends SuperMapper<BaseAuthority> {
 
     /**
      * 查询所有访问权限列表

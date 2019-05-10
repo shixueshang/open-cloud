@@ -5,15 +5,18 @@ import com.opencloud.auth.client.constants.AuthConstants;
 import com.opencloud.base.client.constants.BaseConstants;
 import com.opencloud.base.client.model.BaseUserAccountDto;
 import com.opencloud.base.client.model.BaseUserDto;
+import com.opencloud.base.client.model.entity.BaseResourceOperation;
 import com.opencloud.base.client.model.entity.BaseUser;
 import com.opencloud.base.client.model.entity.BaseUserAccount;
 import com.opencloud.base.client.model.entity.BaseUserAccountLogs;
+import com.opencloud.base.provider.mapper.BaseResourceOperationMapper;
 import com.opencloud.base.provider.mapper.BaseUserAccountLogsMapper;
 import com.opencloud.base.provider.mapper.BaseUserAccountMapper;
 import com.opencloud.base.provider.service.BaseUserAccountService;
 import com.opencloud.base.provider.service.BaseUserService;
 import com.opencloud.common.constants.CommonConstants;
 import com.opencloud.common.exception.OpenAlertException;
+import com.opencloud.common.mybatis.base.service.impl.BaseServiceImpl;
 import com.opencloud.common.utils.RandomValueUtils;
 import com.opencloud.common.utils.StringUtils;
 import com.opencloud.common.utils.WebUtils;
@@ -35,7 +38,7 @@ import java.util.Map;
 @Slf4j
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class BaseUserAccountServiceImpl implements BaseUserAccountService {
+public class BaseUserAccountServiceImpl extends BaseServiceImpl<BaseUserAccountMapper, BaseUserAccount> implements BaseUserAccountService {
 
     @Autowired
     private BaseUserAccountMapper baseUserAccountMapper;
@@ -104,7 +107,7 @@ public class BaseUserAccountServiceImpl implements BaseUserAccountService {
      * @return
      */
     @Override
-    public BaseUserAccount register(String account, String password, String accountType,String nickName) {
+    public BaseUserAccount register(String account, String password, String accountType, String nickName) {
         if (isExist(account, accountType)) {
             return null;
         }
@@ -149,16 +152,16 @@ public class BaseUserAccountServiceImpl implements BaseUserAccountService {
         QueryWrapper<BaseUserAccount> queryWrapper = new QueryWrapper();
         if (StringUtils.isNotBlank(thirdParty)) {
             queryWrapper.lambda()
-                    .eq(BaseUserAccount::getAccountType,thirdParty)
-                    .eq(BaseUserAccount::getAccount,account);
+                    .eq(BaseUserAccount::getAccountType, thirdParty)
+                    .eq(BaseUserAccount::getAccount, account);
             baseUserAccount = baseUserAccountMapper.selectOne(queryWrapper);
         } else {
             // 非第三方登录, 账号密码方式登陆
             //用户名登录
             queryWrapper = new QueryWrapper<>();
             queryWrapper.lambda()
-                    .eq(BaseUserAccount::getAccountType,BaseConstants.USER_ACCOUNT_TYPE_USERNAME)
-                    .eq(BaseUserAccount::getAccount,account);
+                    .eq(BaseUserAccount::getAccountType, BaseConstants.USER_ACCOUNT_TYPE_USERNAME)
+                    .eq(BaseUserAccount::getAccount, account);
             baseUserAccount = baseUserAccountMapper.selectOne(queryWrapper);
 
             // 手机号登陆
@@ -166,8 +169,8 @@ public class BaseUserAccountServiceImpl implements BaseUserAccountService {
                 // 用户名登陆
                 queryWrapper = new QueryWrapper<>();
                 queryWrapper.lambda()
-                        .eq(BaseUserAccount::getAccountType,BaseConstants.USER_ACCOUNT_TYPE_MOBILE)
-                        .eq(BaseUserAccount::getAccount,account);
+                        .eq(BaseUserAccount::getAccountType, BaseConstants.USER_ACCOUNT_TYPE_MOBILE)
+                        .eq(BaseUserAccount::getAccount, account);
                 baseUserAccount = baseUserAccountMapper.selectOne(queryWrapper);
             }
 
@@ -175,8 +178,8 @@ public class BaseUserAccountServiceImpl implements BaseUserAccountService {
             if (baseUserAccount == null && StringUtils.matchEmail(account)) {
                 queryWrapper = new QueryWrapper<>();
                 queryWrapper.lambda()
-                        .eq(BaseUserAccount::getAccountType,BaseConstants.USER_ACCOUNT_TYPE_EMAIL)
-                        .eq(BaseUserAccount::getAccount,account);
+                        .eq(BaseUserAccount::getAccountType, BaseConstants.USER_ACCOUNT_TYPE_EMAIL)
+                        .eq(BaseUserAccount::getAccount, account);
                 baseUserAccount = baseUserAccountMapper.selectOne(queryWrapper);
             }
         }
@@ -290,9 +293,9 @@ public class BaseUserAccountServiceImpl implements BaseUserAccountService {
         }
         QueryWrapper<BaseUserAccount> queryWrapper = new QueryWrapper();
         queryWrapper.lambda()
-                .eq(BaseUserAccount::getUserId,userId)
-                .eq(BaseUserAccount::getAccount,userProfile.getUserName())
-                .eq(BaseUserAccount::getAccountType,BaseConstants.USER_ACCOUNT_TYPE_USERNAME);
+                .eq(BaseUserAccount::getUserId, userId)
+                .eq(BaseUserAccount::getAccount, userProfile.getUserName())
+                .eq(BaseUserAccount::getAccountType, BaseConstants.USER_ACCOUNT_TYPE_USERNAME);
         BaseUserAccount baseUserAccount = baseUserAccountMapper.selectOne(queryWrapper);
         if (baseUserAccount == null) {
             return;
@@ -308,6 +311,7 @@ public class BaseUserAccountServiceImpl implements BaseUserAccountService {
 
     /**
      * 重置用户密码
+     *
      * @param userId
      * @param password
      */
@@ -325,9 +329,9 @@ public class BaseUserAccountServiceImpl implements BaseUserAccountService {
         }
         QueryWrapper<BaseUserAccount> queryWrapper = new QueryWrapper();
         queryWrapper.lambda()
-                .eq(BaseUserAccount::getUserId,userId)
-                .eq(BaseUserAccount::getAccount,userProfile.getUserName())
-                .eq(BaseUserAccount::getAccountType,BaseConstants.USER_ACCOUNT_TYPE_USERNAME);
+                .eq(BaseUserAccount::getUserId, userId)
+                .eq(BaseUserAccount::getAccount, userProfile.getUserName())
+                .eq(BaseUserAccount::getAccountType, BaseConstants.USER_ACCOUNT_TYPE_USERNAME);
         BaseUserAccount baseUserAccount = baseUserAccountMapper.selectOne(queryWrapper);
         if (baseUserAccount == null) {
             return;
@@ -365,9 +369,9 @@ public class BaseUserAccountServiceImpl implements BaseUserAccountService {
     public Boolean isExist(Long userId, String account, String accountType) {
         QueryWrapper<BaseUserAccount> queryWrapper = new QueryWrapper();
         queryWrapper.lambda()
-                .eq(BaseUserAccount::getUserId,userId)
-                .eq(BaseUserAccount::getAccount,account)
-                .eq(BaseUserAccount::getAccountType,accountType);
+                .eq(BaseUserAccount::getUserId, userId)
+                .eq(BaseUserAccount::getAccount, account)
+                .eq(BaseUserAccount::getAccountType, accountType);
         int count = baseUserAccountMapper.selectCount(queryWrapper);
         return count > 0 ? true : false;
     }
@@ -376,8 +380,8 @@ public class BaseUserAccountServiceImpl implements BaseUserAccountService {
     public Boolean isExist(String account, String accountType) {
         QueryWrapper<BaseUserAccount> queryWrapper = new QueryWrapper();
         queryWrapper.lambda()
-                .eq(BaseUserAccount::getAccount,account)
-                .eq(BaseUserAccount::getAccountType,accountType);
+                .eq(BaseUserAccount::getAccount, account)
+                .eq(BaseUserAccount::getAccountType, accountType);
         int count = baseUserAccountMapper.selectCount(queryWrapper);
         return count > 0 ? true : false;
     }
@@ -393,9 +397,9 @@ public class BaseUserAccountServiceImpl implements BaseUserAccountService {
     public void removeEmailAccount(Long userId, String email) {
         QueryWrapper<BaseUserAccount> queryWrapper = new QueryWrapper();
         queryWrapper.lambda()
-                .eq(BaseUserAccount::getUserId,userId)
-                .eq(BaseUserAccount::getAccount,email)
-                .eq(BaseUserAccount::getAccountType,BaseConstants.USER_ACCOUNT_TYPE_EMAIL);
+                .eq(BaseUserAccount::getUserId, userId)
+                .eq(BaseUserAccount::getAccount, email)
+                .eq(BaseUserAccount::getAccountType, BaseConstants.USER_ACCOUNT_TYPE_EMAIL);
         baseUserAccountMapper.delete(queryWrapper);
     }
 
@@ -410,9 +414,9 @@ public class BaseUserAccountServiceImpl implements BaseUserAccountService {
     public void removeMobileAccount(Long userId, String mobile) {
         QueryWrapper<BaseUserAccount> queryWrapper = new QueryWrapper();
         queryWrapper.lambda()
-                .eq(BaseUserAccount::getUserId,userId)
-                .eq(BaseUserAccount::getAccount,mobile)
-                .eq(BaseUserAccount::getAccountType,BaseConstants.USER_ACCOUNT_TYPE_MOBILE);
+                .eq(BaseUserAccount::getUserId, userId)
+                .eq(BaseUserAccount::getAccount, mobile)
+                .eq(BaseUserAccount::getAccountType, BaseConstants.USER_ACCOUNT_TYPE_MOBILE);
         baseUserAccountMapper.delete(queryWrapper);
     }
 
