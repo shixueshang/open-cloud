@@ -48,7 +48,7 @@ import org.springframework.context.ApplicationContext;
 @EnableFeignClients
 @EnableDiscoveryClient
 @SpringCloudApplication
-@RemoteApplicationEventScan(basePackages = "com.opencloud.zuul.provider.event")
+@RemoteApplicationEventScan(basePackages = "com.opencloud.zuul.event")
 public class ZuulGatewayApplication implements CommandLineRunner {
     @Autowired
     private ApplicationContext context;
