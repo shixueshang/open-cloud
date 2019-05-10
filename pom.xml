@@ -38,7 +38,7 @@
         <lombok.versin>1.18.0</lombok.versin>
         <hutool.version>4.1.19</hutool.version>
         <com.google.zxing.version>3.1.0</com.google.zxing.version>
-        <google.guava.version>19.0</google.guava.version>
+        <google.guava.version>18.0</google.guava.version>
         <swagger2.version>2.7.0</swagger2.version>
 
         <!--自定义版本-->
@@ -102,16 +102,6 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-boot-starter</artifactId>
-                <version>${mybatis-plus.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus</artifactId>
-                <version>${mybatis-plus.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring-boot.version}</version>
@@ -124,17 +114,6 @@
                 <version>${spring-cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>
-            <!--工具类-->
-            <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-all</artifactId>
-                <version>${hutool.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>18.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -34,7 +34,7 @@ spring:
                 namespace: ${config.namespace}
                 refreshable-dataids: common.properties
                 server-addr: ${config.server-addr}
-                shared-dataids: common.properties,redis.properties,rabbitmq.properties
+                shared-dataids: common.properties,db.properties,redis.properties,rabbitmq.properties
             discovery:
                 server-addr: ${discovery.server-addr}
     main:
@@ -65,6 +65,12 @@ hystrix:
           thread:
             timeoutInMilliseconds: 60000
   shareSecurityContext: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh,health,refresh-gateway,gateway
 
 opencloud:
 # 开放api

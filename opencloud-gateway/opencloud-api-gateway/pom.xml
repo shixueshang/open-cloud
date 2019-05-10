@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>opencloud-gateway</artifactId>
@@ -13,13 +13,33 @@
     <packaging>jar</packaging>
     <description>API网关服务</description>
     <dependencies>
-       <dependency>
+        <dependency>
+            <artifactId>opencloud-common-core</artifactId>
+            <groupId>com.opencloud</groupId>
+            <version>${opencloud.common.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.opencloud</groupId>
+            <artifactId>opencloud-base-client</artifactId>
+            <version>${opencloud.base-client.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-gateway</artifactId>
+        </dependency>
+        <!-- OAuth2 WebFlux -->
+        <!-- https://docs.spring.io/spring-security/site/docs/current/reference/html/webflux-oauth2.html -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-jose</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-resource-server</artifactId>
         </dependency>
         <dependency>
             <groupId>io.springfox</groupId>
@@ -33,16 +53,6 @@
             <version>${swagger2.version}</version>
         </dependency>
         <dependency>
-            <artifactId>opencloud-common-core</artifactId>
-            <groupId>com.opencloud</groupId>
-            <version>${opencloud.common.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.opencloud</groupId>
-            <artifactId>opencloud-base-client</artifactId>
-            <version>${opencloud.base-client.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
@@ -51,15 +61,14 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
-        <!-- OAuth2 WebFlux -->
-        <!-- https://docs.spring.io/spring-security/site/docs/current/reference/html/webflux-oauth2.html -->
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-oauth2-jose</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-oauth2-resource-server</artifactId>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>${alibaba.druid.version}</version>
         </dependency>
     </dependencies>
     <build>

@@ -1,18 +1,13 @@
 package com.opencloud.api.gateway.configuration;
 
 import com.opencloud.api.gateway.exception.JsonExceptionHandler;
-import com.opencloud.api.gateway.locator.DbRouteLocator;
-import com.opencloud.api.gateway.service.feign.GatewayRemoteService;
+import com.opencloud.api.gateway.locator.DbRouteDefinitionLocator;
 import com.opencloud.common.utils.SpringContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.cloud.gateway.discovery.DiscoveryClientRouteDefinitionLocator;
-import org.springframework.cloud.gateway.discovery.DiscoveryLocatorProperties;
 import org.springframework.cloud.gateway.route.RouteDefinitionLocator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.codec.ServerCodecConfigurer;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.cors.reactive.CorsUtils;
 import org.springframework.web.reactive.result.view.ViewResolver;
 import org.springframework.web.server.ServerWebExchange;
@@ -42,6 +38,7 @@ import java.util.List;
 @Configuration
 @EnableConfigurationProperties({ApiProperties.class})
 public class ApiConfiguration {
+
     /**
      * 这里为支持的请求头，如果有自定义的header字段请自己添加（不知道为什么不能使用*）
      */
@@ -51,17 +48,18 @@ public class ApiConfiguration {
     private static final String ALLOWED_EXPOSE = "Authorization";
     private static final String MAX_AGE = "18000L";
 
-
     @Bean
     @ConditionalOnMissingBean(SpringContextHolder.class)
     public SpringContextHolder springContextHolder() {
         SpringContextHolder holder = new SpringContextHolder();
-        log.info("bean [{}]",holder);
+        log.info("bean [{}]", holder);
         return holder;
     }
 
+
     /**
      * 跨域配置
+     *
      * @return
      */
     @Bean
@@ -86,13 +84,9 @@ public class ApiConfiguration {
         };
     }
 
-    @Bean
-    public RouteDefinitionLocator discoveryClientRouteDefinitionLocator(DiscoveryClient discoveryClient, DiscoveryLocatorProperties discoveryLocatorProperties) {
-        return new DiscoveryClientRouteDefinitionLocator(discoveryClient,discoveryLocatorProperties);
-    }
-
     /**
      * 自定义异常处理[@@]注册Bean时依赖的Bean，会从容器中直接获取，所以直接注入即可
+     *
      * @param viewResolversProvider
      * @param serverCodecConfigurer
      * @return
@@ -112,8 +106,17 @@ public class ApiConfiguration {
     }
 
     @Bean
-    @ConditionalOnBean({RouteDefinitionLocator.class})
-    public DbRouteLocator dbRouteLocator(RouteDefinitionLocator routeDefinitionLocator, GatewayRemoteService gatewayRemoteService){
-        return new DbRouteLocator(routeDefinitionLocator,gatewayRemoteService);
+    @Primary
+    public SwaggerProvider swaggerProvider(RouteDefinitionLocator routeDefinitionLocator){
+        return  new SwaggerProvider(routeDefinitionLocator);
+    }
+
+    /**
+     * 动态路由加载
+     * @return
+     */
+    @Bean
+    public DbRouteDefinitionLocator dbRouteDefinitionLocator(JdbcTemplate jdbcTemplate) {
+        return new DbRouteDefinitionLocator(jdbcTemplate);
     }
 }

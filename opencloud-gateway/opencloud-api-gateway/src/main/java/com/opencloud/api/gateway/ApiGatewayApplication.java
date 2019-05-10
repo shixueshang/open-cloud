@@ -24,15 +24,12 @@
  */
 package com.opencloud.api.gateway;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.bus.jackson.RemoteApplicationEventScan;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.gateway.event.RefreshRoutesEvent;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.context.ApplicationContext;
 
 
 /**
@@ -45,18 +42,13 @@ import org.springframework.context.ApplicationContext;
 @EnableFeignClients
 @EnableDiscoveryClient
 @SpringBootApplication
-@RemoteApplicationEventScan(basePackages = "com.opencloud.gateway.provider.event")
+@RemoteApplicationEventScan(basePackages = "com.opencloud.api.gateway.event")
 public class ApiGatewayApplication implements CommandLineRunner {
-    @Autowired
-    private ApplicationContext context;
-
     public static void main(String[] args) {
         SpringApplication.run(ApiGatewayApplication.class, args);
     }
-
     @Override
     public void run(String... strings) throws Exception {
         // 消息总线刷新所有网关实例
-        context.publishEvent(new RefreshRoutesEvent(null));
     }
 }

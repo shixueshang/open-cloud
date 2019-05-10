@@ -40,10 +40,12 @@ public class SecurityConfiguration {
                 .authorizeExchange()
                 .pathMatchers(
                         "/",
+                        "/actuator/**",
                         "/**/v2/api-docs",
                         "/swagger-resources/**",
                         "/webjars/**",
-                        "/swagger-ui.html").permitAll()
+                        "/swagger-ui.html",
+                        "/favicon.ico").permitAll()
                 .anyExchange().authenticated()
                 .and().exceptionHandling()
                 .accessDeniedHandler(accessDeniedHandler)
