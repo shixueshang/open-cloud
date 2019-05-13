@@ -7,6 +7,8 @@ import com.opencloud.common.security.OpenHelper;
 import com.opencloud.common.utils.WebUtils;
 import com.opencloud.zuul.exception.JsonAccessDeniedHandler;
 import com.opencloud.zuul.exception.JsonAuthenticationEntryPoint;
+import com.opencloud.zuul.filter.ApiAccessManager;
+import com.opencloud.zuul.filter.IpCheckFilter;
 import com.opencloud.zuul.filter.PreRequestFilter;
 import com.opencloud.zuul.filter.SignatureFilter;
 import com.opencloud.zuul.service.AccessLogService;
@@ -65,6 +67,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     private RedisConnectionFactory redisConnectionFactory;
     @Autowired
     private AccessLogService accessLogService;
+    @Autowired
+    private ApiAccessManager apiAccessManager;
 
     private OAuth2WebSecurityExpressionHandler expressionHandler;
 
@@ -89,7 +93,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .authorizeRequests()
                 .anyRequest().authenticated()
                 // 动态访问控制
-                .anyRequest().access("@accessControl.access(request,authentication)")
+                .anyRequest().access("@apiAccessManager.check(request,authentication)")
                 // SSO退出
                 .and().logout().logoutSuccessHandler(new SsoLogoutSuccessHandler(properties.getApiServerAddr() + "/auth/logout", restTemplate))
                 .and()
@@ -103,6 +107,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
         http.addFilterBefore(new PreRequestFilter(snowflakeIdGenerator, redisTemplate, accessLogService), AbstractPreAuthenticatedProcessingFilter.class);
         // 增加签名验证过滤器
         http.addFilterAfter(new SignatureFilter(baseAppRemoteService, apiGatewayProperties), AbstractPreAuthenticatedProcessingFilter.class);
+        // 增加IP检测过滤器
+        http.addFilterAfter(new IpCheckFilter(apiAccessManager, new JsonAccessDeniedHandler(accessLogService)), AbstractPreAuthenticatedProcessingFilter.class);
     }
 
     static class SsoLogoutSuccessHandler implements LogoutSuccessHandler {
@@ -117,11 +123,11 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
         @Override
         public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
             try {
-                Map headerMap =  WebUtils.getHttpHeaders(request);
+                Map headerMap = WebUtils.getHttpHeaders(request);
                 HttpHeaders httpHeaders = new HttpHeaders();
                 httpHeaders.setAll(headerMap);
                 HttpEntity<MultiValueMap<String, Object>> requestObj = new HttpEntity(null, httpHeaders);
-                restTemplate.postForObject(defaultTargetUrl,requestObj, String.class);
+                restTemplate.postForObject(defaultTargetUrl, requestObj, String.class);
             } catch (Exception e) {
                 log.error("sso logout error:", e);
             }

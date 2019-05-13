@@ -16,7 +16,6 @@ import com.opencloud.base.provider.service.BaseUserService;
 import com.opencloud.common.constants.CommonConstants;
 import com.opencloud.common.model.PageParams;
 import com.opencloud.common.mybatis.base.service.impl.BaseServiceImpl;
-import com.opencloud.common.mybatis.query.CriteriaQuery;
 import com.opencloud.common.security.Authority;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,6 +83,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl<BaseUserMapper, BaseUse
                 .eq(ObjectUtils.isNotEmpty(query.getUserType()), BaseUser::getUserType, query.getUserType())
                 .eq(ObjectUtils.isNotEmpty(query.getUserName()), BaseUser::getUserName, query.getUserName())
                 .eq(ObjectUtils.isNotEmpty(query.getMobile()), BaseUser::getMobile, query.getMobile());
+        queryWrapper.orderByDesc("create_time");
         return baseUserMapper.selectPage(pageParams, queryWrapper);
     }
 

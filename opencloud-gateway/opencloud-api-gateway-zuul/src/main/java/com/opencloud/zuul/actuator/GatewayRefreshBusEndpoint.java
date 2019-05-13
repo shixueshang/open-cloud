@@ -1,7 +1,7 @@
-package com.opencloud.zuul.endpoint;
+package com.opencloud.zuul.actuator;
 
 import com.opencloud.common.model.ResultBody;
-import com.opencloud.zuul.event.GatewayRefreshRemoteApplicationEvent;
+import com.opencloud.zuul.actuator.event.GatewayRefreshRemoteApplicationEvent;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.Selector;
 import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;

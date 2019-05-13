@@ -3,12 +3,14 @@ package com.opencloud.zuul.locator;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.opencloud.base.client.model.entity.GatewayRoute;
+import com.opencloud.zuul.actuator.event.GatewayRefreshRemoteApplicationEvent;
 import com.opencloud.zuul.service.feign.GatewayRemoteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.cloud.netflix.zuul.filters.SimpleRouteLocator;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties.ZuulRoute;
+import org.springframework.context.ApplicationListener;
 import org.springframework.util.StringUtils;
 
 import java.util.LinkedHashMap;
@@ -23,7 +25,7 @@ import java.util.Map;
  * @description:
  */
 @Slf4j
-public class DbRouteLocator extends SimpleRouteLocator {
+public class DbRouteLocator extends SimpleRouteLocator implements ApplicationListener<GatewayRefreshRemoteApplicationEvent> {
 
     private GatewayRemoteService gatewayRemoteService;
     private ZuulProperties properties;
@@ -96,10 +98,10 @@ public class DbRouteLocator extends SimpleRouteLocator {
                     routes.put(zuulRoute.getPath(), zuulRoute);
                 }
             }
+            log.info("=============加载动态路由:{}==============",routeList.size());
         } catch (Exception e) {
             log.error("加载动态路由错误:{}", e.getMessage());
         }
-        log.info("=============加载动态路由:{}==============",routeList.size());
         return routes;
     }
 
@@ -109,5 +111,10 @@ public class DbRouteLocator extends SimpleRouteLocator {
 
     public void setRouteList(List<GatewayRoute> routeList) {
         this.routeList = routeList;
+    }
+
+    @Override
+    public void onApplicationEvent(GatewayRefreshRemoteApplicationEvent gatewayRefreshRemoteApplicationEvent) {
+        doRefresh();
     }
 }

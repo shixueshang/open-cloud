@@ -45,11 +45,6 @@ public class IndexController {
     @ResponseBody
     public ResultBody getServiceList() {
         List<Map> services = Lists.newArrayList();
-        Map gateway = Maps.newHashMap();
-        gateway.put("serviceId", serviceId);
-        gateway.put("serviceName", serviceId);
-        services.add(gateway);
-
         List<Route> routes = zuulRoutesLocator.getRoutes();
         if (routes != null && routes.size() > 0) {
             routes.forEach(route -> {

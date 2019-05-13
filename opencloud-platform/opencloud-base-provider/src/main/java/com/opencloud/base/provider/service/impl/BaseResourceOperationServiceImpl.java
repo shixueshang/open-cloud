@@ -6,10 +6,8 @@ import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.opencloud.base.client.constants.BaseConstants;
 import com.opencloud.base.client.constants.ResourceType;
-import com.opencloud.base.client.model.entity.BaseAuthority;
 import com.opencloud.base.client.model.entity.BaseResourceOperation;
 import com.opencloud.base.client.model.entity.BaseResourceOperationApi;
-import com.opencloud.base.provider.mapper.BaseAuthorityMapper;
 import com.opencloud.base.provider.mapper.BaseResourceOperationApiMapper;
 import com.opencloud.base.provider.mapper.BaseResourceOperationMapper;
 import com.opencloud.base.provider.service.BaseAuthorityService;
@@ -55,6 +53,7 @@ public class BaseResourceOperationServiceImpl extends BaseServiceImpl<BaseResour
         queryWrapper.lambda()
                 .likeRight(ObjectUtils.isNotEmpty(query.getOperationCode()),BaseResourceOperation::getOperationCode, query.getOperationCode())
                 .likeRight(ObjectUtils.isNotEmpty(query.getOperationName()),BaseResourceOperation::getOperationName, query.getOperationName());
+        queryWrapper.orderByDesc("create_time");
         return baseResourceOperationMapper.selectPage(new Page(pageParams.getPage(),pageParams.getLimit()),queryWrapper);
     }
 

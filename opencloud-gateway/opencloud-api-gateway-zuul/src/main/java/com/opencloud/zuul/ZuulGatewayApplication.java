@@ -24,7 +24,7 @@
  */
 package com.opencloud.zuul;
 
-import com.opencloud.zuul.event.GatewayRefreshRemoteApplicationEvent;
+import com.opencloud.zuul.actuator.event.GatewayRefreshRemoteApplicationEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -34,7 +34,7 @@ import org.springframework.cloud.client.SpringCloudApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEventPublisher;
 
 
 /**
@@ -48,10 +48,10 @@ import org.springframework.context.ApplicationContext;
 @EnableFeignClients
 @EnableDiscoveryClient
 @SpringCloudApplication
-@RemoteApplicationEventScan(basePackages = "com.opencloud.zuul.event")
+@RemoteApplicationEventScan(basePackages = "com.opencloud.zuul.actuator.event")
 public class ZuulGatewayApplication implements CommandLineRunner {
     @Autowired
-    private ApplicationContext context;
+    private ApplicationEventPublisher publisher;
     @Autowired
     private BusProperties bus;
 
@@ -62,7 +62,7 @@ public class ZuulGatewayApplication implements CommandLineRunner {
     @Override
     public void run(String... strings) throws Exception {
         // 消息总线刷新所有网关实例
-        context.publishEvent(new GatewayRefreshRemoteApplicationEvent(context, bus.getId(), null));
+        publisher.publishEvent(new GatewayRefreshRemoteApplicationEvent(this, bus.getId(), null));
     }
 
 

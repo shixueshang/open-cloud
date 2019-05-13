@@ -61,22 +61,6 @@ zuul:
     enabled: true
     key-prefix: cloud_rate_limit
     repository: REDIS
-  routes:
-    opencloud-admin-provider:
-      path: /admin/**
-      serviceId: opencloud-admin-provider
-    opencloud-auth-provider:
-      path: /auth/**
-      serviceId: opencloud-auth-provider
-    opencloud-base-provider:
-      path: /base/**
-      serviceId: opencloud-base-provider
-    opencloud-msg-provider:
-      path: /msg/**
-      serviceId:  opencloud-msg-provider
-    opencloud-scheduler-provider:
-      path: /scheduler/**
-      serviceId: opencloud-scheduler-provider
   semaphore:
     max-semaphores: 1000
   sensitive-headers: ''

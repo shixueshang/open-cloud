@@ -62,23 +62,23 @@ public class GatewayRouteController {
      * 添加路由
      *
      * @param path        路径表达式
+     * @param routeName   描述
      * @param serviceId   服务名方转发
      * @param url         地址转发
      * @param stripPrefix 忽略前缀
      * @param retryable   支持重试
      * @param status      是否启用
-     * @param routeDesc   描述
      * @return
      */
     @ApiOperation(value = "添加路由", notes = "添加路由")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "path", required = true, value = "路径表达式", paramType = "form"),
+            @ApiImplicitParam(name = "routeName", required = true, value = "路由名称", paramType = "form"),
             @ApiImplicitParam(name = "serviceId", required = false, value = "服务名方转发", paramType = "form"),
             @ApiImplicitParam(name = "url", required = false, value = "地址转发", paramType = "form"),
             @ApiImplicitParam(name = "stripPrefix", required = false, allowableValues = "0,1", defaultValue = "1", value = "忽略前缀", paramType = "form"),
             @ApiImplicitParam(name = "retryable", required = false, allowableValues = "0,1", defaultValue = "0", value = "支持重试", paramType = "form"),
-            @ApiImplicitParam(name = "status", required = false, allowableValues = "0,1", defaultValue = "1", value = "是否启用", paramType = "form"),
-            @ApiImplicitParam(name = "routeDesc", required = false, value = "描述", paramType = "form")
+            @ApiImplicitParam(name = "status", required = false, allowableValues = "0,1", defaultValue = "1", value = "是否启用", paramType = "form")
     })
     @PostMapping("/gateway/route/add")
     public ResultBody<Long> addRoute(
@@ -88,7 +88,7 @@ public class GatewayRouteController {
             @RequestParam(value = "stripPrefix", required = false, defaultValue = "1") Integer stripPrefix,
             @RequestParam(value = "retryable", required = false, defaultValue = "0") Integer retryable,
             @RequestParam(value = "status", defaultValue = "1") Integer status,
-            @RequestParam(value = "routeDesc", required = false, defaultValue = "") String routeDesc
+            @RequestParam(value = "routeName", required = false, defaultValue = "") String routeName
     ) {
         GatewayRoute route = new GatewayRoute();
         route.setPath(path);
@@ -97,7 +97,7 @@ public class GatewayRouteController {
         route.setRetryable(retryable);
         route.setStripPrefix(stripPrefix);
         route.setStatus(status);
-        route.setRouteDesc(routeDesc);
+        route.setRouteName(routeName);
         Long routeId = null;
         GatewayRoute result = gatewayRouteService.addRoute(route);
         if (result != null) {
@@ -118,7 +118,7 @@ public class GatewayRouteController {
      * @param stripPrefix 忽略前缀
      * @param retryable   支持重试
      * @param status      是否启用
-     * @param routeDesc   描述
+     * @param routeName   描述
      * @return
      */
     @ApiOperation(value = "编辑路由", notes = "编辑路由")
@@ -130,7 +130,7 @@ public class GatewayRouteController {
             @ApiImplicitParam(name = "stripPrefix", required = false, allowableValues = "0,1", defaultValue = "1", value = "忽略前缀", paramType = "form"),
             @ApiImplicitParam(name = "retryable", required = false, allowableValues = "0,1", defaultValue = "0", value = "支持重试", paramType = "form"),
             @ApiImplicitParam(name = "status", required = false, allowableValues = "0,1", defaultValue = "1", value = "是否启用", paramType = "form"),
-            @ApiImplicitParam(name = "routeDesc", required = false, value = "描述", paramType = "form")
+            @ApiImplicitParam(name = "routeName", required = false, value = "描述", paramType = "form")
     })
     @PostMapping("/gateway/route/update")
     public ResultBody updateRoute(
@@ -141,7 +141,7 @@ public class GatewayRouteController {
             @RequestParam(value = "stripPrefix", required = false, defaultValue = "1") Integer stripPrefix,
             @RequestParam(value = "retryable", required = false, defaultValue = "0") Integer retryable,
             @RequestParam(value = "status", defaultValue = "1") Integer status,
-            @RequestParam(value = "routeDesc", required = false, defaultValue = "") String routeDesc
+            @RequestParam(value = "routeName", required = false, defaultValue = "") String routeName
     ) {
         GatewayRoute route = new GatewayRoute();
         route.setRouteId(routeId);
@@ -151,7 +151,7 @@ public class GatewayRouteController {
         route.setRetryable(retryable);
         route.setStripPrefix(stripPrefix);
         route.setStatus(status);
-        route.setRouteDesc(routeDesc);
+        route.setRouteName(routeName);
         gatewayRouteService.updateRoute(route);
         // 刷新网关
         openRestTemplate.refreshGateway();

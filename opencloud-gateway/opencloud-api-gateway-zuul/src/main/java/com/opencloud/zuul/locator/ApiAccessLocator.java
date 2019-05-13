@@ -7,10 +7,12 @@ import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.support.StringToMatc
 import com.opencloud.base.client.model.AccessAuthority;
 import com.opencloud.base.client.model.GatewayIpLimitApisDto;
 import com.opencloud.base.client.model.GatewayRateLimitApisDto;
+import com.opencloud.zuul.actuator.event.GatewayRefreshRemoteApplicationEvent;
 import com.opencloud.zuul.service.feign.BaseAuthorityRemoteService;
 import com.opencloud.zuul.service.feign.GatewayRemoteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.netflix.zuul.filters.Route;
+import org.springframework.context.ApplicationListener;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 
@@ -23,7 +25,7 @@ import java.util.concurrent.TimeUnit;
  * @author liuyadu
  */
 @Slf4j
-public class AccessLocator {
+public class ApiAccessLocator implements ApplicationListener<GatewayRefreshRemoteApplicationEvent> {
     /**
      * 单位时间
      */
@@ -79,7 +81,7 @@ public class AccessLocator {
     private StringToMatchTypeConverter converter;
 
 
-    public AccessLocator(DbRouteLocator zuulRoutesLocator, RateLimitProperties rateLimitProperties, BaseAuthorityRemoteService baseAuthorityRemoteService, GatewayRemoteService gatewayRemoteService) {
+    public ApiAccessLocator(DbRouteLocator zuulRoutesLocator, RateLimitProperties rateLimitProperties, BaseAuthorityRemoteService baseAuthorityRemoteService, GatewayRemoteService gatewayRemoteService) {
         this.zuulRoutesLocator = zuulRoutesLocator;
         this.rateLimitProperties = rateLimitProperties;
         this.baseAuthorityRemoteService = baseAuthorityRemoteService;
@@ -148,10 +150,10 @@ public class AccessLocator {
                     allConfigAttribute.put(fullPath, array);
                 }
             }
+            log.info("=============加载动态权限:{}==============",authorityList.size());
         } catch (Exception e) {
             log.error("加载动态权限错误:{}", e.getMessage());
         }
-        log.info("=============加载动态权限:{}==============",authorityList.size());
     }
 
     /**
@@ -166,10 +168,10 @@ public class AccessLocator {
                     item.setPath(getZuulPath(item.getServiceId(), item.getPath()));
                 }
             }
+            log.info("=============加载IP黑名单:{}==============",ipBlackList.size());
         } catch (Exception e) {
             log.error("加载IP黑名单错误:{}", e.getMessage());
         }
-        log.info("=============加载IP黑名单:{}==============",ipBlackList.size());
     }
 
     /**
@@ -184,10 +186,10 @@ public class AccessLocator {
                     item.setPath(getZuulPath(item.getServiceId(), item.getPath()));
                 }
             }
+            log.info("=============加载IP白名单:{}==============",ipWhiteList.size());
         } catch (Exception e) {
             log.error("加载IP白名单错误:{}", e.getMessage());
         }
-        log.info("=============加载IP白名单:{}==============",ipWhiteList.size());
     }
 
     /**
@@ -306,5 +308,10 @@ public class AccessLocator {
 
     public void setAllConfigAttribute(HashMap<String, Collection<ConfigAttribute>> allConfigAttribute) {
         this.allConfigAttribute = allConfigAttribute;
+    }
+
+    @Override
+    public void onApplicationEvent(GatewayRefreshRemoteApplicationEvent gatewayRefreshRemoteApplicationEvent) {
+        doRefresh();
     }
 }

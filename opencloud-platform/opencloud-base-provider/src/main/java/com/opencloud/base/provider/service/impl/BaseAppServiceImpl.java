@@ -65,6 +65,7 @@ public class BaseAppServiceImpl extends BaseServiceImpl<BaseAppMapper, BaseApp> 
         cq.select("app.*,user.user_name");
         //关联User表
         cq.createAlias(BaseUser.class);
+        cq.orderByDesc("create_time");
         return pageList(cq);
     }
 

@@ -32,13 +32,13 @@ public class PreRequestFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         log.debug("==> PreFilter");
         Date start = new Date();
-        log.debug("==> start [{}] path[{}]", start.getTime(),httpServletRequest.getRequestURI());
+        log.debug("==> start [{}] path[{}]", start.getTime(),request.getRequestURI());
         try {
             Long requestId = snowflakeIdGenerator.nextId();
-            httpServletRequest.setAttribute(AccessLogService.PRE_REQUEST_ID, String.valueOf(requestId));
+            request.setAttribute(AccessLogService.PRE_REQUEST_ID, String.valueOf(requestId));
             Map<String, Object> map = Maps.newHashMap();
             map.put("accessId", requestId);
             map.put("requestTime", new Date());
@@ -49,11 +49,11 @@ public class PreRequestFilter extends OncePerRequestFilter {
         } catch (Exception e) {
             log.error("访问日志异常:{}", e);
         }
-        filterChain.doFilter(httpServletRequest, httpServletResponse);
+        filterChain.doFilter(request, response);
         Date end = new Date();
-        log.debug("==> end [{}] use [{}] httpStatus=[{}]", end.getTime(), end.getTime() - start.getTime(),httpServletResponse.getStatus());
-        if (httpServletResponse.getStatus() == 200) {
-            accessLogService.sendLog(httpServletRequest,httpServletResponse);
+        log.debug("==> end [{}] use [{}] httpStatus=[{}]", end.getTime(), end.getTime() - start.getTime(),response.getStatus());
+        if (response.getStatus() == 200) {
+            accessLogService.sendLog(request,response);
         }
     }
 }

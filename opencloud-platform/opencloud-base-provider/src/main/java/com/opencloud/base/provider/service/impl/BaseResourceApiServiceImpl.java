@@ -3,7 +3,6 @@ package com.opencloud.base.provider.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.opencloud.base.client.constants.BaseConstants;
 import com.opencloud.base.client.constants.ResourceType;
 import com.opencloud.base.client.model.entity.BaseResourceApi;
@@ -51,6 +50,7 @@ public class BaseResourceApiServiceImpl extends BaseServiceImpl<BaseResourceApiM
                 .eq(ObjectUtils.isNotEmpty(query.getStatus()), BaseResourceApi::getStatus, query.getStatus())
                 .eq(ObjectUtils.isNotEmpty(query.getIsAuth()), BaseResourceApi::getIsAuth, query.getIsAuth())
                 .eq(ObjectUtils.isNotEmpty(query.getIsOpen()), BaseResourceApi::getIsOpen, query.getIsOpen());
+        queryWrapper.orderByDesc("create_time");
         return baseResourceApiMapper.selectPage(pageParams, queryWrapper);
     }
 

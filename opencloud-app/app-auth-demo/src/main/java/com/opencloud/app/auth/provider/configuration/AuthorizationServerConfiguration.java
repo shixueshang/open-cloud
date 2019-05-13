@@ -3,8 +3,8 @@ package com.opencloud.app.auth.provider.configuration;
 import com.opencloud.app.auth.provider.exception.Oauth2WebResponseExceptionTranslator;
 import com.opencloud.auth.client.config.SocialOAuth2ClientProperties;
 import com.opencloud.auth.client.constants.AuthConstants;
-import com.opencloud.common.configuration.OpenCommonProperties;
 import com.opencloud.common.security.OpenHelper;
+import com.opencloud.common.security.OpenTokenEnhancer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -24,8 +24,8 @@ import org.springframework.security.oauth2.provider.approval.JdbcApprovalStore;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
 import javax.sql.DataSource;
@@ -45,8 +45,6 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     private DataSource dataSource;
     @Autowired
     private RedisConnectionFactory redisConnectionFactory;
-    @Autowired
-    private OpenCommonProperties openCommonProperties;
 
     /**
      * 使用JWT作为token
@@ -65,10 +63,6 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Qualifier(value = "clientDetailsServiceImpl")
     private ClientDetailsService customClientDetailsService;
 
-    @Bean
-    public JwtAccessTokenConverter tokenEnhancer() throws Exception {
-        return  OpenHelper.buildJwtTokenEnhancer(openCommonProperties);
-    }
     /**
      * 授权store
      *
@@ -77,6 +71,10 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Bean
     public ApprovalStore approvalStore() {
         return new JdbcApprovalStore(dataSource);
+    }
+
+    private TokenEnhancer tokenEnhancer(){
+        return new OpenTokenEnhancer();
     }
 
     /**
@@ -102,7 +100,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
                 .authenticationManager(authenticationManager)
                 .approvalStore(approvalStore())
                 .tokenStore(tokenStore())
-                .accessTokenConverter(tokenEnhancer())
+                .accessTokenConverter(OpenHelper.buildAccessTokenConverter())
                 .authorizationCodeServices(authorizationCodeServices());
         // 自定义确认授权页面
         endpoints.pathMapping("/oauth/confirm_access", "/confirm_access");

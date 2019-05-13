@@ -3,11 +3,10 @@ package com.opencloud.zuul.configuration;
 import com.google.common.collect.Lists;
 import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.config.properties.RateLimitProperties;
 import com.netflix.zuul.ZuulFilter;
-import com.opencloud.zuul.endpoint.GatewayRefreshBusEndpoint;
-import com.opencloud.zuul.event.GatewayRefreshRemoteListener;
+import com.opencloud.zuul.actuator.GatewayRefreshBusEndpoint;
 import com.opencloud.zuul.filter.ZuulErrorFilter;
 import com.opencloud.zuul.filter.ZuulResponseFilter;
-import com.opencloud.zuul.locator.AccessLocator;
+import com.opencloud.zuul.locator.ApiAccessLocator;
 import com.opencloud.zuul.locator.DbRouteLocator;
 import com.opencloud.zuul.service.AccessLogService;
 import com.opencloud.zuul.service.feign.BaseAuthorityRemoteService;
@@ -82,8 +81,8 @@ public class ApiConfiguration {
      * @return
      */
     @Bean
-    public AccessLocator accessLocator(GatewayRemoteService gatewayRemoteService) {
-        return new AccessLocator(zuulRoutesLocator,rateLimitProperties, baseAuthorityRemoteService, gatewayRemoteService);
+    public ApiAccessLocator apiAccessLocator(GatewayRemoteService gatewayRemoteService) {
+        return new ApiAccessLocator(zuulRoutesLocator,rateLimitProperties, baseAuthorityRemoteService, gatewayRemoteService);
     }
 
     /**
@@ -96,18 +95,6 @@ public class ApiConfiguration {
         zuulRoutesLocator = new DbRouteLocator(serverProperties.getServlet().getContextPath(), zuulProperties, gatewayRemoteService);
         log.info("ZuulRoutesLocator:{}", zuulRoutesLocator);
         return zuulRoutesLocator;
-    }
-
-    /**
-     * 配置网关刷新bus监听
-     *
-     * @return
-     */
-    @Bean
-    public GatewayRefreshRemoteListener gatewayRefreshRemoteListener(AccessLocator accessLocator) {
-        GatewayRefreshRemoteListener rateLimitRefreshRemoteListener = new GatewayRefreshRemoteListener(zuulRoutesLocator, accessLocator);
-        log.info("bean [{}]", rateLimitRefreshRemoteListener);
-        return rateLimitRefreshRemoteListener;
     }
 
     /**

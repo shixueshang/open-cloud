@@ -3,12 +3,9 @@ package com.opencloud.base.provider.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.opencloud.base.client.model.GatewayIpLimitApisDto;
-import com.opencloud.base.client.model.entity.BaseResourceOperation;
 import com.opencloud.base.client.model.entity.GatewayIpLimit;
 import com.opencloud.base.client.model.entity.GatewayIpLimitApi;
-import com.opencloud.base.provider.mapper.BaseResourceOperationMapper;
 import com.opencloud.base.provider.mapper.GatewayIpLimitApisMapper;
 import com.opencloud.base.provider.mapper.GatewayIpLimitMapper;
 import com.opencloud.base.provider.service.GatewayIpLimitService;
@@ -49,6 +46,7 @@ public class GatewayIpLimitServiceImpl extends BaseServiceImpl<GatewayIpLimitMap
         queryWrapper.lambda()
                 .likeRight(ObjectUtils.isNotEmpty(query.getPolicyName()),GatewayIpLimit::getPolicyName, query.getPolicyName())
                 .eq(ObjectUtils.isNotEmpty(query.getPolicyType()),GatewayIpLimit::getPolicyType, query.getPolicyType());
+        queryWrapper.orderByDesc("create_time");
         return gatewayIpLimitMapper.selectPage(pageParams,queryWrapper);
     }
 

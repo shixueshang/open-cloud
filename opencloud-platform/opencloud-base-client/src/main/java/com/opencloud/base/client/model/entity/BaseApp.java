@@ -241,4 +241,6 @@ public class BaseApp extends AbstractEntity {
     public void setIsPersist(Integer isPersist) {
         this.isPersist = isPersist;
     }
+
+
 }

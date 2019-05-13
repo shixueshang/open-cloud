@@ -12,7 +12,7 @@
         <result column="strip_prefix" property="stripPrefix" jdbcType="INTEGER"/>
         <result column="retryable" property="retryable" jdbcType="INTEGER"/>
         <result column="status" property="status" jdbcType="TINYINT"/>
-        <result column="route_desc" property="routeDesc" jdbcType="VARCHAR"/>
+        <result column="route_desc" property="routeName" jdbcType="VARCHAR"/>
         <result column="is_persist" property="isPersist" jdbcType="INTEGER"/>
     </resultMap>
 </mapper>

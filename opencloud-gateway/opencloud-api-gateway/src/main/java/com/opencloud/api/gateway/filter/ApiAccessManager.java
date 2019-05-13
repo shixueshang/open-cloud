@@ -1,26 +1,28 @@
-package com.opencloud.zuul.filter;
+package com.opencloud.api.gateway.filter;
 
-import com.opencloud.base.client.model.AccessAuthority;
-import com.opencloud.base.client.model.GatewayIpLimitApisDto;
+import com.opencloud.api.gateway.configuration.ApiProperties;
+import com.opencloud.api.gateway.locator.ApiAccessLocator;
 import com.opencloud.common.constants.CommonConstants;
 import com.opencloud.common.constants.ResultEnum;
 import com.opencloud.common.security.Authority;
-import com.opencloud.common.utils.StringUtils;
-import com.opencloud.common.utils.WebUtils;
-import com.opencloud.zuul.configuration.ApiProperties;
-import com.opencloud.zuul.locator.AccessLocator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authorization.AuthorizationDecision;
+import org.springframework.security.authorization.ReactiveAuthorizationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.web.util.matcher.IpAddressMatcher;
-import org.springframework.stereotype.Service;
+import org.springframework.security.web.server.authorization.AuthorizationContext;
+import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Mono;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * 自定义动态访问控制
@@ -28,10 +30,10 @@ import java.util.*;
  * @author liuyadu
  */
 @Slf4j
-@Service
-public class AccessControl {
+@Component
+public class ApiAccessManager implements ReactiveAuthorizationManager<AuthorizationContext> {
 
-    private AccessLocator accessLocator;
+    private ApiAccessLocator accessLocator;
 
     private ApiProperties apiGatewayProperties;
 
@@ -42,7 +44,7 @@ public class AccessControl {
     private Set<String> authorityIgnores = new HashSet<>();
 
 
-    public AccessControl(AccessLocator accessLocator, ApiProperties apiGatewayProperties) {
+    public ApiAccessManager(ApiAccessLocator accessLocator, ApiProperties apiGatewayProperties) {
         this.accessLocator = accessLocator;
         this.apiGatewayProperties = apiGatewayProperties;
         if (apiGatewayProperties != null) {
@@ -55,44 +57,18 @@ public class AccessControl {
         }
     }
 
-    /**
-     * 访问控制
-     * 1.IP黑名单
-     * 2.IP白名单
-     * 3.权限控制
-     *
-     * @param request
-     * @param authentication
-     * @return
-     */
-    public boolean access(HttpServletRequest request, Authentication authentication) {
+
+    @Override
+    public Mono<AuthorizationDecision> check(Mono<Authentication> authentication, AuthorizationContext authorizationContext) {
+        ServerWebExchange exchange = authorizationContext.getExchange();
+        System.out.println(exchange.getRequest().getURI().getPath());
+        String requestPath = exchange.getRequest().getURI().getPath();
         if (!apiGatewayProperties.getAccessControl()) {
-            return true;
+          //  return new AuthorizationDecision(true);
         }
-        String requestPath = getRequestPath(request);
-        String remoteIpAddress = WebUtils.getIpAddr(request);
-        // 1.ip黑名单检测
-        boolean deny = matchIpBlacklist(requestPath, remoteIpAddress);
-        if (deny) {
-            // 拒绝
-            log.debug("==> access_denied:path={},message={}", requestPath, ResultEnum.ACCESS_DENIED_BLACK_IP_LIMITED.getMessage());
-            request.setAttribute(CommonConstants.X_ACCESS_DENIED, ResultEnum.ACCESS_DENIED_BLACK_IP_LIMITED);
-            return false;
-        }
-
-        // 2.是否直接放行
-        if (isPermitAll(requestPath)) {
-            return true;
-        }
-
-        // 3.ip白名单检测
-        boolean[] matchIpWhiteListResult = matchIpWhiteList(requestPath, remoteIpAddress);
-        boolean hasWhiteList = matchIpWhiteListResult[0];
-        boolean allow = matchIpWhiteListResult[1];
-
         // 4.判断api是否需要认证
         boolean isAuth = isAuthAccess(requestPath);
-
+/*
         if (hasWhiteList) {
             // 接口存在白名单限制
             if (allow) {
@@ -102,20 +78,19 @@ public class AccessControl {
                     return true;
                 } else {
                     // 校验身份
-                    return checkAuthorities(request, authentication, requestPath);
+
                 }
             } else {
                 // IP白名单检测通过,拒绝
                 log.debug("==> access_denied:path={},message={}", requestPath, ResultEnum.ACCESS_DENIED_WHITE_IP_LIMITED.getMessage());
                 request.setAttribute(CommonConstants.X_ACCESS_DENIED, ResultEnum.ACCESS_DENIED_WHITE_IP_LIMITED);
                 return false;
-            }
-
-        } else {
-            // 接口不存在白名单限制,只校验身份
-            return checkAuthorities(request, authentication, requestPath);
-        }
+            }*/
+           return authentication.map((a) -> {
+                return new AuthorizationDecision(a.isAuthenticated());
+            }).defaultIfEmpty(new AuthorizationDecision(false));
     }
+
 
 
     private boolean isPermitAll(String requestPath) {
@@ -141,7 +116,7 @@ public class AccessControl {
     }
 
 
-    private boolean checkAuthorities(HttpServletRequest request, Authentication authentication, String requestPath) {
+    private boolean checkAuthorities(ServerWebExchange exchange, Authentication authentication, String requestPath) {
         Object principal = authentication.getPrincipal();
         // 已认证身份
         if (principal != null) {
@@ -154,12 +129,12 @@ public class AccessControl {
                 // 认证通过,并且无需权限
                 return true;
             }
-            return mathAuthorities(request, authentication, requestPath);
+            return mathAuthorities(exchange, authentication, requestPath);
         }
         return false;
     }
 
-    public boolean mathAuthorities(HttpServletRequest request, Authentication authentication, String requestPath) {
+    public boolean mathAuthorities(ServerWebExchange exchange, Authentication authentication, String requestPath) {
         Collection<ConfigAttribute> attributes = getAttributes(requestPath);
         if (authentication == null) {
             return false;
@@ -181,7 +156,7 @@ public class AccessControl {
                             if (customer.getIsExpired() != null && customer.getIsExpired()) {
                                 // 授权已过期
                                 log.debug("==> access_denied:path={},message={}", requestPath, ResultEnum.ACCESS_DENIED_AUTHORITY_EXPIRED.getMessage());
-                                request.setAttribute(CommonConstants.X_ACCESS_DENIED, ResultEnum.ACCESS_DENIED_AUTHORITY_EXPIRED);
+                                exchange.getAttributes().put(CommonConstants.X_ACCESS_DENIED, ResultEnum.ACCESS_DENIED_AUTHORITY_EXPIRED);
                                 return false;
                             }
                         }
@@ -195,65 +170,19 @@ public class AccessControl {
 
     private Collection<ConfigAttribute> getAttributes(String requestPath) {
         // 匹配动态权限
-        for (Iterator<String> iter = accessLocator.getAllConfigAttribute().keySet().iterator(); iter.hasNext(); ) {
+        for (Iterator<String> iter = accessLocator.getAllConfigAttributeCache().keySet().iterator(); iter.hasNext(); ) {
             String url = iter.next();
             // 防止匹配错误 忽略/**
             if (!"/**".equals(url) && pathMatch.match(url, requestPath)) {
                 // 返回匹配到权限
-                return accessLocator.getAllConfigAttribute().get(url);
+                return accessLocator.getAllConfigAttributeCache().get(url);
             }
         }
         return SecurityConfig.createList("AUTHORITIES_REQUIRED");
     }
 
-
-    private boolean matchIpBlacklist(String requestPath, String remoteIpAddress) {
-        List<GatewayIpLimitApisDto> blackList = accessLocator.getIpBlackList();
-        if (blackList != null) {
-            for (GatewayIpLimitApisDto api : blackList) {
-                if (pathMatch.match(api.getPath(), requestPath) && api.getIpAddressSet() != null && !api.getIpAddressSet().isEmpty()) {
-                    if (matchIp(api.getIpAddressSet(), remoteIpAddress)) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-
-    }
-
-    private boolean[] matchIpWhiteList(String requestPath, String remoteIpAddress) {
-        boolean hasWhiteList = false;
-        boolean allow = false;
-        List<GatewayIpLimitApisDto> whiteList = accessLocator.getIpWhiteList();
-        if (whiteList != null) {
-            for (GatewayIpLimitApisDto api : whiteList) {
-                if (pathMatch.match(api.getPath(), requestPath) && api.getIpAddressSet() != null && !api.getIpAddressSet().isEmpty()) {
-                    hasWhiteList = true;
-                    allow = matchIp(api.getIpAddressSet(), remoteIpAddress);
-                    break;
-                }
-            }
-        }
-        return new boolean[]{hasWhiteList, allow};
-    }
-
-    private boolean matchIp(Set<String> ips, String remoteIpAddress) {
-        IpAddressMatcher ipAddressMatcher = null;
-        for (String ip : ips) {
-            try {
-                ipAddressMatcher = new IpAddressMatcher(ip);
-                if (ipAddressMatcher.matches(remoteIpAddress)) {
-                    return true;
-                }
-            } catch (Exception e) {
-            }
-        }
-        return false;
-    }
-
     private boolean isAuthAccess(String requestPath) {
-        List<AccessAuthority> authorityList = accessLocator.getAuthorityList();
+       /* List<AccessAuthority> authorityList = accessLocator.getAccessAuthorities();
         if (authorityList != null) {
             for (AccessAuthority auth : authorityList) {
                 String fullPath = auth.getPath();
@@ -263,16 +192,8 @@ public class AccessControl {
                     return true;
                 }
             }
-        }
+        }*/
         return false;
     }
 
-    private String getRequestPath(HttpServletRequest request) {
-        String url = request.getServletPath();
-        String pathInfo = request.getPathInfo();
-        if (pathInfo != null) {
-            url = StringUtils.isNotBlank(url) ? url + pathInfo : pathInfo;
-        }
-        return url;
-    }
 }

@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.io.Serializable;
 
+/**
+ * @author liuyadu
+ */
 @TableName("gateway_ip_limit_api")
 public class GatewayIpLimitApi implements Serializable {
 

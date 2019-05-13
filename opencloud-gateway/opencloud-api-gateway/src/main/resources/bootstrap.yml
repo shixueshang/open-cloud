@@ -7,28 +7,20 @@ spring:
         gateway:
             discovery:
                 locator:
+                  #表明gateway开启服务注册和发现的功能，并且spring cloud gateway自动根据服务发现为每一个服务创建了一个router，# 这个router将以服务名开头的请求路径转发到对应的服务
                   enabled: false
+                  #将请求路径上的服务名配置为小写（因为服务注册的时候，向注册中心注册时将服务名转成大写的了,比如以/service-hi/*的请求路径被路由转发到服务名为service-hi的服务上
                   lowerCaseServiceId: true
-            routes:
-              - id: opencloud-admin-provider
-                uri: lb://opencloud-admin-provider
-                predicates:
-                    - Path=/admin/**
-                filters:
-                    #转发去掉前缀,总要否则swagger无法加载
-                    - StripPrefix=1
-              - id: opencloud-base-provider
-                uri: lb://opencloud-base-provider
-                predicates:
-                    - Path=/base/**
-                filters:
-                    - StripPrefix=1
-              - id: opencloud-auth-provider
-                uri: lb://opencloud-auth-provider
-                predicates:
-                   - Path=/auth/**
-                filters:
-                   - StripPrefix=1
+            #路由定义,本项目从数据库中加载路由配置com.opencloud.api.gateway.locator.DbRouteDefinitionLocator
+#            routes:
+#              - id: opencloud-admin-provider
+#                uri: lb://opencloud-admin-provider
+#                predicates:
+#                    - Path=/admin/**
+#                    - Name=平台后台管理服务
+#                filters:
+#                    #转发去掉前缀,总要否则swagger无法加载
+#                    - StripPrefix=1
         nacos:
             config:
                 namespace: ${config.namespace}

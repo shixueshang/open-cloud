@@ -3,7 +3,6 @@ package com.opencloud.base.provider.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.opencloud.base.client.model.entity.GatewayAccessLogs;
 import com.opencloud.base.provider.mapper.GatewayLogsMapper;
 import com.opencloud.base.provider.service.GatewayAccessLogsService;
@@ -39,6 +38,7 @@ public class GatewayAccessLogsServiceImpl implements GatewayAccessLogsService {
                 .eq(ObjectUtils.isNotEmpty(query.getIp()),GatewayAccessLogs::getIp, query.getIp())
                 .eq(ObjectUtils.isNotEmpty(query.getServerIp()),GatewayAccessLogs::getServerIp, query.getServerIp())
                 .eq(ObjectUtils.isNotEmpty(query.getServiceId()),GatewayAccessLogs::getServiceId, query.getServiceId());
+        queryWrapper.orderByDesc("request_time");
         return gatewayLogsMapper.selectPage(pageParams,queryWrapper);
     }
 }

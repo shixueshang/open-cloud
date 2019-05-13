@@ -22,6 +22,12 @@ public class GatewayRoute implements Serializable {
      */
     @TableId(type = IdType.ID_WORKER)
     private Long routeId;
+
+    /**
+     * 路由名称
+     */
+    private String routeName;
+
     /**
      * 路径
      */
@@ -46,11 +52,6 @@ public class GatewayRoute implements Serializable {
      * 0-不重试 1-重试
      */
     private Integer retryable;
-
-    /**
-     * 路由描述
-     */
-    private String routeDesc;
 
     /**
      * 状态:0-无效 1-有效
@@ -152,12 +153,12 @@ public class GatewayRoute implements Serializable {
         this.retryable = retryable;
     }
 
-    public String getRouteDesc() {
-        return routeDesc;
+    public String getRouteName() {
+        return routeName;
     }
 
-    public void setRouteDesc(String routeDesc) {
-        this.routeDesc = routeDesc;
+    public void setRouteName(String routeName) {
+        this.routeName = routeName;
     }
 
     public Integer getStatus() {

@@ -3,13 +3,10 @@ package com.opencloud.base.provider.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.opencloud.base.client.constants.BaseConstants;
-import com.opencloud.base.client.model.entity.BaseResourceOperation;
 import com.opencloud.base.client.model.entity.BaseRole;
 import com.opencloud.base.client.model.entity.BaseRoleUser;
 import com.opencloud.base.client.model.entity.BaseUser;
-import com.opencloud.base.provider.mapper.BaseResourceOperationMapper;
 import com.opencloud.base.provider.mapper.BaseRoleMapper;
 import com.opencloud.base.provider.mapper.BaseRoleUserMapper;
 import com.opencloud.base.provider.service.BaseRoleService;
@@ -53,6 +50,7 @@ public class BaseRoleServiceImpl extends BaseServiceImpl<BaseRoleMapper, BaseRol
         queryWrapper.lambda()
                 .likeRight(ObjectUtils.isNotEmpty(query.getRoleCode()),BaseRole::getRoleCode, query.getRoleCode())
                 .likeRight(ObjectUtils.isNotEmpty(query.getRoleName()),BaseRole::getRoleName, query.getRoleName());
+        queryWrapper.orderByDesc("create_time");
         return baseRoleMapper.selectPage(pageParams,queryWrapper);
     }
 

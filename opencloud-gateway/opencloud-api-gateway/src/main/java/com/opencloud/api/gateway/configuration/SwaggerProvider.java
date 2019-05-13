@@ -27,7 +27,7 @@ public class SwaggerProvider implements SwaggerResourcesProvider {
         routeDefinitionLocator.getRouteDefinitions()
                 .subscribe(routeDefinition -> routeDefinition.getPredicates().stream()
                         .filter(predicateDefinition -> ("Path").equalsIgnoreCase(predicateDefinition.getName()))
-                        .forEach(predicateDefinition -> resources.add(swaggerResource(routeDefinition.getId(),
+                        .forEach(predicateDefinition -> resources.add(swaggerResource(predicateDefinition.getArgs().get("name"),
                                 predicateDefinition.getArgs().get(NameUtils.GENERATED_NAME_PREFIX + "0")
                                         .replace("/**", API_URI)))));
         return resources;

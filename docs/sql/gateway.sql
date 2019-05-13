@@ -148,29 +148,31 @@ CREATE TABLE `gateway_rate_limit_role` (
 -- ----------------------------
 -- Records of gateway_rate_limit_role
 -- ----------------------------
-
 -- ----------------------------
 -- Table structure for gateway_route
 -- ----------------------------
 DROP TABLE IF EXISTS `gateway_route`;
 CREATE TABLE `gateway_route` (
-                               `route_id` bigint(20) NOT NULL COMMENT '路由ID',
-                               `path` varchar(255) DEFAULT NULL COMMENT '路径',
-                               `service_id` varchar(255) DEFAULT NULL COMMENT '服务ID',
-                               `url` varchar(255) DEFAULT NULL COMMENT '完整地址',
-                               `strip_prefix` tinyint(3) NOT NULL DEFAULT '1' COMMENT '忽略前缀',
-                               `retryable` tinyint(3) NOT NULL DEFAULT '0' COMMENT '0-不重试 1-重试',
-                               `status` tinyint(3) NOT NULL DEFAULT '1' COMMENT '状态:0-无效 1-有效',
-                               `route_desc` varchar(255) DEFAULT NULL,
-                               `is_persist` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否为保留数据:0-否 1-是',
-                               PRIMARY KEY (`route_id`)
+  `route_id` bigint(20) NOT NULL COMMENT '路由ID',
+  `route_name` varchar(255) NOT NULL COMMENT '路由名称',
+  `path` varchar(255) DEFAULT NULL COMMENT '路径',
+  `service_id` varchar(255) DEFAULT NULL COMMENT '服务ID',
+  `url` varchar(255) DEFAULT NULL COMMENT '完整地址',
+  `strip_prefix` tinyint(3) NOT NULL DEFAULT '1' COMMENT '忽略前缀',
+  `retryable` tinyint(3) NOT NULL DEFAULT '0' COMMENT '0-不重试 1-重试',
+  `status` tinyint(3) NOT NULL DEFAULT '1' COMMENT '状态:0-无效 1-有效',
+  `is_persist` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否为保留数据:0-否 1-是',
+  PRIMARY KEY (`route_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='开放网关-路由';
 
 -- ----------------------------
 -- Records of gateway_route
 -- ----------------------------
-INSERT INTO `gateway_route` VALUES ('55659578597467766', '/admin/**', 'opencloud-admin-provider', '', '1', '0', '1', '', '1');
-INSERT INTO `gateway_route` VALUES ('556587504019439616', '/base/**', 'opencloud-base-provider', '', '1', '0', '1', '', '1');
-INSERT INTO `gateway_route` VALUES ('556595619813130240', '/auth/**', 'opencloud-auth-provider', '', '1', '0', '1', '', '1');
-INSERT INTO `gateway_route` VALUES ('556595914240688128', '/msg/**', 'opencloud-msg-provider', '', '1', '0', '1', '', '1');
+INSERT INTO `gateway_route` VALUES ('55659578597467766', '平台后台管理服务', '/admin/**', 'app-admin', '', '0', '0', '1', '1');
+INSERT INTO `gateway_route` VALUES ('556587504019439616', '平台基础支撑服务', '/base/**', 'opencloud-base-provider', '', '0', '0', '1', '1');
+INSERT INTO `gateway_route` VALUES ('556595619813130240', '平台统一认证服务', '/auth/**', 'opencloud-auth-provider', '', '0', '0', '1', '1');
+INSERT INTO `gateway_route` VALUES ('556595914240688128', '平台消息服务', '/msg/**', 'opencloud-msg-provider', '', '0', '0', '1', '1');
+INSERT INTO `gateway_route` VALUES ('556595914240688139', '平台任务调度服务', '/scheduler/**', 'opencloud-scheduler-provider', '', '0', '0', '1', '1');
+INSERT INTO `gateway_route` VALUES ('556595914240688145', '平台工作流服务', '/bpm/**', 'opencloud-bpm-provider', '', '0', '0', '1', '1');
 SET FOREIGN_KEY_CHECKS=1;
+

@@ -46,10 +46,6 @@ public class IndexController {
     @ResponseBody
     public Mono<ResultBody> getServiceList() {
         List<Map> services = Lists.newArrayList();
-        Map gateway = Maps.newHashMap();
-        gateway.put("serviceId", serviceId);
-        gateway.put("serviceName", serviceId);
-        services.add(gateway);
         List<String> routes = new ArrayList<>();
         //取出gateway的route
         routeLocator.getRoutes().subscribe(route -> routes.add(route.getId()));
@@ -59,7 +55,7 @@ public class IndexController {
                         .forEach(predicateDefinition -> {
                                     Map service = Maps.newHashMap();
                                     service.put("serviceId", routeDefinition.getId());
-                                    service.put("serviceName", routeDefinition.getId());
+                                    service.put("serviceName",  predicateDefinition.getArgs().get("name"));
                                     services.add(service);
                                 }
                         ));
