@@ -59,7 +59,7 @@ public class BaseAuthorityServiceImpl  extends BaseServiceImpl<BaseAuthorityMapp
     @Autowired
     private BaseAppService baseAppService;
 
-    private final static String SEPARATOR = ":";
+    private final static String SEPARATOR = "_";
 
     @Value("${spring.application.name}")
     private String DEFAULT_SERVICE_ID;
@@ -116,13 +116,13 @@ public class BaseAuthorityServiceImpl  extends BaseServiceImpl<BaseAuthorityMapp
         }
         if (ResourceType.menu.equals(resourceType)) {
             BaseResourceMenu menu = baseResourceMenuService.getMenu(resourceId);
-            authority = ResourceType.menu.name() + SEPARATOR + menu.getMenuCode();
+            authority = ResourceType.menu.name().toUpperCase() + SEPARATOR + menu.getMenuCode();
             baseAuthority.setMenuId(resourceId);
             baseAuthority.setStatus(menu.getStatus());
         }
         if (ResourceType.operation.equals(resourceType)) {
             BaseResourceOperation operation = baseResourceOperationService.getOperation(resourceId);
-            authority = ResourceType.operation.name() + SEPARATOR + operation.getOperationCode();
+            authority = ResourceType.operation.name().toUpperCase() + SEPARATOR + operation.getOperationCode();
             baseAuthority.setOperationId(resourceId);
             baseAuthority.setStatus(operation.getStatus());
         }
