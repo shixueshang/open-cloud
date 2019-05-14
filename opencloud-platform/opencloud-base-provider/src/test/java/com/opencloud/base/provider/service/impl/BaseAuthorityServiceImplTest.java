@@ -1,6 +1,6 @@
 package com.opencloud.base.provider.service.impl;
 
-import com.opencloud.base.client.model.BaseMenuAuthority;
+import com.opencloud.base.client.model.entity.BaseAuthority;
 import com.opencloud.base.client.model.entity.BaseResourceMenu;
 import com.opencloud.base.client.model.entity.BaseResourceOperation;
 import com.opencloud.base.provider.service.BaseAuthorityService;
@@ -24,8 +24,21 @@ public class BaseAuthorityServiceImplTest extends BaseTest {
     private BaseAuthorityService baseAuthorityService;
 
     @Test
-    public void  findAuthorityDetail(){
-        List<BaseMenuAuthority> list = baseAuthorityService.findMenuAuthority(null);
+    public void findAuthorityDetail() {
+        List<BaseAuthority> list = baseAuthorityService.list();
+        for (BaseAuthority a : list
+                ) {
+            if (a.getAuthority().startsWith("menu:")) {
+                a.setAuthority(a.getAuthority().replace("menu:", "MENU_"));
+            }
+            if (a.getAuthority().startsWith("OPERATION_")) {
+                a.setAuthority(a.getAuthority().replace("OPERATION_", "ACTION_"));
+            }
+            BaseAuthority authority = new BaseAuthority();
+            authority.setAuthorityId(a.getAuthorityId());
+            authority.setAuthority(a.getAuthority());
+            baseAuthorityService.updateById(authority);
+        }
     }
 
     @Test

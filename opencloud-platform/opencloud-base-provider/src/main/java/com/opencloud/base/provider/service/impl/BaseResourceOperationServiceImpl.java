@@ -127,7 +127,7 @@ public class BaseResourceOperationServiceImpl extends BaseServiceImpl<BaseResour
         operation.setUpdateTime(operation.getCreateTime());
         baseResourceOperationMapper.insert(operation);
         // 同步权限表里的信息
-        baseAuthorityService.saveOrUpdateAuthority(operation.getOperationId(), ResourceType.operation);
+        baseAuthorityService.saveOrUpdateAuthority(operation.getOperationId(), ResourceType.action);
         return operation;
     }
 
@@ -158,7 +158,7 @@ public class BaseResourceOperationServiceImpl extends BaseServiceImpl<BaseResour
         operation.setUpdateTime(new Date());
         baseResourceOperationMapper.updateById(operation);
         // 同步权限表里的信息
-        baseAuthorityService.saveOrUpdateAuthority(operation.getOperationId(), ResourceType.operation);
+        baseAuthorityService.saveOrUpdateAuthority(operation.getOperationId(), ResourceType.action);
         return operation;
     }
 
@@ -175,7 +175,7 @@ public class BaseResourceOperationServiceImpl extends BaseServiceImpl<BaseResour
             throw new OpenAlertException(String.format("保留数据,不允许删除"));
         }
         removeOperationApi(operationId);
-        baseAuthorityService.removeAuthority(operationId, ResourceType.operation);
+        baseAuthorityService.removeAuthority(operationId, ResourceType.action);
         baseResourceOperationMapper.deleteById(operationId);
     }
 

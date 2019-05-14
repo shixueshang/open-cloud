@@ -12,7 +12,7 @@ public enum ResourceType {
     /**
      * 操作资源
      */
-    operation,
+    action,
     /**
      * API接口资源
      */

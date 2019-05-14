@@ -120,9 +120,9 @@ public class BaseAuthorityServiceImpl  extends BaseServiceImpl<BaseAuthorityMapp
             baseAuthority.setMenuId(resourceId);
             baseAuthority.setStatus(menu.getStatus());
         }
-        if (ResourceType.operation.equals(resourceType)) {
+        if (ResourceType.action.equals(resourceType)) {
             BaseResourceOperation operation = baseResourceOperationService.getOperation(resourceId);
-            authority = ResourceType.operation.name().toUpperCase() + SEPARATOR + operation.getOperationCode();
+            authority = ResourceType.action.name().toUpperCase() + SEPARATOR + operation.getOperationCode();
             baseAuthority.setOperationId(resourceId);
             baseAuthority.setStatus(operation.getStatus());
         }
@@ -216,7 +216,7 @@ public class BaseAuthorityServiceImpl  extends BaseServiceImpl<BaseAuthorityMapp
         if (ResourceType.menu.equals(resourceType)) {
             queryWrapper.lambda().eq(BaseAuthority::getMenuId, resourceId);
         }
-        if (ResourceType.operation.equals(resourceType)) {
+        if (ResourceType.action.equals(resourceType)) {
             queryWrapper.lambda().eq(BaseAuthority::getOperationId, resourceId);
         }
         if (ResourceType.api.equals(resourceType)) {
