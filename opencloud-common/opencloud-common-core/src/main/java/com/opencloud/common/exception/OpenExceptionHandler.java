@@ -39,7 +39,7 @@ public class OpenExceptionHandler {
      */
     @ExceptionHandler({AuthenticationException.class})
     public static ResultBody authenticationException(Exception ex, HttpServletRequest request, HttpServletResponse response) {
-        ResultBody resultBody = resolveException(ex,request.getRequestURI());
+        ResultBody resultBody = resolveException(ex, request.getRequestURI());
         response.setStatus(resultBody.getHttpStatus());
         return resultBody;
     }
@@ -54,7 +54,7 @@ public class OpenExceptionHandler {
      */
     @ExceptionHandler({OAuth2Exception.class, InvalidTokenException.class})
     public static ResultBody oauth2Exception(Exception ex, HttpServletRequest request, HttpServletResponse response) {
-        ResultBody resultBody = resolveException(ex,request.getRequestURI());
+        ResultBody resultBody = resolveException(ex, request.getRequestURI());
         response.setStatus(resultBody.getHttpStatus());
         return resultBody;
     }
@@ -69,7 +69,7 @@ public class OpenExceptionHandler {
      */
     @ExceptionHandler({OpenException.class})
     public static ResultBody openException(Exception ex, HttpServletRequest request, HttpServletResponse response) {
-        ResultBody resultBody = resolveException(ex,request.getRequestURI());
+        ResultBody resultBody = resolveException(ex, request.getRequestURI());
         response.setStatus(resultBody.getHttpStatus());
         return resultBody;
     }
@@ -84,7 +84,7 @@ public class OpenExceptionHandler {
      */
     @ExceptionHandler({Exception.class})
     public static ResultBody exception(Exception ex, HttpServletRequest request, HttpServletResponse response) {
-        ResultBody resultBody = resolveException(ex,request.getRequestURI());
+        ResultBody resultBody = resolveException(ex, request.getRequestURI());
         response.setStatus(resultBody.getHttpStatus());
         return resultBody;
     }
@@ -96,7 +96,7 @@ public class OpenExceptionHandler {
      * @param ex
      * @return
      */
-    public static ResultBody resolveException(Exception ex,String path) {
+    public static ResultBody resolveException(Exception ex, String path) {
         ResultEnum code = ResultEnum.ERROR;
         int httpStatus = HttpStatus.OK.value();
         String superClassName = ex.getClass().getSuperclass().getName();
@@ -104,7 +104,7 @@ public class OpenExceptionHandler {
         if (superClassName.contains("AuthenticationException")) {
             if (className.contains("UsernameNotFoundException")) {
                 code = ResultEnum.USERNAME_NOT_FOUND;
-            } else if (className.contains("BadCredentialsException")) {
+            } else if (className.contains("BadCredentialsException") || className.contains("InvalidGrantException")) {
                 code = ResultEnum.BAD_CREDENTIALS;
             } else if (className.contains("AccountExpiredException")) {
                 code = ResultEnum.ACCOUNT_EXPIRED;
