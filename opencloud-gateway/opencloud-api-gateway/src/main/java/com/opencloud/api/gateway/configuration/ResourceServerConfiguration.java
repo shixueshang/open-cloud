@@ -2,8 +2,8 @@ package com.opencloud.api.gateway.configuration;
 
 import com.opencloud.api.gateway.exception.JsonAccessDeniedHandler;
 import com.opencloud.api.gateway.exception.JsonAuthenticationEntryPoint;
-import com.opencloud.api.gateway.filter.ApiAccessManager;
-import com.opencloud.api.gateway.locator.ApiAccessLocator;
+import com.opencloud.api.gateway.filter.ApiAuthorizationManager;
+import com.opencloud.api.gateway.locator.ApiResourceLocator;
 import com.opencloud.api.gateway.oauth2.RedisAuthenticationManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -35,14 +35,14 @@ import reactor.core.publisher.Mono;
  * @description:
  */
 @Configuration
-public class SecurityConfiguration {
+public class ResourceServerConfiguration {
 
     private static final String MAX_AGE = "18000L";
 
     @Autowired
     private RedisConnectionFactory redisConnectionFactory;
     @Autowired
-    private ApiAccessLocator apiAccessLocator;
+    private ApiResourceLocator apiAccessLocator;
     @Autowired
     private ApiProperties apiGatewayProperties;
 
@@ -80,6 +80,7 @@ public class SecurityConfiguration {
 
     @Bean
     SecurityWebFilterChain springWebFilterChain(ServerHttpSecurity http) throws Exception {
+        // 自定义oauth2 认证, 使用redis读取token,而非jwt方式
         JsonAuthenticationEntryPoint entryPoint = new JsonAuthenticationEntryPoint();
         JsonAccessDeniedHandler accessDeniedHandler = new JsonAccessDeniedHandler();
         AuthenticationWebFilter oauth2 = new AuthenticationWebFilter(new RedisAuthenticationManager(new RedisTokenStore(redisConnectionFactory)));
@@ -89,12 +90,10 @@ public class SecurityConfiguration {
                 .httpBasic().disable()
                 .csrf().disable()
                 .authorizeExchange()
-                .anyExchange().access(new ApiAccessManager(apiAccessLocator,apiGatewayProperties))
+                .anyExchange().access(new ApiAuthorizationManager(apiAccessLocator, apiGatewayProperties))
                 .and().exceptionHandling()
                 .accessDeniedHandler(accessDeniedHandler)
                 .authenticationEntryPoint(entryPoint).and()
-                // 手动添加过滤器, 直接注入corsFilter @Bean不生效,不知道为什么?待解决.
-                .addFilterAt(corsFilter(), SecurityWebFiltersOrder.CORS)
                 .addFilterAt(oauth2, SecurityWebFiltersOrder.AUTHENTICATION);
         return http.build();
     }

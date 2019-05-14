@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
  * @author liuyadu
  */
 @Slf4j
-public class ApiAccessLocator implements ApplicationListener<GatewayRefreshRemoteApplicationEvent> {
+public class ApiResourceLocator implements ApplicationListener<GatewayRefreshRemoteApplicationEvent> {
     /**
      * 单位时间
      */
@@ -75,13 +75,13 @@ public class ApiAccessLocator implements ApplicationListener<GatewayRefreshRemot
     private List<GatewayRateLimitApisDto> rateLimitApiList;
 
     private RateLimitProperties rateLimitProperties;
-    private DbRouteLocator zuulRoutesLocator;
+    private RemoteRouteLocator zuulRoutesLocator;
     private BaseAuthorityRemoteService baseAuthorityRemoteService;
     private GatewayRemoteService gatewayRemoteService;
     private StringToMatchTypeConverter converter;
 
 
-    public ApiAccessLocator(DbRouteLocator zuulRoutesLocator, RateLimitProperties rateLimitProperties, BaseAuthorityRemoteService baseAuthorityRemoteService, GatewayRemoteService gatewayRemoteService) {
+    public ApiResourceLocator(RemoteRouteLocator zuulRoutesLocator, RateLimitProperties rateLimitProperties, BaseAuthorityRemoteService baseAuthorityRemoteService, GatewayRemoteService gatewayRemoteService) {
         this.zuulRoutesLocator = zuulRoutesLocator;
         this.rateLimitProperties = rateLimitProperties;
         this.baseAuthorityRemoteService = baseAuthorityRemoteService;
@@ -104,13 +104,13 @@ public class ApiAccessLocator implements ApplicationListener<GatewayRefreshRemot
      *
      * @return
      */
-    protected String getZuulPath(String serviceId, String path) {
+    protected String getFullPath(String serviceId, String path) {
         if (path == null) {
             path = "";
         }
-        List<Route> rotes = zuulRoutesLocator.getRoutes();
-        if (rotes != null && !rotes.isEmpty()) {
-            for (Route route : rotes) {
+        List<Route> routes = zuulRoutesLocator.getRoutes();
+        if (routes != null && !routes.isEmpty()) {
+            for (Route route : routes) {
                 // 服务ID相同
                 if (route.getId().equals(serviceId)) {
                     return route.getPrefix().concat(path);
@@ -137,7 +137,7 @@ public class ApiAccessLocator implements ApplicationListener<GatewayRefreshRemot
                     if (path == null) {
                         continue;
                     }
-                    String fullPath = getZuulPath(item.getServiceId(), path);
+                    String fullPath = getFullPath(item.getServiceId(), path);
                     item.setPath(fullPath);
                     array = allConfigAttribute.get(fullPath);
                     if (array == null) {
@@ -165,7 +165,7 @@ public class ApiAccessLocator implements ApplicationListener<GatewayRefreshRemot
             ipBlackList = gatewayRemoteService.getApiBlackList().getData();
             if (ipBlackList != null) {
                 for (GatewayIpLimitApisDto item : ipBlackList) {
-                    item.setPath(getZuulPath(item.getServiceId(), item.getPath()));
+                    item.setPath(getFullPath(item.getServiceId(), item.getPath()));
                 }
             }
             log.info("=============加载IP黑名单:{}==============",ipBlackList.size());
@@ -183,7 +183,7 @@ public class ApiAccessLocator implements ApplicationListener<GatewayRefreshRemot
             ipWhiteList = gatewayRemoteService.getApiWhiteList().getData();
             if (ipWhiteList != null) {
                 for (GatewayIpLimitApisDto item : ipWhiteList) {
-                    item.setPath(getZuulPath(item.getServiceId(), item.getPath()));
+                    item.setPath(getFullPath(item.getServiceId(), item.getPath()));
                 }
             }
             log.info("=============加载IP白名单:{}==============",ipWhiteList.size());
@@ -231,7 +231,7 @@ public class ApiAccessLocator implements ApplicationListener<GatewayRefreshRemot
                     long[] arry = getIntervalAndQuota(item.getIntervalUnit());
                     Long refreshInterval = arry[0];
                     Long quota = arry[1];
-                    String url = getZuulPath(item.getServiceId(), item.getPath());
+                    String url = getFullPath(item.getServiceId(), item.getPath());
                     item.setPath(url);
                     policy.setLimit(item.getLimit());
                     policy.setRefreshInterval(refreshInterval);

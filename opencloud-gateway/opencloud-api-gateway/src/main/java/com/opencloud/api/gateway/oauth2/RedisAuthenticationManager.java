@@ -5,17 +5,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
-import org.springframework.security.oauth2.core.OAuth2AccessToken;
-import org.springframework.security.oauth2.core.OAuth2AccessToken.TokenType;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2Error;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.server.resource.BearerTokenAuthenticationToken;
 import org.springframework.security.oauth2.server.resource.BearerTokenError;
 import org.springframework.security.oauth2.server.resource.BearerTokenErrorCodes;
 import reactor.core.publisher.Mono;
-
-import java.time.Instant;
 
 /**
  * @author: liuyadu
@@ -25,7 +22,6 @@ import java.time.Instant;
 @Slf4j
 public class RedisAuthenticationManager implements ReactiveAuthenticationManager {
     private TokenStore tokenStore;
-    private AccessTokenConverter accessTokenConverter = new AccessTokenConverter();
 
     public RedisAuthenticationManager(TokenStore tokenStore) {
         this.tokenStore = tokenStore;
@@ -38,12 +34,11 @@ public class RedisAuthenticationManager implements ReactiveAuthenticationManager
                 .cast(BearerTokenAuthenticationToken.class)
                 .map(BearerTokenAuthenticationToken::getToken)
                 .flatMap((token -> {
-                    org.springframework.security.oauth2.common.OAuth2AccessToken oauth2token = this.tokenStore.readAccessToken(token);
-                    if(oauth2token==null){
+                    OAuth2Authentication oAuth2Authentication = this.tokenStore.readAuthentication(token);
+                    if(oAuth2Authentication==null){
                         throw new InvalidTokenException("InvalidToken");
                     }else{
-                        OAuth2AccessToken accessToken = new OAuth2AccessToken(TokenType.BEARER,oauth2token.getValue(),null, Instant.ofEpochSecond(oauth2token.getExpiresIn()),oauth2token.getScope());
-                        return Mono.just(accessTokenConverter.convert(accessToken));
+                        return Mono.just(oAuth2Authentication);
                     }
                 }))
                 .cast(Authentication.class)

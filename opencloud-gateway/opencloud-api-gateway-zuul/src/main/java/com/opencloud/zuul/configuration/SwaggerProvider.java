@@ -25,7 +25,7 @@
 package com.opencloud.zuul.configuration;
 
 import com.opencloud.common.swagger.OpenSwaggerProperties;
-import com.opencloud.zuul.locator.DbRouteLocator;
+import com.opencloud.zuul.locator.RemoteRouteLocator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.zuul.filters.Route;
@@ -50,21 +50,21 @@ public class SwaggerProvider implements SwaggerResourcesProvider {
 
     private OpenSwaggerProperties openSwaggerProperties;
 
-    private DbRouteLocator zuulRoutesLocator;
+    private RemoteRouteLocator remoteRouteLocator;
 
     public SwaggerProvider() {
     }
 
     @Autowired
-    public SwaggerProvider(OpenSwaggerProperties openSwaggerProperties, DbRouteLocator zuulRouteLocator) {
+    public SwaggerProvider(OpenSwaggerProperties openSwaggerProperties, RemoteRouteLocator remoteRouteLocator) {
         this.openSwaggerProperties = openSwaggerProperties;
-        this.zuulRoutesLocator = zuulRouteLocator;
+        this.remoteRouteLocator = remoteRouteLocator;
     }
 
     @Override
     public List<SwaggerResource> get() {
         List<SwaggerResource> resources = new ArrayList<>();
-        List<Route> routes = zuulRoutesLocator.getRoutes();
+        List<Route> routes = remoteRouteLocator.getRoutes();
         routes.forEach(route -> {
             // 只加载未被忽略的服务
             if (!openSwaggerProperties.getIgnores().contains(route.getLocation())) {

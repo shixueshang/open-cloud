@@ -3,11 +3,11 @@ package com.opencloud.zuul.configuration;
 import com.google.common.collect.Lists;
 import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.config.properties.RateLimitProperties;
 import com.netflix.zuul.ZuulFilter;
-import com.opencloud.zuul.actuator.GatewayRefreshBusEndpoint;
+import com.opencloud.zuul.actuator.OpenApiEndpoint;
 import com.opencloud.zuul.filter.ZuulErrorFilter;
 import com.opencloud.zuul.filter.ZuulResponseFilter;
-import com.opencloud.zuul.locator.ApiAccessLocator;
-import com.opencloud.zuul.locator.DbRouteLocator;
+import com.opencloud.zuul.locator.ApiResourceLocator;
+import com.opencloud.zuul.locator.RemoteRouteLocator;
 import com.opencloud.zuul.service.AccessLogService;
 import com.opencloud.zuul.service.feign.BaseAuthorityRemoteService;
 import com.opencloud.zuul.service.feign.GatewayRemoteService;
@@ -47,13 +47,14 @@ public class ApiConfiguration {
     private static final Long MAX_AGE = 18000L;
 
     @Autowired
-    private DbRouteLocator zuulRoutesLocator;
+    private RemoteRouteLocator zuulRoutesLocator;
     @Autowired
     private RateLimitProperties rateLimitProperties;
     @Autowired
     private BaseAuthorityRemoteService baseAuthorityRemoteService;
     @Autowired
     private AccessLogService accessLogService;
+
     /**
      * 响应过滤器
      *
@@ -77,12 +78,12 @@ public class ApiConfiguration {
 
     /**
      * 访问控制加载器
-
+     *
      * @return
      */
     @Bean
-    public ApiAccessLocator apiAccessLocator(GatewayRemoteService gatewayRemoteService) {
-        return new ApiAccessLocator(zuulRoutesLocator,rateLimitProperties, baseAuthorityRemoteService, gatewayRemoteService);
+    public ApiResourceLocator apiResourceLocator(GatewayRemoteService gatewayRemoteService) {
+        return new ApiResourceLocator(zuulRoutesLocator, rateLimitProperties, baseAuthorityRemoteService, gatewayRemoteService);
     }
 
     /**
@@ -91,8 +92,8 @@ public class ApiConfiguration {
      * @return
      */
     @Bean
-    public DbRouteLocator zuulRouteLocator(ZuulProperties zuulProperties, ServerProperties serverProperties, GatewayRemoteService gatewayRemoteService) {
-        zuulRoutesLocator = new DbRouteLocator(serverProperties.getServlet().getContextPath(), zuulProperties, gatewayRemoteService);
+    public RemoteRouteLocator zuulRouteLocator(ZuulProperties zuulProperties, ServerProperties serverProperties, GatewayRemoteService gatewayRemoteService) {
+        zuulRoutesLocator = new RemoteRouteLocator(serverProperties.getServlet().getContextPath(), zuulProperties, gatewayRemoteService);
         log.info("ZuulRoutesLocator:{}", zuulRoutesLocator);
         return zuulRoutesLocator;
     }
@@ -107,13 +108,18 @@ public class ApiConfiguration {
     @Bean
     @ConditionalOnEnabledEndpoint
     @ConditionalOnClass({Endpoint.class})
-    public GatewayRefreshBusEndpoint gatewayRefreshBusEndpoint(ApplicationContext context, BusProperties bus) {
-        GatewayRefreshBusEndpoint endpoint = new GatewayRefreshBusEndpoint(context, bus.getId());
+    public OpenApiEndpoint openApiEndpoint(ApplicationContext context, BusProperties bus) {
+        OpenApiEndpoint endpoint = new OpenApiEndpoint(context, bus.getId());
         log.info("bean [{}]", endpoint);
         return endpoint;
     }
 
 
+    /**
+     * 跨域配置
+     *
+     * @return
+     */
     @Bean
     public FilterRegistrationBean corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

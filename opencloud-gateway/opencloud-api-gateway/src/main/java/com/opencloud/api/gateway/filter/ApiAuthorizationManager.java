@@ -1,10 +1,12 @@
 package com.opencloud.api.gateway.filter;
 
 import com.opencloud.api.gateway.configuration.ApiProperties;
-import com.opencloud.api.gateway.locator.ApiAccessLocator;
+import com.opencloud.api.gateway.locator.ApiResourceLocator;
+import com.opencloud.base.client.model.AccessAuthority;
 import com.opencloud.common.constants.CommonConstants;
 import com.opencloud.common.constants.ResultEnum;
 import com.opencloud.common.security.Authority;
+import com.opencloud.common.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
@@ -19,10 +21,7 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 自定义动态访问控制
@@ -31,9 +30,9 @@ import java.util.Set;
  */
 @Slf4j
 @Component
-public class ApiAccessManager implements ReactiveAuthorizationManager<AuthorizationContext> {
+public class ApiAuthorizationManager implements ReactiveAuthorizationManager<AuthorizationContext> {
 
-    private ApiAccessLocator accessLocator;
+    private ApiResourceLocator accessLocator;
 
     private ApiProperties apiGatewayProperties;
 
@@ -44,7 +43,7 @@ public class ApiAccessManager implements ReactiveAuthorizationManager<Authorizat
     private Set<String> authorityIgnores = new HashSet<>();
 
 
-    public ApiAccessManager(ApiAccessLocator accessLocator, ApiProperties apiGatewayProperties) {
+    public ApiAuthorizationManager(ApiResourceLocator accessLocator, ApiProperties apiGatewayProperties) {
         this.accessLocator = accessLocator;
         this.apiGatewayProperties = apiGatewayProperties;
         if (apiGatewayProperties != null) {
@@ -61,36 +60,24 @@ public class ApiAccessManager implements ReactiveAuthorizationManager<Authorizat
     @Override
     public Mono<AuthorizationDecision> check(Mono<Authentication> authentication, AuthorizationContext authorizationContext) {
         ServerWebExchange exchange = authorizationContext.getExchange();
-        System.out.println(exchange.getRequest().getURI().getPath());
         String requestPath = exchange.getRequest().getURI().getPath();
         if (!apiGatewayProperties.getAccessControl()) {
-          //  return new AuthorizationDecision(true);
+            return Mono.just(new AuthorizationDecision(true));
         }
-        // 4.判断api是否需要认证
+        // 是否直接放行
+        if (isPermitAll(requestPath)) {
+            return Mono.just(new AuthorizationDecision(true));
+        }
+        // 判断api是否需要认证
         boolean isAuth = isAuthAccess(requestPath);
-/*
-        if (hasWhiteList) {
-            // 接口存在白名单限制
-            if (allow) {
-                // IP白名单检测通过
-                if (!isAuth) {
-                    // 无需身份验证,允许
-                    return true;
-                } else {
-                    // 校验身份
 
-                }
-            } else {
-                // IP白名单检测通过,拒绝
-                log.debug("==> access_denied:path={},message={}", requestPath, ResultEnum.ACCESS_DENIED_WHITE_IP_LIMITED.getMessage());
-                request.setAttribute(CommonConstants.X_ACCESS_DENIED, ResultEnum.ACCESS_DENIED_WHITE_IP_LIMITED);
-                return false;
-            }*/
-           return authentication.map((a) -> {
-                return new AuthorizationDecision(a.isAuthenticated());
-            }).defaultIfEmpty(new AuthorizationDecision(false));
+        if (isAuth) {
+            // 校验身份
+            return Mono.just(new AuthorizationDecision(checkAuthorities(exchange, authentication.block(), requestPath)));
+        } else {
+            return Mono.just(new AuthorizationDecision(true));
+        }
     }
-
 
 
     private boolean isPermitAll(String requestPath) {
@@ -120,7 +107,6 @@ public class ApiAccessManager implements ReactiveAuthorizationManager<Authorizat
         Object principal = authentication.getPrincipal();
         // 已认证身份
         if (principal != null) {
-
             if (authentication instanceof AnonymousAuthenticationToken) {
                 //check if this uri can be access by anonymous
                 //return
@@ -182,7 +168,7 @@ public class ApiAccessManager implements ReactiveAuthorizationManager<Authorizat
     }
 
     private boolean isAuthAccess(String requestPath) {
-       /* List<AccessAuthority> authorityList = accessLocator.getAccessAuthorities();
+        List<AccessAuthority> authorityList = accessLocator.getAccessAuthorities();
         if (authorityList != null) {
             for (AccessAuthority auth : authorityList) {
                 String fullPath = auth.getPath();
@@ -192,7 +178,7 @@ public class ApiAccessManager implements ReactiveAuthorizationManager<Authorizat
                     return true;
                 }
             }
-        }*/
+        }
         return false;
     }
 

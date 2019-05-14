@@ -22,9 +22,9 @@ public class IpCheckFilter extends OncePerRequestFilter {
 
     private AccessDeniedHandler accessDeniedHandler;
 
-    private ApiAccessManager apiAccessManager;
+    private ApiAuthorizationManager apiAccessManager;
 
-    public IpCheckFilter(ApiAccessManager apiAccessManager, AccessDeniedHandler accessDeniedHandler) {
+    public IpCheckFilter(ApiAuthorizationManager apiAccessManager, AccessDeniedHandler accessDeniedHandler) {
         this.apiAccessManager = apiAccessManager;
         this.accessDeniedHandler = accessDeniedHandler;
     }

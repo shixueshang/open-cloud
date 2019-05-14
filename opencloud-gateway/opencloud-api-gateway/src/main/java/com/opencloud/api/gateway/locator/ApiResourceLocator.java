@@ -12,9 +12,6 @@ import org.springframework.cloud.gateway.support.NameUtils;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
-import reactor.cache.CacheFlux;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -25,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  * @author liuyadu
  */
 @Slf4j
-public class ApiAccessLocator implements ApplicationListener<GatewayRefreshRemoteApplicationEvent>{
+public class ApiResourceLocator implements ApplicationListener<GatewayRefreshRemoteApplicationEvent> {
     /**
      * 单位时间
      */
@@ -51,11 +48,11 @@ public class ApiAccessLocator implements ApplicationListener<GatewayRefreshRemot
     public static final int PERIOD_DAY_TTL = 2 * 3600 * 24 + 10;
 
 
-    private Flux<AccessAuthority> accessAuthorities;
+    private List<AccessAuthority> accessAuthorities;
 
-    private Flux<GatewayIpLimitApisDto> ipBlacks;
+    private List<GatewayIpLimitApisDto> ipBlacks;
 
-    private Flux<GatewayIpLimitApisDto> ipWhites;
+    private List<GatewayIpLimitApisDto> ipWhites;
 
     /**
      * 缓存
@@ -72,15 +69,15 @@ public class ApiAccessLocator implements ApplicationListener<GatewayRefreshRemot
 
     private RouteDefinitionLocator routeDefinitionLocator;
 
-    public ApiAccessLocator() {
+    public ApiResourceLocator() {
         allConfigAttributeCache = Maps.newHashMap();
-        accessAuthorities = CacheFlux.lookup(cache, "accessAuthorities", AccessAuthority.class).onCacheMissResume(Flux.fromIterable(new ArrayList<>()));
-        ipBlacks = CacheFlux.lookup(cache, "ipBlacks", GatewayIpLimitApisDto.class).onCacheMissResume(Flux.fromIterable(new ArrayList<>()));
-        ipWhites = CacheFlux.lookup(cache, "ipWhites", GatewayIpLimitApisDto.class).onCacheMissResume(Flux.fromIterable(new ArrayList<>()));
+        accessAuthorities = cache.put("accessAuthorities", new ArrayList<>());
+        ipBlacks = cache.put("ipBlacks", new ArrayList<>());
+        ipWhites = cache.put("ipWhites", new ArrayList<>());
     }
 
 
-    public ApiAccessLocator(RouteDefinitionLocator routeDefinitionLocator, BaseAuthorityRemoteService baseAuthorityRemoteService, GatewayRemoteService gatewayRemoteService) {
+    public ApiResourceLocator(RouteDefinitionLocator routeDefinitionLocator, BaseAuthorityRemoteService baseAuthorityRemoteService, GatewayRemoteService gatewayRemoteService) {
         this();
         this.baseAuthorityRemoteService = baseAuthorityRemoteService;
         this.gatewayRemoteService = gatewayRemoteService;
@@ -109,13 +106,16 @@ public class ApiAccessLocator implements ApplicationListener<GatewayRefreshRemot
      *
      * @return
      */
-    protected String getFullPath(String serviceId, final String path) {
+    protected String getFullPath(String serviceId, String path) {
         routeDefinitionLocator.getRouteDefinitions()
                 .filter(route -> route.getUri().equals("lb://" + serviceId))
                 .subscribe(route -> route.getPredicates().stream()
                         .filter(predicateDefinition -> ("Path").equalsIgnoreCase(predicateDefinition.getName()))
-                        .forEach(predicateDefinition -> Mono.just(predicateDefinition.getArgs().get(NameUtils.GENERATED_NAME_PREFIX + "0")
-                                .replace("/**", path))));
+                        .forEach(predicateDefinition -> {
+                            String fullPath = predicateDefinition.getArgs().get(NameUtils.GENERATED_NAME_PREFIX + "0")
+                                    .replace("/**", path);
+                        }));
+
         return path;
     }
 
@@ -147,7 +147,7 @@ public class ApiAccessLocator implements ApplicationListener<GatewayRefreshRemot
                     allConfigAttributeCache.put(fullPath, array);
                 }
                 log.info("=============加载动态权限:{}==============", authorityList.size());
-                accessAuthorities = Flux.fromIterable(authorityList);
+                accessAuthorities = authorityList;
             }
         } catch (Exception e) {
             log.error("加载动态权限错误:{}", e.getMessage());
@@ -165,7 +165,7 @@ public class ApiAccessLocator implements ApplicationListener<GatewayRefreshRemot
                     item.setPath(getFullPath(item.getServiceId(), item.getPath()));
                 }
                 log.info("=============加载IP黑名单:{}==============", ipBlackList.size());
-                ipBlacks = Flux.fromIterable(ipBlackList);
+                ipBlacks = ipBlackList;
             }
         } catch (Exception e) {
             log.error("加载IP黑名单错误:{}", e.getMessage());
@@ -183,7 +183,7 @@ public class ApiAccessLocator implements ApplicationListener<GatewayRefreshRemot
                     item.setPath(getFullPath(item.getServiceId(), item.getPath()));
                 }
                 log.info("=============加载IP白名单:{}==============", ipWhiteList.size());
-                ipWhites = Flux.fromIterable(ipWhiteList);
+                ipBlacks = ipWhiteList;
             }
         } catch (Exception e) {
             log.error("加载IP白名单错误:{}", e.getMessage());
@@ -211,28 +211,37 @@ public class ApiAccessLocator implements ApplicationListener<GatewayRefreshRemot
         }
     }
 
-    public Flux<AccessAuthority> getAccessAuthorities() {
+
+    public List<AccessAuthority> getAccessAuthorities() {
         return accessAuthorities;
     }
 
-    public void setAccessAuthorities(Flux<AccessAuthority> accessAuthorities) {
+    public void setAccessAuthorities(List<AccessAuthority> accessAuthorities) {
         this.accessAuthorities = accessAuthorities;
     }
 
-    public Flux<GatewayIpLimitApisDto> getIpBlacks() {
+    public List<GatewayIpLimitApisDto> getIpBlacks() {
         return ipBlacks;
     }
 
-    public void setIpBlacks(Flux<GatewayIpLimitApisDto> ipBlacks) {
+    public void setIpBlacks(List<GatewayIpLimitApisDto> ipBlacks) {
         this.ipBlacks = ipBlacks;
     }
 
-    public Flux<GatewayIpLimitApisDto> getIpWhites() {
+    public List<GatewayIpLimitApisDto> getIpWhites() {
         return ipWhites;
     }
 
-    public void setIpWhites(Flux<GatewayIpLimitApisDto> ipWhites) {
+    public void setIpWhites(List<GatewayIpLimitApisDto> ipWhites) {
         this.ipWhites = ipWhites;
+    }
+
+    public Map<String, List> getCache() {
+        return cache;
+    }
+
+    public void setCache(Map<String, List> cache) {
+        this.cache = cache;
     }
 
     public HashMap<String, Collection<ConfigAttribute>> getAllConfigAttributeCache() {

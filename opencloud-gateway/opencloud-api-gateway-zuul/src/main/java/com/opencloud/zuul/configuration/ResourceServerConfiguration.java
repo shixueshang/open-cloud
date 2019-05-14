@@ -1,13 +1,10 @@
 package com.opencloud.zuul.configuration;
 
-import com.opencloud.common.configuration.OpenCommonProperties;
 import com.opencloud.common.gen.SnowflakeIdGenerator;
-import com.opencloud.common.model.ResultBody;
 import com.opencloud.common.security.OpenHelper;
-import com.opencloud.common.utils.WebUtils;
 import com.opencloud.zuul.exception.JsonAccessDeniedHandler;
 import com.opencloud.zuul.exception.JsonAuthenticationEntryPoint;
-import com.opencloud.zuul.filter.ApiAccessManager;
+import com.opencloud.zuul.filter.ApiAuthorizationManager;
 import com.opencloud.zuul.filter.IpCheckFilter;
 import com.opencloud.zuul.filter.PreRequestFilter;
 import com.opencloud.zuul.filter.SignatureFilter;
@@ -20,25 +17,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.expression.OAuth2WebSecurityExpressionHandler;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Map;
 
 /**
  * oauth2资源服务器配置
@@ -52,15 +37,11 @@ import java.util.Map;
 @EnableResourceServer
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
     @Autowired
-    private ApiProperties apiGatewayProperties;
-    @Autowired
-    private OpenCommonProperties properties;
+    private ApiProperties apiProperties;
     @Autowired
     private BaseAppRemoteService baseAppRemoteService;
     @Autowired
     private SnowflakeIdGenerator snowflakeIdGenerator;
-    @Autowired
-    private RestTemplate restTemplate;
     @Autowired
     private RedisTemplate redisTemplate;
     @Autowired
@@ -68,7 +49,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     @Autowired
     private AccessLogService accessLogService;
     @Autowired
-    private ApiAccessManager apiAccessManager;
+    private ApiAuthorizationManager apiAccessManager;
 
     private OAuth2WebSecurityExpressionHandler expressionHandler;
 
@@ -93,9 +74,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .authorizeRequests()
                 .anyRequest().authenticated()
                 // 动态访问控制
-                .anyRequest().access("@apiAccessManager.check(request,authentication)")
-                // SSO退出
-                .and().logout().logoutSuccessHandler(new SsoLogoutSuccessHandler(properties.getApiServerAddr() + "/auth/logout", restTemplate))
+                .anyRequest().access("@apiAuthorizationManager.check(request,authentication)")
                 .and()
                 //认证鉴权错误处理,为了统一异常处理。每个资源服务器都应该加上。
                 .exceptionHandling()
@@ -106,34 +85,9 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
         // 网关日志前置过滤器
         http.addFilterBefore(new PreRequestFilter(snowflakeIdGenerator, redisTemplate, accessLogService), AbstractPreAuthenticatedProcessingFilter.class);
         // 增加签名验证过滤器
-        http.addFilterAfter(new SignatureFilter(baseAppRemoteService, apiGatewayProperties), AbstractPreAuthenticatedProcessingFilter.class);
+        http.addFilterAfter(new SignatureFilter(baseAppRemoteService, apiProperties), AbstractPreAuthenticatedProcessingFilter.class);
         // 增加IP检测过滤器
         http.addFilterAfter(new IpCheckFilter(apiAccessManager, new JsonAccessDeniedHandler(accessLogService)), AbstractPreAuthenticatedProcessingFilter.class);
     }
-
-    static class SsoLogoutSuccessHandler implements LogoutSuccessHandler {
-        private String defaultTargetUrl;
-        private RestTemplate restTemplate;
-
-        public SsoLogoutSuccessHandler(String defaultTargetUrl, RestTemplate restTemplate) {
-            this.defaultTargetUrl = defaultTargetUrl;
-            this.restTemplate = restTemplate;
-        }
-
-        @Override
-        public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-            try {
-                Map headerMap = WebUtils.getHttpHeaders(request);
-                HttpHeaders httpHeaders = new HttpHeaders();
-                httpHeaders.setAll(headerMap);
-                HttpEntity<MultiValueMap<String, Object>> requestObj = new HttpEntity(null, httpHeaders);
-                restTemplate.postForObject(defaultTargetUrl, requestObj, String.class);
-            } catch (Exception e) {
-                log.error("sso logout error:", e);
-            }
-            WebUtils.writeJson(response, ResultBody.success("退出成功", null));
-        }
-    }
-
 }
 

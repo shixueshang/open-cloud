@@ -1,17 +1,23 @@
 package com.opencloud.api.gateway.configuration;
 
+import com.opencloud.api.gateway.actuator.OpenApiEndpoint;
 import com.opencloud.api.gateway.exception.JsonExceptionHandler;
-import com.opencloud.api.gateway.locator.ApiAccessLocator;
-import com.opencloud.api.gateway.locator.DbRouteDefinitionLocator;
+import com.opencloud.api.gateway.locator.ApiResourceLocator;
+import com.opencloud.api.gateway.locator.JdbcRouteDefinitionLocator;
 import com.opencloud.api.gateway.service.feign.BaseAuthorityRemoteService;
 import com.opencloud.api.gateway.service.feign.GatewayRemoteService;
 import com.opencloud.common.utils.SpringContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnEnabledEndpoint;
+import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
+import org.springframework.cloud.bus.BusProperties;
 import org.springframework.cloud.gateway.route.RouteDefinitionLocator;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -75,8 +81,8 @@ public class ApiConfiguration {
      * @return
      */
     @Bean
-    public DbRouteDefinitionLocator dbRouteDefinitionLocator(JdbcTemplate jdbcTemplate) {
-        return new DbRouteDefinitionLocator(jdbcTemplate);
+    public JdbcRouteDefinitionLocator jdbcRouteDefinitionLocator(JdbcTemplate jdbcTemplate) {
+        return new JdbcRouteDefinitionLocator(jdbcTemplate);
     }
 
     /**
@@ -86,7 +92,23 @@ public class ApiConfiguration {
      */
     @Bean
     @Lazy
-    public ApiAccessLocator apiAccessLocator(RouteDefinitionLocator routeDefinitionLocator, BaseAuthorityRemoteService baseAuthorityRemoteService, GatewayRemoteService gatewayRemoteService) {
-        return new ApiAccessLocator(routeDefinitionLocator, baseAuthorityRemoteService, gatewayRemoteService);
+    public ApiResourceLocator apiResourceLocator(RouteDefinitionLocator routeDefinitionLocator, BaseAuthorityRemoteService baseAuthorityRemoteService, GatewayRemoteService gatewayRemoteService) {
+        return new ApiResourceLocator(routeDefinitionLocator, baseAuthorityRemoteService, gatewayRemoteService);
+    }
+
+    /**
+     * 网关bus端点
+     *
+     * @param context
+     * @param bus
+     * @return
+     */
+    @Bean
+    @ConditionalOnEnabledEndpoint
+    @ConditionalOnClass({Endpoint.class})
+    public OpenApiEndpoint openApiEndpoint(ApplicationContext context, BusProperties bus) {
+        OpenApiEndpoint endpoint = new OpenApiEndpoint(context, bus.getId());
+        log.info("bean [{}]", endpoint);
+        return endpoint;
     }
 }

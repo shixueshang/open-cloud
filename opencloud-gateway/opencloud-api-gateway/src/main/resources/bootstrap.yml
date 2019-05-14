@@ -62,7 +62,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: refresh,health,refresh-gateway,gateway
+        include: refresh,health,open
 
 opencloud:
 # 开放api

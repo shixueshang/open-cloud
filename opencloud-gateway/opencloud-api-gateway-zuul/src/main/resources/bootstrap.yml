@@ -69,7 +69,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: refresh,health,refresh-gateway
+        include: refresh,health,open
 
 opencloud:
   #网关配置

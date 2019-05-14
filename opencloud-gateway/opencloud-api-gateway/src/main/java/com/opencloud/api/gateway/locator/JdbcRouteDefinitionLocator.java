@@ -31,12 +31,12 @@ import java.util.Map;
  * @author liuyadu
  */
 @Slf4j
-public class DbRouteDefinitionLocator implements RouteDefinitionLocator, ApplicationListener<GatewayRefreshRemoteApplicationEvent> {
+public class JdbcRouteDefinitionLocator implements RouteDefinitionLocator, ApplicationListener<GatewayRefreshRemoteApplicationEvent> {
     private JdbcTemplate jdbcTemplate;
     private Flux<RouteDefinition> routeDefinitions;
     private Map<String, List> cache = new HashMap<>();
 
-    public DbRouteDefinitionLocator(JdbcTemplate jdbcTemplate) {
+    public JdbcRouteDefinitionLocator(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         routeDefinitions = CacheFlux.lookup(cache, "routeDefs", RouteDefinition.class).onCacheMissResume(Flux.fromIterable(new ArrayList<>()));
     }

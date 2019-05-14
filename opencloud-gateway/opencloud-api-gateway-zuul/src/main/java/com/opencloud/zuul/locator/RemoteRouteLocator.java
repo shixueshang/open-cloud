@@ -25,13 +25,13 @@ import java.util.Map;
  * @description:
  */
 @Slf4j
-public class DbRouteLocator extends SimpleRouteLocator implements ApplicationListener<GatewayRefreshRemoteApplicationEvent> {
+public class RemoteRouteLocator extends SimpleRouteLocator implements ApplicationListener<GatewayRefreshRemoteApplicationEvent> {
 
     private GatewayRemoteService gatewayRemoteService;
     private ZuulProperties properties;
     private List<GatewayRoute> routeList;
 
-    public DbRouteLocator(String servletPath, ZuulProperties properties, GatewayRemoteService gatewayRemoteService) {
+    public RemoteRouteLocator(String servletPath, ZuulProperties properties, GatewayRemoteService gatewayRemoteService) {
         super(servletPath, properties);
         this.properties = properties;
         this.gatewayRemoteService = gatewayRemoteService;
@@ -47,7 +47,7 @@ public class DbRouteLocator extends SimpleRouteLocator implements ApplicationLis
         LinkedHashMap<String, ZuulProperties.ZuulRoute> routesMap = Maps.newLinkedHashMap();
         routesMap.putAll(super.locateRoutes());
         //从db中加载路由信息
-        routesMap.putAll(loadRouteWithDb());
+        routesMap.putAll(loadRoutes());
         //优化一下配置
         LinkedHashMap<String, ZuulProperties.ZuulRoute> values = Maps.newLinkedHashMap();
         for (Map.Entry<String, ZuulProperties.ZuulRoute> entry : routesMap.entrySet()) {
@@ -78,7 +78,7 @@ public class DbRouteLocator extends SimpleRouteLocator implements ApplicationLis
      * @date 2017年7月3日 下午6:04:42
      * @version 1.0.0
      */
-    public Map<String, ZuulRoute> loadRouteWithDb() {
+    public Map<String, ZuulRoute> loadRoutes() {
         Map<String, ZuulProperties.ZuulRoute> routes = Maps.newLinkedHashMap();
         routeList = Lists.newArrayList();
         try {

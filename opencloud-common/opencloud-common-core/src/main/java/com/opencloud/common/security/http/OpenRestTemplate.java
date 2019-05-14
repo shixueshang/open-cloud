@@ -5,7 +5,6 @@ import com.opencloud.common.model.ResultBody;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
 import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails;
@@ -101,9 +100,8 @@ public class OpenRestTemplate extends RestTemplate {
         try {
             Assert.notNull(common.getApiServerAddr(), "网关信息错误");
             HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
             HttpEntity<String> formEntity = new HttpEntity<String>("", headers);
-            ResultBody resultBody = buildOauth2ClientRequest().postForObject(common.getApiServerAddr().concat("/actuator/refresh-gateway"), formEntity, ResultBody.class);
+            ResultBody resultBody = buildOauth2ClientRequest().postForObject(common.getApiServerAddr().concat("/actuator/open/refresh"), formEntity, ResultBody.class);
             log.info("refreshGateway:{}", resultBody);
         } catch (Exception e) {
             log.error("refreshGateway error:{}", e.getMessage());

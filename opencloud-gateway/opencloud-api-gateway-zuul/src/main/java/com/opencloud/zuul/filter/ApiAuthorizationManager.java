@@ -7,7 +7,7 @@ import com.opencloud.common.constants.ResultEnum;
 import com.opencloud.common.security.Authority;
 import com.opencloud.common.utils.StringUtils;
 import com.opencloud.zuul.configuration.ApiProperties;
-import com.opencloud.zuul.locator.ApiAccessLocator;
+import com.opencloud.zuul.locator.ApiResourceLocator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
@@ -28,11 +28,11 @@ import java.util.*;
  */
 @Slf4j
 @Component
-public class ApiAccessManager {
+public class ApiAuthorizationManager {
 
-    private ApiAccessLocator accessLocator;
+    private ApiResourceLocator accessLocator;
 
-    private ApiProperties apiGatewayProperties;
+    private ApiProperties apiProperties;
 
     private static final AntPathMatcher pathMatch = new AntPathMatcher();
 
@@ -41,15 +41,15 @@ public class ApiAccessManager {
     private Set<String> authorityIgnores = new HashSet<>();
 
 
-    public ApiAccessManager(ApiAccessLocator accessLocator, ApiProperties apiGatewayProperties) {
+    public ApiAuthorizationManager(ApiResourceLocator accessLocator, ApiProperties apiProperties) {
         this.accessLocator = accessLocator;
-        this.apiGatewayProperties = apiGatewayProperties;
-        if (apiGatewayProperties != null) {
-            if (apiGatewayProperties.getPermitAll() != null) {
-                permitAll.addAll(apiGatewayProperties.getPermitAll());
+        this.apiProperties = apiProperties;
+        if (apiProperties != null) {
+            if (apiProperties.getPermitAll() != null) {
+                permitAll.addAll(apiProperties.getPermitAll());
             }
-            if (apiGatewayProperties.getAuthorityIgnores() != null) {
-                authorityIgnores.addAll(apiGatewayProperties.getAuthorityIgnores());
+            if (apiProperties.getAuthorityIgnores() != null) {
+                authorityIgnores.addAll(apiProperties.getAuthorityIgnores());
             }
         }
     }
@@ -65,7 +65,7 @@ public class ApiAccessManager {
      * @return
      */
     public boolean check(HttpServletRequest request, Authentication authentication) {
-        if (!apiGatewayProperties.getAccessControl()) {
+        if (!apiProperties.getAccessControl()) {
             return true;
         }
         String requestPath = getRequestPath(request);
