@@ -7,6 +7,7 @@ import com.opencloud.common.configuration.OpenIdGenProperties;
 import com.opencloud.common.exception.OpenExceptionHandler;
 import com.opencloud.common.gen.SnowflakeIdGenerator;
 import com.opencloud.common.health.DbHealthIndicator;
+import com.opencloud.common.security.CustomResponseErrorHandler;
 import com.opencloud.common.security.http.OpenRestTemplate;
 import com.opencloud.common.utils.SpringContextHolder;
 import lombok.extern.slf4j.Slf4j;
@@ -113,6 +114,8 @@ public class AutoConfiguration {
     @ConditionalOnMissingBean(OpenRestTemplate.class)
     public OpenRestTemplate openRestTemplate(OpenCommonProperties openCommonProperties) {
         OpenRestTemplate restTemplate = new OpenRestTemplate(openCommonProperties);
+        //设置自定义ErrorHandler
+        restTemplate.setErrorHandler(new CustomResponseErrorHandler());
         log.info("bean [{}]", restTemplate);
         return restTemplate;
     }
