@@ -9,7 +9,7 @@
   <a><img src="https://img.shields.io/npm/l/express.svg" alt="License"></a>
 </p>  
 
-# 微服务开放平台 2.0.0
+# 微服务开放平台 2.0.0 更快、更新、更全面
 
 ---
 #### 简介
