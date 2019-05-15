@@ -11,16 +11,6 @@ spring:
                   enabled: false
                   #将请求路径上的服务名配置为小写（因为服务注册的时候，向注册中心注册时将服务名转成大写的了,比如以/service-hi/*的请求路径被路由转发到服务名为service-hi的服务上
                   lowerCaseServiceId: true
-            #路由定义,本项目从数据库中加载路由配置com.opencloud.api.gateway.locator.DbRouteDefinitionLocator
-#            routes:
-#              - id: opencloud-admin-provider
-#                uri: lb://opencloud-admin-provider
-#                predicates:
-#                    - Path=/admin/**
-#                    - Name=平台后台管理服务
-#                filters:
-#                    #转发去掉前缀,总要否则swagger无法加载
-#                    - StripPrefix=1
         nacos:
             config:
                 namespace: ${config.namespace}
@@ -75,13 +65,19 @@ opencloud:
       enable-swagger-ui: true
       # 始终放行
       permit-all:
-        - /login/**
-        - /logout
-        - /oauth/*
+        - /
+        - /error
+        - /**/v2/api-docs/**
+        - /**/swagger-resources/**
+        - /webjars/**
+        - /swagger-ui.html
+        - /favicon.ico
         - /auth/login/**
         - /auth/logout
         - /auth/oauth/**
         - /admin/login/token
+        - /admin/logout
+
       # 忽略权限鉴定
       authority-ignores:
         - /auth/user/me

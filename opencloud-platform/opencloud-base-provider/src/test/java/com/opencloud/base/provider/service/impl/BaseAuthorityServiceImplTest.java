@@ -6,6 +6,7 @@ import com.opencloud.base.client.model.entity.BaseResourceOperation;
 import com.opencloud.base.provider.service.BaseAuthorityService;
 import com.opencloud.base.provider.service.BaseResourceMenuService;
 import com.opencloud.base.provider.service.BaseResourceOperationService;
+import com.opencloud.common.security.http.OpenRestTemplate;
 import com.opencloud.common.test.BaseTest;
 import com.opencloud.common.utils.RandomValueUtils;
 import org.junit.Test;
@@ -22,6 +23,8 @@ public class BaseAuthorityServiceImplTest extends BaseTest {
     private BaseResourceMenuService baseResourceMenuService;
     @Autowired
     private BaseAuthorityService baseAuthorityService;
+    @Autowired
+    private OpenRestTemplate openRestTemplate;
 
     @Test
     public void findAuthorityDetail() {
@@ -40,6 +43,12 @@ public class BaseAuthorityServiceImplTest extends BaseTest {
             baseAuthorityService.updateById(authority);
         }
     }
+
+    @Test
+    public void refreshGateway() {
+        openRestTemplate.refreshGateway();
+    }
+
 
     @Test
     public void insertAuthority() {

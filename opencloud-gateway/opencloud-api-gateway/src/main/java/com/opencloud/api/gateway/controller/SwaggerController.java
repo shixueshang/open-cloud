@@ -1,12 +1,15 @@
 package com.opencloud.api.gateway.controller;
 
+import com.opencloud.common.configuration.OpenCommonProperties;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
+import springfox.documentation.swagger.web.ApiKeyVehicle;
 import springfox.documentation.swagger.web.SecurityConfiguration;
 import springfox.documentation.swagger.web.SwaggerResourcesProvider;
 import springfox.documentation.swagger.web.UiConfiguration;
@@ -19,6 +22,29 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/swagger-resources")
 public class SwaggerController {
+
+    /**
+     * swagger安全配置
+     *
+     * @param commonProperties
+     * @return
+     */
+    @Bean
+    public SecurityConfiguration security(OpenCommonProperties commonProperties) {
+        return new SecurityConfiguration(commonProperties.getClientId(),
+                commonProperties.getClientSecret(),
+                "realm", commonProperties.getClientId(),
+                "", ApiKeyVehicle.HEADER, "", ",");
+    }
+
+
+    @Bean
+    UiConfiguration uiConfig() {
+        return new UiConfiguration(null, "list", "alpha", "schema",
+                UiConfiguration.Constants.DEFAULT_SUBMIT_METHODS, false, true, 60000L);
+    }
+
+
     @Autowired(required = false)
     private SecurityConfiguration securityConfiguration;
     @Autowired(required = false)

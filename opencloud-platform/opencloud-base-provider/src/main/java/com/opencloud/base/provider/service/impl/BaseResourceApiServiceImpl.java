@@ -62,7 +62,7 @@ public class BaseResourceApiServiceImpl extends BaseServiceImpl<BaseResourceApiM
     @Override
     public List<BaseResourceApi> findAllList(String serviceId) {
         QueryWrapper<BaseResourceApi> queryWrapper = new QueryWrapper();
-        queryWrapper.lambda().eq(BaseResourceApi::getServiceId, serviceId);
+        queryWrapper.lambda().eq(ObjectUtils.isNotEmpty(serviceId),BaseResourceApi::getServiceId, serviceId);
         List<BaseResourceApi> list = baseResourceApiMapper.selectList(queryWrapper);
         return list;
     }

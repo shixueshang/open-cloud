@@ -73,7 +73,9 @@ public class ApiAuthorizationManager implements ReactiveAuthorizationManager<Aut
 
         if (isAuth) {
             // 校验身份
-            return Mono.just(new AuthorizationDecision(checkAuthorities(exchange, authentication.block(), requestPath)));
+           return authentication.map((a) -> {
+                return new AuthorizationDecision(checkAuthorities(exchange, a, requestPath));
+            });
         } else {
             return Mono.just(new AuthorizationDecision(true));
         }
@@ -173,8 +175,8 @@ public class ApiAuthorizationManager implements ReactiveAuthorizationManager<Aut
             for (AccessAuthority auth : authorityList) {
                 String fullPath = auth.getPath();
                 Boolean isAuth = auth.getIsAuth() != null && auth.getIsAuth().equals(1) ? true : false;
-                // 无需认证,返回true
-                if (StringUtils.isNotBlank(fullPath) && pathMatch.match(fullPath, requestPath) && !isAuth) {
+                // 需认证,返回true
+                if (StringUtils.isNotBlank(fullPath) && pathMatch.match(fullPath, requestPath) && isAuth) {
                     return true;
                 }
             }

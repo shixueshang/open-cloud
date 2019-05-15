@@ -22,7 +22,6 @@ public class SwaggerProvider implements SwaggerResourcesProvider {
     @Override
     public List<SwaggerResource> get() {
         List<SwaggerResource> resources = new ArrayList<>();
-        List<String> routes = new ArrayList<>();
         //结合配置的route-路径(Path)，和route过滤，只获取有效的route节点
         routeDefinitionLocator.getRouteDefinitions()
                 .subscribe(routeDefinition -> routeDefinition.getPredicates().stream()

@@ -105,9 +105,6 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRefreshRem
      * @return
      */
     protected String getFullPath(String serviceId, String path) {
-        if (path == null) {
-            path = "";
-        }
         List<Route> routes = zuulRoutesLocator.getRoutes();
         if (routes != null && !routes.isEmpty()) {
             for (Route route : routes) {

@@ -51,7 +51,6 @@ public class ResourceServerConfiguration {
      *
      * @return
      */
-    @Bean
     public WebFilter corsFilter() {
         return (ServerWebExchange ctx, WebFilterChain chain) -> {
             ServerHttpRequest request = ctx.getRequest();
@@ -94,6 +93,7 @@ public class ResourceServerConfiguration {
                 .and().exceptionHandling()
                 .accessDeniedHandler(accessDeniedHandler)
                 .authenticationEntryPoint(entryPoint).and()
+                .addFilterAt(corsFilter(), SecurityWebFiltersOrder.CORS)
                 .addFilterAt(oauth2, SecurityWebFiltersOrder.AUTHENTICATION);
         return http.build();
     }

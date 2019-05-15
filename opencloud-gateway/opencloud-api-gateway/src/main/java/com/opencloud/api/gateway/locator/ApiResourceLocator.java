@@ -107,16 +107,15 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRefreshRem
      * @return
      */
     protected String getFullPath(String serviceId, String path) {
-        routeDefinitionLocator.getRouteDefinitions()
-                .filter(route -> route.getUri().equals("lb://" + serviceId))
-                .subscribe(route -> route.getPredicates().stream()
-                        .filter(predicateDefinition -> ("Path").equalsIgnoreCase(predicateDefinition.getName()))
-                        .forEach(predicateDefinition -> {
-                            String fullPath = predicateDefinition.getArgs().get(NameUtils.GENERATED_NAME_PREFIX + "0")
-                                    .replace("/**", path);
-                        }));
-
-        return path;
+        return routeDefinitionLocator.getRouteDefinitions()
+                .toStream()
+                .filter(routeDefinition -> routeDefinition.getUri().toString().equals("lb://" + serviceId))
+                .map(routeDefinition -> {
+                    String fullPath = routeDefinition.getPredicates().stream().filter(predicateDefinition ->
+                            ("Path").equalsIgnoreCase(predicateDefinition.getName())
+                    ).findFirst().get().getArgs().get(NameUtils.GENERATED_NAME_PREFIX + "0").replace("/**", path);
+                    return fullPath;
+                }).findFirst().orElse(path);
     }
 
     /**

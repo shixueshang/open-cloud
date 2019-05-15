@@ -50,7 +50,6 @@ public class OpenRestTemplate extends RestTemplate {
         resource.setClientId(clientId);
         resource.setClientSecret(clientSecret);
         resource.setAccessTokenUri(accessTokenUri);
-        resource.setAuthenticationScheme(AuthenticationScheme.form);
         OAuth2RestTemplate restTemplate = new OAuth2RestTemplate(resource);
         return restTemplate;
     }

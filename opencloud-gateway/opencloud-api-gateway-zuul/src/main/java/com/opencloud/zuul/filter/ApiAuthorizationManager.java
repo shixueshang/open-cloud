@@ -226,7 +226,7 @@ public class ApiAuthorizationManager {
                 String fullPath = auth.getPath();
                 Boolean isAuth = auth.getIsAuth() != null && auth.getIsAuth().equals(1) ? true : false;
                 // 无需认证,返回true
-                if (StringUtils.isNotBlank(fullPath) && pathMatch.match(fullPath, requestPath) && !isAuth) {
+                if (StringUtils.isNotBlank(fullPath) && pathMatch.match(fullPath, requestPath) && isAuth) {
                     return true;
                 }
             }
