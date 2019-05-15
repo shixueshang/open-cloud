@@ -174,7 +174,8 @@ open-cloud
      1. BaseApplication (必须)
      2. AuthApplication (必须)
      3. ApiGatewayApplication (必须)
-     4. AdminApplication   (必须)
+     4. AdminApplication   (必须)  
+     
    4个服务启动成功后。就可以依赖这些服务进行微服务开发了。  
    访问 http://localhost:8888
      
