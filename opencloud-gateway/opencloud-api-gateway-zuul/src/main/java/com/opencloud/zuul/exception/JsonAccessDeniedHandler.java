@@ -29,7 +29,7 @@ public class JsonAccessDeniedHandler implements AccessDeniedHandler {
     public void handle(HttpServletRequest request, HttpServletResponse response,
                        AccessDeniedException exception) throws IOException, ServletException {
         // 保存日志
-        accessLogService.sendLog(request, response);
+        accessLogService.sendLog(request, response,exception);
         ResultBody resultBody = OpenExceptionHandler.resolveException(exception,request.getRequestURI());
         response.setStatus(resultBody.getHttpStatus());
         WebUtils.writeJson(response, resultBody);

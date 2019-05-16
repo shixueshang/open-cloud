@@ -2,9 +2,11 @@ package com.opencloud.api.gateway.configuration;
 
 import com.opencloud.api.gateway.exception.JsonAccessDeniedHandler;
 import com.opencloud.api.gateway.exception.JsonAuthenticationEntryPoint;
+import com.opencloud.api.gateway.filter.AccessLogFilter;
 import com.opencloud.api.gateway.filter.ApiAuthorizationManager;
 import com.opencloud.api.gateway.locator.ApiResourceLocator;
 import com.opencloud.api.gateway.oauth2.RedisAuthenticationManager;
+import com.opencloud.api.gateway.service.AccessLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,6 +47,8 @@ public class ResourceServerConfiguration {
     private ApiResourceLocator apiAccessLocator;
     @Autowired
     private ApiProperties apiGatewayProperties;
+    @Autowired
+    private AccessLogService accessLogService;
 
     /**
      * 跨域配置
@@ -80,8 +84,8 @@ public class ResourceServerConfiguration {
     @Bean
     SecurityWebFilterChain springWebFilterChain(ServerHttpSecurity http) throws Exception {
         // 自定义oauth2 认证, 使用redis读取token,而非jwt方式
-        JsonAuthenticationEntryPoint entryPoint = new JsonAuthenticationEntryPoint();
-        JsonAccessDeniedHandler accessDeniedHandler = new JsonAccessDeniedHandler();
+        JsonAuthenticationEntryPoint entryPoint = new JsonAuthenticationEntryPoint(accessLogService);
+        JsonAccessDeniedHandler accessDeniedHandler = new JsonAccessDeniedHandler(accessLogService);
         AuthenticationWebFilter oauth2 = new AuthenticationWebFilter(new RedisAuthenticationManager(new RedisTokenStore(redisConnectionFactory)));
         oauth2.setServerAuthenticationConverter(new ServerBearerTokenAuthenticationConverter());
         oauth2.setAuthenticationFailureHandler(new ServerAuthenticationEntryPointFailureHandler(entryPoint));
@@ -93,8 +97,12 @@ public class ResourceServerConfiguration {
                 .and().exceptionHandling()
                 .accessDeniedHandler(accessDeniedHandler)
                 .authenticationEntryPoint(entryPoint).and()
+                // 跨域过滤器
                 .addFilterAt(corsFilter(), SecurityWebFiltersOrder.CORS)
-                .addFilterAt(oauth2, SecurityWebFiltersOrder.AUTHENTICATION);
+                // oauth2认证过滤器
+                .addFilterAt(oauth2, SecurityWebFiltersOrder.AUTHENTICATION)
+                // 日志过滤器放到最后
+                .addFilterAt(new AccessLogFilter(accessLogService), SecurityWebFiltersOrder.LAST);
         return http.build();
     }
 }

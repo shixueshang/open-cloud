@@ -41,7 +41,7 @@ public class AccessLogsHandler {
         try {
             if (access != null) {
                 GatewayAccessLogs logs = BeanConvertUtils.mapToObject(access, GatewayAccessLogs.class);
-                if (logs != null && logs.getAccessId() != null) {
+                if (logs != null) {
                     if (logs.getIp() != null) {
                         logs.setRegion(ipRegionService.getRegion(logs.getIp()));
                     }

@@ -1,6 +1,7 @@
 package com.opencloud.api.gateway.exception;
 
 import com.alibaba.fastjson.JSONObject;
+import com.opencloud.api.gateway.service.AccessLogService;
 import com.opencloud.common.exception.OpenExceptionHandler;
 import com.opencloud.common.model.ResultBody;
 import lombok.extern.slf4j.Slf4j;
@@ -22,16 +23,17 @@ import java.nio.charset.Charset;
  */
 @Slf4j
 public class JsonAccessDeniedHandler implements ServerAccessDeniedHandler {
-//    private AccessLogService accessLogService;
-//
-//    public GatewayAccessDeniedHandler(AccessLogService accessLogService) {
-//        this.accessLogService = accessLogService;
-//    }
-//
-//
+  private AccessLogService accessLogService;
+
+    public JsonAccessDeniedHandler(AccessLogService accessLogService) {
+        this.accessLogService = accessLogService;
+   }
+
     @Override
     public Mono<Void> handle(ServerWebExchange exchange, AccessDeniedException e) {
         ResultBody resultBody = OpenExceptionHandler.resolveException(e,exchange.getRequest().getURI().getPath());
+        // 保存日志
+        accessLogService.sendLog(exchange,e);
         return Mono.defer(() -> {
             return Mono.just(exchange.getResponse());
         }).flatMap((response) -> {

@@ -1,8 +1,10 @@
 package com.opencloud.api.gateway.exception;
 
+import com.opencloud.api.gateway.service.AccessLogService;
 import com.opencloud.common.constants.ResultEnum;
 import com.opencloud.common.exception.OpenExceptionHandler;
 import com.opencloud.common.model.ResultBody;
+import com.sun.xml.internal.ws.client.ResponseContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.cloud.gateway.support.NotFoundException;
@@ -26,126 +28,139 @@ import java.util.List;
 
 /**
  * @author liuyadu
- * @classDesc: 统一异常处理,参考{@link org.springframework.web.server.AbstractErrorWebExceptionHandler}修改
+ * @classDesc: 统一异常处理, 参考{@link org.springframework.web.server.AbstractErrorWebExceptionHandler}修改
  */
 @Slf4j
 public class JsonExceptionHandler implements ErrorWebExceptionHandler {
- 
 
- /**
-  * MessageReader
-  */
- private List<HttpMessageReader<?>> messageReaders = Collections.emptyList();
- 
- /**
-  * MessageWriter
-  */
- private List<HttpMessageWriter<?>> messageWriters = Collections.emptyList();
- 
- /**
-  * ViewResolvers
-  */
- private List<ViewResolver> viewResolvers = Collections.emptyList();
- 
- /**
-  * 存储处理异常后的信息
-  */
- private ThreadLocal<ResultBody> exceptionHandlerResult = new ThreadLocal<>();
- 
- /**
-  * 参考AbstractErrorWebExceptionHandler
-  * @param messageReaders
-  */
- public void setMessageReaders(List<HttpMessageReader<?>> messageReaders) {
-  Assert.notNull(messageReaders, "'messageReaders' must not be null");
-  this.messageReaders = messageReaders;
- }
- 
- /**
-  * 参考AbstractErrorWebExceptionHandler
-  * @param viewResolvers
-  */
- public void setViewResolvers(List<ViewResolver> viewResolvers) {
-  this.viewResolvers = viewResolvers;
- }
- 
- /**
-  * 参考AbstractErrorWebExceptionHandler
-  * @param messageWriters
-  */
- public void setMessageWriters(List<HttpMessageWriter<?>> messageWriters) {
-  Assert.notNull(messageWriters, "'messageWriters' must not be null");
-  this.messageWriters = messageWriters;
- }
- 
- @Override
- public Mono<Void> handle(ServerWebExchange exchange, Throwable ex) {
-  /**
-   * 按照异常类型进行处理
-   */
-  ResultBody resultBody;
-  ServerHttpRequest request = exchange.getRequest();
-  if (ex instanceof NotFoundException) {
-   resultBody = ResultBody.failed(ResultEnum.SERVICE_NOT_FOUND.getCode(), "服务暂时无法访问，请稍后再试!").setHttpStatus(HttpStatus.SERVICE_UNAVAILABLE.value()).setPath(request.getURI().getPath());
-   log.error("==> 错误解析:{}", resultBody);
-  }else{
-   resultBody = OpenExceptionHandler.resolveException((Exception) ex,exchange.getRequest().getURI().getPath());
-   resultBody.setPath(request.getURI().getPath());
-  }
-  /**
-   * 参考AbstractErrorWebExceptionHandler
-   */
-  if (exchange.getResponse().isCommitted()) {
-   return Mono.error(ex);
-  }
-  exceptionHandlerResult.set(resultBody);
-  ServerRequest newRequest = ServerRequest.create(exchange, this.messageReaders);
-  return RouterFunctions.route(RequestPredicates.all(), this::renderErrorResponse).route(newRequest)
-    .switchIfEmpty(Mono.error(ex))
-    .flatMap((handler) -> handler.handle(newRequest))
-    .flatMap((response) -> write(exchange, response));
- 
- }
- 
- /**
-  * 参考DefaultErrorWebExceptionHandler
-  * @param request
-  * @return
-  */
- protected Mono<ServerResponse> renderErrorResponse(ServerRequest request) {
-  ResultBody result = exceptionHandlerResult.get();
-  return ServerResponse.status(result.getHttpStatus())
-    .contentType(MediaType.APPLICATION_JSON_UTF8)
-    .body(BodyInserters.fromObject(result));
- }
- 
- /**
-  * 参考AbstractErrorWebExceptionHandler
-  * @param exchange
-  * @param response
-  * @return
-  */
- private Mono<? extends Void> write(ServerWebExchange exchange,
-          ServerResponse response) {
-  exchange.getResponse().getHeaders()
-    .setContentType(response.headers().getContentType());
-  return response.writeTo(exchange, new ResponseContext());
- }
- 
- /**
-  * 参考AbstractErrorWebExceptionHandler
-  */
- private class ResponseContext implements ServerResponse.Context {
- 
-  @Override
-  public List<HttpMessageWriter<?>> messageWriters() {
-   return JsonExceptionHandler.this.messageWriters;
-  }
- 
-  @Override
-  public List<ViewResolver> viewResolvers() {
-   return JsonExceptionHandler.this.viewResolvers;
-  }
- 
- }
+    private AccessLogService accessLogService;
+
+    public JsonExceptionHandler(AccessLogService accessLogService) {
+        this.accessLogService = accessLogService;
+    }
+
+    /**
+     * MessageReader
+     */
+    private List<HttpMessageReader<?>> messageReaders = Collections.emptyList();
+
+    /**
+     * MessageWriter
+     */
+    private List<HttpMessageWriter<?>> messageWriters = Collections.emptyList();
+
+    /**
+     * ViewResolvers
+     */
+    private List<ViewResolver> viewResolvers = Collections.emptyList();
+
+    /**
+     * 存储处理异常后的信息
+     */
+    private ThreadLocal<ResultBody> exceptionHandlerResult = new ThreadLocal<>();
+
+    /**
+     * 参考AbstractErrorWebExceptionHandler
+     *
+     * @param messageReaders
+     */
+    public void setMessageReaders(List<HttpMessageReader<?>> messageReaders) {
+        Assert.notNull(messageReaders, "'messageReaders' must not be null");
+        this.messageReaders = messageReaders;
+    }
+
+    /**
+     * 参考AbstractErrorWebExceptionHandler
+     *
+     * @param viewResolvers
+     */
+    public void setViewResolvers(List<ViewResolver> viewResolvers) {
+        this.viewResolvers = viewResolvers;
+    }
+
+    /**
+     * 参考AbstractErrorWebExceptionHandler
+     *
+     * @param messageWriters
+     */
+    public void setMessageWriters(List<HttpMessageWriter<?>> messageWriters) {
+        Assert.notNull(messageWriters, "'messageWriters' must not be null");
+        this.messageWriters = messageWriters;
+    }
+
+    @Override
+    public Mono<Void> handle(ServerWebExchange exchange, Throwable ex) {
+        /**
+         * 按照异常类型进行处理
+         */
+        ResultBody resultBody;
+        ServerHttpRequest request = exchange.getRequest();
+        if (ex instanceof NotFoundException) {
+            resultBody = ResultBody.failed(ResultEnum.SERVICE_NOT_FOUND.getCode(), "服务暂时无法访问，请稍后再试!").setHttpStatus(HttpStatus.SERVICE_UNAVAILABLE.value()).setPath(request.getURI().getPath());
+            log.error("==> 错误解析:{}", resultBody);
+        } else {
+            resultBody = OpenExceptionHandler.resolveException((Exception) ex, exchange.getRequest().getURI().getPath());
+            resultBody.setPath(request.getURI().getPath());
+        }
+        /**
+         * 参考AbstractErrorWebExceptionHandler
+         */
+        if (exchange.getResponse().isCommitted()) {
+            return Mono.error(ex);
+        }
+        exceptionHandlerResult.set(resultBody);
+        ServerRequest newRequest = ServerRequest.create(exchange, this.messageReaders);
+        return RouterFunctions.route(RequestPredicates.all(), this::renderErrorResponse).route(newRequest)
+                .switchIfEmpty(Mono.error(ex))
+                .flatMap((handler) -> handler.handle(newRequest))
+                .flatMap((response) -> {
+                    return write(exchange, response,ex);
+                });
+    }
+
+    /**
+     * 参考DefaultErrorWebExceptionHandler
+     *
+     * @param request
+     * @return
+     */
+    protected Mono<ServerResponse> renderErrorResponse(ServerRequest request) {
+        ResultBody result = exceptionHandlerResult.get();
+        return ServerResponse.status(result.getHttpStatus())
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .body(BodyInserters.fromObject(result));
+    }
+
+    /**
+     * 参考AbstractErrorWebExceptionHandler
+     *
+     * @param exchange
+     * @param response
+     * @return
+     */
+    private Mono<? extends Void> write(ServerWebExchange exchange,
+                                       ServerResponse response,Throwable ex) {
+        exchange.getResponse().getHeaders()
+                .setContentType(response.headers().getContentType());
+        // 保存日志
+        accessLogService.sendLog(exchange, (Exception) ex);
+        return response.writeTo(exchange, new ResponseContext());
+    }
+
+    /**
+     * 参考AbstractErrorWebExceptionHandler
+     */
+    private class ResponseContext implements ServerResponse.Context {
+
+        @Override
+        public List<HttpMessageWriter<?>> messageWriters() {
+            return JsonExceptionHandler.this.messageWriters;
+        }
+
+        @Override
+        public List<ViewResolver> viewResolvers() {
+            return JsonExceptionHandler.this.viewResolvers;
+        }
+
+    }
 }

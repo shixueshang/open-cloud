@@ -128,13 +128,10 @@ public class OpenHelper {
      * @return
      */
     public static ResourceServerTokenServices buildRedisTokenServices(RedisConnectionFactory redisConnectionFactory) throws Exception {
-        // 使用自定义系统用户凭证转换器
-        DefaultAccessTokenConverter accessTokenConverter = buildAccessTokenConverter();
         OpenRedisTokenService tokenServices = new OpenRedisTokenService();
         // 这里的签名key 保持和认证中心一致
         RedisTokenStore redisTokenStore = new RedisTokenStore(redisConnectionFactory);
         tokenServices.setTokenStore(redisTokenStore);
-        tokenServices.setDefaultAccessTokenConverter(accessTokenConverter);
         log.info("buildRedisTokenServices[{}]",tokenServices);
         return tokenServices;
     }

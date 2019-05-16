@@ -1,6 +1,7 @@
 package com.opencloud.api.gateway.exception;
 
 import com.alibaba.fastjson.JSONObject;
+import com.opencloud.api.gateway.service.AccessLogService;
 import com.opencloud.common.exception.OpenExceptionHandler;
 import com.opencloud.common.model.ResultBody;
 import lombok.extern.slf4j.Slf4j;
@@ -23,15 +24,17 @@ import java.nio.charset.Charset;
  */
 @Slf4j
 public class JsonAuthenticationEntryPoint implements ServerAuthenticationEntryPoint {
-    //private AccessLogService accessLogService;
+    private AccessLogService accessLogService;
 
-    /*public GatewayAuthenticationEntryPoint(AccessLogService accessLogService) {
+    public JsonAuthenticationEntryPoint(AccessLogService accessLogService) {
         this.accessLogService = accessLogService;
-    }*/
+    }
 
     @Override
     public Mono<Void> commence(ServerWebExchange exchange, AuthenticationException e) {
         ResultBody resultBody = OpenExceptionHandler.resolveException(e,exchange.getRequest().getURI().getPath());
+        // 保存日志
+        accessLogService.sendLog(exchange,e);
         return Mono.defer(() -> {
             return Mono.just(exchange.getResponse());
         }).flatMap((response) -> {

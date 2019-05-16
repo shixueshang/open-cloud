@@ -9,6 +9,7 @@ import com.opencloud.api.gateway.actuator.OpenApiEndpoint;
 import com.opencloud.api.gateway.exception.JsonExceptionHandler;
 import com.opencloud.api.gateway.locator.ApiResourceLocator;
 import com.opencloud.api.gateway.locator.JdbcRouteDefinitionLocator;
+import com.opencloud.api.gateway.service.AccessLogService;
 import com.opencloud.api.gateway.service.feign.BaseAuthorityRemoteService;
 import com.opencloud.api.gateway.service.feign.GatewayRemoteService;
 import com.opencloud.common.configuration.OpenCommonProperties;
@@ -37,9 +38,6 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.reactive.result.view.ViewResolver;
-import springfox.documentation.swagger.web.ApiKeyVehicle;
-import springfox.documentation.swagger.web.SecurityConfiguration;
-import springfox.documentation.swagger.web.UiConfiguration;
 
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -74,9 +72,9 @@ public class ApiConfiguration {
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public ErrorWebExceptionHandler errorWebExceptionHandler(ObjectProvider<List<ViewResolver>> viewResolversProvider,
-                                                             ServerCodecConfigurer serverCodecConfigurer) {
+                                                             ServerCodecConfigurer serverCodecConfigurer,AccessLogService accessLogService) {
 
-        JsonExceptionHandler jsonExceptionHandler = new JsonExceptionHandler();
+        JsonExceptionHandler jsonExceptionHandler = new JsonExceptionHandler(accessLogService);
         jsonExceptionHandler.setViewResolvers(viewResolversProvider.getIfAvailable(Collections::emptyList));
         jsonExceptionHandler.setMessageWriters(serverCodecConfigurer.getWriters());
         jsonExceptionHandler.setMessageReaders(serverCodecConfigurer.getReaders());
@@ -169,6 +167,5 @@ public class ApiConfiguration {
         log.info("bean [{}]", endpoint);
         return endpoint;
     }
-
 
 }

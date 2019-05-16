@@ -58,7 +58,7 @@ public class ZuulResponseFilter extends ZuulFilter {
         HttpServletResponse response = ctx.getResponse();
         // 把路由的serviceId放入作用域
         request.setAttribute(FilterConstants.SERVICE_ID_KEY, ctx.get(FilterConstants.SERVICE_ID_KEY));
-        accessLogService.sendLog(request, response);
+        accessLogService.sendLog(request, response,null);
         return null;
     }
 

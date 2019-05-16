@@ -1,6 +1,5 @@
 package com.opencloud.zuul.configuration;
 
-import com.opencloud.common.gen.SnowflakeIdGenerator;
 import com.opencloud.common.security.OpenHelper;
 import com.opencloud.zuul.exception.JsonAccessDeniedHandler;
 import com.opencloud.zuul.exception.JsonAuthenticationEntryPoint;
@@ -16,7 +15,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
@@ -40,10 +38,6 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     private ApiProperties apiProperties;
     @Autowired
     private BaseAppRemoteService baseAppRemoteService;
-    @Autowired
-    private SnowflakeIdGenerator snowflakeIdGenerator;
-    @Autowired
-    private RedisTemplate redisTemplate;
     @Autowired
     private RedisConnectionFactory redisConnectionFactory;
     @Autowired
@@ -83,7 +77,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .and()
                 .csrf().disable();
         // 网关日志前置过滤器
-        http.addFilterBefore(new PreRequestFilter(snowflakeIdGenerator, redisTemplate, accessLogService), AbstractPreAuthenticatedProcessingFilter.class);
+        http.addFilterBefore(new PreRequestFilter(), AbstractPreAuthenticatedProcessingFilter.class);
         // 增加签名验证过滤器
         http.addFilterAfter(new SignatureFilter(baseAppRemoteService, apiProperties), AbstractPreAuthenticatedProcessingFilter.class);
         // 增加IP检测过滤器

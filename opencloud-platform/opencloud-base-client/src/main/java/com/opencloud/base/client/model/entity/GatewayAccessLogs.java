@@ -1,5 +1,6 @@
 package com.opencloud.base.client.model.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
@@ -15,7 +16,7 @@ public class GatewayAccessLogs implements Serializable {
     /**
      * 访问ID
      */
-    @TableId
+    @TableId(type= IdType.ID_WORKER)
     private Long accessId;
 
     /**

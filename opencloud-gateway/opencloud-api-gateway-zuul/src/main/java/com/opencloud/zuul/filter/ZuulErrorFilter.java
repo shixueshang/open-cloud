@@ -43,7 +43,7 @@ public class ZuulErrorFilter extends ZuulFilter {
         RequestContext ctx = RequestContext.getCurrentContext();
         HttpServletRequest request = ctx.getRequest();
         HttpServletResponse response = ctx.getResponse();
-        accessLogService.sendLog(request, response);
+        accessLogService.sendLog(request, response,(Exception) ctx.getThrowable());
         return null;
     }
 }
