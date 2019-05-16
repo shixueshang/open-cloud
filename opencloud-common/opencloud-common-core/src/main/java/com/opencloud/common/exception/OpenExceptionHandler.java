@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 
 /**
  * 统一异常处理器
@@ -89,6 +90,21 @@ public class OpenExceptionHandler {
         return resultBody;
     }
 
+    /**
+     * 静态解析认证异常
+     *
+     * @param ex
+     * @return
+     */
+    public static ResultBody resolveOauthException(Exception ex, String path) {
+        ResultEnum code = ResultEnum.BAD_CREDENTIALS;
+        int httpStatus = HttpStatus.OK.value();
+        String error = Optional.ofNullable(ex.getMessage()).orElse("");
+        if (error.contains("User is disabled")) {
+            code = ResultEnum.ACCOUNT_DISABLED;
+        }
+        return buildBody(ex, code, path, httpStatus);
+    }
 
     /**
      * 静态解析异常。可以直接调用
@@ -104,7 +120,7 @@ public class OpenExceptionHandler {
         if (superClassName.contains("AuthenticationException")) {
             if (className.contains("UsernameNotFoundException")) {
                 code = ResultEnum.USERNAME_NOT_FOUND;
-            } else if (className.contains("BadCredentialsException") || className.contains("InvalidGrantException")) {
+            } else if (className.contains("BadCredentialsException")) {
                 code = ResultEnum.BAD_CREDENTIALS;
             } else if (className.contains("AccountExpiredException")) {
                 code = ResultEnum.ACCOUNT_EXPIRED;
