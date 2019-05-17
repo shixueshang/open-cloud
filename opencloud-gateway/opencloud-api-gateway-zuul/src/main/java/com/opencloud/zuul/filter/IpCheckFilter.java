@@ -33,7 +33,7 @@ public class IpCheckFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String requestPath = apiAccessManager.getRequestPath(request);
-        String remoteIpAddress = WebUtils.getIpAddr(request);
+        String remoteIpAddress = WebUtils.getRemoteAddress(request);
         // 1.ip黑名单检测
         boolean deny = apiAccessManager.matchIpBlacklist(requestPath, remoteIpAddress);
         if (deny) {

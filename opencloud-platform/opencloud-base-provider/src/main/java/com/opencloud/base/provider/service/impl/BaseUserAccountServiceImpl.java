@@ -5,11 +5,9 @@ import com.opencloud.auth.client.constants.AuthConstants;
 import com.opencloud.base.client.constants.BaseConstants;
 import com.opencloud.base.client.model.BaseUserAccountDto;
 import com.opencloud.base.client.model.BaseUserDto;
-import com.opencloud.base.client.model.entity.BaseResourceOperation;
 import com.opencloud.base.client.model.entity.BaseUser;
 import com.opencloud.base.client.model.entity.BaseUserAccount;
 import com.opencloud.base.client.model.entity.BaseUserAccountLogs;
-import com.opencloud.base.provider.mapper.BaseResourceOperationMapper;
 import com.opencloud.base.provider.mapper.BaseUserAccountLogsMapper;
 import com.opencloud.base.provider.mapper.BaseUserAccountMapper;
 import com.opencloud.base.provider.service.BaseUserAccountService;
@@ -198,7 +196,7 @@ public class BaseUserAccountServiceImpl extends BaseServiceImpl<BaseUserAccountM
                     log.setAccount(baseUserAccount.getAccount());
                     log.setAccountId(String.valueOf(baseUserAccount.getAccountId()));
                     log.setAccountType(baseUserAccount.getAccountType());
-                    log.setLoginIp(WebUtils.getIpAddr(request));
+                    log.setLoginIp(WebUtils.getRemoteAddress(request));
                     log.setLoginAgent(request.getHeader(HttpHeaders.USER_AGENT));
                     addLoginLog(log);
                 }

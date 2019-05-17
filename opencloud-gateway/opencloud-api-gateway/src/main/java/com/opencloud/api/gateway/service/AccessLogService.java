@@ -3,6 +3,7 @@ package com.opencloud.api.gateway.service;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Maps;
+import com.opencloud.api.gateway.util.ReactiveWebUtils;
 import com.opencloud.common.constants.MqConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpTemplate;
@@ -86,7 +87,7 @@ public class AccessLogService {
             if (route != null) {
                 serviceId = route.getUri().toString().replace("lb://", "");
             }
-            String ip = request.getRemoteAddress().getAddress().getHostAddress();
+            String ip = ReactiveWebUtils.getRemoteAddress(exchange);
             String userAgent = headers.get(HttpHeaders.USER_AGENT);
             Object requestTime = exchange.getAttribute("requestTime");
             String error = null;

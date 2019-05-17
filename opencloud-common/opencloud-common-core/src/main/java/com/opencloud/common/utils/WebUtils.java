@@ -4,9 +4,11 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.net.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.util.Assert;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.server.ServerWebExchange;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.ServletRequest;
@@ -14,7 +16,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.net.*;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.*;
 import java.util.Map.Entry;
@@ -446,7 +449,7 @@ public class WebUtils {
      * @param request
      * @return
      */
-    public static String getIpAddr(HttpServletRequest request) {
+    public static String getRemoteAddress(HttpServletRequest request) {
         String unknown = "unknown";
         String ip = request.getHeader("X-Forwarded-For");
         if (ip == null || ip.length() == 0 || unknown.equalsIgnoreCase(ip)) {
@@ -476,6 +479,7 @@ public class WebUtils {
         }
         return ip;
     }
+
 
     /**
      * 判断访问URI是否是静态文件请求

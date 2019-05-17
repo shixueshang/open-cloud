@@ -69,7 +69,7 @@ public class AccessLogService {
             Map headers = WebUtils.getHttpHeaders(request);
             Map data = WebUtils.getParameterMap(request);
             Object serviceId = request.getAttribute(FilterConstants.SERVICE_ID_KEY);
-            String ip = WebUtils.getIpAddr(request);
+            String ip = WebUtils.getRemoteAddress(request);
             String userAgent = request.getHeader(HttpHeaders.USER_AGENT);
             Object requestTime = request.getAttribute("requestTime");
             String error = null;
