@@ -4,7 +4,6 @@ import com.opencloud.api.gateway.service.AccessLogService;
 import com.opencloud.common.constants.ResultEnum;
 import com.opencloud.common.exception.OpenExceptionHandler;
 import com.opencloud.common.model.ResultBody;
-import com.sun.xml.internal.ws.client.ResponseContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.cloud.gateway.support.NotFoundException;
@@ -28,7 +27,7 @@ import java.util.List;
 
 /**
  * @author liuyadu
- * @classDesc: 统一异常处理, 参考{@link org.springframework.web.server.AbstractErrorWebExceptionHandler}修改
+ * @classDesc: 统一异常处理
  */
 @Slf4j
 public class JsonExceptionHandler implements ErrorWebExceptionHandler {
