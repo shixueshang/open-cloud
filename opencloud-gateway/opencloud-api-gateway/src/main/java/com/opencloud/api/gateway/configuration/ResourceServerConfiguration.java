@@ -4,6 +4,7 @@ import com.opencloud.api.gateway.exception.JsonAccessDeniedHandler;
 import com.opencloud.api.gateway.exception.JsonAuthenticationEntryPoint;
 import com.opencloud.api.gateway.filter.AccessLogFilter;
 import com.opencloud.api.gateway.filter.ApiAuthorizationManager;
+import com.opencloud.api.gateway.filter.IpCheckFilter;
 import com.opencloud.api.gateway.locator.ApiResourceLocator;
 import com.opencloud.api.gateway.oauth2.RedisAuthenticationManager;
 import com.opencloud.api.gateway.service.AccessLogService;
@@ -86,6 +87,7 @@ public class ResourceServerConfiguration {
         // 自定义oauth2 认证, 使用redis读取token,而非jwt方式
         JsonAuthenticationEntryPoint entryPoint = new JsonAuthenticationEntryPoint(accessLogService);
         JsonAccessDeniedHandler accessDeniedHandler = new JsonAccessDeniedHandler(accessLogService);
+        ApiAuthorizationManager apiAuthorizationManager = new ApiAuthorizationManager(apiAccessLocator, apiGatewayProperties);
         AuthenticationWebFilter oauth2 = new AuthenticationWebFilter(new RedisAuthenticationManager(new RedisTokenStore(redisConnectionFactory)));
         oauth2.setServerAuthenticationConverter(new ServerBearerTokenAuthenticationConverter());
         oauth2.setAuthenticationFailureHandler(new ServerAuthenticationEntryPointFailureHandler(entryPoint));
@@ -93,10 +95,12 @@ public class ResourceServerConfiguration {
                 .httpBasic().disable()
                 .csrf().disable()
                 .authorizeExchange()
-                .anyExchange().access(new ApiAuthorizationManager(apiAccessLocator, apiGatewayProperties))
+                .anyExchange().access(apiAuthorizationManager)
                 .and().exceptionHandling()
                 .accessDeniedHandler(accessDeniedHandler)
                 .authenticationEntryPoint(entryPoint).and()
+                // IP访问限制过滤器,放到首位
+                .addFilterAt(new IpCheckFilter(apiAuthorizationManager, accessDeniedHandler), SecurityWebFiltersOrder.FIRST)
                 // 跨域过滤器
                 .addFilterAt(corsFilter(), SecurityWebFiltersOrder.CORS)
                 // oauth2认证过滤器

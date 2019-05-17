@@ -3,13 +3,15 @@ package com.opencloud.zuul.locator;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.opencloud.base.client.model.entity.GatewayRoute;
-import com.opencloud.zuul.actuator.event.GatewayRefreshRemoteApplicationEvent;
+import com.opencloud.zuul.event.GatewayRemoteRefreshRouteEvent;
+import com.opencloud.zuul.event.GatewayResourceRefreshEvent;
 import com.opencloud.zuul.service.feign.GatewayRemoteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.cloud.netflix.zuul.filters.SimpleRouteLocator;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties.ZuulRoute;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
 import org.springframework.util.StringUtils;
 
@@ -25,16 +27,17 @@ import java.util.Map;
  * @description:
  */
 @Slf4j
-public class RemoteRouteLocator extends SimpleRouteLocator implements ApplicationListener<GatewayRefreshRemoteApplicationEvent> {
+public class RemoteRouteLocator extends SimpleRouteLocator implements ApplicationListener<GatewayRemoteRefreshRouteEvent> {
 
     private GatewayRemoteService gatewayRemoteService;
     private ZuulProperties properties;
     private List<GatewayRoute> routeList;
-
-    public RemoteRouteLocator(String servletPath, ZuulProperties properties, GatewayRemoteService gatewayRemoteService) {
+    public ApplicationEventPublisher publisher;
+    public RemoteRouteLocator(String servletPath, ZuulProperties properties, GatewayRemoteService gatewayRemoteService,ApplicationEventPublisher publisher) {
         super(servletPath, properties);
         this.properties = properties;
         this.gatewayRemoteService = gatewayRemoteService;
+        this.publisher = publisher;
     }
 
     /**
@@ -114,7 +117,8 @@ public class RemoteRouteLocator extends SimpleRouteLocator implements Applicatio
     }
 
     @Override
-    public void onApplicationEvent(GatewayRefreshRemoteApplicationEvent gatewayRefreshRemoteApplicationEvent) {
+    public void onApplicationEvent(GatewayRemoteRefreshRouteEvent gatewayRemoteRefreshRouteEvent) {
         doRefresh();
+        this.publisher.publishEvent(new GatewayResourceRefreshEvent(this));
     }
 }

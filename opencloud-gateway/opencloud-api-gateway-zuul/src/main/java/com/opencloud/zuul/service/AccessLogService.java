@@ -70,7 +70,6 @@ public class AccessLogService {
             Object serviceId = request.getAttribute(FilterConstants.SERVICE_ID_KEY);
             String ip = WebUtils.getIpAddr(request);
             String userAgent = request.getHeader(HttpHeaders.USER_AGENT);
-            String serverIp = WebUtils.getLocalIpAddress();
             Object requestTime = request.getAttribute("requestTime");
             String error = null;
             if (ex != null) {
@@ -89,7 +88,6 @@ public class AccessLogService {
             map.put("ip", ip);
             map.put("method", method);
             map.put("userAgent", userAgent);
-            map.put("serverIp", serverIp);
             map.put("responseTime", new Date());
             map.put("error", error);
             OpenUser user = OpenHelper.getUser();

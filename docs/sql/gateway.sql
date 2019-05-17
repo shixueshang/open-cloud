@@ -33,7 +33,6 @@ CREATE TABLE `gateway_access_logs` (
                                      `user_agent` varchar(255) DEFAULT NULL,
                                      `region` varchar(255) DEFAULT NULL COMMENT '区域',
                                      `authentication` text COMMENT '认证信息',
-                                     `server_ip` varchar(255) DEFAULT NULL COMMENT '服务器IP',
                                      `service_id` varchar(100) DEFAULT NULL COMMENT '服务名',
                                      `error` varchar(255) DEFAULT NULL COMMENT '错误信息',
                                      PRIMARY KEY (`access_id`)

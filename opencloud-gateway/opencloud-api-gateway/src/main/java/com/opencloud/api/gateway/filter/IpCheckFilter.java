@@ -1,39 +1,40 @@
-package com.opencloud.zuul.filter;
+package com.opencloud.api.gateway.filter;
 
+import com.opencloud.api.gateway.exception.JsonAccessDeniedHandler;
 import com.opencloud.common.constants.CommonConstants;
 import com.opencloud.common.constants.ResultEnum;
-import com.opencloud.common.utils.WebUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.web.filter.OncePerRequestFilter;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebFilter;
+import org.springframework.web.server.WebFilterChain;
+import reactor.core.publisher.Mono;
 
 /**
  * IP访问限制过滤器
+ *
  * @author liuyadu
  */
 @Slf4j
-public class IpCheckFilter extends OncePerRequestFilter {
+public class IpCheckFilter implements WebFilter {
 
-    private AccessDeniedHandler accessDeniedHandler;
+    private JsonAccessDeniedHandler accessDeniedHandler;
 
     private ApiAuthorizationManager apiAccessManager;
 
-    public IpCheckFilter(ApiAuthorizationManager apiAccessManager, AccessDeniedHandler accessDeniedHandler) {
+    public IpCheckFilter(ApiAuthorizationManager apiAccessManager, JsonAccessDeniedHandler accessDeniedHandler) {
         this.apiAccessManager = apiAccessManager;
         this.accessDeniedHandler = accessDeniedHandler;
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String requestPath = apiAccessManager.getRequestPath(request);
-        String remoteIpAddress = WebUtils.getIpAddr(request);
+    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+        ServerHttpRequest request = exchange.getRequest();
+        ServerHttpResponse response = exchange.getResponse();
+        String requestPath = request.getURI().getPath();
+        String remoteIpAddress = request.getRemoteAddress().getAddress().getHostAddress();
         try {
             // 1.ip黑名单检测
             boolean deny = apiAccessManager.matchIpBlacklist(requestPath, remoteIpAddress);
@@ -46,20 +47,18 @@ public class IpCheckFilter extends OncePerRequestFilter {
             boolean[] matchIpWhiteListResult = apiAccessManager.matchIpWhiteList(requestPath, remoteIpAddress);
             boolean hasWhiteList = matchIpWhiteListResult[0];
             boolean allow = matchIpWhiteListResult[1];
-
             if (hasWhiteList) {
                 // 接口存在白名单限制
                 if (!allow) {
                     // IP白名单检测通过,拒绝
-                    request.setAttribute(CommonConstants.X_ACCESS_DENIED, ResultEnum.ACCESS_DENIED_WHITE_IP_LIMITED);
+                    exchange.getAttributes().put(CommonConstants.X_ACCESS_DENIED, ResultEnum.ACCESS_DENIED_WHITE_IP_LIMITED);
                     throw new AccessDeniedException(ResultEnum.ACCESS_DENIED_WHITE_IP_LIMITED.getMessage());
                 }
             }
         } catch (AccessDeniedException e) {
-            accessDeniedHandler.handle(request, response, e);
-            return;
+            accessDeniedHandler.handle(exchange, e);
+            return Mono.empty();
         }
-        filterChain.doFilter(request, response);
-
+        return chain.filter(exchange);
     }
 }

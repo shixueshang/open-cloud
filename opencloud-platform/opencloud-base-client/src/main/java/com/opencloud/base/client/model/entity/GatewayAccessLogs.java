@@ -77,11 +77,6 @@ public class GatewayAccessLogs implements Serializable {
     private String authentication;
 
     /**
-     * 服务器IP
-     */
-    private String serverIp;
-
-    /**
      * 服务名
      */
     private String serviceId;
@@ -291,14 +286,6 @@ public class GatewayAccessLogs implements Serializable {
 
     public void setAuthentication(String authentication) {
         this.authentication = authentication;
-    }
-
-    public String getServerIp() {
-        return serverIp;
-    }
-
-    public void setServerIp(String serverIp) {
-        this.serverIp = serverIp;
     }
 
     public String getServiceId() {

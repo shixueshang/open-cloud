@@ -36,7 +36,6 @@ public class GatewayAccessLogsServiceImpl implements GatewayAccessLogsService {
         queryWrapper.lambda()
                 .likeRight(ObjectUtils.isNotEmpty(query.getPath()),GatewayAccessLogs::getPath, query.getPath())
                 .eq(ObjectUtils.isNotEmpty(query.getIp()),GatewayAccessLogs::getIp, query.getIp())
-                .eq(ObjectUtils.isNotEmpty(query.getServerIp()),GatewayAccessLogs::getServerIp, query.getServerIp())
                 .eq(ObjectUtils.isNotEmpty(query.getServiceId()),GatewayAccessLogs::getServiceId, query.getServiceId());
         queryWrapper.orderByDesc("request_time");
         return gatewayLogsMapper.selectPage(pageParams,queryWrapper);

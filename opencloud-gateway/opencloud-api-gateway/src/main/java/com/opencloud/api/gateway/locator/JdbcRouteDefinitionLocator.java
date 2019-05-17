@@ -1,7 +1,8 @@
 package com.opencloud.api.gateway.locator;
 
 import com.google.common.collect.Lists;
-import com.opencloud.api.gateway.actuator.event.GatewayRefreshRemoteApplicationEvent;
+import com.opencloud.api.gateway.event.GatewayRemoteRefreshRouteEvent;
+import com.opencloud.api.gateway.event.GatewayResourceRefreshEvent;
 import com.opencloud.base.client.model.entity.GatewayRoute;
 import com.opencloud.common.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +11,7 @@ import org.springframework.cloud.gateway.handler.predicate.PredicateDefinition;
 import org.springframework.cloud.gateway.route.RouteDefinition;
 import org.springframework.cloud.gateway.route.RouteDefinitionLocator;
 import org.springframework.cloud.gateway.support.NameUtils;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -31,13 +33,15 @@ import java.util.Map;
  * @author liuyadu
  */
 @Slf4j
-public class JdbcRouteDefinitionLocator implements RouteDefinitionLocator, ApplicationListener<GatewayRefreshRemoteApplicationEvent> {
+public class JdbcRouteDefinitionLocator implements RouteDefinitionLocator, ApplicationListener<GatewayRemoteRefreshRouteEvent> {
     private JdbcTemplate jdbcTemplate;
     private Flux<RouteDefinition> routeDefinitions;
     private Map<String, List> cache = new HashMap<>();
+    public ApplicationEventPublisher publisher;
 
-    public JdbcRouteDefinitionLocator(JdbcTemplate jdbcTemplate) {
+    public JdbcRouteDefinitionLocator(JdbcTemplate jdbcTemplate,ApplicationEventPublisher publisher) {
         this.jdbcTemplate = jdbcTemplate;
+        this.publisher = publisher;
         routeDefinitions = CacheFlux.lookup(cache, "routeDefs", RouteDefinition.class).onCacheMissResume(Flux.fromIterable(new ArrayList<>()));
     }
 
@@ -58,8 +62,9 @@ public class JdbcRouteDefinitionLocator implements RouteDefinitionLocator, Appli
     }
 
     @Override
-    public void onApplicationEvent(GatewayRefreshRemoteApplicationEvent event) {
+    public void onApplicationEvent(GatewayRemoteRefreshRouteEvent event) {
         refresh();
+        this.publisher.publishEvent(new GatewayResourceRefreshEvent(this));
     }
 
 

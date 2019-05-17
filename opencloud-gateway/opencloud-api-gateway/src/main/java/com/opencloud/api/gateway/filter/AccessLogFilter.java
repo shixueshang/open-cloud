@@ -36,7 +36,6 @@ public class AccessLogFilter implements WebFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
-        exchange.getAttributes().put("requestTime", new Date());
         RecorderServerHttpRequestDecorator requestDecorator = new RecorderServerHttpRequestDecorator(request);
         Flux<DataBuffer> body = requestDecorator.getBody();
         //读取requestBody传参
@@ -63,7 +62,7 @@ public class AccessLogFilter implements WebFilter {
                 return super.writeWith(body);
             }
         };
-
+        exchange.getAttributes().put("requestTime", new Date());
         return chain.filter(exchange.mutate().request(requestDecorator).response(decoratedResponse).build());
     }
 

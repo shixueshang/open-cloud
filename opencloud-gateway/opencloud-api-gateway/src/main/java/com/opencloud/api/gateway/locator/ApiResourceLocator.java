@@ -1,7 +1,7 @@
 package com.opencloud.api.gateway.locator;
 
 import com.google.common.collect.Maps;
-import com.opencloud.api.gateway.actuator.event.GatewayRefreshRemoteApplicationEvent;
+import com.opencloud.api.gateway.event.GatewayResourceRefreshEvent;
 import com.opencloud.api.gateway.service.feign.BaseAuthorityRemoteService;
 import com.opencloud.api.gateway.service.feign.GatewayRemoteService;
 import com.opencloud.base.client.model.AccessAuthority;
@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  * @author liuyadu
  */
 @Slf4j
-public class ApiResourceLocator implements ApplicationListener<GatewayRefreshRemoteApplicationEvent> {
+public class ApiResourceLocator implements ApplicationListener<GatewayResourceRefreshEvent> {
     /**
      * 单位时间
      */
@@ -96,9 +96,8 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRefreshRem
     }
 
     @Override
-    public void onApplicationEvent(GatewayRefreshRemoteApplicationEvent event) {
+    public void onApplicationEvent(GatewayResourceRefreshEvent event) {
         refresh();
-        // 刷新路由
     }
 
     /**
@@ -107,6 +106,7 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRefreshRem
      * @return
      */
     protected String getFullPath(String serviceId, String path) {
+        //@Todo
         return routeDefinitionLocator.getRouteDefinitions()
                 .toStream()
                 .filter(routeDefinition -> routeDefinition.getUri().toString().equals("lb://" + serviceId))

@@ -27,6 +27,7 @@ import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.cloud.bus.BusProperties;
 import org.springframework.cloud.gateway.route.RouteDefinitionLocator;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -137,8 +138,8 @@ public class ApiConfiguration {
      * @return
      */
     @Bean
-    public JdbcRouteDefinitionLocator jdbcRouteDefinitionLocator(JdbcTemplate jdbcTemplate) {
-        return new JdbcRouteDefinitionLocator(jdbcTemplate);
+    public JdbcRouteDefinitionLocator jdbcRouteDefinitionLocator(JdbcTemplate jdbcTemplate,ApplicationEventPublisher publisher) {
+        return new JdbcRouteDefinitionLocator(jdbcTemplate,publisher);
     }
 
     /**

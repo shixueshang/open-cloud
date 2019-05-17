@@ -175,7 +175,7 @@ public class ApiAuthorizationManager {
 
 
     public boolean matchIpBlacklist(String requestPath, String remoteIpAddress) {
-        List<GatewayIpLimitApisDto> blackList = accessLocator.getIpBlackList();
+        List<GatewayIpLimitApisDto> blackList = accessLocator.getIpBlacks();
         if (blackList != null) {
             for (GatewayIpLimitApisDto api : blackList) {
                 if (pathMatch.match(api.getPath(), requestPath) && api.getIpAddressSet() != null && !api.getIpAddressSet().isEmpty()) {
@@ -192,7 +192,7 @@ public class ApiAuthorizationManager {
     public boolean[] matchIpWhiteList(String requestPath, String remoteIpAddress) {
         boolean hasWhiteList = false;
         boolean allow = false;
-        List<GatewayIpLimitApisDto> whiteList = accessLocator.getIpWhiteList();
+        List<GatewayIpLimitApisDto> whiteList = accessLocator.getIpWhites();
         if (whiteList != null) {
             for (GatewayIpLimitApisDto api : whiteList) {
                 if (pathMatch.match(api.getPath(), requestPath) && api.getIpAddressSet() != null && !api.getIpAddressSet().isEmpty()) {
@@ -220,7 +220,7 @@ public class ApiAuthorizationManager {
     }
 
     public boolean isAuthAccess(String requestPath) {
-        List<AccessAuthority> authorityList = accessLocator.getAuthorityList();
+        List<AccessAuthority> authorityList = accessLocator.getAccessAuthorities();
         if (authorityList != null) {
             for (AccessAuthority auth : authorityList) {
                 String fullPath = auth.getPath();

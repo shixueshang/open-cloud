@@ -7,7 +7,7 @@ import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.support.StringToMatc
 import com.opencloud.base.client.model.AccessAuthority;
 import com.opencloud.base.client.model.GatewayIpLimitApisDto;
 import com.opencloud.base.client.model.GatewayRateLimitApisDto;
-import com.opencloud.zuul.actuator.event.GatewayRefreshRemoteApplicationEvent;
+import com.opencloud.zuul.event.GatewayResourceRefreshEvent;
 import com.opencloud.zuul.service.feign.BaseAuthorityRemoteService;
 import com.opencloud.zuul.service.feign.GatewayRemoteService;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
  * @author liuyadu
  */
 @Slf4j
-public class ApiResourceLocator implements ApplicationListener<GatewayRefreshRemoteApplicationEvent> {
+public class ApiResourceLocator implements ApplicationListener<GatewayResourceRefreshEvent> {
     /**
      * 单位时间
      */
@@ -57,22 +57,22 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRefreshRem
     /**
      * 权限列表
      */
-    private List<AccessAuthority> authorityList;
+    private List<AccessAuthority> accessAuthorities;
 
     /**
      * IP黑名单
      */
-    private List<GatewayIpLimitApisDto> ipBlackList;
+    private List<GatewayIpLimitApisDto> ipBlacks;
 
     /**
      * Ip白名单
      */
-    private List<GatewayIpLimitApisDto> ipWhiteList;
+    private List<GatewayIpLimitApisDto> ipWhites;
 
     /**
      * 网关API接口流量控制列表
      */
-    private List<GatewayRateLimitApisDto> rateLimitApiList;
+    private List<GatewayRateLimitApisDto> rateLimitApis;
 
     private RateLimitProperties rateLimitProperties;
     private RemoteRouteLocator zuulRoutesLocator;
@@ -94,8 +94,8 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRefreshRem
      */
     public void doRefresh() {
         loadAuthority();
-        loadIpBlackList();
-        loadIpWhiteList();
+        loadIpBlacks();
+        loadIpWhites();
         loadRateLimit();
     }
 
@@ -122,14 +122,14 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRefreshRem
      */
     public void loadAuthority() {
         allConfigAttribute = Maps.newHashMap();
-        authorityList = Lists.newArrayList();
+        accessAuthorities = Lists.newArrayList();
         Collection<ConfigAttribute> array;
         ConfigAttribute cfg;
         try {
             // 查询所有接口
-            authorityList = baseAuthorityRemoteService.getAccessAuthorityList().getData();
-            if (authorityList != null) {
-                for (AccessAuthority item : authorityList) {
+            accessAuthorities = baseAuthorityRemoteService.getAccessAuthorityList().getData();
+            if (accessAuthorities != null) {
+                for (AccessAuthority item : accessAuthorities) {
                     String path = item.getPath();
                     if (path == null) {
                         continue;
@@ -147,7 +147,7 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRefreshRem
                     allConfigAttribute.put(fullPath, array);
                 }
             }
-            log.info("=============加载动态权限:{}==============",authorityList.size());
+            log.info("=============加载动态权限:{}==============",accessAuthorities.size());
         } catch (Exception e) {
             log.error("加载动态权限错误:{}", e.getMessage());
         }
@@ -156,16 +156,16 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRefreshRem
     /**
      * 加载IP黑名单
      */
-    public void loadIpBlackList() {
-        ipBlackList = Lists.newArrayList();
+    public void loadIpBlacks() {
+        ipBlacks = Lists.newArrayList();
         try {
-            ipBlackList = gatewayRemoteService.getApiBlackList().getData();
-            if (ipBlackList != null) {
-                for (GatewayIpLimitApisDto item : ipBlackList) {
+            ipBlacks = gatewayRemoteService.getApiBlackList().getData();
+            if (ipBlacks != null) {
+                for (GatewayIpLimitApisDto item : ipBlacks) {
                     item.setPath(getFullPath(item.getServiceId(), item.getPath()));
                 }
             }
-            log.info("=============加载IP黑名单:{}==============",ipBlackList.size());
+            log.info("=============加载IP黑名单:{}==============",ipBlacks.size());
         } catch (Exception e) {
             log.error("加载IP黑名单错误:{}", e.getMessage());
         }
@@ -174,16 +174,16 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRefreshRem
     /**
      * 加载IP白名单
      */
-    public void loadIpWhiteList() {
-        ipWhiteList = Lists.newArrayList();
+    public void loadIpWhites() {
+        ipWhites = Lists.newArrayList();
         try {
-            ipWhiteList = gatewayRemoteService.getApiWhiteList().getData();
-            if (ipWhiteList != null) {
-                for (GatewayIpLimitApisDto item : ipWhiteList) {
+            ipWhites = gatewayRemoteService.getApiWhiteList().getData();
+            if (ipWhites != null) {
+                for (GatewayIpLimitApisDto item : ipWhites) {
                     item.setPath(getFullPath(item.getServiceId(), item.getPath()));
                 }
             }
-            log.info("=============加载IP白名单:{}==============",ipWhiteList.size());
+            log.info("=============加载IP白名单:{}==============",ipWhites.size());
         } catch (Exception e) {
             log.error("加载IP白名单错误:{}", e.getMessage());
         }
@@ -217,9 +217,9 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRefreshRem
     protected Map<String, List<RateLimitProperties.Policy>> loadRateLimitPolicy() {
         Map<String, List<RateLimitProperties.Policy>> policyMap = Maps.newLinkedHashMap();
         try {
-            rateLimitApiList = gatewayRemoteService.getApiRateLimitList().getData();
-            if (rateLimitApiList != null && rateLimitApiList.size() > 0) {
-                for (GatewayRateLimitApisDto item : rateLimitApiList) {
+            rateLimitApis = gatewayRemoteService.getApiRateLimitList().getData();
+            if (rateLimitApis != null && rateLimitApis.size() > 0) {
+                for (GatewayRateLimitApisDto item : rateLimitApis) {
                     List<RateLimitProperties.Policy> policyList = policyMap.get(item.getServiceId());
                     if (policyList == null) {
                         policyList = Lists.newArrayList();
@@ -266,37 +266,36 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRefreshRem
         }
     }
 
-
-    public List<AccessAuthority> getAuthorityList() {
-        return authorityList;
+    public List<AccessAuthority> getAccessAuthorities() {
+        return accessAuthorities;
     }
 
-    public void setAuthorityList(List<AccessAuthority> authorityList) {
-        this.authorityList = authorityList;
+    public void setAccessAuthorities(List<AccessAuthority> accessAuthorities) {
+        this.accessAuthorities = accessAuthorities;
     }
 
-    public List<GatewayIpLimitApisDto> getIpBlackList() {
-        return ipBlackList;
+    public List<GatewayIpLimitApisDto> getIpBlacks() {
+        return ipBlacks;
     }
 
-    public void setIpBlackList(List<GatewayIpLimitApisDto> ipBlackList) {
-        this.ipBlackList = ipBlackList;
+    public void setIpBlacks(List<GatewayIpLimitApisDto> ipBlacks) {
+        this.ipBlacks = ipBlacks;
     }
 
-    public List<GatewayIpLimitApisDto> getIpWhiteList() {
-        return ipWhiteList;
+    public List<GatewayIpLimitApisDto> getIpWhites() {
+        return ipWhites;
     }
 
-    public void setIpWhiteList(List<GatewayIpLimitApisDto> ipWhiteList) {
-        this.ipWhiteList = ipWhiteList;
+    public void setIpWhites(List<GatewayIpLimitApisDto> ipWhites) {
+        this.ipWhites = ipWhites;
     }
 
-    public List<GatewayRateLimitApisDto> getRateLimitApiList() {
-        return rateLimitApiList;
+    public List<GatewayRateLimitApisDto> getRateLimitApis() {
+        return rateLimitApis;
     }
 
-    public void setRateLimitApiList(List<GatewayRateLimitApisDto> rateLimitApiList) {
-        this.rateLimitApiList = rateLimitApiList;
+    public void setRateLimitApis(List<GatewayRateLimitApisDto> rateLimitApis) {
+        this.rateLimitApis = rateLimitApis;
     }
 
     public HashMap<String, Collection<ConfigAttribute>> getAllConfigAttribute() {
@@ -308,7 +307,7 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRefreshRem
     }
 
     @Override
-    public void onApplicationEvent(GatewayRefreshRemoteApplicationEvent gatewayRefreshRemoteApplicationEvent) {
+    public void onApplicationEvent(GatewayResourceRefreshEvent gatewayResourceRefreshEvent) {
         doRefresh();
     }
 }

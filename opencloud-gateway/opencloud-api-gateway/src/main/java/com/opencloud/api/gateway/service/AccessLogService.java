@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Maps;
 import com.opencloud.common.constants.MqConstants;
-import com.opencloud.common.utils.WebUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +80,6 @@ public class AccessLogService {
             }
             String ip = request.getRemoteAddress().getAddress().getHostAddress();
             String userAgent = headers.get(HttpHeaders.USER_AGENT);
-            String serverIp = WebUtils.getLocalIpAddress();
             Object requestTime = exchange.getAttribute("requestTime");
             String error = null;
             if (ex != null) {
@@ -100,7 +98,6 @@ public class AccessLogService {
             map.put("ip", ip);
             map.put("method", method);
             map.put("userAgent", userAgent);
-            map.put("serverIp", serverIp);
             map.put("responseTime", new Date());
             map.put("error", error);
             Mono<Authentication> authentication = getCurrentUser();
@@ -109,7 +106,7 @@ public class AccessLogService {
                         map.put("authentication", JSONObject.toJSONString(auth))
                 );
             }
-            amqpTemplate.convertAndSend(MqConstants.QUEUE_ACCESS_LOGS, map);
+           amqpTemplate.convertAndSend(MqConstants.QUEUE_ACCESS_LOGS, map);
         } catch (Exception e) {
             log.error("access logs save error:{}", e);
         }

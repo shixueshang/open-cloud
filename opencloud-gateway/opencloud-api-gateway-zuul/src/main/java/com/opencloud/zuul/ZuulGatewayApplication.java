@@ -24,7 +24,7 @@
  */
 package com.opencloud.zuul;
 
-import com.opencloud.zuul.actuator.event.GatewayRefreshRemoteApplicationEvent;
+import com.opencloud.zuul.event.GatewayRemoteRefreshRouteEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -48,7 +48,7 @@ import org.springframework.context.ApplicationEventPublisher;
 @EnableFeignClients
 @EnableDiscoveryClient
 @SpringCloudApplication
-@RemoteApplicationEventScan(basePackages = "com.opencloud.zuul.actuator.event")
+@RemoteApplicationEventScan(basePackages = "com.opencloud.zuul.event")
 public class ZuulGatewayApplication implements CommandLineRunner {
     @Autowired
     private ApplicationEventPublisher publisher;
@@ -62,7 +62,7 @@ public class ZuulGatewayApplication implements CommandLineRunner {
     @Override
     public void run(String... strings) throws Exception {
         // 消息总线刷新所有网关实例
-        publisher.publishEvent(new GatewayRefreshRemoteApplicationEvent(this, bus.getId(), null));
+        publisher.publishEvent(new GatewayRemoteRefreshRouteEvent(this, bus.getId(), null));
     }
 
 

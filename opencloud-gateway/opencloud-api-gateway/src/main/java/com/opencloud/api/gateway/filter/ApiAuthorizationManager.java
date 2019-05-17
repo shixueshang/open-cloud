@@ -2,7 +2,9 @@ package com.opencloud.api.gateway.filter;
 
 import com.opencloud.api.gateway.configuration.ApiProperties;
 import com.opencloud.api.gateway.locator.ApiResourceLocator;
+import com.opencloud.api.gateway.util.matcher.IpAddressMatcher;
 import com.opencloud.base.client.model.AccessAuthority;
+import com.opencloud.base.client.model.GatewayIpLimitApisDto;
 import com.opencloud.common.constants.CommonConstants;
 import com.opencloud.common.constants.ResultEnum;
 import com.opencloud.common.security.Authority;
@@ -184,4 +186,49 @@ public class ApiAuthorizationManager implements ReactiveAuthorizationManager<Aut
         return false;
     }
 
+
+    public boolean matchIpBlacklist(String requestPath, String remoteIpAddress) {
+        List<GatewayIpLimitApisDto> blackList = accessLocator.getIpBlacks();
+        if (blackList != null) {
+            for (GatewayIpLimitApisDto api : blackList) {
+                if (pathMatch.match(api.getPath(), requestPath) && api.getIpAddressSet() != null && !api.getIpAddressSet().isEmpty()) {
+                    if (matchIp(api.getIpAddressSet(), remoteIpAddress)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+
+    }
+
+    public boolean[] matchIpWhiteList(String requestPath, String remoteIpAddress) {
+        boolean hasWhiteList = false;
+        boolean allow = false;
+        List<GatewayIpLimitApisDto> whiteList = accessLocator.getIpWhites();
+        if (whiteList != null) {
+            for (GatewayIpLimitApisDto api : whiteList) {
+                if (pathMatch.match(api.getPath(), requestPath) && api.getIpAddressSet() != null && !api.getIpAddressSet().isEmpty()) {
+                    hasWhiteList = true;
+                    allow = matchIp(api.getIpAddressSet(), remoteIpAddress);
+                    break;
+                }
+            }
+        }
+        return new boolean[]{hasWhiteList, allow};
+    }
+
+    public boolean matchIp(Set<String> ips, String remoteIpAddress) {
+        IpAddressMatcher ipAddressMatcher = null;
+        for (String ip : ips) {
+            try {
+                ipAddressMatcher = new IpAddressMatcher(ip);
+                if (ipAddressMatcher.matches(remoteIpAddress)) {
+                    return true;
+                }
+            } catch (Exception e) {
+            }
+        }
+        return false;
+    }
 }
