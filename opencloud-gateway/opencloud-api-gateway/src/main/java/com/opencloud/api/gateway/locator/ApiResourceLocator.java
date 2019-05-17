@@ -1,5 +1,6 @@
 package com.opencloud.api.gateway.locator;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.opencloud.api.gateway.event.GatewayResourceRefreshEvent;
 import com.opencloud.api.gateway.service.feign.BaseAuthorityRemoteService;
@@ -61,7 +62,7 @@ public class ApiResourceLocator implements ApplicationListener<GatewayResourceRe
     /**
      * 权限列表
      */
-    private HashMap<String, Collection<ConfigAttribute>> allConfigAttributeCache;
+    private HashMap<String, Collection<ConfigAttribute>> allConfigAttributes;
 
 
     private BaseAuthorityRemoteService baseAuthorityRemoteService;
@@ -70,7 +71,7 @@ public class ApiResourceLocator implements ApplicationListener<GatewayResourceRe
     private RouteDefinitionLocator routeDefinitionLocator;
 
     public ApiResourceLocator() {
-        allConfigAttributeCache = Maps.newHashMap();
+        allConfigAttributes = Maps.newHashMap();
         accessAuthorities = cache.put("accessAuthorities", new ArrayList<>());
         ipBlacks = cache.put("ipBlacks", new ArrayList<>());
         ipWhites = cache.put("ipWhites", new ArrayList<>());
@@ -89,7 +90,7 @@ public class ApiResourceLocator implements ApplicationListener<GatewayResourceRe
      */
     public void refresh() {
         this.cache.clear();
-        this.allConfigAttributeCache.clear();
+        this.allConfigAttributes.clear();
         loadAuthority();
         loadIpBlackList();
         loadIpWhiteList();
@@ -122,20 +123,22 @@ public class ApiResourceLocator implements ApplicationListener<GatewayResourceRe
      * 加载授权列表
      */
     public void loadAuthority() {
+        allConfigAttributes = Maps.newHashMap();
+        accessAuthorities = Lists.newArrayList();
         Collection<ConfigAttribute> array;
         ConfigAttribute cfg;
         try {
             // 查询所有接口
-            List<AccessAuthority> authorityList = baseAuthorityRemoteService.getAccessAuthorityList().getData();
-            if (authorityList != null) {
-                for (AccessAuthority item : authorityList) {
+            accessAuthorities = baseAuthorityRemoteService.getAccessAuthorityList().getData();
+            if (accessAuthorities != null) {
+                for (AccessAuthority item : accessAuthorities) {
                     String path = item.getPath();
                     if (path == null) {
                         continue;
                     }
                     String fullPath = getFullPath(item.getServiceId(), path);
                     item.setPath(fullPath);
-                    array = allConfigAttributeCache.get(fullPath);
+                    array = allConfigAttributes.get(fullPath);
                     if (array == null) {
                         array = new ArrayList<>();
                     }
@@ -143,10 +146,9 @@ public class ApiResourceLocator implements ApplicationListener<GatewayResourceRe
                         cfg = new SecurityConfig(item.getAuthority());
                         array.add(cfg);
                     }
-                    allConfigAttributeCache.put(fullPath, array);
+                    allConfigAttributes.put(fullPath, array);
                 }
-                log.info("=============加载动态权限:{}==============", authorityList.size());
-                accessAuthorities = authorityList;
+                log.info("=============加载动态权限:{}==============", accessAuthorities.size());
             }
         } catch (Exception e) {
             log.error("加载动态权限错误:{}", e.getMessage());
@@ -157,14 +159,14 @@ public class ApiResourceLocator implements ApplicationListener<GatewayResourceRe
      * 加载IP黑名单
      */
     public void loadIpBlackList() {
+        ipBlacks = Lists.newArrayList();
         try {
-            List<GatewayIpLimitApisDto> ipBlackList = gatewayRemoteService.getApiBlackList().getData();
-            if (ipBlackList != null) {
-                for (GatewayIpLimitApisDto item : ipBlackList) {
+            ipBlacks = gatewayRemoteService.getApiBlackList().getData();
+            if (ipBlacks != null) {
+                for (GatewayIpLimitApisDto item : ipBlacks) {
                     item.setPath(getFullPath(item.getServiceId(), item.getPath()));
                 }
-                log.info("=============加载IP黑名单:{}==============", ipBlackList.size());
-                ipBlacks = ipBlackList;
+                log.info("=============加载IP黑名单:{}==============", ipBlacks.size());
             }
         } catch (Exception e) {
             log.error("加载IP黑名单错误:{}", e.getMessage());
@@ -175,14 +177,14 @@ public class ApiResourceLocator implements ApplicationListener<GatewayResourceRe
      * 加载IP白名单
      */
     public void loadIpWhiteList() {
+        ipWhites = Lists.newArrayList();
         try {
-            List<GatewayIpLimitApisDto> ipWhiteList = gatewayRemoteService.getApiWhiteList().getData();
-            if (ipWhiteList != null) {
-                for (GatewayIpLimitApisDto item : ipWhiteList) {
+            ipWhites = gatewayRemoteService.getApiWhiteList().getData();
+            if (ipWhites != null) {
+                for (GatewayIpLimitApisDto item : ipWhites) {
                     item.setPath(getFullPath(item.getServiceId(), item.getPath()));
                 }
-                log.info("=============加载IP白名单:{}==============", ipWhiteList.size());
-                ipBlacks = ipWhiteList;
+                log.info("=============加载IP白名单:{}==============", ipWhites.size());
             }
         } catch (Exception e) {
             log.error("加载IP白名单错误:{}", e.getMessage());
@@ -243,11 +245,11 @@ public class ApiResourceLocator implements ApplicationListener<GatewayResourceRe
         this.cache = cache;
     }
 
-    public HashMap<String, Collection<ConfigAttribute>> getAllConfigAttributeCache() {
-        return allConfigAttributeCache;
+    public HashMap<String, Collection<ConfigAttribute>> getAllConfigAttributes() {
+        return allConfigAttributes;
     }
 
-    public void setAllConfigAttributeCache(HashMap<String, Collection<ConfigAttribute>> allConfigAttributeCache) {
-        this.allConfigAttributeCache = allConfigAttributeCache;
+    public void setAllConfigAttributes(HashMap<String, Collection<ConfigAttribute>> allConfigAttributes) {
+        this.allConfigAttributes = allConfigAttributes;
     }
 }

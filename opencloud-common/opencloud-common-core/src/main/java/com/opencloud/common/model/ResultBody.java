@@ -109,7 +109,7 @@ public class ResultBody<T> implements Serializable {
     }
 
     public String getMessage() {
-        return i18n(this.error,this.message);
+        return i18n(this.message,this.error);
     }
 
     public ResultBody setMessage(String message) {

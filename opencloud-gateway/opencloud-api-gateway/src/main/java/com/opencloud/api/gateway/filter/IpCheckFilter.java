@@ -1,7 +1,6 @@
 package com.opencloud.api.gateway.filter;
 
 import com.opencloud.api.gateway.exception.JsonAccessDeniedHandler;
-import com.opencloud.common.constants.CommonConstants;
 import com.opencloud.common.constants.ResultEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -35,29 +34,23 @@ public class IpCheckFilter implements WebFilter {
         ServerHttpResponse response = exchange.getResponse();
         String requestPath = request.getURI().getPath();
         String remoteIpAddress = request.getRemoteAddress().getAddress().getHostAddress();
-        try {
-            // 1.ip黑名单检测
-            boolean deny = apiAccessManager.matchIpBlacklist(requestPath, remoteIpAddress);
-            if (deny) {
-                // 拒绝
-                throw new AccessDeniedException(ResultEnum.ACCESS_DENIED_BLACK_IP_LIMITED.getMessage());
-            }
+        // 1.ip黑名单检测
+        boolean deny = apiAccessManager.matchIpBlacklist(requestPath, remoteIpAddress);
+        if (deny) {
+            // 拒绝
+            return accessDeniedHandler.handle(exchange, new AccessDeniedException(ResultEnum.ACCESS_DENIED_BLACK_IP_LIMITED.getMessage()));
+        }
 
-            // 3.ip白名单检测
-            boolean[] matchIpWhiteListResult = apiAccessManager.matchIpWhiteList(requestPath, remoteIpAddress);
-            boolean hasWhiteList = matchIpWhiteListResult[0];
-            boolean allow = matchIpWhiteListResult[1];
-            if (hasWhiteList) {
-                // 接口存在白名单限制
-                if (!allow) {
-                    // IP白名单检测通过,拒绝
-                    exchange.getAttributes().put(CommonConstants.X_ACCESS_DENIED, ResultEnum.ACCESS_DENIED_WHITE_IP_LIMITED);
-                    throw new AccessDeniedException(ResultEnum.ACCESS_DENIED_WHITE_IP_LIMITED.getMessage());
-                }
+        // 3.ip白名单检测
+        boolean[] matchIpWhiteListResult = apiAccessManager.matchIpWhiteList(requestPath, remoteIpAddress);
+        boolean hasWhiteList = matchIpWhiteListResult[0];
+        boolean allow = matchIpWhiteListResult[1];
+        if (hasWhiteList) {
+            // 接口存在白名单限制
+            if (!allow) {
+                // IP白名单检测通过,拒绝
+                return accessDeniedHandler.handle(exchange, new AccessDeniedException(ResultEnum.ACCESS_DENIED_WHITE_IP_LIMITED.getMessage()));
             }
-        } catch (AccessDeniedException e) {
-            accessDeniedHandler.handle(exchange, e);
-            return Mono.empty();
         }
         return chain.filter(exchange);
     }

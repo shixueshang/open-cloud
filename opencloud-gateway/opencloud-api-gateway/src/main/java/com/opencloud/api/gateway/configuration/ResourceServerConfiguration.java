@@ -99,10 +99,10 @@ public class ResourceServerConfiguration {
                 .and().exceptionHandling()
                 .accessDeniedHandler(accessDeniedHandler)
                 .authenticationEntryPoint(entryPoint).and()
-                // IP访问限制过滤器,放到首位
-                .addFilterAt(new IpCheckFilter(apiAuthorizationManager, accessDeniedHandler), SecurityWebFiltersOrder.FIRST)
                 // 跨域过滤器
                 .addFilterAt(corsFilter(), SecurityWebFiltersOrder.CORS)
+                // IP访问限制过滤器
+                .addFilterAt(new IpCheckFilter(apiAuthorizationManager, accessDeniedHandler), SecurityWebFiltersOrder.CSRF)
                 // oauth2认证过滤器
                 .addFilterAt(oauth2, SecurityWebFiltersOrder.AUTHENTICATION)
                 // 日志过滤器放到最后

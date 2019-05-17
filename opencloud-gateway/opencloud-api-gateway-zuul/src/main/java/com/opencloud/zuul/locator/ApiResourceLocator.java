@@ -53,7 +53,7 @@ public class ApiResourceLocator implements ApplicationListener<GatewayResourceRe
     /**
      * 权限列表
      */
-    private HashMap<String, Collection<ConfigAttribute>> allConfigAttribute;
+    private HashMap<String, Collection<ConfigAttribute>> allConfigAttributes;
     /**
      * 权限列表
      */
@@ -121,7 +121,7 @@ public class ApiResourceLocator implements ApplicationListener<GatewayResourceRe
      * 加载授权列表
      */
     public void loadAuthority() {
-        allConfigAttribute = Maps.newHashMap();
+        allConfigAttributes = Maps.newHashMap();
         accessAuthorities = Lists.newArrayList();
         Collection<ConfigAttribute> array;
         ConfigAttribute cfg;
@@ -136,7 +136,7 @@ public class ApiResourceLocator implements ApplicationListener<GatewayResourceRe
                     }
                     String fullPath = getFullPath(item.getServiceId(), path);
                     item.setPath(fullPath);
-                    array = allConfigAttribute.get(fullPath);
+                    array = allConfigAttributes.get(fullPath);
                     if (array == null) {
                         array = new ArrayList<>();
                     }
@@ -144,7 +144,7 @@ public class ApiResourceLocator implements ApplicationListener<GatewayResourceRe
                         cfg = new SecurityConfig(item.getAuthority());
                         array.add(cfg);
                     }
-                    allConfigAttribute.put(fullPath, array);
+                    allConfigAttributes.put(fullPath, array);
                 }
             }
             log.info("=============加载动态权限:{}==============",accessAuthorities.size());
@@ -298,12 +298,12 @@ public class ApiResourceLocator implements ApplicationListener<GatewayResourceRe
         this.rateLimitApis = rateLimitApis;
     }
 
-    public HashMap<String, Collection<ConfigAttribute>> getAllConfigAttribute() {
-        return allConfigAttribute;
+    public HashMap<String, Collection<ConfigAttribute>> getAllConfigAttributes() {
+        return allConfigAttributes;
     }
 
-    public void setAllConfigAttribute(HashMap<String, Collection<ConfigAttribute>> allConfigAttribute) {
-        this.allConfigAttribute = allConfigAttribute;
+    public void setAllConfigAttributes(HashMap<String, Collection<ConfigAttribute>> allConfigAttributes) {
+        this.allConfigAttributes = allConfigAttributes;
     }
 
     @Override

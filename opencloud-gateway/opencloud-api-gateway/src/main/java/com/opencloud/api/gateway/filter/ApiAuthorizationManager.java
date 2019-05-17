@@ -160,12 +160,12 @@ public class ApiAuthorizationManager implements ReactiveAuthorizationManager<Aut
 
     private Collection<ConfigAttribute> getAttributes(String requestPath) {
         // 匹配动态权限
-        for (Iterator<String> iter = accessLocator.getAllConfigAttributeCache().keySet().iterator(); iter.hasNext(); ) {
+        for (Iterator<String> iter = accessLocator.getAllConfigAttributes().keySet().iterator(); iter.hasNext(); ) {
             String url = iter.next();
             // 防止匹配错误 忽略/**
             if (!"/**".equals(url) && pathMatch.match(url, requestPath)) {
                 // 返回匹配到权限
-                return accessLocator.getAllConfigAttributeCache().get(url);
+                return accessLocator.getAllConfigAttributes().get(url);
             }
         }
         return SecurityConfig.createList("AUTHORITIES_REQUIRED");
