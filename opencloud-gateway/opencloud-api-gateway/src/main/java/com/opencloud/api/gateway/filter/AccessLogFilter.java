@@ -16,7 +16,6 @@ import reactor.core.publisher.Mono;
 
 import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -35,7 +34,6 @@ public class AccessLogFilter implements WebFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-        exchange.getAttributes().put("requestTime", new Date());
         ServerHttpRequest request = exchange.getRequest();
         RecorderServerHttpRequestDecorator requestDecorator = new RecorderServerHttpRequestDecorator(request);
         Flux<DataBuffer> body = requestDecorator.getBody();

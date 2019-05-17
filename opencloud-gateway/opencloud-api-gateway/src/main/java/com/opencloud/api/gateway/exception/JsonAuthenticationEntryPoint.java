@@ -33,8 +33,6 @@ public class JsonAuthenticationEntryPoint implements ServerAuthenticationEntryPo
     @Override
     public Mono<Void> commence(ServerWebExchange exchange, AuthenticationException e) {
         ResultBody resultBody = OpenExceptionHandler.resolveException(e,exchange.getRequest().getURI().getPath());
-        // 保存日志
-        accessLogService.sendLog(exchange,e);
         return Mono.defer(() -> {
             return Mono.just(exchange.getResponse());
         }).flatMap((response) -> {
@@ -42,6 +40,8 @@ public class JsonAuthenticationEntryPoint implements ServerAuthenticationEntryPo
             response.getHeaders().setContentType(MediaType.APPLICATION_JSON_UTF8);
             DataBufferFactory dataBufferFactory = response.bufferFactory();
             DataBuffer buffer = dataBufferFactory.wrap(JSONObject.toJSONString(resultBody).getBytes(Charset.defaultCharset()));
+            // 保存日志
+            accessLogService.sendLog(exchange,e);
             return response.writeWith(Mono.just(buffer)).doOnError((error) -> {
                 DataBufferUtils.release(buffer);
             });

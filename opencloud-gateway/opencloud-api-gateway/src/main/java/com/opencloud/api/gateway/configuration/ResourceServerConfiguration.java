@@ -5,6 +5,7 @@ import com.opencloud.api.gateway.exception.JsonAuthenticationEntryPoint;
 import com.opencloud.api.gateway.filter.AccessLogFilter;
 import com.opencloud.api.gateway.filter.ApiAuthorizationManager;
 import com.opencloud.api.gateway.filter.IpCheckFilter;
+import com.opencloud.api.gateway.filter.PreRequestFilter;
 import com.opencloud.api.gateway.locator.ApiResourceLocator;
 import com.opencloud.api.gateway.oauth2.RedisAuthenticationManager;
 import com.opencloud.api.gateway.service.AccessLogService;
@@ -99,6 +100,8 @@ public class ResourceServerConfiguration {
                 .and().exceptionHandling()
                 .accessDeniedHandler(accessDeniedHandler)
                 .authenticationEntryPoint(entryPoint).and()
+                // 前置过滤器 添加请求时间
+                .addFilterAt(new PreRequestFilter(), SecurityWebFiltersOrder.FIRST)
                 // 跨域过滤器
                 .addFilterAt(corsFilter(), SecurityWebFiltersOrder.CORS)
                 // IP访问限制过滤器

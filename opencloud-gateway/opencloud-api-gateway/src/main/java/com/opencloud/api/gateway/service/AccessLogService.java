@@ -44,7 +44,9 @@ public class AccessLogService {
     @JsonIgnore
     private Set<String> ignores = new HashSet<>(Arrays.asList(new String[]{
             "/**/oauth/check_token/**",
-            "/**/gateway/access/logs/**"
+            "/**/gateway/access/logs/**",
+            "/webjars/**"
+
     }));
 
     /**
@@ -64,7 +66,7 @@ public class AccessLogService {
         return false;
     }
 
-    public void sendLog(ServerWebExchange exchange,Exception ex) {
+    public void sendLog(ServerWebExchange exchange, Exception ex) {
         ServerHttpRequest request = exchange.getRequest();
         ServerHttpResponse response = exchange.getResponse();
         try {
@@ -100,13 +102,14 @@ public class AccessLogService {
             map.put("userAgent", userAgent);
             map.put("responseTime", new Date());
             map.put("error", error);
+            //@Todo 获取不到,待解决
             Mono<Authentication> authentication = getCurrentUser();
             if (authentication != null) {
                 authentication.map(auth ->
                         map.put("authentication", JSONObject.toJSONString(auth))
                 );
             }
-           amqpTemplate.convertAndSend(MqConstants.QUEUE_ACCESS_LOGS, map);
+            amqpTemplate.convertAndSend(MqConstants.QUEUE_ACCESS_LOGS, map);
         } catch (Exception e) {
             log.error("access logs save error:{}", e);
         }

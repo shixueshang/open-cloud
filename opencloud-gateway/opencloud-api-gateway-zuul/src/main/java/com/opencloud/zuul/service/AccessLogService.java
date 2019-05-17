@@ -40,7 +40,8 @@ public class AccessLogService {
     @JsonIgnore
     private Set<String> ignores = new HashSet<>(Arrays.asList(new String[]{
             "/**/oauth/check_token",
-            "/**/gateway/access/logs"
+            "/**/gateway/access/logs",
+            "/webjars/**"
     }));
 
     /**
