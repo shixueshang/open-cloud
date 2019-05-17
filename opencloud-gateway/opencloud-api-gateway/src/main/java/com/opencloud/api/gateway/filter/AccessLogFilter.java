@@ -54,10 +54,10 @@ public class AccessLogFilter implements WebFilter {
                         // probably should reuse buffers
                         byte[] content = new byte[dataBuffer.readableByteCount()];
                         dataBuffer.read(content);
-                        accessLogService.sendLog(exchange, null);
                         return bufferFactory.wrap(content);
                     }));
                 }
+                accessLogService.sendLog(exchange, null);
                 return super.writeWith(body);
             }
         };
