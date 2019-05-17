@@ -17,6 +17,7 @@ import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.web.bind.support.WebExchangeDataBinder;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -75,7 +76,12 @@ public class AccessLogService {
             String requestPath = request.getURI().getPath();
             String method = request.getMethodValue();
             Map<String, String> headers = request.getHeaders().toSingleValueMap();
-            Map data = request.getQueryParams();
+            Map<String, Object> data = Maps.newHashMap();
+            WebExchangeDataBinder.extractValuesToBind(exchange).flatMap(objectMap -> {
+                        data.putAll(objectMap);
+                        return Mono.just(data);
+                    }
+            );
             String serviceId = null;
             if (route != null) {
                 serviceId = route.getUri().toString().replace("lb://", "");

@@ -115,6 +115,7 @@ public class OpenExceptionHandler {
     public static ResultBody resolveException(Exception ex, String path) {
         ResultEnum code = ResultEnum.ERROR;
         int httpStatus = HttpStatus.OK.value();
+        String message = ex.getMessage();
         String superClassName = ex.getClass().getSuperclass().getName();
         String className = ex.getClass().getName();
         if (superClassName.contains("AuthenticationException")) {
@@ -143,15 +144,15 @@ public class OpenExceptionHandler {
                 code = ResultEnum.UNAUTHORIZED_CLIENT;
             } else if (className.contains("InvalidGrantException")) {
                 code = ResultEnum.INVALID_GRANT;
-                if ("Bad credentials".contains(ex.getMessage())) {
+                if ("Bad credentials".contains(message)) {
                     code = ResultEnum.BAD_CREDENTIALS;
                     httpStatus = HttpStatus.OK.value();
                 }
-                if ("User is disabled".contains(ex.getMessage())) {
+                if ("User is disabled".contains(message)) {
                     code = ResultEnum.ACCOUNT_DISABLED;
                     httpStatus = HttpStatus.OK.value();
                 }
-                if ("User account is locked".contains(ex.getMessage())) {
+                if ("User account is locked".contains(message)) {
                     code = ResultEnum.ACCOUNT_LOCKED;
                     httpStatus = HttpStatus.OK.value();
                 }
@@ -212,6 +213,15 @@ public class OpenExceptionHandler {
             } else if (className.contains("AccessDeniedException")) {
                 code = ResultEnum.ACCESS_DENIED;
                 httpStatus = HttpStatus.FORBIDDEN.value();
+                if ("access_denied_black_ip_limited".contains(message)) {
+                    code = ResultEnum.ACCESS_DENIED_BLACK_IP_LIMITED;
+                }
+                if ("access_denied_white_ip_limited".contains(message)) {
+                    code = ResultEnum.ACCESS_DENIED_WHITE_IP_LIMITED;
+                }
+                if ("access_denied_authority_expired".contains(message)) {
+                    code = ResultEnum.ACCESS_DENIED_AUTHORITY_EXPIRED;
+                }
             }
         }
         return buildBody(ex, code, path, httpStatus);
