@@ -478,32 +478,6 @@ public class WebUtils {
     }
 
     /**
-     * 获取本地Ip4地址
-     *
-     * @return
-     */
-    public static final String getLocalIpAddress() {
-        String ipString = "";
-        try {
-            Enumeration<NetworkInterface> allNetInterfaces = NetworkInterface.getNetworkInterfaces();
-            InetAddress ip = null;
-            while (allNetInterfaces.hasMoreElements()) {
-                NetworkInterface netInterface = (NetworkInterface) allNetInterfaces.nextElement();
-                Enumeration<InetAddress> addresses = netInterface.getInetAddresses();
-                while (addresses.hasMoreElements()) {
-                    ip = (InetAddress) addresses.nextElement();
-                    if (ip != null && ip instanceof Inet4Address && !ip.getHostAddress().equals("127.0.0.1")) {
-                        return ip.getHostAddress();
-                    }
-                }
-            }
-        } catch (Exception e) {
-
-        }
-        return ipString;
-    }
-
-    /**
      * 判断访问URI是否是静态文件请求
      *
      * @throws Exception
