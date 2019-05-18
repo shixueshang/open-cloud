@@ -4,11 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.net.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.util.Assert;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.server.ServerWebExchange;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.ServletRequest;
@@ -499,7 +497,7 @@ public class WebUtils {
      * @return
      */
     public static void writeJson(HttpServletResponse response, Object object) {
-        writeJson(response, JSON.toJSONString(object), "application/json");
+        writeJson(response, JSON.toJSONString(object), MediaType.APPLICATION_JSON_UTF8_VALUE);
     }
 
     /**
@@ -512,7 +510,7 @@ public class WebUtils {
     public static void writeJson(HttpServletResponse response, String string, String type) {
         try {
             // CORS setting
-            response.setHeader("OpenAccess-Control-Allow-Origin", "*");
+            response.setHeader("Access-Control-Allow-Origin", "*");
             response.setContentType(type);
             response.setCharacterEncoding("utf-8");
             response.getWriter().print(string);

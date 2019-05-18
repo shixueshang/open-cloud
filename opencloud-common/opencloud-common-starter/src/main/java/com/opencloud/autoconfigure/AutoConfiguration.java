@@ -17,6 +17,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * 默认配置类
@@ -117,6 +118,14 @@ public class AutoConfiguration {
         //设置自定义ErrorHandler
         restTemplate.setErrorHandler(new CustomResponseErrorHandler());
         log.info("bean [{}]", restTemplate);
+        return restTemplate;
+    }
+
+    @Bean
+    public RestTemplate restTemplate() {
+        RestTemplate restTemplate = new RestTemplate();
+        //设置自定义ErrorHandler
+        restTemplate.setErrorHandler(new CustomResponseErrorHandler());
         return restTemplate;
     }
 

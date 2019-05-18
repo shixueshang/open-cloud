@@ -114,115 +114,96 @@ public class OpenExceptionHandler {
      */
     public static ResultBody resolveException(Exception ex, String path) {
         ResultEnum code = ResultEnum.ERROR;
-        int httpStatus = HttpStatus.OK.value();
+        int httpStatus = HttpStatus.INTERNAL_SERVER_ERROR.value();
         String message = ex.getMessage();
         String superClassName = ex.getClass().getSuperclass().getName();
         String className = ex.getClass().getName();
-        if (superClassName.contains("AuthenticationException")) {
-            if (className.contains("UsernameNotFoundException")) {
-                code = ResultEnum.USERNAME_NOT_FOUND;
-            } else if (className.contains("BadCredentialsException")) {
-                code = ResultEnum.BAD_CREDENTIALS;
-            } else if (className.contains("AccountExpiredException")) {
-                code = ResultEnum.ACCOUNT_EXPIRED;
-            } else if (className.contains("LockedException")) {
-                code = ResultEnum.ACCOUNT_LOCKED;
-            } else if (className.contains("DisabledException")) {
-                code = ResultEnum.ACCOUNT_DISABLED;
-            } else if (className.contains("CredentialsExpiredException")) {
-                code = ResultEnum.CREDENTIALS_EXPIRED;
-            } else {
-                code = ResultEnum.UNAUTHORIZED;
-                httpStatus = HttpStatus.UNAUTHORIZED.value();
-            }
-        } else if (superClassName.contains("OAuth2Exception")) {
-            code = ResultEnum.UNAUTHORIZED;
+        if (className.contains("UsernameNotFoundException")) {
             httpStatus = HttpStatus.UNAUTHORIZED.value();
-            if (className.contains("InvalidClientException")) {
-                code = ResultEnum.INVALID_CLIENT;
-            } else if (className.contains("UnauthorizedClientException")) {
-                code = ResultEnum.UNAUTHORIZED_CLIENT;
-            } else if (className.contains("InvalidGrantException")) {
-                code = ResultEnum.INVALID_GRANT;
-                if ("Bad credentials".contains(message)) {
-                    code = ResultEnum.BAD_CREDENTIALS;
-                    httpStatus = HttpStatus.OK.value();
-                }
-                if ("User is disabled".contains(message)) {
-                    code = ResultEnum.ACCOUNT_DISABLED;
-                    httpStatus = HttpStatus.OK.value();
-                }
-                if ("User account is locked".contains(message)) {
-                    code = ResultEnum.ACCOUNT_LOCKED;
-                    httpStatus = HttpStatus.OK.value();
-                }
-            } else if (className.contains("InvalidScopeException")) {
-                code = ResultEnum.INVALID_SCOPE;
-            } else if (className.contains("InvalidTokenException")) {
-                code = ResultEnum.INVALID_TOKEN;
-            } else if (className.contains("InvalidRequestException")) {
-                code = ResultEnum.INVALID_REQUEST;
-            } else if (className.contains("RedirectMismatchException")) {
-                code = ResultEnum.REDIRECT_URI_MISMATCH;
-            } else if (className.contains("UnsupportedGrantTypeException")) {
-                code = ResultEnum.UNSUPPORTED_GRANT_TYPE;
-            } else if (className.contains("UnsupportedResponseTypeException")) {
-                code = ResultEnum.UNSUPPORTED_RESPONSE_TYPE;
-            } else if (className.contains("UserDeniedAuthorizationException")) {
-                code = ResultEnum.ACCESS_DENIED;
-            } else {
-                code = ResultEnum.INVALID_REQUEST;
+            code = ResultEnum.USERNAME_NOT_FOUND;
+        } else if (className.contains("BadCredentialsException")) {
+            httpStatus = HttpStatus.UNAUTHORIZED.value();
+            code = ResultEnum.BAD_CREDENTIALS;
+        } else if (className.contains("AccountExpiredException")) {
+            httpStatus = HttpStatus.UNAUTHORIZED.value();
+            code = ResultEnum.ACCOUNT_EXPIRED;
+        } else if (className.contains("LockedException")) {
+            httpStatus = HttpStatus.UNAUTHORIZED.value();
+            code = ResultEnum.ACCOUNT_LOCKED;
+        } else if (className.contains("DisabledException")) {
+            httpStatus = HttpStatus.UNAUTHORIZED.value();
+            code = ResultEnum.ACCOUNT_DISABLED;
+        } else if (className.contains("CredentialsExpiredException")) {
+            httpStatus = HttpStatus.UNAUTHORIZED.value();
+            code = ResultEnum.CREDENTIALS_EXPIRED;
+        } else if (className.contains("InvalidClientException")) {
+            httpStatus = HttpStatus.UNAUTHORIZED.value();
+            code = ResultEnum.INVALID_CLIENT;
+        } else if (className.contains("UnauthorizedClientException")) {
+            httpStatus = HttpStatus.UNAUTHORIZED.value();
+            code = ResultEnum.UNAUTHORIZED_CLIENT;
+        } else if (className.contains("InvalidGrantException")) {
+            code = ResultEnum.INVALID_GRANT;
+            if ("Bad credentials".contains(message)) {
+                code = ResultEnum.BAD_CREDENTIALS;
+            } else if ("User is disabled".contains(message)) {
+                code = ResultEnum.ACCOUNT_DISABLED;
+            } else if ("User account is locked".contains(message)) {
+                code = ResultEnum.ACCOUNT_LOCKED;
             }
-            if (code.equals(ResultEnum.ACCESS_DENIED)) {
-                httpStatus = HttpStatus.FORBIDDEN.value();
+        } else if (className.contains("InvalidScopeException")) {
+            httpStatus = HttpStatus.UNAUTHORIZED.value();
+            code = ResultEnum.INVALID_SCOPE;
+        } else if (className.contains("InvalidTokenException")) {
+            httpStatus = HttpStatus.UNAUTHORIZED.value();
+            code = ResultEnum.INVALID_TOKEN;
+        } else if (className.contains("InvalidRequestException")) {
+            httpStatus = HttpStatus.BAD_REQUEST.value();
+            code = ResultEnum.INVALID_REQUEST;
+        } else if (className.contains("RedirectMismatchException")) {
+            code = ResultEnum.REDIRECT_URI_MISMATCH;
+        } else if (className.contains("UnsupportedGrantTypeException")) {
+            code = ResultEnum.UNSUPPORTED_GRANT_TYPE;
+        } else if (className.contains("UnsupportedResponseTypeException")) {
+            code = ResultEnum.UNSUPPORTED_RESPONSE_TYPE;
+        } else if (className.contains("UserDeniedAuthorizationException")) {
+            code = ResultEnum.ACCESS_DENIED;
+        } else if (className.contains("AccessDeniedException")) {
+            code = ResultEnum.ACCESS_DENIED;
+            httpStatus = HttpStatus.FORBIDDEN.value();
+            if ("access_denied_black_ip_limited".contains(message)) {
+                code = ResultEnum.ACCESS_DENIED_BLACK_IP_LIMITED;
+            } else if ("access_denied_white_ip_limited".contains(message)) {
+                code = ResultEnum.ACCESS_DENIED_WHITE_IP_LIMITED;
+            } else if ("access_denied_authority_expired".contains(message)) {
+                code = ResultEnum.ACCESS_DENIED_AUTHORITY_EXPIRED;
             }
-        } else if (superClassName.contains("OpenException")) {
-            code = ResultEnum.ERROR;
-            httpStatus = HttpStatus.OK.value();
-            if (className.contains("OpenAlertException")) {
-                code = ResultEnum.ALERT;
-            }
-            if (className.contains("exception.OpenSignatureException")) {
-                code = ResultEnum.SIGNATURE_DENIED;
-            }
-        } else {
-            code = ResultEnum.ERROR;
-            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR.value();
-            if (className.contains("HttpMessageNotReadableException")
-                    || className.contains("TypeMismatchException")
-                    || className.contains("MissingServletRequestParameterException")) {
-                httpStatus = HttpStatus.BAD_REQUEST.value();
-                code = ResultEnum.BAD_REQUEST;
-            } else if (className.contains("NoHandlerFoundException")) {
-                httpStatus = HttpStatus.NOT_FOUND.value();
-                code = ResultEnum.NOT_FOUND;
-            } else if (className.contains("HttpRequestMethodNotSupportedException")) {
-                httpStatus = HttpStatus.METHOD_NOT_ALLOWED.value();
-                code = ResultEnum.METHOD_NOT_ALLOWED;
-            } else if (className.contains("HttpMediaTypeNotAcceptableException")) {
-                httpStatus = HttpStatus.BAD_REQUEST.value();
-                code = ResultEnum.MEDIA_TYPE_NOT_ACCEPTABLE;
-            } else if (className.contains("MethodArgumentNotValidException")) {
-                BindingResult bindingResult = ((MethodArgumentNotValidException) ex).getBindingResult();
-                code = ResultEnum.ALERT;
-                return ResultBody.failed(code.getCode(), bindingResult.getFieldError().getDefaultMessage());
-            } else if (className.contains("IllegalArgumentException")) {
-                //参数错误
-                code = ResultEnum.ALERT;
-                httpStatus = HttpStatus.BAD_REQUEST.value();
-            } else if (className.contains("AccessDeniedException")) {
-                code = ResultEnum.ACCESS_DENIED;
-                httpStatus = HttpStatus.FORBIDDEN.value();
-                if ("access_denied_black_ip_limited".contains(message)) {
-                    code = ResultEnum.ACCESS_DENIED_BLACK_IP_LIMITED;
-                }
-                if ("access_denied_white_ip_limited".contains(message)) {
-                    code = ResultEnum.ACCESS_DENIED_WHITE_IP_LIMITED;
-                }
-                if ("access_denied_authority_expired".contains(message)) {
-                    code = ResultEnum.ACCESS_DENIED_AUTHORITY_EXPIRED;
-                }
-            }
+        } else if (className.contains("HttpMessageNotReadableException")
+                || className.contains("TypeMismatchException")
+                || className.contains("MissingServletRequestParameterException")) {
+            httpStatus = HttpStatus.BAD_REQUEST.value();
+            code = ResultEnum.BAD_REQUEST;
+        } else if (className.contains("NoHandlerFoundException")) {
+            httpStatus = HttpStatus.NOT_FOUND.value();
+            code = ResultEnum.NOT_FOUND;
+        } else if (className.contains("HttpRequestMethodNotSupportedException")) {
+            httpStatus = HttpStatus.METHOD_NOT_ALLOWED.value();
+            code = ResultEnum.METHOD_NOT_ALLOWED;
+        } else if (className.contains("HttpMediaTypeNotAcceptableException")) {
+            httpStatus = HttpStatus.BAD_REQUEST.value();
+            code = ResultEnum.MEDIA_TYPE_NOT_ACCEPTABLE;
+        } else if (className.contains("MethodArgumentNotValidException")) {
+            BindingResult bindingResult = ((MethodArgumentNotValidException) ex).getBindingResult();
+            code = ResultEnum.ALERT;
+            return ResultBody.failed(code.getCode(), bindingResult.getFieldError().getDefaultMessage());
+        } else if (className.contains("IllegalArgumentException")) {
+            //参数错误
+            code = ResultEnum.ALERT;
+            httpStatus = HttpStatus.BAD_REQUEST.value();
+        } else if (className.contains("OpenAlertException")) {
+            code = ResultEnum.ALERT;
+        } else if (className.contains("OpenSignatureException")) {
+            code = ResultEnum.SIGNATURE_DENIED;
         }
         return buildBody(ex, code, path, httpStatus);
     }
