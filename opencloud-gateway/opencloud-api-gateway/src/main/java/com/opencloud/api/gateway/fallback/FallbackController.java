@@ -15,6 +15,6 @@ public class FallbackController {
 
     @RequestMapping("/fallback")
     public Mono<ResultBody> fallback() {
-        return Mono.just(ResultBody.failed(ResultEnum.GATEWAY_TIMEOUT.getCode(), "服务访问超时，请稍后再试!"));
+        return Mono.just(ResultBody.failed(ResultEnum.GATEWAY_TIMEOUT.getCode(), "访问超时，请稍后再试!"));
     }
 }

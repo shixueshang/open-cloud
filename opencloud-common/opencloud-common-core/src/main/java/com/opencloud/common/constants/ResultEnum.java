@@ -27,7 +27,6 @@ public enum ResultEnum {
     EXPIRED_TOKEN(2007, "expired_token"),
     UNSUPPORTED_GRANT_TYPE(2008, "unsupported_grant_type"),
     UNSUPPORTED_RESPONSE_TYPE(2009, "unsupported_response_type"),
-    TEMPORARILY_UNAVAILABLE(2011, "temporarily_unavailable"),
     UNAUTHORIZED(2012, "unauthorized"),
     SIGNATURE_DENIED(2013, "signature_denied"),
 
@@ -58,8 +57,8 @@ public enum ResultEnum {
      * 系统错误
      */
     ERROR(5000, "error"),
-    SERVICE_NOT_FOUND(5003, "service_not_found"),
-    GATEWAY_TIMEOUT(5004, "gateway_timeout");
+    GATEWAY_TIMEOUT(5004, "gateway_timeout"),
+    SERVICE_UNAVAILABLE(5003, "service_unavailable");
 
 
     private int code;

@@ -5,7 +5,6 @@ import com.google.common.collect.Maps;
 import com.opencloud.base.client.model.entity.GatewayRoute;
 import com.opencloud.zuul.event.GatewayRemoteRefreshRouteEvent;
 import com.opencloud.zuul.event.GatewayResourceRefreshEvent;
-import com.opencloud.zuul.service.feign.GatewayRemoteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.cloud.netflix.zuul.filters.SimpleRouteLocator;
@@ -13,8 +12,12 @@ import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties.ZuulRoute;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.util.StringUtils;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,16 +30,17 @@ import java.util.Map;
  * @description:
  */
 @Slf4j
-public class RemoteRouteLocator extends SimpleRouteLocator implements ApplicationListener<GatewayRemoteRefreshRouteEvent> {
+public class JdbcRouteLocator extends SimpleRouteLocator implements ApplicationListener<GatewayRemoteRefreshRouteEvent> {
 
-    private GatewayRemoteService gatewayRemoteService;
+    private JdbcTemplate jdbcTemplate;
     private ZuulProperties properties;
     private List<GatewayRoute> routeList;
     public ApplicationEventPublisher publisher;
-    public RemoteRouteLocator(String servletPath, ZuulProperties properties, GatewayRemoteService gatewayRemoteService,ApplicationEventPublisher publisher) {
+
+    public JdbcRouteLocator(String servletPath, ZuulProperties properties, JdbcTemplate jdbcTemplate, ApplicationEventPublisher publisher) {
         super(servletPath, properties);
         this.properties = properties;
-        this.gatewayRemoteService = gatewayRemoteService;
+        this.jdbcTemplate = jdbcTemplate;
         this.publisher = publisher;
     }
 
@@ -85,7 +89,22 @@ public class RemoteRouteLocator extends SimpleRouteLocator implements Applicatio
         Map<String, ZuulProperties.ZuulRoute> routes = Maps.newLinkedHashMap();
         routeList = Lists.newArrayList();
         try {
-            routeList = gatewayRemoteService.getApiRouteList().getData();
+            routeList = jdbcTemplate.query("SELECT * FROM gateway_route WHERE status = 1", new RowMapper<GatewayRoute>() {
+                @Override
+                public GatewayRoute mapRow(ResultSet rs, int i) throws SQLException {
+                    GatewayRoute route = new GatewayRoute();
+                    route.setRouteId(rs.getLong("route_id"));
+                    route.setPath(rs.getString("path"));
+                    route.setServiceId(rs.getString("service_id"));
+                    route.setUrl(rs.getString("url"));
+                    route.setStatus(rs.getInt("status"));
+                    route.setRetryable(rs.getInt("retryable"));
+                    route.setStripPrefix(rs.getInt("strip_prefix"));
+                    route.setIsPersist(rs.getInt("is_persist"));
+                    route.setRouteName(rs.getString("route_name"));
+                    return route;
+                }
+            });
             if (routeList != null && routeList.size() > 0) {
                 for (GatewayRoute result : routeList) {
                     if (StringUtils.isEmpty(result.getPath())) {
@@ -101,7 +120,7 @@ public class RemoteRouteLocator extends SimpleRouteLocator implements Applicatio
                     routes.put(zuulRoute.getPath(), zuulRoute);
                 }
             }
-            log.info("=============加载动态路由:{}==============",routeList.size());
+            log.info("=============加载动态路由:{}==============", routeList.size());
         } catch (Exception e) {
             log.error("加载动态路由错误:{}", e.getMessage());
         }

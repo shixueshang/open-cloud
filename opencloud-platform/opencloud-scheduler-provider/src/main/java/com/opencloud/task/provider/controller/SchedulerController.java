@@ -43,7 +43,7 @@ public class SchedulerController {
      */
     @ApiOperation(value = "获取任务执行日志列表", notes = "获取任务执行日志列表")
     @GetMapping(value = "/job/logs")
-    public ResultBody<IPage<SchedulerJobLogs>> getJobLogList(@RequestParam Map map) {
+    public ResultBody<IPage<SchedulerJobLogs>> getJobLogList(@RequestParam(required = false) Map map) {
         IPage<SchedulerJobLogs> result = schedulerJobLogsService.findListPage(new PageParams(map));
         return ResultBody.success(result);
     }
@@ -55,7 +55,7 @@ public class SchedulerController {
      */
     @ApiOperation(value = "获取任务列表", notes = "获取任务列表")
     @GetMapping(value = "/job")
-    public ResultBody<IPage<TaskInfo>> getJobList(@RequestParam Map map) {
+    public ResultBody<IPage<TaskInfo>> getJobList(@RequestParam(required = false) Map map) {
         List<TaskInfo> list = schedulerService.getJobList();
         IPage page = new Page();
         page.setRecords(list);

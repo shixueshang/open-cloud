@@ -95,7 +95,7 @@ public class JsonExceptionHandler implements ErrorWebExceptionHandler {
         ResultBody resultBody;
         ServerHttpRequest request = exchange.getRequest();
         if (ex instanceof NotFoundException) {
-            resultBody = ResultBody.failed(ResultEnum.SERVICE_NOT_FOUND.getCode(), "服务暂时无法访问，请稍后再试!").setHttpStatus(HttpStatus.SERVICE_UNAVAILABLE.value()).setPath(request.getURI().getPath());
+            resultBody = ResultBody.failed(ResultEnum.SERVICE_UNAVAILABLE.getCode(), ResultEnum.SERVICE_UNAVAILABLE.getMessage()).setHttpStatus(HttpStatus.SERVICE_UNAVAILABLE.value()).setPath(request.getURI().getPath());
             log.error("==> 错误解析:{}", resultBody);
         } else {
             resultBody = OpenExceptionHandler.resolveException((Exception) ex, exchange.getRequest().getURI().getPath());

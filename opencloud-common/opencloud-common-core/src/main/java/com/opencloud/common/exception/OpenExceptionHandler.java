@@ -142,6 +142,9 @@ public class OpenExceptionHandler {
         } else if (className.contains("UnauthorizedClientException")) {
             httpStatus = HttpStatus.UNAUTHORIZED.value();
             code = ResultEnum.UNAUTHORIZED_CLIENT;
+        }else if (className.contains("InsufficientAuthenticationException")) {
+            httpStatus = HttpStatus.UNAUTHORIZED.value();
+            code = ResultEnum.UNAUTHORIZED;
         } else if (className.contains("InvalidGrantException")) {
             code = ResultEnum.INVALID_GRANT;
             if ("Bad credentials".contains(message)) {

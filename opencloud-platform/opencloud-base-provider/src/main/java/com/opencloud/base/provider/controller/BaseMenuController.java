@@ -8,10 +8,7 @@ import com.opencloud.base.provider.service.BaseResourceOperationService;
 import com.opencloud.common.model.PageParams;
 import com.opencloud.common.model.ResultBody;
 import com.opencloud.common.security.http.OpenRestTemplate;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +37,7 @@ public class BaseMenuController {
      */
     @ApiOperation(value = "获取分页菜单资源列表", notes = "获取分页菜单资源列表")
     @GetMapping("/menu")
-    public ResultBody<IPage<BaseResourceMenu>> getMenuListPage(@RequestParam Map map) {
+    public ResultBody<IPage<BaseResourceMenu>> getMenuListPage(@RequestParam(required = false) Map map) {
         return ResultBody.success(baseResourceMenuService.findListPage(new PageParams(map)));
     }
 

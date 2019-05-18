@@ -75,13 +75,13 @@ public class ApiResourceLocator implements ApplicationListener<GatewayResourceRe
     private List<GatewayRateLimitApisDto> rateLimitApis;
 
     private RateLimitProperties rateLimitProperties;
-    private RemoteRouteLocator zuulRoutesLocator;
+    private JdbcRouteLocator zuulRoutesLocator;
     private BaseAuthorityRemoteService baseAuthorityRemoteService;
     private GatewayRemoteService gatewayRemoteService;
     private StringToMatchTypeConverter converter;
 
 
-    public ApiResourceLocator(RemoteRouteLocator zuulRoutesLocator, RateLimitProperties rateLimitProperties, BaseAuthorityRemoteService baseAuthorityRemoteService, GatewayRemoteService gatewayRemoteService) {
+    public ApiResourceLocator(JdbcRouteLocator zuulRoutesLocator, RateLimitProperties rateLimitProperties, BaseAuthorityRemoteService baseAuthorityRemoteService, GatewayRemoteService gatewayRemoteService) {
         this.zuulRoutesLocator = zuulRoutesLocator;
         this.rateLimitProperties = rateLimitProperties;
         this.baseAuthorityRemoteService = baseAuthorityRemoteService;

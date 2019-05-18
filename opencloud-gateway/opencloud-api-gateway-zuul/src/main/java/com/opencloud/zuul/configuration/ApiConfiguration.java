@@ -7,7 +7,7 @@ import com.opencloud.zuul.actuator.OpenApiEndpoint;
 import com.opencloud.zuul.filter.ZuulErrorFilter;
 import com.opencloud.zuul.filter.ZuulResponseFilter;
 import com.opencloud.zuul.locator.ApiResourceLocator;
-import com.opencloud.zuul.locator.RemoteRouteLocator;
+import com.opencloud.zuul.locator.JdbcRouteLocator;
 import com.opencloud.zuul.service.AccessLogService;
 import com.opencloud.zuul.service.feign.BaseAuthorityRemoteService;
 import com.opencloud.zuul.service.feign.GatewayRemoteService;
@@ -26,6 +26,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -48,7 +49,7 @@ public class ApiConfiguration {
     private static final Long MAX_AGE = 18000L;
 
     @Autowired
-    private RemoteRouteLocator zuulRoutesLocator;
+    private JdbcRouteLocator zuulRoutesLocator;
     @Autowired
     private RateLimitProperties rateLimitProperties;
     @Autowired
@@ -93,8 +94,8 @@ public class ApiConfiguration {
      * @return
      */
     @Bean
-    public RemoteRouteLocator zuulRouteLocator(ZuulProperties zuulProperties, ServerProperties serverProperties, GatewayRemoteService gatewayRemoteService, ApplicationEventPublisher publisher) {
-        zuulRoutesLocator = new RemoteRouteLocator(serverProperties.getServlet().getContextPath(), zuulProperties, gatewayRemoteService, publisher);
+    public JdbcRouteLocator zuulRouteLocator(ZuulProperties zuulProperties, ServerProperties serverProperties, JdbcTemplate jdbcTemplate, ApplicationEventPublisher publisher) {
+        zuulRoutesLocator = new JdbcRouteLocator(serverProperties.getServlet().getContextPath(), zuulProperties, jdbcTemplate, publisher);
         log.info("ZuulRoutesLocator:{}", zuulRoutesLocator);
         return zuulRoutesLocator;
     }

@@ -82,9 +82,8 @@ public class ServiceFallbackProvider implements FallbackProvider {
 
             @Override
             public InputStream getBody() throws IOException {
-                log.error(s, throwable);
                 //响应体
-                String content = JSONObject.toJSONString(ResultBody.failed(ResultEnum.GATEWAY_TIMEOUT.getCode(), "服务暂时无法访问，请稍后再试!"));
+                String content = JSONObject.toJSONString(ResultBody.failed(ResultEnum.SERVICE_UNAVAILABLE.getCode(), ResultEnum.SERVICE_UNAVAILABLE.getMessage()));
                 return new ByteArrayInputStream(content.getBytes());
             }
 

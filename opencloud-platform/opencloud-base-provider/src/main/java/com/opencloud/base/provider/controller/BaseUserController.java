@@ -44,7 +44,7 @@ public class BaseUserController {
      */
     @ApiOperation(value = "系统分页用户列表", notes = "系统分页用户列表")
     @GetMapping("/user")
-    public ResultBody<IPage<BaseUser>> getUserList(@RequestParam Map map) {
+    public ResultBody<IPage<BaseUser>> getUserList(@RequestParam(required = false) Map map) {
         return ResultBody.success(baseUserService.findListPage(new PageParams(map)));
     }
 

@@ -237,6 +237,10 @@ open-cloud
                       server-addr: ${discovery.server-addr}
           main:
               allow-bean-definition-overriding: true
+          mvc:
+              throw-exception-if-no-handler-found: true
+          resources:
+              add-mappings: false
           profiles:
               active: ${profile.name}
       

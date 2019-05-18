@@ -39,7 +39,7 @@ public class GatewayIpLimitController {
      */
     @ApiOperation(value = "获取分页接口列表", notes = "获取分页接口列表")
     @GetMapping("/gateway/limit/ip")
-    public ResultBody<IPage<GatewayIpLimit>> getIpLimitListPage(@RequestParam Map map) {
+    public ResultBody<IPage<GatewayIpLimit>> getIpLimitListPage(@RequestParam(required = false) Map map) {
         return ResultBody.success(gatewayIpLimitService.findListPage(new PageParams(map)));
     }
 

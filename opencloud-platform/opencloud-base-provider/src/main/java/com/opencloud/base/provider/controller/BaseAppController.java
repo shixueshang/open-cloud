@@ -35,7 +35,7 @@ public class BaseAppController implements BaseAppRemoteApi {
      */
     @ApiOperation(value = "获取分页应用列表", notes = "获取分页应用列表")
     @GetMapping("/app")
-    public ResultBody<IPage<BaseApp>> getAppListPage(@RequestParam Map map) {
+    public ResultBody<IPage<BaseApp>> getAppListPage(@RequestParam(required = false) Map map) {
         IPage<BaseApp> IPage = baseAppService.findListPage(new PageParams(map));
         return ResultBody.success(IPage);
     }

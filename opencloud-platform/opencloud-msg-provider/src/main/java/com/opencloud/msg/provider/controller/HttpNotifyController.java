@@ -50,7 +50,7 @@ public class HttpNotifyController implements HttpNotifyRemoteApi {
      */
     @ApiOperation(value = "获取分页异步通知列表", notes = "获取分页异步通知列表")
     @GetMapping("/http/notify/logs")
-    public ResultBody<IPage<NotifyHttpLogs>> getNotifyHttpLogListPage(@RequestParam Map map) {
+    public ResultBody<IPage<NotifyHttpLogs>> getNotifyHttpLogListPage(@RequestParam(required = false) Map map) {
         return ResultBody.success(notifyHttpLogsService.findListPage(new PageParams(map)));
     }
 

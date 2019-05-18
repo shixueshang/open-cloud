@@ -24,11 +24,10 @@
  */
 package com.opencloud.zuul.configuration;
 
-import com.opencloud.common.swagger.OpenSwaggerProperties;
-import com.opencloud.zuul.locator.RemoteRouteLocator;
+import com.opencloud.base.client.model.entity.GatewayRoute;
+import com.opencloud.zuul.locator.JdbcRouteLocator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.netflix.zuul.filters.Route;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import springfox.documentation.swagger.web.SwaggerResource;
@@ -48,29 +47,22 @@ import java.util.List;
 @Slf4j
 public class SwaggerProvider implements SwaggerResourcesProvider {
 
-    private OpenSwaggerProperties openSwaggerProperties;
-
-    private RemoteRouteLocator remoteRouteLocator;
+    private JdbcRouteLocator jdbcRouteLocator;
 
     public SwaggerProvider() {
     }
 
     @Autowired
-    public SwaggerProvider(OpenSwaggerProperties openSwaggerProperties, RemoteRouteLocator remoteRouteLocator) {
-        this.openSwaggerProperties = openSwaggerProperties;
-        this.remoteRouteLocator = remoteRouteLocator;
+    public SwaggerProvider(JdbcRouteLocator jdbcRouteLocator) {
+        this.jdbcRouteLocator = jdbcRouteLocator;
     }
 
     @Override
     public List<SwaggerResource> get() {
         List<SwaggerResource> resources = new ArrayList<>();
-        List<Route> routes = remoteRouteLocator.getRoutes();
+        List<GatewayRoute> routes = jdbcRouteLocator.getRouteList();
         routes.forEach(route -> {
-            // 只加载未被忽略的服务
-            if (!openSwaggerProperties.getIgnores().contains(route.getLocation())) {
-                resources.add(swaggerResource(route.getId(), route.getFullPath().replace("**", "v2/api-docs"), "2.0"));
-
-            }
+            resources.add(swaggerResource(route.getRouteName(), route.getPath().replace("**", "v2/api-docs"), "2.0"));
         });
         return resources;
     }

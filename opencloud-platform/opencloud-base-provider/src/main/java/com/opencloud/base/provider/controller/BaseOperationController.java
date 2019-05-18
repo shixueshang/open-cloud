@@ -37,7 +37,7 @@ public class BaseOperationController {
      */
     @ApiOperation(value = "获取分页操作列表", notes = "获取分页操作列表")
     @GetMapping("/operation")
-    public ResultBody<IPage<BaseOperationAuthority>> getOperationListPage(@RequestParam Map map) {
+    public ResultBody<IPage<BaseOperationAuthority>> getOperationListPage(@RequestParam(required = false) Map map) {
         return ResultBody.success(baseResourceOperationService.findListPage(new PageParams(map)));
     }
 

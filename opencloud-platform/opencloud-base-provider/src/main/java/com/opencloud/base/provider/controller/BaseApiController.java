@@ -35,7 +35,7 @@ public class BaseApiController {
      */
     @ApiOperation(value = "获取分页接口列表", notes = "获取分页接口列表")
     @GetMapping(value = "/api")
-    public ResultBody<IPage<BaseResourceApi>> getApiList(@RequestParam Map map) {
+    public ResultBody<IPage<BaseResourceApi>> getApiList(@RequestParam(required = false) Map map) {
         QueryWrapper<BaseResourceApi> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(BaseResourceApi::getIsOpen,1);
         int openApiCount = apiService.getCount(queryWrapper);

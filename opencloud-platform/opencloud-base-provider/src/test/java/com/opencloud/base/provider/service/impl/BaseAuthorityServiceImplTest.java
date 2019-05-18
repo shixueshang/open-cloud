@@ -26,16 +26,19 @@ public class BaseAuthorityServiceImplTest extends BaseTest {
     @Autowired
     private OpenRestTemplate openRestTemplate;
 
+    /***
+     * 升级2.0.0权限标识测试类
+     */
     @Test
-    public void findAuthorityDetail() {
+    public void updateAuthority2() {
         List<BaseAuthority> list = baseAuthorityService.list();
         for (BaseAuthority a : list
                 ) {
             if (a.getAuthority().startsWith("menu:")) {
                 a.setAuthority(a.getAuthority().replace("menu:", "MENU_"));
             }
-            if (a.getAuthority().startsWith("OPERATION_")) {
-                a.setAuthority(a.getAuthority().replace("OPERATION_", "ACTION_"));
+            if (a.getAuthority().startsWith("operation:")) {
+                a.setAuthority(a.getAuthority().replace("operation:", "ACTION_"));
             }
             BaseAuthority authority = new BaseAuthority();
             authority.setAuthorityId(a.getAuthorityId());

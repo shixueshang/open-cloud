@@ -35,7 +35,7 @@ public class GatewayAccessLogsController {
      */
     @ApiOperation(value = "获取分页访问日志列表", notes = "获取分页访问日志列表")
     @GetMapping("/gateway/access/logs")
-    public ResultBody<IPage<GatewayAccessLogs>> getAccessLogListPage(@RequestParam Map map) {
+    public ResultBody<IPage<GatewayAccessLogs>> getAccessLogListPage(@RequestParam(required = false) Map map) {
         return ResultBody.success(gatewayAccessLogsService.findListPage(new PageParams(map)));
     }
 
