@@ -81,7 +81,7 @@ open-cloud
     
 ├── opencloud-gateway  -- 开放API服务模块
     ├── opencloud-api-gateway       -- API开放网关-基于SpringCloudGateway-(port = 8888)  
-    ├── opencloud-api-gateway-zuul  -- API开放网关-基于Zuul-(port = 8888)  
+    ├── opencloud-api-gateway-zuul  --（较为稳定推荐使用）API开放网关-基于Zuul-(port = 8888)  
     
 ├── opencloud-platform    --  平台服务模块
     ├── opencloud-base-client    -- 平台基础服务接口
@@ -171,10 +171,10 @@ open-cloud
     ```
     
 5. 本地启动(顺序启动)
-     1. BaseApplication (必须)
-     2. AuthApplication (必须)
-     3. ApiGatewayApplication (必须)
-     4. AdminApplication   (必须)  
+     1. BaseApplication
+     2. AuthApplication
+     3. ZuulGatewayApplication(推荐) 或 ApiGatewayApplication 
+     4. AdminApplication
      
    4个服务启动成功后。就可以依赖这些服务进行微服务开发了。  
    访问 http://localhost:8888
