@@ -1,16 +1,21 @@
 package com.opencloud.app.auth.provider.controller;
 
 import com.opencloud.app.auth.provider.service.feign.BaseAppRemoteService;
+import com.opencloud.common.exception.OpenExceptionHandler;
+import com.opencloud.common.model.ResultBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.provider.AuthorizationRequest;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,7 +56,7 @@ public class IndexController {
      * @param model
      * @return
      */
-    @RequestMapping("/confirm_access")
+    @RequestMapping("/oauth/confirm_access")
     public String confirm_access(HttpServletRequest request, HttpSession session, Map model) {
         Map<String, String> scopes = (Map<String, String>) (model.containsKey("scopes") ? model.get("scopes") : request.getAttribute("scopes"));
         List<String> scopeList = new ArrayList<String>();
@@ -70,5 +75,17 @@ public class IndexController {
             }
         }
         return "confirm_access";
+    }
+
+    /**
+     * 自定义oauth2错误页
+     * @param request
+     * @return
+     */
+    @RequestMapping("/oauth/error")
+    @ResponseBody
+    public Object handleError(HttpServletRequest request) {
+        Object error = request.getAttribute("error");
+        return error;
     }
 }

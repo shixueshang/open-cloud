@@ -103,7 +103,9 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
                 .accessTokenConverter(OpenHelper.buildAccessTokenConverter())
                 .authorizationCodeServices(authorizationCodeServices());
         // 自定义确认授权页面
-        endpoints.pathMapping("/oauth/confirm_access", "/confirm_access");
+        endpoints.pathMapping("/oauth/confirm_access", "/oauth/confirm_access");
+        // 自定义错误页
+        endpoints.pathMapping("/oauth/error","/oauth/error");
         // 自定义异常转换类
         endpoints.exceptionTranslator(new Oauth2WebResponseExceptionTranslator());
     }

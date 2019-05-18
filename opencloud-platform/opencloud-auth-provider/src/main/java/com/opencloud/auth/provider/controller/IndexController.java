@@ -18,10 +18,7 @@ import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -78,7 +75,7 @@ public class IndexController {
      * @param model
      * @return
      */
-    @RequestMapping("/confirm_access")
+    @RequestMapping("/oauth/confirm_access")
     public String confirm_access(HttpServletRequest request, HttpSession session, Map model) {
         Map<String, String> scopes = (Map<String, String>) (model.containsKey("scopes") ? model.get("scopes") : request.getAttribute("scopes"));
         List<String> scopeList = new ArrayList<String>();
@@ -97,6 +94,18 @@ public class IndexController {
             }
         }
         return "confirm_access";
+    }
+
+    /**
+     * 自定义oauth2错误页
+     * @param request
+     * @return
+     */
+    @RequestMapping("/oauth/error")
+    @ResponseBody
+    public Object handleError(HttpServletRequest request) {
+        Object error = request.getAttribute("error");
+        return error;
     }
 
     /**
