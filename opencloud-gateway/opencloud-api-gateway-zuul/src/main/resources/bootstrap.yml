@@ -82,7 +82,7 @@ opencloud:
     #动态权限控制
     access-control: true
     #校验参数签名
-    check-sign: true
+    check-sign: false
     # swagger调试
     enable-swagger-ui: true
     # 始终放行

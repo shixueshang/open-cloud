@@ -41,18 +41,18 @@ public class SignatureUtils {
      * @throws Exception
      */
     public static void validateParams(Map<String, String> paramsMap) throws Exception {
-        Assert.notNull(paramsMap.get(CommonConstants.SIGN_CLIENT_ID_KEY), "clientId不能为空");
-        Assert.notNull(paramsMap.get(CommonConstants.SIGN_NONCE_KEY), "nonce不能为空");
-        Assert.notNull(paramsMap.get(CommonConstants.SIGN_TIMESTAMP_KEY), "timestamp不能为空");
-        Assert.notNull(paramsMap.get(CommonConstants.SIGN_SIGN_TYPE_KEY), "signType不能为空");
-        Assert.notNull(paramsMap.get(CommonConstants.SIGN_SIGN_KEY), "sign不能为空");
+        Assert.notNull(paramsMap.get(CommonConstants.SIGN_CLIENT_ID_KEY), "签名验证失败:clientId不能为空");
+        Assert.notNull(paramsMap.get(CommonConstants.SIGN_NONCE_KEY), "签名验证失败:nonce不能为空");
+        Assert.notNull(paramsMap.get(CommonConstants.SIGN_TIMESTAMP_KEY), "签名验证失败:timestamp不能为空");
+        Assert.notNull(paramsMap.get(CommonConstants.SIGN_SIGN_TYPE_KEY), "s签名验证失败:ignType不能为空");
+        Assert.notNull(paramsMap.get(CommonConstants.SIGN_SIGN_KEY), "签名验证失败:sign不能为空");
         if (!SignatureUtils.SignType.contains(paramsMap.get(CommonConstants.SIGN_SIGN_TYPE_KEY))) {
-            throw new IllegalArgumentException(String.format("signType必须为:%s,%s", SignatureUtils.SignType.MD5, SignatureUtils.SignType.SHA256));
+            throw new IllegalArgumentException(String.format("签名验证失败:signType必须为:%s,%s", SignatureUtils.SignType.MD5, SignatureUtils.SignType.SHA256));
         }
         try {
             DateUtils.parseDate(paramsMap.get(CommonConstants.SIGN_TIMESTAMP_KEY), "yyyyMMddHHmmss");
         } catch (ParseException e) {
-            throw new IllegalArgumentException("timestamp格式必须为:yyyyMMddHHmmss");
+            throw new IllegalArgumentException("签名验证失败:timestamp格式必须为:yyyyMMddHHmmss");
         }
     }
 
