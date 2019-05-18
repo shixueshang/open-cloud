@@ -82,13 +82,11 @@ opencloud:
     enable-swagger-ui: true
     # 始终放行
     permit-all:
-        - /login/**
-        - /logout
-        - /oauth/*
         - /auth/login/**
         - /auth/logout
         - /auth/oauth/**
         - /admin/login/token
+        - /admin/logout
     # 忽略权限鉴定
     authority-ignores:
         - /auth/user/me

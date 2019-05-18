@@ -509,8 +509,6 @@ public class WebUtils {
      */
     public static void writeJson(HttpServletResponse response, String string, String type) {
         try {
-            // CORS setting
-            response.setHeader("Access-Control-Allow-Origin", "*");
             response.setContentType(type);
             response.setCharacterEncoding("utf-8");
             response.getWriter().print(string);
