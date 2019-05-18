@@ -127,7 +127,7 @@ public class AnnotationScan implements ApplicationListener<ApplicationReadyEvent
         Map resource = Maps.newHashMap();
         resource.put("application",serviceId);
         resource.put("mapping",list);
-        log.info("ApplicationReadyEvent:[{}]", resource);
+        log.info("ApplicationReadyEvent:[{}]", serviceId);
         executorService.submit(new Runnable() {
             @Override
             public void run() {
