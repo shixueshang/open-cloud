@@ -32,6 +32,7 @@
 #### 代码仓库
 
 ##### 请随手给个Star! 感谢支持！
+<a target="_blank" href="https://gitee.com/liuyadu/generator.git">代码生成器</a>  
 
 <a target="_blank" href="https://gitee.com/liuyadu">服务端源码-码云</a>  
 
