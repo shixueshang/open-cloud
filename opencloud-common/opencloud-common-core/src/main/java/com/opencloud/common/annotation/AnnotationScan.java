@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * 自定义注解扫描
@@ -43,6 +45,8 @@ public class AnnotationScan implements ApplicationListener<ApplicationReadyEvent
         this.amqpTemplate = amqpTemplate;
     }
 
+    private ExecutorService executorService = Executors.newFixedThreadPool(2);
+
     /**
      * 初始化方法
      *
@@ -52,14 +56,16 @@ public class AnnotationScan implements ApplicationListener<ApplicationReadyEvent
     public void onApplicationEvent(ApplicationReadyEvent event) {
         ConfigurableApplicationContext applicationContext = event.getApplicationContext();
         Map<String, Object> resourceServer = applicationContext.getBeansWithAnnotation(EnableResourceServer.class);
+        amqpTemplate = applicationContext.getBean(RabbitTemplate.class);
+        if (amqpTemplate == null) {
+            return;
+        }
         if (resourceServer == null || resourceServer.isEmpty()) {
             // 只扫描资源服务器
             return;
         }
-        amqpTemplate = applicationContext.getBean(RabbitTemplate.class);
         Environment env = applicationContext.getEnvironment();
         String serviceId = env.getProperty("spring.application.name", "application");
-        log.info("ApplicationReadyEvent:[{}]", serviceId);
         RequestMappingHandlerMapping mapping = applicationContext.getBean(RequestMappingHandlerMapping.class);
         // 获取url与类和方法的对应信息
         Map<RequestMappingInfo, HandlerMethod> map = mapping.getHandlerMethods();
@@ -81,7 +87,6 @@ public class AnnotationScan implements ApplicationListener<ApplicationReadyEvent
                     mediaTypeSet.add(MediaType.APPLICATION_JSON_UTF8);
                     break;
                 }
-
             }
             String mediaTypes = getMediaTypes(mediaTypeSet);
             // 请求类型
@@ -97,7 +102,7 @@ public class AnnotationScan implements ApplicationListener<ApplicationReadyEvent
             String methodName = method.getMethod().getName();
             String fullName = className + "." + methodName;
             // md5码
-            String md5 = EncryptUtils.md5Hex(fullName+serviceId);
+            String md5 = EncryptUtils.md5Hex(fullName + serviceId);
             String name = "";
             String desc = "";
 
@@ -119,10 +124,21 @@ public class AnnotationScan implements ApplicationListener<ApplicationReadyEvent
             api.put("contentType", mediaTypes);
             list.add(api);
         }
-        if (amqpTemplate != null) {
-            // 发送mq扫描消息
-            amqpTemplate.convertAndSend(MqConstants.QUEUE_SCAN_API_RESOURCE, list);
-        }
+        Map resource = Maps.newHashMap();
+        resource.put("application",serviceId);
+        resource.put("mapping",list);
+        log.info("ApplicationReadyEvent:[{}]", resource);
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    // 发送mq扫描消息
+                    amqpTemplate.convertAndSend(MqConstants.QUEUE_SCAN_API_RESOURCE, resource);
+                } catch (Exception e) {
+                    log.error("发送失败:{}", e);
+                }
+            }
+        });
     }
 
 
