@@ -5,6 +5,7 @@ import com.opencloud.common.annotation.AnnotationScan;
 import com.opencloud.common.configuration.OpenCommonProperties;
 import com.opencloud.common.configuration.OpenIdGenProperties;
 import com.opencloud.common.exception.OpenExceptionHandler;
+import com.opencloud.common.filter.XssFilter;
 import com.opencloud.common.gen.SnowflakeIdGenerator;
 import com.opencloud.common.health.DbHealthIndicator;
 import com.opencloud.common.security.CustomResponseErrorHandler;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -28,6 +30,14 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 @EnableConfigurationProperties({OpenCommonProperties.class,  OpenIdGenProperties.class})
 public class AutoConfiguration {
+
+
+    @Bean
+    public FilterRegistrationBean xxsFilter() {
+        FilterRegistrationBean bean = new FilterRegistrationBean(new XssFilter());
+        log.info("bean [{}]",bean);
+        return bean;
+    }
 
     /**
      * 分页插件

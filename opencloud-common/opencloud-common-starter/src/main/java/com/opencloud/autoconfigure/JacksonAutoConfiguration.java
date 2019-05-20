@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.opencloud.common.filter.XssStringJsonSerializer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
@@ -40,6 +41,10 @@ public class JacksonAutoConfiguration {
         SimpleModule simpleModule = new SimpleModule();
         simpleModule.addSerializer(Long.class, ToStringSerializer.instance);
         simpleModule.addSerializer(Long.TYPE, ToStringSerializer.instance);
+        //注册xss解析器
+        SimpleModule xssModule = new SimpleModule("XssStringJsonSerializer");
+        xssModule.addSerializer(new XssStringJsonSerializer());
+        objectMapper.registerModule(xssModule);
         objectMapper.registerModule(simpleModule);
 
         /**
