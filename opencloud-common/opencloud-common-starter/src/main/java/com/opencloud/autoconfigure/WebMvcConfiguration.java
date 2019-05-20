@@ -14,10 +14,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
     /**
-     * 多个WebSecurityConfigurerAdapter 需要加@Order
+     * 多个WebSecurityConfigurerAdapter
      */
     @Configuration
-    @Order(1)
+    @Order(101)
     public static class ApiWebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         @Override
         public void configure(WebSecurity web) throws Exception {
