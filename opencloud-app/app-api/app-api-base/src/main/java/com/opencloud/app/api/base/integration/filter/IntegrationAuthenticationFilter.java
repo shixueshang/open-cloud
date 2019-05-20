@@ -1,8 +1,9 @@
 package com.opencloud.app.api.base.integration.filter;
 
-import com.opencloud.app.client.integration.authenticator.IntegrationAuthenticator;
-import com.opencloud.app.client.integration.model.IntegrationAuthenticationContext;
-import com.opencloud.app.client.integration.model.IntegrationParams;
+
+import com.opencloud.app.api.base.integration.authenticator.IntegrationAuthenticator;
+import com.opencloud.app.api.base.integration.model.IntegrationAuthenticationContext;
+import com.opencloud.app.api.base.integration.model.IntegrationParams;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;

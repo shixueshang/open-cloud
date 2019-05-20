@@ -1,7 +1,8 @@
 package com.opencloud.app.api.base.integration.provider;
 
-import com.opencloud.app.client.integration.authenticator.third.ThirdIntegrationAuthenticator;
-import com.opencloud.app.client.service.impl.UserDetailsServiceImpl;
+
+import com.opencloud.app.api.base.integration.authenticator.third.ThirdIntegrationAuthenticator;
+import com.opencloud.app.api.base.service.impl.UserDetailsServiceImpl;
 import com.opencloud.common.security.OpenUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
