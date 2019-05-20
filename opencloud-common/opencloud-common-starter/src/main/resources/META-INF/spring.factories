@@ -4,4 +4,5 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.opencloud.aut
   com.opencloud.autoconfigure.SwaggerAutoConfiguration,\
   com.opencloud.autoconfigure.WebMvcConfiguration,\
   com.opencloud.autoconfigure.XssAutoConfiguration,\
-  com.opencloud.autoconfigure.RedisCacheAutoConfiguration
+  com.opencloud.autoconfigure.RedisCacheAutoConfiguration,\
+  com.opencloud.autoconfigure.JacksonAutoConfiguration
