@@ -38,6 +38,16 @@ public class BaseUserAccount implements Serializable {
     private String accountType;
 
 
+    /**
+     * 第三方登录昵称
+     */
+    private String nickName;
+    /**
+     * 第三方登录头像
+     */
+    private String avatar;
+
+
     public BaseUserAccount() {
     }
 
@@ -46,6 +56,14 @@ public class BaseUserAccount implements Serializable {
         this.account = account;
         this.password = password;
         this.accountType = accountType;
+    }
+
+    public BaseUserAccount(String account, String password, String accountType, String nickName,String avatar) {
+        this.account = account;
+        this.password = password;
+        this.accountType = accountType;
+        this.avatar = avatar;
+        this.nickName = nickName;
     }
 
     /**
@@ -94,4 +112,19 @@ public class BaseUserAccount implements Serializable {
         this.accountType = accountType;
     }
 
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
 }

@@ -1,6 +1,7 @@
 package com.opencloud.base.provider.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.opencloud.auth.client.constants.AuthConstants;
 import com.opencloud.base.client.constants.BaseConstants;
 import com.opencloud.base.client.model.BaseUserAccountDto;
@@ -131,6 +132,34 @@ public class BaseUserAccountServiceImpl extends BaseServiceImpl<BaseUserAccountM
     }
 
     /**
+     * 注册第三方账号
+     *
+     * @param username
+     * @param userhead
+     * @param accountType
+     * @param nickName
+     * @return
+     */
+    @Override
+    public BaseUserAccount registerThirdAccount(String username, String avatar, String authType, String nickName) {
+        BaseUserAccount baseUserAccount = getUserAccount(username, authType);
+        if (ObjectUtils.isEmpty(baseUserAccount)) {
+            //加密
+            String encodePassword = passwordEncoder.encode(BaseConstants.DEF_PWD);
+            baseUserAccount = new BaseUserAccount(username, encodePassword, authType, nickName, avatar);
+            baseUserAccountMapper.insert(baseUserAccount);
+        }
+        return baseUserAccount;
+    }
+    public BaseUserAccount getUserAccount(String account, String accountType) {
+        QueryWrapper<BaseUserAccount> queryWrapper = new QueryWrapper();
+        queryWrapper.lambda()
+                .eq(BaseUserAccount::getAccount, account)
+                .eq(BaseUserAccount::getAccountType, accountType);
+        return baseUserAccountMapper.selectOne(queryWrapper);
+
+    }
+    /**
      * 支持系统用户名、手机号、email登陆
      *
      * @param account
@@ -205,6 +234,38 @@ public class BaseUserAccountServiceImpl extends BaseServiceImpl<BaseUserAccountM
             }
         }
         return baseUserAccountDto;
+    }
+
+    /**
+     * 支持系统用户名、手机号、email登陆
+     *
+     * @param accountName
+     * @return
+     */
+    @Override
+    public BaseUserAccountDto applogin(String accountName) {
+        if (StringUtils.isBlank(accountName)) {
+            return null;
+        }
+        Map<String, String> headers = WebUtils.getHttpHeaders(WebUtils.getHttpServletRequest());
+        // 第三方登录标识
+        String thirdParty = headers.get(AuthConstants.HEADER_X_THIRDPARTY_LOGIN);
+        BaseUserAccount account = null;
+        // 账号返回数据
+        BaseUserAccountDto userAccountDto = null;
+        QueryWrapper<BaseUserAccount> qw = new QueryWrapper();
+        qw.lambda().eq(BaseUserAccount::getAccount, accountName);
+        if (StringUtils.isNotBlank(thirdParty)) {
+            //第三方登录加入登录类型,防止不同平台的三方账户重复
+            qw.lambda().eq(BaseUserAccount::getAccountType, thirdParty);
+        }
+        account = baseUserAccountMapper.selectOne(qw);
+        // 获取用户详细信息
+        if (account != null) {
+            userAccountDto = new BaseUserAccountDto();
+            BeanUtils.copyProperties(account, userAccountDto);
+        }
+        return userAccountDto;
     }
 
     /**

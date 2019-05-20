@@ -17,6 +17,18 @@ public class CommonConstants {
     public final static String ROOT = "admin";
 
     /**
+     * 空主键值
+     */
+    public final static Long NULLKEY = -1L;
+
+
+    /**
+     * 短信验证码key前缀
+     */
+    public final static String PRE_SMS = "OPENCLOUD_PRE_SMS:";
+
+
+    /**
      * 端点监控权限标识
      */
     public final static String AUTHORITY_ACTUATOR = "actuator";

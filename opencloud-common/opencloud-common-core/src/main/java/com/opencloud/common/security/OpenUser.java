@@ -70,6 +70,17 @@ public class OpenUser implements UserDetails {
     private String avatar;
 
     /**
+     * 账户Id
+     */
+    private Long accountId;
+
+    /***
+     * 账户类型
+     */
+    private String accountType;
+
+
+    /**
      * 只是客户端模式.不包含用户信息
      *
      * @return
@@ -94,6 +105,22 @@ public class OpenUser implements UserDetails {
         this.avatar = avatar;
         this.nickName = nickName;
     }
+
+    public OpenUser(String authCenterId, Long accountId, Long userId, String username, String password, boolean accountNonLocked, boolean accountNonExpired, boolean enabled, boolean credentialsNonExpired, String nickName, String avatar, String accountType) {
+        this.authCenterId = authCenterId;
+        this.userId = userId;
+        this.username = username;
+        this.password = password;
+        this.accountNonLocked = accountNonLocked;
+        this.accountNonExpired = accountNonExpired;
+        this.enabled = enabled;
+        this.credentialsNonExpired = credentialsNonExpired;
+        this.avatar = avatar;
+        this.nickName = nickName;
+        this.accountType = accountType;
+        this.accountId = accountId;
+    }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -201,5 +228,21 @@ public class OpenUser implements UserDetails {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public Long getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(Long accountId) {
+        this.accountId = accountId;
+    }
+
+    public String getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(String accountType) {
+        this.accountType = accountType;
     }
 }

@@ -1,6 +1,7 @@
 package com.opencloud.base.provider.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.opencloud.base.client.model.BaseAppUserDto;
 import com.opencloud.base.client.model.BaseUserDto;
 import com.opencloud.base.client.model.entity.BaseUser;
 import com.opencloud.common.model.PageParams;
@@ -72,5 +73,24 @@ public interface BaseUserService extends IBaseService<BaseUser> {
      * @return
      */
     BaseUser getUserByUsername(String username);
+
+
+    /**
+     * 登录初始化
+     *
+     * @param userId
+     * @return
+     */
+    BaseAppUserDto loginInit();
+
+
+    /**
+     * 获取App用户详细信息
+     *
+     * @param userId
+     * @return
+     */
+    BaseAppUserDto getAppUserWithByUserId(Long userId);
+
 
 }

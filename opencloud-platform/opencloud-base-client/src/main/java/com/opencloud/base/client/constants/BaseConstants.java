@@ -16,6 +16,11 @@ public class BaseConstants {
      * 默认接口分类
      */
     public final static String DEFAULT_API_CATEGORY = "default";
+
+    /**
+     * 默认注册密码
+     */
+    public final static String DEF_PWD = "123456";
     /**
      * 状态:0-无效 1-有效
      */

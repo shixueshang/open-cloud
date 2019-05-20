@@ -1,6 +1,7 @@
 package com.opencloud.base.provider.controller;
 
 import com.opencloud.base.client.api.BaseUserAccountRemoteApi;
+import com.opencloud.base.client.model.BaseAppUserDto;
 import com.opencloud.base.client.model.BaseUserAccountDto;
 import com.opencloud.base.client.model.BaseUserDto;
 import com.opencloud.base.client.model.entity.BaseUserAccount;
@@ -30,6 +31,7 @@ public class BaseUserUserAccountController implements BaseUserAccountRemoteApi {
     private BaseUserAccountService baseUserAccountService;
     @Autowired
     private BaseUserService baseUserService;
+
     /**
      * 获取登录账号信息
      *
@@ -65,7 +67,7 @@ public class BaseUserUserAccountController implements BaseUserAccountRemoteApi {
             @RequestParam(value = "nickName") String nickName
     ) {
         Long userId = null;
-        BaseUserAccount baseUserAccount = baseUserAccountService.register(account, password, accountType,nickName);
+        BaseUserAccount baseUserAccount = baseUserAccountService.registerThirdAccount(account, password, accountType, nickName);
         if (baseUserAccount != null) {
             userId = baseUserAccount.getUserId();
         }
@@ -75,6 +77,7 @@ public class BaseUserUserAccountController implements BaseUserAccountRemoteApi {
 
     /**
      * 重置密码
+     *
      * @param userId
      * @param oldPassword
      * @param newPassword
@@ -94,14 +97,58 @@ public class BaseUserUserAccountController implements BaseUserAccountRemoteApi {
 
     /**
      * 获取用户详细信息
+     *
      * @param userId
      * @return
      */
     @ApiOperation(value = "获取用户详细信息", notes = "获取用户详细信息")
     @PostMapping("/user/info")
     @Override
-    public  ResultBody<BaseUserDto> getUserInfo(@RequestParam(value = "userId") Long userId){
+    public ResultBody<BaseUserDto> getUserInfo(@RequestParam(value = "userId") Long userId) {
         return ResultBody.success(baseUserService.getUserWithAuthoritiesById(userId));
-    };
+    }
+
+    /**
+     * 获取App用户详细信息
+     *
+     * @param userId
+     * @return
+     */
+    @ApiOperation(value = "获取App用户详细信息", notes = "获取App用户详细信息")
+    @PostMapping("/user/appInfo")
+    @Override
+    public ResultBody<BaseAppUserDto> getAppUserInfo(@RequestParam(value = "userId") Long userId) {
+        return ResultBody.success(baseUserService.getAppUserWithByUserId(userId));
+    }
+
+
+    /**
+     * App初始化登录
+     *
+     * @param userId
+     * @return
+     */
+    @ApiOperation(value = "App初始化登录", notes = "App初始化登录")
+    @PostMapping("/login/init")
+    @Override
+    public ResultBody<BaseAppUserDto> loginInit() {
+        return ResultBody.success(baseUserService.loginInit());
+    }
+
+    /**
+     * 获取app登录信息
+     *
+     * @param username 登录名
+     * @return
+     */
+    @ApiOperation(value = "获取app登录信息")
+    @ApiImplicitParams({@ApiImplicitParam(name = "username", required = true, value = "登录名", paramType = "path")})
+    @PostMapping("/account/appLogin")
+    @Override
+    public ResultBody<BaseUserAccountDto> appLogin(@RequestParam(value = "username") String username) {
+        BaseUserAccountDto account = baseUserAccountService.applogin(username);
+        return ResultBody.success(account);
+    }
+
 
 }

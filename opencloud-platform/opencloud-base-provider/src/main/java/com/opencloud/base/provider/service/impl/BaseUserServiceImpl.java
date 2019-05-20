@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.opencloud.base.client.constants.BaseConstants;
+import com.opencloud.base.client.model.BaseAppUserDto;
 import com.opencloud.base.client.model.BaseUserDto;
 import com.opencloud.base.client.model.entity.BaseRole;
 import com.opencloud.base.client.model.entity.BaseUser;
@@ -14,9 +15,13 @@ import com.opencloud.base.provider.service.BaseAuthorityService;
 import com.opencloud.base.provider.service.BaseRoleService;
 import com.opencloud.base.provider.service.BaseUserService;
 import com.opencloud.common.constants.CommonConstants;
+import com.opencloud.common.constants.MqConstants;
 import com.opencloud.common.model.PageParams;
 import com.opencloud.common.mybatis.base.service.impl.BaseServiceImpl;
 import com.opencloud.common.security.Authority;
+import com.opencloud.common.security.OpenHelper;
+import com.opencloud.common.security.OpenUser;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author: liuyadu
@@ -40,6 +46,8 @@ public class BaseUserServiceImpl extends BaseServiceImpl<BaseUserMapper, BaseUse
     private BaseRoleService roleService;
     @Autowired
     private BaseAuthorityService baseAuthorityService;
+    @Autowired
+    private AmqpTemplate amqpTemplate;
 
     /**
      * 更新系统用户
@@ -153,6 +161,50 @@ public class BaseUserServiceImpl extends BaseServiceImpl<BaseUserMapper, BaseUse
         userProfile.setRoles(roles);
         return userProfile;
     }
+
+    /**
+     * 获取App用户详细信息
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public BaseAppUserDto getAppUserWithByUserId(Long userId) {
+        //查询系统用户资料
+        BaseUser baseUser = getUserById(userId);
+        BaseAppUserDto userProfile = new BaseAppUserDto();
+        BeanUtils.copyProperties(baseUser, userProfile);
+        //发布用户信息扩展事件
+        userProfile = (BaseAppUserDto) amqpTemplate.convertSendAndReceive(MqConstants.QUEUE_USERINFO, userProfile);
+        return userProfile;
+    }
+
+    /**
+     * 登录初始化
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public BaseAppUserDto loginInit() {
+        OpenUser user = OpenHelper.getUser();
+        Long userId = Optional.ofNullable(user.getUserId()).orElse(-1L);
+        BaseAppUserDto appUserDto = new BaseAppUserDto();
+        BaseUser baseUser = new BaseUser();
+        if (!CommonConstants.NULLKEY.equals(userId)) {
+            //查询系统用户资料
+            baseUser = getUserById(userId);
+        } else {
+            appUserDto.setAccountId(user.getAccountId());
+            //首次登录
+            appUserDto.setUserId(CommonConstants.NULLKEY);
+        }
+        BeanUtils.copyProperties(baseUser, appUserDto);
+        //推送扩展事件
+        appUserDto = (BaseAppUserDto) amqpTemplate.convertSendAndReceive(MqConstants.QUEUE_LOGININIT, appUserDto);
+        return appUserDto;
+    }
+
 
 
     /**

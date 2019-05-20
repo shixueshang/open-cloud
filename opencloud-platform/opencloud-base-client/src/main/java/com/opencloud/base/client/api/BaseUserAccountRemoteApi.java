@@ -1,5 +1,6 @@
 package com.opencloud.base.client.api;
 
+import com.opencloud.base.client.model.BaseAppUserDto;
 import com.opencloud.base.client.model.BaseUserAccountDto;
 import com.opencloud.base.client.model.BaseUserDto;
 import com.opencloud.common.model.ResultBody;
@@ -57,5 +58,31 @@ public interface BaseUserAccountRemoteApi {
      */
     @PostMapping("/user/info")
     ResultBody<BaseUserDto> getUserInfo(@RequestParam(value = "userId") Long userId);
+    /**
+     * APP登录
+     *
+     * @param username 登录名
+     * @return
+     */
+    @PostMapping("/account/appLogin")
+    ResultBody<BaseUserAccountDto> appLogin(@RequestParam(value = "username") String username);
+    /**
+     * APP初始化登录
+     *
+     * @param userId
+     * @return
+     */
+    @PostMapping("/login/init")
+    ResultBody<BaseAppUserDto> loginInit();
+    /**
+     * 获取APP用户详细信息
+     *
+     * @param userId
+     * @return
+     */
+    @PostMapping("/user/appInfo")
+    ResultBody<BaseAppUserDto> getAppUserInfo(@RequestParam(value = "userId") Long userId);
+
+
 
 }

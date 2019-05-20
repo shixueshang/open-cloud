@@ -23,6 +23,19 @@ public interface BaseUserAccountService extends IBaseService<BaseUserAccount> {
      */
     Long register(BaseUserDto profileDto);
 
+
+    /**
+     * 绑定账号
+     *
+     * @param username
+     * @param avatar
+     * @param authType
+     * @param nickName
+     * @return
+     */
+    BaseUserAccount registerThirdAccount(String username, String avatar, String authType, String nickName);
+
+
     /**
      * 绑定账号
      *
@@ -71,6 +84,15 @@ public interface BaseUserAccountService extends IBaseService<BaseUserAccount> {
      * @return
      */
     BaseUserAccountDto login(String account);
+
+    /**
+     * 支持密码、手机号、QQ、微信等第三方登录
+     * 其他方式没有规则，无法自动识别。需要单独开发
+     *
+     * @param account 登陆账号
+     * @return
+     */
+    BaseUserAccountDto applogin(String account);
 
     /**
      * 重置用户密码
