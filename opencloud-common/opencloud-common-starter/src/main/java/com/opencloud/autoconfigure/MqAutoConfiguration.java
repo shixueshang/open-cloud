@@ -26,4 +26,14 @@ public  class MqAutoConfiguration {
         return new Queue(MqConstants.QUEUE_ACCESS_LOGS);
     }
 
+    @Bean
+    public Queue userInfo() {
+        return new Queue(MqConstants.QUEUE_USERINFO);
+    }
+
+    @Bean
+    public Queue loginInit() {
+        return new Queue(MqConstants.QUEUE_LOGININIT);
+    }
+
 }

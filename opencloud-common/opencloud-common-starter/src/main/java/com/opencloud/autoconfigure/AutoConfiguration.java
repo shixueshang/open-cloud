@@ -10,6 +10,7 @@ import com.opencloud.common.gen.SnowflakeIdGenerator;
 import com.opencloud.common.health.DbHealthIndicator;
 import com.opencloud.common.security.CustomResponseErrorHandler;
 import com.opencloud.common.security.http.OpenRestTemplate;
+import com.opencloud.common.utils.RedisUtils;
 import com.opencloud.common.utils.SpringContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpTemplate;
@@ -144,5 +145,10 @@ public class AutoConfiguration {
     public DbHealthIndicator dbHealthIndicator() {
         DbHealthIndicator dbHealthIndicator = new DbHealthIndicator();
         return dbHealthIndicator;
+    }
+    @Bean
+    @ConditionalOnMissingBean(RedisUtils.class)
+    public RedisUtils redisUtils() {
+        return new RedisUtils();
     }
 }

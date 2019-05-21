@@ -60,6 +60,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 // 内部调用直接放行
                 .antMatchers(
                         "/account/localLogin",
+                        "/account/appLogin",
                         "/account/register/thirdParty",
                         "/account/logs/add",
                         "/authority/access/list",
@@ -68,6 +69,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                         "/app/*/info",
                         "/app/client/*/info",
                         "/user/info",
+                        "/user/appInfo",
                         "/gateway/api/**"
                         ).permitAll()
                 .anyRequest().authenticated()

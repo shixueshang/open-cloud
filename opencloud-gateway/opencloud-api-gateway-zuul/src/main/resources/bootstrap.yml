@@ -90,6 +90,7 @@ opencloud:
       - /auth/login/**
       - /auth/logout
       - /auth/oauth/**
+      - /auth/login/**
       - /admin/login/token
       - /admin/logout
       - /app/login/token
