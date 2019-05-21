@@ -13,7 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.provider.authentication.BearerTokenExtractor;
-import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler;
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 
@@ -35,7 +35,7 @@ import java.io.IOException;
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
     @Autowired
-    private DefaultTokenServices defaultTokenServices;
+    private TokenStore tokenStore;
 
     private BearerTokenExtractor tokenExtractor = new BearerTokenExtractor();
 
@@ -82,7 +82,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                     String tokenValue = authentication.getPrincipal().toString();
                     log.debug("revokeToken tokenValue:{}",tokenValue);
                     // 移除token
-                   defaultTokenServices.revokeToken(tokenValue);
+                    tokenStore.removeAccessToken(tokenStore.readAccessToken(tokenValue));
                 }
             }catch (Exception e){
                 log.error("revokeToken error:{}",e);

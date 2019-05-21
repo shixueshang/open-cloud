@@ -1,8 +1,7 @@
 package com.opencloud.app.auth.provider.configuration;
 
-import com.opencloud.app.auth.provider.exception.Oauth2WebResponseExceptionTranslator;
 import com.opencloud.auth.client.config.SocialOAuth2ClientProperties;
-import com.opencloud.auth.client.constants.AuthConstants;
+import com.opencloud.common.exception.Oauth2WebResponseExceptionTranslator;
 import com.opencloud.common.security.OpenHelper;
 import com.opencloud.common.security.OpenTokenEnhancer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -23,7 +23,6 @@ import org.springframework.security.oauth2.provider.approval.ApprovalStore;
 import org.springframework.security.oauth2.provider.approval.JdbcApprovalStore;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeServices;
-import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
@@ -45,9 +44,17 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     private DataSource dataSource;
     @Autowired
     private RedisConnectionFactory redisConnectionFactory;
+    @Autowired
+    private UserDetailsService userDetailsService;
+    /**
+     * 自定义获取客户端,为了支持自定义权限,
+     */
+    @Autowired
+    @Qualifier(value = "clientDetailsServiceImpl")
+    private ClientDetailsService customClientDetailsService;
 
     /**
-     * 使用JWT作为token
+     * 令牌存放
      *
      * @return
      */
@@ -56,12 +63,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
         return new RedisTokenStore(redisConnectionFactory);
     }
 
-    /**
-     * 自定义获取客户端,为了支持自定义权限,
-     */
-    @Autowired
-    @Qualifier(value = "clientDetailsServiceImpl")
-    private ClientDetailsService customClientDetailsService;
+
 
     /**
      * 授权store
@@ -73,12 +75,18 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
         return new JdbcApprovalStore(dataSource);
     }
 
-    private TokenEnhancer tokenEnhancer(){
+    /**
+     * 自定义生成令牌
+     *
+     * @return
+     */
+    @Bean
+    public TokenEnhancer tokenEnhancer() {
         return new OpenTokenEnhancer();
     }
 
     /**
-     * 授权码store
+     * 授权码存放
      *
      * @return
      */
@@ -100,37 +108,23 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
                 .authenticationManager(authenticationManager)
                 .approvalStore(approvalStore())
                 .tokenStore(tokenStore())
+                .tokenEnhancer(tokenEnhancer())
+                .reuseRefreshTokens(false)
+                .userDetailsService(userDetailsService)
                 .accessTokenConverter(OpenHelper.buildAccessTokenConverter())
                 .authorizationCodeServices(authorizationCodeServices());
+        endpoints.setClientDetailsService(customClientDetailsService);
         // 自定义确认授权页面
         endpoints.pathMapping("/oauth/confirm_access", "/oauth/confirm_access");
         // 自定义错误页
-        endpoints.pathMapping("/oauth/error","/oauth/error");
+        endpoints.pathMapping("/oauth/error", "/oauth/error");
         // 自定义异常转换类
         endpoints.exceptionTranslator(new Oauth2WebResponseExceptionTranslator());
-    }
-
-
-    @Bean
-    public DefaultTokenServices defaultTokenServices() throws Exception {
-        DefaultTokenServices tokenServices = new DefaultTokenServices();
-        tokenServices.setTokenEnhancer(tokenEnhancer());
-        tokenServices.setTokenStore(tokenStore());
-        // 是否支持刷新令牌
-        tokenServices.setSupportRefreshToken(true);
-        tokenServices.setClientDetailsService(customClientDetailsService);
-        // token有效期自定义设置，默认12小时
-        tokenServices.setAccessTokenValiditySeconds(AuthConstants.ACCESS_TOKEN_VALIDITY_SECONDS);
-        //默认30天，这里修改
-        tokenServices.setRefreshTokenValiditySeconds(AuthConstants.REFRESH_TOKEN_VALIDITY_SECONDS);
-        return tokenServices;
     }
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
         security
-                // 开启/oauth/token_key验证端口无权限访问
-                .tokenKeyAccess("permitAll()")
                 // 开启/oauth/check_token验证端口认证权限访问
                 .checkTokenAccess("isAuthenticated()")
                 //开启客户端授权

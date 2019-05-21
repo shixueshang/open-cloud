@@ -1,4 +1,4 @@
-package com.opencloud.auth.provider.exception;
+package com.opencloud.common.exception;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;

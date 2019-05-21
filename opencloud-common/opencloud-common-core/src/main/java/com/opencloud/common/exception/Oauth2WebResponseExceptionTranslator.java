@@ -1,6 +1,5 @@
-package com.opencloud.app.auth.provider.exception;
+package com.opencloud.common.exception;
 
-import com.opencloud.common.exception.OpenExceptionHandler;
 import com.opencloud.common.model.ResultBody;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
