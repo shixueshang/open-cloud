@@ -75,6 +75,9 @@ open-cloud
 ├── opencloud-app    -- 应用服务模块
     ├── app-admin  -- 运营后台服务(port = 8301)  
     ├── app-auth-demo  -- 移动应用用户认证中心(多认证中心演示)(port = 7211)  
+    ├── app-api        -- APP接口模块 
+       ├── app-api-base    -- APP接口基础模块
+       ├── app-api-server  -- APP接口服务(port = 7211)
      
 ├── opencloud-common  -- 公共类和jar包依赖
     ├── opencloud-common-core    -- 提供微服务相关依赖包、工具类、全局异常解析等...
@@ -379,5 +382,18 @@ AppSecret： 1a616ba3f91141efa1c4f4a1ce725e2c
 ![输入图片说明](https://images.gitee.com/uploads/images/2019/0326/182231_9185e368_791541.png "ctoken1.png")
 - 访问已授权资源,正常返回数据(如果授权完,还提示权限不足，由于上次令牌存在缓存信息,重新获取token即可)
 ![输入图片说明](https://images.gitee.com/uploads/images/2019/0326/182343_dc4305d0_791541.png "ctoken2.png")
+
+
+### 5.如何创建APP接口服务
+app-api-base为平台提供的基础接口模块,该模块会提供常用的基础接口,如登录,注册,验证码,第三方登录等APP中常用的接口,每个接口都提供扩展功能,通过编写自定义handler来扩展接口返回的数据
+满足不同的业务需求(例:GetUserInfoHander扩展了获取个人信息和登录初始化接口)
+使用方式：新建APP项目并依赖app-api-base模块,参考app-api-server的写法
+为何这么用:
+当你做过很多项目时就有体会,每做一个项目基本就是在老框架上改,删除之前项目的业务代码,这是一个烦人的过程,所以建议app-api-base中只提供可复用的基础接口并提供扩展事件
+
+
+
+
+
 
 
