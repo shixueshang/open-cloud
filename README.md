@@ -10,51 +10,40 @@
 </p>  
 
 # 微服务开放平台 2.0.0 更快、更新、更全面
-
----
+        
 #### 简介
 搭建基于OAuth2的开放平台、为APP端提供统一接口管控平台、为第三方合作伙伴的业务对接提供授信可控的技术对接平台.
-+ 统一API网关、访问鉴权、参数验签、外部调用更安全.
-+ 分布式架构,基于服务发现,Fegin(伪RPC)方式内部调用,更便捷.
-+ 深度整合SpringCloud+SpringSecurity+Oauth2,更细粒度、灵活的ABAC权限控制.
++ 统一API网关、访问鉴权、参数验签、接口调用更安全.
++ 深度整合SpringSecurity+Oauth2,更细粒度、灵活的ABAC权限控制.
++ 分布式架构,服务内部调用Fegin,微服务开发更便捷.
 + 前后端分离方式开发应用，分工合作更高效!
-+ 代码合理封装、简单易懂、   
-
++ 代码合理封装、简单易懂、
+   
 <a target="_blank" href="http://39.106.187.125/admin">演示地址</a>
-  
-默认登录账号:admin 123456
-测试登录账号:test 123456
++ 默认登录账号:admin 123456  
++ 测试登录账号:test 123456
 
-#### 欢迎吐槽 
-学习交流群:760809808  <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=b45f53bc72df5935af588df50a0f651285020356d1daa05f90ee3fb95a0607c9"><img  border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="open-cloud学习交流群" title="open-cloud学习交流群"></a>  
-![760809808](/docs/1548831206525.png)  
-
-#### 代码仓库
-
-##### 请随手给个Star! 感谢支持！
+#### 开源不易，请随手给个Star! 感谢支持！
 <a target="_blank" href="https://gitee.com/liuyadu/generator.git">代码生成器</a>  
 
-<a target="_blank" href="https://gitee.com/liuyadu">服务端源码-码云</a>  
+##### 服务端源码
+<a target="_blank" href="https://gitee.com/liuyadu">码云</a>  <a target="_blank" href="https://github.com/liuyadu/">github</a>  
 
-<a target="_blank" href="https://github.com/liuyadu/">服务端源码-Github</a>  
+##### vue后台UI源码
+<a target="_blank" href="https://gitee.com/liuyadu/open-admin-ui">后台UI源码</a>
 
-<a target="_blank" href="https://gitee.com/liuyadu/open-admin-ui">前端ui源码</a>
-
+##### 使用手册
 <a target="_blank" href="https://gitee.com/liuyadu/open-cloud/wikis/pages">使用手册</a>  
-
-<a target="_blank" href="https://gitee.com/liuyadu/open-cloud/wikis/jenkins%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90?sort_id=1434524">jenkins持续集成</a>  
-
-<a target="_blank" href="https://gitee.com/liuyadu/open-cloud/wikis/nginx%E9%83%A8%E7%BD%B2%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE?sort_id=1434529">nginx部署前端项目</a>  
-
+        
 #### 更新日志
     v-2.0.0 2019-05-01
-        1. 升级SpringCloud版本至Greenwich.SR1,SpringBoot 2.1.4.RELEASE
+        1. 升级SpringCloud Greenwich.SR1,SpringBoot 2.1.4.RELEASE
         2. 重构项目结构
-        3. 增加SpringCloudGateway
-        4. 迁移gateway功能到base服务中
-        5. 增加MybatisPlus
-        6. 使用.yml代替.properties
-        7. 移除generator模块,将提供单独代码生成项目(计划中...)
+        3. 优化Zuul网关性能
+        4. 增加官方SpringCloudGateway
+        5. 迁移Gateway功能到base服务中
+        6. 增加MybatisPlus
+        7. 使用.yml代替.properties
         
     v-1.0.0 2019-03-18
         1. 重构项目结构
@@ -63,6 +52,13 @@
         4. 提取公共配置,并迁移到Nacos配置中心
         5. 优化功能
         
+
+
+#### 欢迎吐槽 
+学习交流群:760809808  <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=b45f53bc72df5935af588df50a0f651285020356d1daa05f90ee3fb95a0607c9"><img  border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="open-cloud学习交流群" title="open-cloud学习交流群"></a>  
+![760809808](/docs/1548831206525.png)  
+
+
 #### 代码结构
 ``` lua
 open-cloud
@@ -104,19 +100,6 @@ open-cloud
 
 ![springcloud](/docs/springcloud.jpg)  
 
-### 功能预览
-
-<table>
-	<tr>
-      <td><img src="https://images.gitee.com/uploads/images/2019/0328/125654_a85872f7_791541.png"/></td>
-      <td><img src="https://images.gitee.com/uploads/images/2019/0328/130140_14d04387_791541.png"/></td>
-  </tr>
-  <tr>
-      <td><img src="https://images.gitee.com/uploads/images/2019/0328/130152_c96b3171_791541.png"/></td>
-      <td><img src="https://images.gitee.com/uploads/images/2019/0328/130201_0db637b1_791541.png"/></td>
-  </tr>
-</table>
-
 #### 数据模型
 
 ##### 基础权限模型  
@@ -131,8 +114,6 @@ open-cloud
 上手难度：★★★
 
 本项目基于springCloud打造的分布式快速开发框架. 需要了解SpringCloud,SpringBoot开发,分布式原理。
-
-#### 注：Nacos版本选择V0.9.0以下版本. 1.0.0以上版本暂未测试!
 
 1. 准备环境
     + Java1.8
@@ -177,11 +158,9 @@ open-cloud
 5. 本地启动(顺序启动)
      1. BaseApplication
      2. AuthApplication
-     3. ZuulGatewayApplication(推荐) 或 ApiGatewayApplication 
-     4. AdminApplication
-     
-   4个服务启动成功后。就可以依赖这些服务进行微服务开发了。  
-   访问 http://localhost:8888
+     3. AdminApplication
+     4. ZuulGatewayApplication(推荐) 或 ApiGatewayApplication 
+     访问 http://localhost:8888
      
 6. 前端启动
     ```bush
@@ -192,25 +171,24 @@ open-cloud
     
 7. 项目打包部署  
 
-     maven多环境打包
+     maven多环境打包,并替换相关变量
    ```bush
      mvn clean install package -P {dev|test|online}
    ```
     项目启动
     ```bush
-    1. ./docs/bin/startup.sh {start|stop|restart|status} open-base-provider.jar
-    2. ./docs/bin/startup.sh {start|stop|restart|status} open-auth-provider.jar
-    3. ./docs/bin/startup.sh {start|stop|restart|status} open-admin-provider.jar
-    4. ./docs/bin/startup.sh {start|stop|restart|status} open-api-gateway.jar
+    ./docs/bin/startup.sh {start|stop|restart|status} opencloud-base-provider.jar
+    ./docs/bin/startup.sh {start|stop|restart|status} opencloud-auth-provider.jar
+    ./docs/bin/startup.sh {start|stop|restart|status} app-admin.jar
+    ./docs/bin/startup.sh {start|stop|restart|status} opencloud-api-gateway-zuul.jar
     ```
     
 #### 集成开发  
-###
- 资源服务器Oauth2校验解析token共总结了3种存放和读取方式:  
- 
- + 远程校验解析token. 缺点:需创建客户端信息,http方式,性能较差. 构建方法:OpenHelper.buildRemoteTokenServices(OpenCommonProperties properties)
- + jwt校验解析token. 缺点:需提供jwt签名或密钥,生存token过长(cookie有时存放不下),且base64加密无法存放敏感数据,不方便拓展. 构建方法:OpenHelper.buildJwtTokenServices(OpenCommonProperties properties)
- + (建议使用)redis校验解析token. 无需创建任何客户端和密钥,读取性能优,可存放复杂的认证信息. 缺点:必须使用同一个redis DB. 构建方法: OpenHelper.buildRedisTokenServices(RedisConnectionFactory redisConnectionFactory)
+####
+ 资源服务器中结合Oauth2解析token共总结3种读取方式:  
+ + (默认)远程校验解析token. 缺点:需创建客户端信息,http方式,性能较差. 构建方法:OpenHelper.buildRemoteTokenServices(OpenCommonProperties properties)
+ + (默认)jwt校验解析token. 缺点:需提供jwt签名或密钥,生存token过长(cookie有时存放不下),且base64加密无法存放敏感数据,不方便拓展. 构建方法:OpenHelper.buildJwtTokenServices(OpenCommonProperties properties)
+ + (拓展,建议使用)redis校验解析token. 无需创建任何客户端和密钥,读取性能优,可存放复杂的认证信息. 缺点:必须使用同一个redisDbIndex. 构建方法: OpenHelper.buildRedisTokenServices(RedisConnectionFactory redisConnectionFactory)
 
 1.创建新maven项目
    ```xml
