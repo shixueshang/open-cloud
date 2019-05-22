@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.opencloud.base.client.constants.BaseConstants;
+import com.opencloud.base.client.event.UserInfoEvent;
 import com.opencloud.base.client.model.BaseAppUserDto;
 import com.opencloud.base.client.model.BaseUserDto;
 import com.opencloud.base.client.model.entity.BaseRole;
@@ -19,17 +20,17 @@ import com.opencloud.common.constants.MqConstants;
 import com.opencloud.common.model.PageParams;
 import com.opencloud.common.mybatis.base.service.impl.BaseServiceImpl;
 import com.opencloud.common.security.Authority;
-import com.opencloud.common.security.OpenHelper;
-import com.opencloud.common.security.OpenUser;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.bus.BusProperties;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * @author: liuyadu
@@ -48,6 +49,10 @@ public class BaseUserServiceImpl extends BaseServiceImpl<BaseUserMapper, BaseUse
     private BaseAuthorityService baseAuthorityService;
     @Autowired
     private AmqpTemplate amqpTemplate;
+    @Autowired
+    private ApplicationEventPublisher publisher;
+    @Autowired
+    private BusProperties busProperties;
 
     /**
      * 更新系统用户
@@ -187,7 +192,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl<BaseUserMapper, BaseUse
      */
     @Override
     public BaseAppUserDto loginInit() {
-        OpenUser user = OpenHelper.getUser();
+      /*  OpenUser user = OpenHelper.getUser();
         Long userId = Optional.ofNullable(user.getUserId()).orElse(-1L);
         BaseAppUserDto appUserDto = new BaseAppUserDto();
         BaseUser baseUser = new BaseUser();
@@ -200,11 +205,12 @@ public class BaseUserServiceImpl extends BaseServiceImpl<BaseUserMapper, BaseUse
             appUserDto.setUserId(CommonConstants.NULLKEY);
         }
         BeanUtils.copyProperties(baseUser, appUserDto);
+        */
+        publisher.publishEvent(new UserInfoEvent(new BaseUser(), busProperties.getId(), null));
         //推送扩展事件
-        appUserDto = (BaseAppUserDto) amqpTemplate.convertSendAndReceive(MqConstants.QUEUE_LOGININIT, appUserDto);
-        return appUserDto;
+        //appUserDto = (BaseAppUserDto) amqpTemplate.convertSendAndReceive(MqConstants.QUEUE_LOGININIT, appUserDto);
+        return null;
     }
-
 
 
     /**

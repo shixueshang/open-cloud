@@ -8,6 +8,9 @@ spring:
     application:
         name: app-api-base
     cloud:
+        #手动配置Bus id,
+        bus:
+            id: ${spring.application.name}:${server.port}
         nacos:
             config:
                 namespace: ${config.namespace}

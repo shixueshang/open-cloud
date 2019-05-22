@@ -1,10 +1,13 @@
 package com.opencloud.app.api.base.listener;
 
+import com.alibaba.fastjson.JSONObject;
 import com.opencloud.base.client.event.UserInfoEvent;
-import com.opencloud.base.client.model.entity.BaseUser;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author liuyadu
+ */
 @Component
 public class UserInfoListener implements ApplicationListener<UserInfoEvent> {
     /**
@@ -15,11 +18,9 @@ public class UserInfoListener implements ApplicationListener<UserInfoEvent> {
 
 
     @Override
-    public void onApplicationEvent(UserInfoEvent userInfoEvent) {
-        //获取注册用户对象
-        BaseUser user = userInfoEvent.getUser();
+    public void onApplicationEvent(UserInfoEvent event) {
         //输出注册用户信息
-        System.out.println("@EventListener注册信息，用户名：" + user.getUserName() + "，密码：" + user.getMobile());
-
+        System.out.printf("UserRemoteApplicationEvent - Source : %s , originService : %s, destinationService : %s\n",
+                JSONObject.toJSON(event.getSource()), event.getOriginService(), event.getDestinationService());
     }
 }

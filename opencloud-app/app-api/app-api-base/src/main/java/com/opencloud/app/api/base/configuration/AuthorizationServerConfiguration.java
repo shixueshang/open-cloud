@@ -83,7 +83,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
      * @return
      */
     @Bean
-    private TokenEnhancer tokenEnhancer() {
+    public TokenEnhancer tokenEnhancer() {
         return new OpenTokenEnhancer();
     }
 
