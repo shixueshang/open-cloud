@@ -17,6 +17,8 @@ import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.cloud.bus.BusProperties;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -124,8 +126,8 @@ public class AutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean(OpenRestTemplate.class)
-    public OpenRestTemplate openRestTemplate(OpenCommonProperties openCommonProperties) {
-        OpenRestTemplate restTemplate = new OpenRestTemplate(openCommonProperties);
+    public OpenRestTemplate openRestTemplate(OpenCommonProperties openCommonProperties, BusProperties busProperties, ApplicationEventPublisher publisher) {
+        OpenRestTemplate restTemplate = new OpenRestTemplate(openCommonProperties,busProperties,publisher);
         //设置自定义ErrorHandler
         restTemplate.setErrorHandler(new CustomResponseErrorHandler());
         log.info("bean [{}]", restTemplate);

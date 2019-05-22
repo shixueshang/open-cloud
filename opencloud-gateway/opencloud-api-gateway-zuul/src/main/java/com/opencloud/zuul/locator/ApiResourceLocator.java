@@ -7,7 +7,7 @@ import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.support.StringToMatc
 import com.opencloud.base.client.model.AccessAuthority;
 import com.opencloud.base.client.model.GatewayIpLimitApisDto;
 import com.opencloud.base.client.model.GatewayRateLimitApisDto;
-import com.opencloud.zuul.event.GatewayResourceRefreshEvent;
+import com.opencloud.common.event.GatewayRemoteRefreshRouteEvent;
 import com.opencloud.zuul.service.feign.BaseAuthorityRemoteService;
 import com.opencloud.zuul.service.feign.GatewayRemoteService;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
  * @author liuyadu
  */
 @Slf4j
-public class ApiResourceLocator implements ApplicationListener<GatewayResourceRefreshEvent> {
+public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefreshRouteEvent> {
     /**
      * 单位时间
      */
@@ -92,7 +92,7 @@ public class ApiResourceLocator implements ApplicationListener<GatewayResourceRe
     /**
      * 刷新访问配置
      */
-    public void doRefresh() {
+    public void refresh() {
         loadAuthority();
         loadIpBlacks();
         loadIpWhites();
@@ -307,7 +307,7 @@ public class ApiResourceLocator implements ApplicationListener<GatewayResourceRe
     }
 
     @Override
-    public void onApplicationEvent(GatewayResourceRefreshEvent gatewayResourceRefreshEvent) {
-        doRefresh();
+    public void onApplicationEvent(GatewayRemoteRefreshRouteEvent gatewayRemoteRefreshRouteEvent) {
+        refresh();
     }
 }

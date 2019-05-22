@@ -1,15 +1,14 @@
 package com.opencloud.common.security.http;
 
 import com.opencloud.common.configuration.OpenCommonProperties;
-import com.opencloud.common.model.ResultBody;
+import com.opencloud.common.event.GatewayRemoteRefreshRouteEvent;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
+import org.springframework.cloud.bus.BusProperties;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.token.grant.client.ClientCredentialsResourceDetails;
 import org.springframework.security.oauth2.client.token.grant.password.ResourceOwnerPasswordResourceDetails;
 import org.springframework.security.oauth2.common.AuthenticationScheme;
-import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -23,9 +22,12 @@ import org.springframework.web.client.RestTemplate;
 public class OpenRestTemplate extends RestTemplate {
 
     private OpenCommonProperties common;
-
-    public OpenRestTemplate(OpenCommonProperties common) {
+    private ApplicationEventPublisher publisher;
+    private BusProperties busProperties;
+    public OpenRestTemplate(OpenCommonProperties common,  BusProperties busProperties, ApplicationEventPublisher publisher) {
         this.common = common;
+        this.publisher = publisher;
+        this.busProperties = busProperties;
     }
 
     /**
@@ -97,11 +99,8 @@ public class OpenRestTemplate extends RestTemplate {
      */
     public void refreshGateway() {
         try {
-            Assert.notNull(common.getApiServerAddr(), "网关信息错误");
-            HttpHeaders headers = new HttpHeaders();
-            HttpEntity<String> formEntity = new HttpEntity<String>("", headers);
-            ResultBody resultBody = buildOauth2ClientRequest().postForObject(common.getApiServerAddr().concat("/actuator/open/refresh"), formEntity, ResultBody.class);
-            log.info("refreshGateway:{}", resultBody);
+            publisher.publishEvent(new GatewayRemoteRefreshRouteEvent(this,busProperties.getId(),null));
+            log.info("refreshGateway:success");
         } catch (Exception e) {
             log.error("refreshGateway error:{}", e.getMessage());
         }

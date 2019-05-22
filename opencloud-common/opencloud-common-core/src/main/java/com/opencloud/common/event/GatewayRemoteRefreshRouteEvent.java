@@ -1,4 +1,4 @@
-package com.opencloud.zuul.event;
+package com.opencloud.common.event;
 
 import org.springframework.cloud.bus.event.RemoteApplicationEvent;
 

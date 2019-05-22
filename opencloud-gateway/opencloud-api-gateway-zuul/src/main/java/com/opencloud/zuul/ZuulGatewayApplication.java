@@ -24,17 +24,16 @@
  */
 package com.opencloud.zuul;
 
-import com.opencloud.zuul.event.GatewayRemoteRefreshRouteEvent;
+import com.opencloud.zuul.locator.ApiResourceLocator;
+import com.opencloud.zuul.locator.JdbcRouteLocator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
-import org.springframework.cloud.bus.BusProperties;
 import org.springframework.cloud.bus.jackson.RemoteApplicationEventScan;
 import org.springframework.cloud.client.SpringCloudApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.context.ApplicationEventPublisher;
 
 
 /**
@@ -48,12 +47,12 @@ import org.springframework.context.ApplicationEventPublisher;
 @EnableFeignClients
 @EnableDiscoveryClient
 @SpringCloudApplication
-@RemoteApplicationEventScan(basePackages = "com.opencloud.zuul.event")
+@RemoteApplicationEventScan(basePackages = "com.opencloud")
 public class ZuulGatewayApplication implements CommandLineRunner {
     @Autowired
-    private ApplicationEventPublisher publisher;
+    private ApiResourceLocator apiResourceLocator;
     @Autowired
-    private BusProperties bus;
+    private JdbcRouteLocator jdbcRouteLocator;
 
     public static void main(String[] args) {
         SpringApplication.run(ZuulGatewayApplication.class, args);
@@ -61,8 +60,8 @@ public class ZuulGatewayApplication implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
-        // 消息总线刷新所有网关实例
-        publisher.publishEvent(new GatewayRemoteRefreshRouteEvent(this, bus.getId(), null));
+        jdbcRouteLocator.doRefresh();
+        apiResourceLocator.refresh();
     }
 
 

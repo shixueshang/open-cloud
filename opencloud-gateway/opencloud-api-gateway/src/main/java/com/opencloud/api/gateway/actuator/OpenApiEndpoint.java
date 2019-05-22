@@ -1,6 +1,6 @@
 package com.opencloud.api.gateway.actuator;
 
-import com.opencloud.api.gateway.event.GatewayRemoteRefreshRouteEvent;
+import com.opencloud.common.event.GatewayRemoteRefreshRouteEvent;
 import com.opencloud.common.model.ResultBody;
 import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
 import org.springframework.cloud.bus.endpoint.AbstractBusEndpoint;

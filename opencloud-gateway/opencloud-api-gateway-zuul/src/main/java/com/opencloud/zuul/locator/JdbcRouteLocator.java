@@ -3,14 +3,12 @@ package com.opencloud.zuul.locator;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.opencloud.base.client.model.entity.GatewayRoute;
-import com.opencloud.zuul.event.GatewayRemoteRefreshRouteEvent;
-import com.opencloud.zuul.event.GatewayResourceRefreshEvent;
+import com.opencloud.common.event.GatewayRemoteRefreshRouteEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.cloud.netflix.zuul.filters.SimpleRouteLocator;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties.ZuulRoute;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -35,13 +33,11 @@ public class JdbcRouteLocator extends SimpleRouteLocator implements ApplicationL
     private JdbcTemplate jdbcTemplate;
     private ZuulProperties properties;
     private List<GatewayRoute> routeList;
-    public ApplicationEventPublisher publisher;
 
-    public JdbcRouteLocator(String servletPath, ZuulProperties properties, JdbcTemplate jdbcTemplate, ApplicationEventPublisher publisher) {
+    public JdbcRouteLocator(String servletPath, ZuulProperties properties, JdbcTemplate jdbcTemplate) {
         super(servletPath, properties);
         this.properties = properties;
         this.jdbcTemplate = jdbcTemplate;
-        this.publisher = publisher;
     }
 
     /**
@@ -138,6 +134,5 @@ public class JdbcRouteLocator extends SimpleRouteLocator implements ApplicationL
     @Override
     public void onApplicationEvent(GatewayRemoteRefreshRouteEvent gatewayRemoteRefreshRouteEvent) {
         doRefresh();
-        this.publisher.publishEvent(new GatewayResourceRefreshEvent(this));
     }
 }

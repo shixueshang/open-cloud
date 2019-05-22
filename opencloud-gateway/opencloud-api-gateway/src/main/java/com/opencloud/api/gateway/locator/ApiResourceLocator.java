@@ -2,11 +2,11 @@ package com.opencloud.api.gateway.locator;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.opencloud.api.gateway.event.GatewayResourceRefreshEvent;
 import com.opencloud.api.gateway.service.feign.BaseAuthorityRemoteService;
 import com.opencloud.api.gateway.service.feign.GatewayRemoteService;
 import com.opencloud.base.client.model.AccessAuthority;
 import com.opencloud.base.client.model.GatewayIpLimitApisDto;
+import com.opencloud.common.event.GatewayRemoteRefreshRouteEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.route.RouteDefinitionLocator;
 import org.springframework.cloud.gateway.support.NameUtils;
@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
  * @author liuyadu
  */
 @Slf4j
-public class ApiResourceLocator implements ApplicationListener<GatewayResourceRefreshEvent> {
+public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefreshRouteEvent> {
     /**
      * 单位时间
      */
@@ -97,7 +97,7 @@ public class ApiResourceLocator implements ApplicationListener<GatewayResourceRe
     }
 
     @Override
-    public void onApplicationEvent(GatewayResourceRefreshEvent event) {
+    public void onApplicationEvent(GatewayRemoteRefreshRouteEvent event) {
         refresh();
     }
 

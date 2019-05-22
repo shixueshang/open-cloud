@@ -1,7 +1,7 @@
 package com.opencloud.zuul.actuator;
 
+import com.opencloud.common.event.GatewayRemoteRefreshRouteEvent;
 import com.opencloud.common.model.ResultBody;
-import com.opencloud.zuul.event.GatewayRemoteRefreshRouteEvent;
 import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
 import org.springframework.cloud.bus.endpoint.AbstractBusEndpoint;
 import org.springframework.context.ApplicationEventPublisher;

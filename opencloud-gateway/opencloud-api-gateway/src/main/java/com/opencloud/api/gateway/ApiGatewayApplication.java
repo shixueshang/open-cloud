@@ -24,16 +24,15 @@
  */
 package com.opencloud.api.gateway;
 
-import com.opencloud.api.gateway.event.GatewayRemoteRefreshRouteEvent;
+import com.opencloud.api.gateway.locator.ApiResourceLocator;
+import com.opencloud.api.gateway.locator.JdbcRouteDefinitionLocator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.bus.BusProperties;
 import org.springframework.cloud.bus.jackson.RemoteApplicationEventScan;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.context.ApplicationEventPublisher;
 
 
 /**
@@ -46,18 +45,20 @@ import org.springframework.context.ApplicationEventPublisher;
 @EnableFeignClients
 @EnableDiscoveryClient
 @SpringBootApplication
-@RemoteApplicationEventScan(basePackages = "com.opencloud.api.gateway.event")
+@RemoteApplicationEventScan(basePackages = "com.opencloud")
 public class ApiGatewayApplication implements CommandLineRunner {
     @Autowired
-    public ApplicationEventPublisher publisher;
+    public ApiResourceLocator apiResourceLocator;
     @Autowired
-    private BusProperties bus;
+    private JdbcRouteDefinitionLocator jdbcRouteDefinitionLocator;
+
     public static void main(String[] args) {
         SpringApplication.run(ApiGatewayApplication.class, args);
     }
+
     @Override
     public void run(String... strings) throws Exception {
-        // 消息总线刷新所有网关实例
-        publisher.publishEvent(new GatewayRemoteRefreshRouteEvent(this, bus.getId(), null));
+        jdbcRouteDefinitionLocator.refresh();
+        apiResourceLocator.refresh();
     }
 }
