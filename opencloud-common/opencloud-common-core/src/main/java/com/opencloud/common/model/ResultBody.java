@@ -2,6 +2,7 @@ package com.opencloud.common.model;
 
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Maps;
 import com.opencloud.common.constants.ResultEnum;
@@ -12,6 +13,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import java.io.Serializable;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author admin
@@ -109,7 +111,7 @@ public class ResultBody<T> implements Serializable {
     }
 
     public String getMessage() {
-        return i18n(this.error,this.message);
+        return Optional.ofNullable(this.message).orElse(i18n(ResultEnum.getResultEnum(this.code).getMessage(), this.message));
     }
 
     public ResultBody setMessage(String message) {
