@@ -740,6 +740,8 @@ CREATE TABLE `base_user_account` (
                                    `account` varchar(255) DEFAULT NULL COMMENT '标识：手机号、邮箱、 用户名、或第三方应用的唯一标识',
                                    `password` varchar(255) DEFAULT NULL COMMENT '密码凭证：站内的保存密码、站外的不保存或保存token）',
                                    `account_type` varchar(255) DEFAULT NULL COMMENT '登录类型:password-密码、mobile-手机号、email-邮箱、weixin-微信、weibo-微博、qq-等等',
+                                   `nick_name` varchar(255) DEFAULT NULL COMMENT '昵称',
+                                   `avatar` varchar(255) DEFAULT NULL COMMENT '头像',
                                    PRIMARY KEY (`account_id`),
                                    KEY `user_id` (`user_id`) USING BTREE,
                                    CONSTRAINT `base_user_account_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `base_user` (`user_id`)
@@ -748,8 +750,8 @@ CREATE TABLE `base_user_account` (
 -- ----------------------------
 -- Records of base_user_account
 -- ----------------------------
-INSERT INTO `base_user_account` VALUES ('521677655368531968', '521677655146233856', 'admin', '$2a$10$A7EHximvrsa4ESX1uSlkJupbg2PLO2StzDzy67NX4YV25MxmbGvXu', 'username');
-INSERT INTO `base_user_account` VALUES ('557063237787451392', '557063237640650752', 'test', '$2a$10$V29RaVpl/zQepgdJXHoqUe2o8Rvrwuu2Xn7lRoXQPxRk4gfC5YwBy', 'username');
+INSERT INTO `base_user_account` VALUES ('521677655368531968', '521677655146233856', 'admin', '$2a$10$A7EHximvrsa4ESX1uSlkJupbg2PLO2StzDzy67NX4YV25MxmbGvXu', 'username','','');
+INSERT INTO `base_user_account` VALUES ('557063237787451392', '557063237640650752', 'test', '$2a$10$V29RaVpl/zQepgdJXHoqUe2o8Rvrwuu2Xn7lRoXQPxRk4gfC5YwBy', 'username','','');
 
 -- ----------------------------
 -- Table structure for base_user_account_logs
