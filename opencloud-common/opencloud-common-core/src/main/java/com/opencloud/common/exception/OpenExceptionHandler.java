@@ -224,8 +224,7 @@ public class OpenExceptionHandler {
         }
         int code = resultCode.getCode();
         exception.printStackTrace();
-        String error = resultCode.getMessage();
-        ResultBody resultBody = ResultBody.failed(code, message).setError(error).setPath(path).setHttpStatus(httpStatus);
+        ResultBody resultBody = ResultBody.failed(code, message).setPath(path).setHttpStatus(httpStatus);
         log.error("==> 错误解析:{}", resultBody);
         return resultBody;
     }

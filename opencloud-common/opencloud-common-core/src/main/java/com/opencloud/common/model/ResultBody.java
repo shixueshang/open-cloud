@@ -26,10 +26,6 @@ public class ResultBody<T> implements Serializable {
      */
     private int code = 0;
     /**
-     * 错误
-     */
-    private String error;
-    /**
      * 返回消息
      */
     private String message;
@@ -70,11 +66,11 @@ public class ResultBody<T> implements Serializable {
     }
 
     public static <T> ResultBody success() {
-        return new ResultBody().setMessage("success");
+        return new ResultBody().setCode(ResultEnum.OK.getCode());
     }
 
     public static <T> ResultBody success(T data) {
-        return new ResultBody().setData(data).setMessage("success");
+        return new ResultBody().setData(data).setCode(ResultEnum.OK.getCode());
     }
 
     public static <T> ResultBody success(String msg, T result) {
@@ -154,14 +150,7 @@ public class ResultBody<T> implements Serializable {
         return this;
     }
 
-    public String getError() {
-        return this.error = (this.code == 0 ? "" : ResultEnum.getResultEnum(this.code).getMessage());
-    }
 
-    public ResultBody setError(String error) {
-        this.error = error;
-        return this;
-    }
 
     public String getPath() {
         return path;
@@ -187,7 +176,6 @@ public class ResultBody<T> implements Serializable {
     public String toString() {
         return "ResultBody{" +
                 "code=" + code +
-                ", error='" + error + '\'' +
                 ", message='" + message + '\'' +
                 ", path='" + path + '\'' +
                 ", data=" + data +
