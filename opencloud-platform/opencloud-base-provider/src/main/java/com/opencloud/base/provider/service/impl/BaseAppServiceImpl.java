@@ -181,8 +181,8 @@ public class BaseAppServiceImpl extends BaseServiceImpl<BaseAppMapper, BaseApp> 
      */
     @Override
     @Caching(evict = {
-            @CacheEvict(value = {"apps"}, key = "#app.appId"),
-            @CacheEvict(value = {"apps"}, key = "'client:'+#app.appId")
+            @CacheEvict(value = {"apps"}, key = "#appId"),
+            @CacheEvict(value = {"apps"}, key = "'client:'+#appId")
     })
     public String restSecret(String appId) {
         BaseApp appInfo = getAppInfo(appId);
@@ -208,8 +208,8 @@ public class BaseAppServiceImpl extends BaseServiceImpl<BaseAppMapper, BaseApp> 
      * @return
      */
     @Caching(evict = {
-            @CacheEvict(value = {"apps"}, key = "#app.appId"),
-            @CacheEvict(value = {"apps"}, key = "'client:'+#app.appId")
+            @CacheEvict(value = {"apps"}, key = "#appId"),
+            @CacheEvict(value = {"apps"}, key = "'client:'+#appId")
     })
     @Override
     public void removeApp(String appId) {
