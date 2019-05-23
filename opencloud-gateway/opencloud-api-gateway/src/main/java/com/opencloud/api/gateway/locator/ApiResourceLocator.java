@@ -98,6 +98,11 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
 
     @Override
     public void onApplicationEvent(GatewayRemoteRefreshRouteEvent event) {
+        try {
+            // 延迟3秒再刷新
+            Thread.sleep(3000);
+        } catch (Exception e) {
+        }
         refresh();
     }
 

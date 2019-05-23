@@ -78,3 +78,4 @@ opencloud:
         - /auth/user/me
         - /base/authority/granted/me
         - /base/authority/granted/me/menu
+        - /base/user/me/**

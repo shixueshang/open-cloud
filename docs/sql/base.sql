@@ -93,7 +93,6 @@ INSERT INTO `base_authority` VALUES ('2', 'actuator', null, '2', null, '1');
 INSERT INTO `base_authority` VALUES ('3', 'MENU_system', '1', null, null, '1');
 INSERT INTO `base_authority` VALUES ('4', 'MENU_gatewayIpLimit', '2', null, null, '1');
 INSERT INTO `base_authority` VALUES ('5', 'MENU_systemMenu', '3', null, null, '1');
-INSERT INTO `base_authority` VALUES ('6', 'MENU_systemMonitor', '4', null, null, '1');
 INSERT INTO `base_authority` VALUES ('7', 'MENU_gatewayRoute', '5', null, null, '1');
 INSERT INTO `base_authority` VALUES ('8', 'MENU_systemApi', '6', null, null, '1');
 INSERT INTO `base_authority` VALUES ('9', 'MENU_gatewayTrace', '7', null, null, '1');

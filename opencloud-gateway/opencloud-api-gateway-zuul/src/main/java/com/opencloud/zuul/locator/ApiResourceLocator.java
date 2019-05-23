@@ -147,7 +147,7 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
                     allConfigAttributes.put(fullPath, array);
                 }
             }
-            log.info("=============加载动态权限:{}==============",accessAuthorities.size());
+            log.info("=============加载动态权限:{}==============", accessAuthorities.size());
         } catch (Exception e) {
             log.error("加载动态权限错误:{}", e.getMessage());
         }
@@ -165,7 +165,7 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
                     item.setPath(getFullPath(item.getServiceId(), item.getPath()));
                 }
             }
-            log.info("=============加载IP黑名单:{}==============",ipBlacks.size());
+            log.info("=============加载IP黑名单:{}==============", ipBlacks.size());
         } catch (Exception e) {
             log.error("加载IP黑名单错误:{}", e.getMessage());
         }
@@ -183,7 +183,7 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
                     item.setPath(getFullPath(item.getServiceId(), item.getPath()));
                 }
             }
-            log.info("=============加载IP白名单:{}==============",ipWhites.size());
+            log.info("=============加载IP白名单:{}==============", ipWhites.size());
         } catch (Exception e) {
             log.error("加载IP白名单错误:{}", e.getMessage());
         }
@@ -210,7 +210,7 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
         //从db中加载限流信息
         policysMap.putAll(loadRateLimitPolicy());
         rateLimitProperties.setPolicyList(policysMap);
-        log.info("=============加载动态限流:{}==============",rateLimitProperties.getPolicyList().size());
+        log.info("=============加载动态限流:{}==============", rateLimitProperties.getPolicyList().size());
     }
 
 
@@ -308,6 +308,11 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
 
     @Override
     public void onApplicationEvent(GatewayRemoteRefreshRouteEvent gatewayRemoteRefreshRouteEvent) {
+        try {
+            // 延迟3秒再刷新
+            Thread.sleep(3000);
+        } catch (Exception e) {
+        }
         refresh();
     }
 }
