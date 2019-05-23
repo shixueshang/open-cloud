@@ -32,8 +32,8 @@ public class IndexController {
 
     @GetMapping("/")
     public String index() {
-        if (apiProperties.getEnableSwaggerUi()) {
-            return "redirect:swagger-ui.html";
+        if (apiProperties.getApiDebug()) {
+            return "redirect:doc.html";
         }
         return "index";
     }

@@ -64,23 +64,15 @@ opencloud:
       check-sign: false
       # 访问权限控制
       access-control: true
-      # swagger调试
-      enable-swagger-ui: true
+      # swagger调试,生产环境设为false
+      api-debug: true
       # 始终放行
       permit-all:
-        - /
-        - /error
-        - /**/v2/api-docs/**
-        - /**/swagger-resources/**
-        - /webjars/**
-        - /swagger-ui.html
-        - /favicon.ico
         - /auth/login/**
         - /auth/logout
         - /auth/oauth/**
         - /admin/login/token
         - /admin/logout
-
       # 忽略权限鉴定
       authority-ignores:
         - /auth/user/me

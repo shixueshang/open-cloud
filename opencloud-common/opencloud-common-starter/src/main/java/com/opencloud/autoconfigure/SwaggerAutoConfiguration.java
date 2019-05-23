@@ -128,13 +128,8 @@ public class SwaggerAutoConfiguration {
      */
     @Bean
     SecurityScheme securityScheme() {
-        return new OAuthBuilder()
-                .name("OAuth2")
-                .scopes(scopes())
-                .grantTypes(grantTypes())
-                .build();
+        return new ApiKey("BearerToken", "Authorization", "header");
     }
-
 
     private List<AuthorizationScope> scopes() {
         List<String> scopes = Lists.newArrayList();

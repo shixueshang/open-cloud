@@ -2,11 +2,12 @@ package com.opencloud.common.model;
 
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Maps;
 import com.opencloud.common.constants.ResultEnum;
 import com.opencloud.common.utils.SpringContextHolder;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 
@@ -18,26 +19,31 @@ import java.util.Optional;
 /**
  * @author admin
  */
+@ApiModel(value = "响应结果")
 public class ResultBody<T> implements Serializable {
     private static final long serialVersionUID = -6190689122701100762L;
 
     /**
-     * 消息码
+     * 响应编码
      */
+    @ApiModelProperty(value = "响应编码:0-请求处理成功")
     private int code = 0;
     /**
-     * 返回消息
+     * 提示消息
      */
+    @ApiModelProperty(value = "提示消息")
     private String message;
 
     /**
      * 请求路径
      */
+    @ApiModelProperty(value = "请求路径")
     private String path;
 
     /**
-     * 返回数据
+     * 响应数据
      */
+    @ApiModelProperty(value = "响应数据")
     private T data;
 
     /**
@@ -48,11 +54,13 @@ public class ResultBody<T> implements Serializable {
     /**
      * 附加数据
      */
+    @ApiModelProperty(value = "附加数据")
     private Map<String, Object> extra;
 
     /**
-     * 服务器时间
+     * 响应时间
      */
+    @ApiModelProperty(value = "响应时间")
     private long timestamp = System.currentTimeMillis();
 
     @JSONField(serialize = false, deserialize = false)
