@@ -102,7 +102,7 @@ public class AnnotationScan implements ApplicationListener<ApplicationReadyEvent
             String methodName = method.getMethod().getName();
             String fullName = className + "." + methodName;
             // md5码
-            String md5 = EncryptUtils.md5Hex(fullName + serviceId);
+            String md5 = EncryptUtils.md5Hex(serviceId + urls);
             String name = "";
             String desc = "";
 
@@ -125,8 +125,8 @@ public class AnnotationScan implements ApplicationListener<ApplicationReadyEvent
             list.add(api);
         }
         Map resource = Maps.newHashMap();
-        resource.put("application",serviceId);
-        resource.put("mapping",list);
+        resource.put("application", serviceId);
+        resource.put("mapping", list);
         log.info("ApplicationReadyEvent:[{}]", serviceId);
         executorService.submit(new Runnable() {
             @Override
