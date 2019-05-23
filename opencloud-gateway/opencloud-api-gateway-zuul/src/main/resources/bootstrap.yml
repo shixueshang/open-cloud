@@ -80,20 +80,24 @@ management:
         include: refresh,health,open
 
 opencloud:
+  swagger2:
+    description: 接口调试文档服务
+    # 生产环境建议关闭
+    enabled: true
+    title: 接口调试文档服务
   #网关配置
   api:
     #动态权限控制
     access-control: true
     #校验参数签名
     check-sign: false
-    # swagger调试
-    enable-swagger-ui: true
+    #接口调试,生产环境设为false
+    api-debug: true
     # 始终放行
     permit-all:
       - /auth/login/**
       - /auth/logout
       - /auth/oauth/**
-      - /auth/login/**
       - /admin/login/token
       - /admin/logout
       - /app/login/token

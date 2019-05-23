@@ -23,9 +23,9 @@ public class ApiProperties {
     private Boolean accessControl = true;
 
     /**
-     * 是否开启swagger调试
+     * 是否开启接口调试
      */
-    private Boolean enableSwaggerUi = false;
+    private Boolean apiDebug = false;
 
     /**
      * 始终放行
@@ -71,11 +71,11 @@ public class ApiProperties {
         this.authorityIgnores = authorityIgnores;
     }
 
-    public Boolean getEnableSwaggerUi() {
-        return enableSwaggerUi;
+    public Boolean getApiDebug() {
+        return apiDebug;
     }
 
-    public void setEnableSwaggerUi(Boolean enableSwaggerUi) {
-        this.enableSwaggerUi = enableSwaggerUi;
+    public void setApiDebug(Boolean apiDebug) {
+        this.apiDebug = apiDebug;
     }
 }

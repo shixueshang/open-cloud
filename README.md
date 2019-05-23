@@ -9,30 +9,35 @@
   <a><img src="https://img.shields.io/npm/l/express.svg" alt="License"></a>
 </p>  
 
-# 微服务开放平台 2.0.0 更快、更新、更全面
-        
+## 微服务开放平台 2.0.0 更快、更新、更全面
+#### 开源不易，请随手给个Star! 感谢支持！
+
 #### 简介
 搭建基于OAuth2的开放平台、为APP端提供统一接口管控平台、为第三方合作伙伴的业务对接提供授信可控的技术对接平台.
++ 分布式架构,统一配置中心,服务治理.fegin(RPC)内部调用,微服务管理开发更便捷
 + 统一API网关、访问鉴权、参数验签、接口调用更安全.
 + 深度整合SpringSecurity+Oauth2,更细粒度、灵活的ABAC权限控制.
-+ 分布式架构,服务内部调用Fegin,微服务开发更便捷.
 + 前后端分离方式开发应用，分工合作更高效!
 + 代码合理封装、简单易懂、
-   
+
+#### 系统结构图
+
+![springcloud](/docs/springcloud.jpg)  
+
 <a target="_blank" href="http://39.106.187.125/admin">演示地址</a>
 + 默认登录账号:admin 123456  
 + 测试登录账号:test 123456
 
-#### 开源不易，请随手给个Star! 感谢支持！
-<a target="_blank" href="https://gitee.com/liuyadu/generator.git">代码生成器</a>  
-
-##### 服务端源码
+####服务端源码
 <a target="_blank" href="https://gitee.com/liuyadu">码云</a>  <a target="_blank" href="https://github.com/liuyadu/">github</a>  
 
-##### vue后台UI源码
+#### vue后台UI源码
 <a target="_blank" href="https://gitee.com/liuyadu/open-admin-ui">后台UI源码</a>
 
-##### 使用手册
+#### 代码生成器
+<a target="_blank" href="https://gitee.com/liuyadu/generator.git">代码生成器</a>  
+
+#### 使用手册
 <a target="_blank" href="https://gitee.com/liuyadu/open-cloud/wikis/pages">使用手册</a>  
         
 #### 更新日志
@@ -51,13 +56,10 @@
         3. 重构授权逻辑
         4. 提取公共配置,并迁移到Nacos配置中心
         5. 优化功能
-        
 
-
-#### 欢迎吐槽 
-学习交流群:760809808  <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=b45f53bc72df5935af588df50a0f651285020356d1daa05f90ee3fb95a0607c9"><img  border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="open-cloud学习交流群" title="open-cloud学习交流群"></a>  
-![760809808](/docs/1548831206525.png)  
-
+#### 学习交流群 
+交流群:760809808  <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=b45f53bc72df5935af588df50a0f651285020356d1daa05f90ee3fb95a0607c9"><img  border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="open-cloud学习交流群" title="open-cloud学习交流群"></a>  
+扫码进群： ![760809808](/docs/1548831206525.png)  
 
 #### 代码结构
 ``` lua
@@ -95,20 +97,6 @@ open-cloud
     ├── opencloud-bpm-client   -- 工作流接口
     ├── opencloud-bpm-provider -- 工作流服务(port = 8255)
 ```
-
-#### 系统结构图
-
-![springcloud](/docs/springcloud.jpg)  
-
-#### 数据模型
-
-##### 基础权限模型  
-
-![base](/docs/base.png)  
-
-##### 网关访问限制模型  
-
-![gateway](/docs/gateway.png)  
 
 #### 快速开始
 上手难度：★★★
@@ -183,195 +171,8 @@ open-cloud
     ./docs/bin/startup.sh {start|stop|restart|status} opencloud-api-gateway-zuul.jar
     ```
     
-#### 集成开发  
-####
- 资源服务器中结合Oauth2解析token共总结3种读取方式:  
- + (默认)远程校验解析token. 缺点:需创建客户端信息,http方式,性能较差. 构建方法:OpenHelper.buildRemoteTokenServices(OpenCommonProperties properties)
- + (默认)jwt校验解析token. 缺点:需提供jwt签名或密钥,生存token过长(cookie有时存放不下),且base64加密无法存放敏感数据,不方便拓展. 构建方法:OpenHelper.buildJwtTokenServices(OpenCommonProperties properties)
- + (拓展,建议使用)redis校验解析token. 无需创建任何客户端和密钥,读取性能优,可存放复杂的认证信息. 缺点:必须使用同一个redisDbIndex. 构建方法: OpenHelper.buildRedisTokenServices(RedisConnectionFactory redisConnectionFactory)
+#### 集成开发 
+<a target="_blank" href="https://gitee.com/liuyadu/open-cloud/wikis/pages?sort_id=1396933&doc_id=256893">集成开发</a>
 
-1.创建新maven项目
-   ```xml
-         <!-- 引入公共包 -->
-         <dependency>
-                    <artifactId>opencloud-common-starter</artifactId>
-                    <groupId>com.opencloud</groupId>
-                    <version>${opencloud.common.version}</version>
-         </dependency>
-   ```
-    
-2.配置 bootstrap.yml
-   ```yaml 
-      server:
-          port: 8266
-      spring:
-          application:
-              name: ${artifactId}
-          cloud:
-              nacos:
-                  config:
-                      namespace: ${config.namespace}
-                      refreshable-dataids: common.properties
-                      server-addr: ${config.server-addr}
-                      shared-dataids: common.properties,db.properties,redis.properties,rabbitmq.properties
-                  discovery:
-                      server-addr: ${discovery.server-addr}
-          main:
-              allow-bean-definition-overriding: true
-          mvc:
-              throw-exception-if-no-handler-found: true
-          resources:
-              add-mappings: false
-          profiles:
-              active: ${profile.name}
-      
-      management:
-          endpoints:
-              web:
-                  exposure:
-                      include: refresh,health
-      opencloud:
-          swagger2:
-              description: 平台消息服务
-              enabled: true
-              title: 平台消息服务
-   ```
-   
-3. 创建MyServiceApplication.java
-   ```java
-        //开启feign RPC远程调用
-       @EnableFeignClients
-       // 开启服务发现
-       @EnableDiscoveryClient
-       @SpringBootApplication
-       public class MyServiceApplication {
-       
-           public static void main(String[] args) {
-               SpringApplication.run(MyServiceApplication.class, args);
-           }
-       }
-   ```
-4.创建ResourceServerConfiguration.java 资源服务配置
-
-   ```java
-        @Configuration
-        @EnableResourceServer
-        public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
-            @Autowired
-            private RedisConnectionFactory redisConnectionFactory;
-        
-            @Override
-            public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
-                  // 构建redis获取token,这里是为了支持自定义用户信息转换器
-                  resources.tokenServices(OpenHelper.buildRedisTokenServices(redisConnectionFactory));
-            }
-        
-            @Override
-            public void configure(HttpSecurity http) throws Exception {
-                http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                        .and()
-                        .authorizeRequests()
-                        // 内部访问直接放行
-                        .antMatchers("/v1/**").permitAll()
-                        // 只有拥有actuator权限可执行远程端点
-                        .requestMatchers(EndpointRequest.toAnyEndpoint()).hasAnyAuthority(CommonConstants.AUTHORITY_ACTUATOR)
-                        .anyRequest().authenticated()
-                        .and()
-                         //认证鉴权错误处理,为了统一异常处理。每个资源服务器都应该加上。
-                        .exceptionHandling()
-                        .accessDeniedHandler(new OpenAccessDeniedHandler())
-                        .authenticationEntryPoint(new OpenAuthenticationEntryPoint())
-                        .and()
-                        .csrf().disable();
-            }
-        
-        }
-   ```
-   
-5.启动项目  
-
-#### 多认证中心
-1. 平台用户认证中心(opencloud-auth-provider) 
-2. 应用用户认证中心(app-auth-demo) 
-3. 用户认证中心2 - 用户认证中心2
-4. 用户认证中心N - 根据实际应用可创建多个用户中心
-
-针对不同应用的用户数据是单独存储，所以需要建立不同的认证中心提供用户认证。
-+ 采用oauth2统一协议,每个APP拥有独立的认证授权中心.
-+ 区分用户数据源
-+ 共享客户端oauth_client_details信息.
-+ 统一方法获取OpenHelper.getUser().认证中心标识-authCenterId.
-+ 个性定制,可单独提供手机验证码等方式登陆.
-
-#### 第三方接口调用 
-### 1.创建应用信息
-
-![创建应用信息](https://images.gitee.com/uploads/images/2019/0326/151715_1eee9886_791541.png "创建应用信息")
-### 2.配置开发信息
-
-![配置开发信息](https://images.gitee.com/uploads/images/2019/0326/151725_e0743ddb_791541.png "配置开发信息")
-### 3.授权功能,默认必须勾选获取当前登录信息接口
-
-![授权功能](https://images.gitee.com/uploads/images/2019/0326/151739_09519ffd_791541.png "授权功能")
-
-
-### 4.使用postman测试调用
-例：
-应用信息生成的
-AppId： 1553588629729
-AppSecret： 1a616ba3f91141efa1c4f4a1ce725e2c
-
-1. 多认证中心,密码模式  
-  移动应用用户认证中心：localhost:7211/oauth/token  
-+ 首先配置客户端密码
-![输入图片说明](https://images.gitee.com/uploads/images/2019/0403/181809_ef6893fb_791541.png "QQ截图20190403181710.png")
-+ 输入用户username和password
-![输入图片说明](https://images.gitee.com/uploads/images/2019/0403/181820_f59fb7b9_791541.png "QQ截图20190403181721.png")
-+ 获取用户信息
-![输入图片说明](https://images.gitee.com/uploads/images/2019/0403/181844_702a05b7_791541.png "QQ截图20190403181733.png")
-
-
-2. 授权码模式(authorization_code) 需要用户认证
-- 获取code
-浏览器访问
-```
- http://localhost:8211/oauth/authorize?response_type=code&client_id=1553588629729&redirect_uri=http://www.baidu.com
-```
-未登录将进入登录页，输入系统用户登录信息
-![输入图片说明](https://images.gitee.com/uploads/images/2019/0326/155530_44c6779e_791541.png "login.png")
-用户确认授权信息
-![输入图片说明](https://images.gitee.com/uploads/images/2019/0326/160746_443dc237_791541.png "confrim.png")
-重定向到回调地址,获得code
-![输入图片说明](https://images.gitee.com/uploads/images/2019/0326/160915_4f078abf_791541.png "code.png")
-
-- 使用postman通过code获取access_token，
-![输入图片说明](https://images.gitee.com/uploads/images/2019/0326/170307_a233d434_791541.png "token.png")
-
-- 使用access_token获取已授权资源
-![输入图片说明](https://images.gitee.com/uploads/images/2019/0326/170316_82f0029c_791541.png "res.png")
-
-3. 客户端模式(client_credentials)
-```
- http://localhost:8211/oauth/token?grant_type=client_credentials&client_id=1553588629729&client_secret=1a616ba3f91141efa1c4f4a1ce725e2c
-```
-- 获取客户端token
-![输入图片说明](https://images.gitee.com/uploads/images/2019/0326/182121_6cb1d676_791541.png "ctoken.png")
-- 访问未授权资源提示权限不足!
-![输入图片说明](https://images.gitee.com/uploads/images/2019/0326/182231_9185e368_791541.png "ctoken1.png")
-- 访问已授权资源,正常返回数据(如果授权完,还提示权限不足，由于上次令牌存在缓存信息,重新获取token即可)
-![输入图片说明](https://images.gitee.com/uploads/images/2019/0326/182343_dc4305d0_791541.png "ctoken2.png")
-
-
-### 5.如何创建APP接口服务
-app-api-base为平台提供的基础接口模块,该模块会提供常用的基础接口,如登录,注册,验证码,第三方登录等APP中常用的接口,每个接口都提供扩展功能,通过编写自定义handler来扩展接口返回的数据
-满足不同的业务需求(例:GetUserInfoHander扩展了获取个人信息和登录初始化接口)
-使用方式：新建APP项目并依赖app-api-base模块,参考app-api-server的写法
-为何这么用:
-当你做过很多项目时就有体会,每做一个项目基本就是在老框架上改,删除之前项目的业务代码,这是一个烦人的过程,所以建议app-api-base中只提供可复用的基础接口并提供扩展事件
-
-
-
-
-
-
-
+#### 第三方应用接入(OAUTH2)
+<a target="_blank" href="https://gitee.com/liuyadu/open-cloud/wikis/pages?sort_id=1396294&doc_id=256893">第三方应用接入</a>

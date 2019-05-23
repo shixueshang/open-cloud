@@ -11,7 +11,6 @@ import com.opencloud.zuul.locator.ApiResourceLocator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.util.matcher.IpAddressMatcher;
@@ -48,6 +47,13 @@ public class ApiAuthorizationManager {
             if (apiProperties.getPermitAll() != null) {
                 permitAll.addAll(apiProperties.getPermitAll());
             }
+            if (apiProperties.getApiDebug()) {
+                permitAll.add("/**/v2/api-docs/**");
+                permitAll.add("/**/swagger-resources/**");
+                permitAll.add("/webjars/**");
+                permitAll.add("/doc.html");
+                permitAll.add("/swagger-ui.html");
+            }
             if (apiProperties.getAuthorityIgnores() != null) {
                 authorityIgnores.addAll(apiProperties.getAuthorityIgnores());
             }
@@ -70,22 +76,20 @@ public class ApiAuthorizationManager {
         }
         String requestPath = getRequestPath(request);
         // 是否直接放行
-        if (isPermitAll(requestPath)) {
+        if (permitAll(requestPath)) {
             return true;
         }
-        // 判断api是否需要认证
-        boolean isAuth = isAuthAccess(requestPath);
-
-        if (isAuth) {
-            // 校验身份
-            return checkAuthorities(request, authentication, requestPath);
-        } else {
-            return true;
-        }
+        return checkAuthorities(request, authentication, requestPath);
     }
 
 
-    public boolean isPermitAll(String requestPath) {
+    /**
+     * 始终放行
+     *
+     * @param requestPath
+     * @return
+     */
+    public boolean permitAll(String requestPath) {
         Iterator<String> it = permitAll.iterator();
         while (it.hasNext()) {
             String path = it.next();
@@ -93,10 +97,30 @@ public class ApiAuthorizationManager {
                 return true;
             }
         }
+        // 动态权限列表
+        List<AccessAuthority> authorityList = accessLocator.getAccessAuthorities();
+        if (authorityList != null) {
+            Iterator<AccessAuthority> it2 = authorityList.iterator();
+            while (it.hasNext()) {
+                AccessAuthority auth = it2.next();
+                Boolean isAuth = auth.getIsAuth() != null && auth.getIsAuth().equals(1) ? true : false;
+                String fullPath = auth.getPath();
+                // 无需认证,返回true
+                if (StringUtils.isNotBlank(fullPath) && pathMatch.match(fullPath, requestPath) && isAuth) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
-    public boolean isNoAuthorityAllow(String requestPath) {
+    /**
+     * 忽略鉴权
+     *
+     * @param requestPath
+     * @return
+     */
+    public boolean authorityIgnores(String requestPath) {
         Iterator<String> it = authorityIgnores.iterator();
         while (it.hasNext()) {
             String path = it.next();
@@ -108,16 +132,19 @@ public class ApiAuthorizationManager {
     }
 
 
+    /**
+     * 检查权限
+     *
+     * @param request
+     * @param authentication
+     * @param requestPath
+     * @return
+     */
     public boolean checkAuthorities(HttpServletRequest request, Authentication authentication, String requestPath) {
         Object principal = authentication.getPrincipal();
         // 已认证身份
         if (principal != null) {
-
-            if (authentication instanceof AnonymousAuthenticationToken) {
-                //check if this uri can be access by anonymous
-                //return
-            }
-            if (isNoAuthorityAllow(requestPath)) {
+            if (authorityIgnores(requestPath)) {
                 // 认证通过,并且无需权限
                 return true;
             }
@@ -219,20 +246,6 @@ public class ApiAuthorizationManager {
         return false;
     }
 
-    public boolean isAuthAccess(String requestPath) {
-        List<AccessAuthority> authorityList = accessLocator.getAccessAuthorities();
-        if (authorityList != null) {
-            for (AccessAuthority auth : authorityList) {
-                String fullPath = auth.getPath();
-                Boolean isAuth = auth.getIsAuth() != null && auth.getIsAuth().equals(1) ? true : false;
-                // 无需认证,返回true
-                if (StringUtils.isNotBlank(fullPath) && pathMatch.match(fullPath, requestPath) && isAuth) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
 
     public String getRequestPath(HttpServletRequest request) {
         String url = request.getServletPath();

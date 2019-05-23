@@ -16,7 +16,6 @@ import java.util.Map;
  * @author liuyau
  * @date 2018/07/10
  */
-@ApiModel(value = "分页参数")
 public class PageParams extends Page implements Serializable {
     private static final long serialVersionUID = -1710273706052960025L;
     private int page = CommonConstants.DEFAULT_PAGE;

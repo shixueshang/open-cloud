@@ -48,9 +48,20 @@ public class ApiAuthorizationManager implements ReactiveAuthorizationManager<Aut
     public ApiAuthorizationManager(ApiResourceLocator accessLocator, ApiProperties apiGatewayProperties) {
         this.accessLocator = accessLocator;
         this.apiGatewayProperties = apiGatewayProperties;
+        // 默认放行
+        permitAll.add("/");
+        permitAll.add("/error");
+        permitAll.add("/favicon.ico");
         if (apiGatewayProperties != null) {
             if (apiGatewayProperties.getPermitAll() != null) {
                 permitAll.addAll(apiGatewayProperties.getPermitAll());
+            }
+            if (apiGatewayProperties.getApiDebug()) {
+                permitAll.add("/**/v2/api-docs/**");
+                permitAll.add("/**/swagger-resources/**");
+                permitAll.add("/webjars/**");
+                permitAll.add("/doc.html");
+                permitAll.add("/swagger-ui.html");
             }
             if (apiGatewayProperties.getAuthorityIgnores() != null) {
                 authorityIgnores.addAll(apiGatewayProperties.getAuthorityIgnores());
@@ -67,24 +78,21 @@ public class ApiAuthorizationManager implements ReactiveAuthorizationManager<Aut
             return Mono.just(new AuthorizationDecision(true));
         }
         // 是否直接放行
-        if (isPermitAll(requestPath)) {
+        if (permitAll(requestPath)) {
             return Mono.just(new AuthorizationDecision(true));
         }
-        // 判断api是否需要认证
-        boolean isAuth = isAuthAccess(requestPath);
-
-        if (isAuth) {
-            // 校验身份
-           return authentication.map((a) -> {
-                return new AuthorizationDecision(checkAuthorities(exchange, a, requestPath));
-            });
-        } else {
-            return Mono.just(new AuthorizationDecision(true));
-        }
+        return authentication.map((a) -> {
+            return new AuthorizationDecision(checkAuthorities(exchange, a, requestPath));
+        });
     }
 
-
-    private boolean isPermitAll(String requestPath) {
+    /**
+     * 始终放行
+     *
+     * @param requestPath
+     * @return
+     */
+    public boolean permitAll(String requestPath) {
         Iterator<String> it = permitAll.iterator();
         while (it.hasNext()) {
             String path = it.next();
@@ -92,10 +100,30 @@ public class ApiAuthorizationManager implements ReactiveAuthorizationManager<Aut
                 return true;
             }
         }
+        // 动态权限列表
+        List<AccessAuthority> authorityList = accessLocator.getAccessAuthorities();
+        if (authorityList != null) {
+            Iterator<AccessAuthority> it2 = authorityList.iterator();
+            while (it.hasNext()) {
+                AccessAuthority auth = it2.next();
+                Boolean isAuth = auth.getIsAuth() != null && auth.getIsAuth().equals(1) ? true : false;
+                String fullPath = auth.getPath();
+                // 无需认证,返回true
+                if (StringUtils.isNotBlank(fullPath) && pathMatch.match(fullPath, requestPath) && isAuth) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
-    private boolean isNoAuthorityAllow(String requestPath) {
+    /**
+     * 忽略鉴权
+     *
+     * @param requestPath
+     * @return
+     */
+    private boolean authorityIgnores(String requestPath) {
         Iterator<String> it = authorityIgnores.iterator();
         while (it.hasNext()) {
             String path = it.next();
@@ -106,7 +134,14 @@ public class ApiAuthorizationManager implements ReactiveAuthorizationManager<Aut
         return false;
     }
 
-
+    /**
+     * 检查权限
+     *
+     * @param request
+     * @param authentication
+     * @param requestPath
+     * @return
+     */
     private boolean checkAuthorities(ServerWebExchange exchange, Authentication authentication, String requestPath) {
         Object principal = authentication.getPrincipal();
         // 已认证身份
@@ -115,7 +150,7 @@ public class ApiAuthorizationManager implements ReactiveAuthorizationManager<Aut
                 //check if this uri can be access by anonymous
                 //return
             }
-            if (isNoAuthorityAllow(requestPath)) {
+            if (authorityIgnores(requestPath)) {
                 // 认证通过,并且无需权限
                 return true;
             }
