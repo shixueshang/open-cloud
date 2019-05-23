@@ -223,9 +223,8 @@ public class OpenExceptionHandler {
             resultCode = ResultEnum.ERROR;
         }
         int code = resultCode.getCode();
-        exception.printStackTrace();
         ResultBody resultBody = ResultBody.failed(code, message).setPath(path).setHttpStatus(httpStatus);
-        log.error("==> 错误解析:{}", resultBody);
+        log.error("==> error:{} exception: {}",resultBody, exception);
         return resultBody;
     }
 

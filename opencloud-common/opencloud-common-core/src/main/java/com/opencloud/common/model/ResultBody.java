@@ -14,7 +14,6 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import java.io.Serializable;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * @author admin
@@ -115,7 +114,7 @@ public class ResultBody<T> implements Serializable {
     }
 
     public String getMessage() {
-        return Optional.ofNullable(this.message).orElse(i18n(ResultEnum.getResultEnum(this.code).getMessage(), this.message));
+        return i18n(ResultEnum.getResultEnum(this.code).getMessage(), this.message);
     }
 
     public ResultBody setMessage(String message) {
