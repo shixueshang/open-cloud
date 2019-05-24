@@ -92,7 +92,7 @@ public class BaseAppServiceImpl extends BaseServiceImpl<BaseAppMapper, BaseApp> 
     public BaseClientDetails getAppClientInfo(String appId) {
         try {
             BaseClientDetails clientDetails = (BaseClientDetails) jdbcClientDetailsService.loadClientByClientId(appId);
-            clientDetails.setAuthorities(baseAuthorityService.findAppGrantedAuthority(appId));
+            clientDetails.setAuthorities(baseAuthorityService.findAuthorityByApp(appId));
             return clientDetails;
         } catch (Exception e) {
             log.error("clientDetailsClient.getClient error:{}", e.getMessage());
@@ -221,7 +221,7 @@ public class BaseAppServiceImpl extends BaseServiceImpl<BaseAppMapper, BaseApp> 
             throw new OpenAlertException(String.format("保留数据,不允许删除"));
         }
         // 移除应用权限
-        baseAuthorityService.removeAppAuthority(appId);
+        baseAuthorityService.removeAuthorityApp(appId);
         baseAppMapper.deleteById(appInfo.getAppId());
         jdbcClientDetailsService.removeClientDetails(appInfo.getAppId());
     }

@@ -308,7 +308,7 @@ public class BaseRoleServiceImpl extends BaseServiceImpl<BaseRoleMapper, BaseRol
      */
     @Override
     public List<BaseRole> getUserRoles(Long userId) {
-        List<BaseRole> roles = baseRoleUserMapper.selectUserRoleList(userId);
+        List<BaseRole> roles = baseRoleUserMapper.selectRoleUserList(userId);
         return roles;
     }
 
@@ -320,7 +320,7 @@ public class BaseRoleServiceImpl extends BaseServiceImpl<BaseRoleMapper, BaseRol
      */
     @Override
     public List<Long> getUserRoleIds(Long userId) {
-        return baseRoleUserMapper.selectUserRoleIdList(userId);
+        return baseRoleUserMapper.selectRoleUserIdList(userId);
     }
 
 

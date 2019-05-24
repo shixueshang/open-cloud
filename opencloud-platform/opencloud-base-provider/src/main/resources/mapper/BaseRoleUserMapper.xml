@@ -9,7 +9,7 @@
         <result column="role_id" property="roleId" jdbcType="BIGINT"/>
     </resultMap>
 
-    <select id="selectUserRoleList" resultMap="com.opencloud.base.provider.mapper.BaseRoleMapper.BaseResultMap">
+    <select id="selectRoleUserList" resultMap="com.opencloud.base.provider.mapper.BaseRoleMapper.BaseResultMap">
         SELECT
         base_role_user.user_id,
         base_role.role_id,
@@ -26,7 +26,7 @@
     </select>
 
 
-    <select id="selectUserRoleIdList" resultType="java.lang.Long">
+    <select id="selectRoleUserIdList" resultType="java.lang.Long">
         SELECT
         base_role.role_id
         FROM

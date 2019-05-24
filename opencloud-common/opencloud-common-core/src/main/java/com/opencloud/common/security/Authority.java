@@ -42,15 +42,22 @@ public final class Authority implements GrantedAuthority {
     public Authority() {
     }
 
-    public Authority(String role) {
-        Assert.hasText(role, "A granted authority textual representation is required");
-        this.authority = role;
+    public Authority(String authority) {
+        Assert.hasText(authority, "A granted authority textual representation is required");
+        this.authority = authority;
     }
 
-    public Authority(String role, Date expireTime) {
-        Assert.hasText(role, "A granted authority textual representation is required");
-        this.authority = role;
+    public Authority(String authority, Date expireTime) {
+        Assert.hasText(authority, "A granted authority textual representation is required");
+        this.authority = authority;
         this.expireTime = expireTime;
+    }
+
+    public Authority(String authorityId, String authority, Date expireTime, String owner) {
+        this.authorityId = authorityId;
+        this.authority = authority;
+        this.expireTime = expireTime;
+        this.owner = owner;
     }
 
     public void setAuthority(String authority) {

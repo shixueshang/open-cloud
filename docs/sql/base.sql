@@ -45,25 +45,25 @@ INSERT INTO `base_app` VALUES ('1552274783265', '2cde1eaa60fe4af1987f94caa13f29a
 INSERT INTO `base_app` VALUES ('1552294656514', '74a02bade18a42388c3127751b96e1f7', '运营后台', 'Admin', '', 'pc', '运营后台', '', 'http://www.baidu.com', '521677655146233856', 'platform', '2018-11-12 17:48:45', '2019-03-16 00:24:26', '1', '1');
 
 -- ----------------------------
--- Table structure for base_app_authority
+-- Table structure for base_authority_app
 -- ----------------------------
-DROP TABLE IF EXISTS `base_app_authority`;
-CREATE TABLE `base_app_authority` (
+DROP TABLE IF EXISTS `base_authority_app`;
+CREATE TABLE `base_authority_app` (
                                     `authority_id` bigint(50) NOT NULL COMMENT '权限ID',
                                     `app_id` varchar(100) NOT NULL COMMENT '应用ID',
                                     `expire_time` datetime DEFAULT NULL COMMENT '过期时间:null表示长期',
                                     KEY `authority_id` (`authority_id`) USING BTREE,
                                     KEY `app_id` (`app_id`) USING BTREE,
-                                    CONSTRAINT `base_app_authority_ibfk_1` FOREIGN KEY (`authority_id`) REFERENCES `base_authority` (`authority_id`),
-                                    CONSTRAINT `base_app_authority_ibfk_2` FOREIGN KEY (`app_id`) REFERENCES `base_app` (`app_id`)
+                                    CONSTRAINT `base_authority_app_ibfk_1` FOREIGN KEY (`authority_id`) REFERENCES `base_authority` (`authority_id`),
+                                    CONSTRAINT `base_authority_app_ibfk_2` FOREIGN KEY (`app_id`) REFERENCES `base_app` (`app_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='系统应用-授权';
 
 -- ----------------------------
--- Records of base_app_authority
+-- Records of base_authority_app
 -- ----------------------------
-INSERT INTO `base_app_authority` VALUES ('555852320928169984', '1552274783265', null);
-INSERT INTO `base_app_authority` VALUES ('2', '1552274783265', null);
-INSERT INTO `base_app_authority` VALUES ('555852320928169984', '1552294656514', null);
+INSERT INTO `base_authority_app` VALUES ('555852320928169984', '1552274783265', null);
+INSERT INTO `base_authority_app` VALUES ('2', '1552274783265', null);
+INSERT INTO `base_authority_app` VALUES ('555852320928169984', '1552294656514', null);
 
 -- ----------------------------
 -- Table structure for base_authority

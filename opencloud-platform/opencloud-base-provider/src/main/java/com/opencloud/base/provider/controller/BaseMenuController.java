@@ -1,10 +1,10 @@
 package com.opencloud.base.provider.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.opencloud.base.client.model.entity.BaseResourceMenu;
-import com.opencloud.base.client.model.entity.BaseResourceOperation;
-import com.opencloud.base.provider.service.BaseResourceMenuService;
-import com.opencloud.base.provider.service.BaseResourceOperationService;
+import com.opencloud.base.client.model.entity.BaseMenu;
+import com.opencloud.base.client.model.entity.BaseAction;
+import com.opencloud.base.provider.service.BaseMenuService;
+import com.opencloud.base.provider.service.BaseActionService;
 import com.opencloud.common.model.PageParams;
 import com.opencloud.common.model.ResultBody;
 import com.opencloud.common.security.http.OpenRestTemplate;
@@ -22,10 +22,10 @@ import java.util.Map;
 @RestController
 public class BaseMenuController {
     @Autowired
-    private BaseResourceMenuService baseResourceMenuService;
+    private BaseMenuService baseResourceMenuService;
 
     @Autowired
-    private BaseResourceOperationService baseResourceOperationService;
+    private BaseActionService baseResourceOperationService;
 
     @Autowired
     private OpenRestTemplate openRestTemplate;
@@ -37,7 +37,7 @@ public class BaseMenuController {
      */
     @ApiOperation(value = "获取分页菜单资源列表", notes = "获取分页菜单资源列表")
     @GetMapping("/menu")
-    public ResultBody<IPage<BaseResourceMenu>> getMenuListPage(@RequestParam(required = false) Map map) {
+    public ResultBody<IPage<BaseMenu>> getMenuListPage(@RequestParam(required = false) Map map) {
         return ResultBody.success(baseResourceMenuService.findListPage(new PageParams(map)));
     }
 
@@ -48,7 +48,7 @@ public class BaseMenuController {
      */
     @ApiOperation(value = "菜单所有资源列表", notes = "菜单所有资源列表")
     @GetMapping("/menu/all")
-    public ResultBody<List<BaseResourceMenu>> getMenuAllList() {
+    public ResultBody<List<BaseMenu>> getMenuAllList() {
         return ResultBody.success(baseResourceMenuService.findAllList());
     }
 
@@ -63,8 +63,8 @@ public class BaseMenuController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "menuId", value = "menuId", paramType = "form"),
     })
-    @GetMapping("/menu/operation")
-    public ResultBody<List<BaseResourceOperation>> getMenuOperationList(Long menuId) {
+    @GetMapping("/menu/action")
+    public ResultBody<List<BaseAction>> getMenuAction(Long menuId) {
         return ResultBody.success(baseResourceOperationService.findListByMenuId(menuId));
     }
 
@@ -79,7 +79,7 @@ public class BaseMenuController {
             @ApiImplicitParam(name = "menuId", required = true, value = "menuId"),
     })
     @GetMapping("/menu/{menuId}/info")
-    public ResultBody<BaseResourceMenu> getMenu(@PathVariable("menuId") Long menuId) {
+    public ResultBody<BaseMenu> getMenu(@PathVariable("menuId") Long menuId) {
         return ResultBody.success(baseResourceMenuService.getMenu(menuId));
     }
 
@@ -124,7 +124,7 @@ public class BaseMenuController {
             @RequestParam(value = "priority", required = false, defaultValue = "0") Integer priority,
             @RequestParam(value = "menuDesc", required = false, defaultValue = "") String menuDesc
     ) {
-        BaseResourceMenu menu = new BaseResourceMenu();
+        BaseMenu menu = new BaseMenu();
         menu.setMenuCode(menuCode);
         menu.setMenuName(menuName);
         menu.setIcon(icon);
@@ -136,7 +136,7 @@ public class BaseMenuController {
         menu.setPriority(priority);
         menu.setMenuDesc(menuDesc);
         Long menuId = null;
-        BaseResourceMenu result = baseResourceMenuService.addMenu(menu);
+        BaseMenu result = baseResourceMenuService.addMenu(menu);
         if (result != null) {
             menuId = result.getMenuId();
         }
@@ -186,7 +186,7 @@ public class BaseMenuController {
             @RequestParam(value = "priority", required = false, defaultValue = "0") Integer priority,
             @RequestParam(value = "menuDesc", required = false, defaultValue = "") String menuDesc
     ) {
-        BaseResourceMenu menu = new BaseResourceMenu();
+        BaseMenu menu = new BaseMenu();
         menu.setMenuId(menuId);
         menu.setMenuCode(menuCode);
         menu.setMenuName(menuName);

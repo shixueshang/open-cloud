@@ -1,7 +1,7 @@
 package com.opencloud.app.api.base.integration.authenticator;
 
 import com.opencloud.app.api.base.integration.model.IntegrationParams;
-import com.opencloud.base.client.model.BaseUserAccountDto;
+import com.opencloud.base.client.model.UserAccount;
 import com.opencloud.common.model.ResultBody;
 
 /**
@@ -15,7 +15,7 @@ public interface IntegrationAuthenticator {
      * @param integrationParams
      * @return
      */
-    ResultBody<BaseUserAccountDto> authenticate(IntegrationParams integrationParams);
+    ResultBody<UserAccount> authenticate(IntegrationParams integrationParams);
 
 
     /**

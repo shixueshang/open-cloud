@@ -2,7 +2,7 @@ package com.opencloud.auth.provider.service.impl;
 
 import com.opencloud.auth.provider.service.feign.BaseUserAccountRemoteService;
 import com.opencloud.base.client.constants.BaseConstants;
-import com.opencloud.base.client.model.BaseUserAccountDto;
+import com.opencloud.base.client.model.UserAccount;
 import com.opencloud.common.model.ResultBody;
 import com.opencloud.common.security.OpenUser;
 import lombok.extern.slf4j.Slf4j;
@@ -33,8 +33,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
-        ResultBody<BaseUserAccountDto> resp = baseUserAccountRemoteService.localLogin(username);
-        BaseUserAccountDto account = resp.getData();
+        ResultBody<UserAccount> resp = baseUserAccountRemoteService.localLogin(username);
+        UserAccount account = resp.getData();
         if (account == null) {
             throw new UsernameNotFoundException("系统用户 " + username + " 不存在!");
         }

@@ -9,8 +9,8 @@
         <result column="api_id" jdbcType="BIGINT" property="apiId"/>
     </resultMap>
 
-    <resultMap id="IpLimitApisDto" extends="com.opencloud.base.provider.mapper.GatewayIpLimitApisMapper.ApiResultMap"
-               type="com.opencloud.base.client.model.GatewayRateLimitApisDto">
+    <resultMap id="RateLimitApi" extends="com.opencloud.base.provider.mapper.GatewayIpLimitApisMapper.ApiResultMap"
+               type="com.opencloud.base.client.model.RateLimitApi">
         <!--
           WARNING - @mbg.generated
         -->
@@ -20,7 +20,7 @@
         <result column="interval_unit" jdbcType="VARCHAR" property="intervalUnit"/>
     </resultMap>
 
-    <select id="selectRateLimitApisDto" resultMap="IpLimitApisDto">
+    <select id="selectRateLimitApi" resultMap="RateLimitApi">
         SELECT
             i.policy_id,
             p.`limit`,
@@ -36,7 +36,7 @@
         FROM
             gateway_rate_limit_api AS i
                 INNER JOIN gateway_rate_limit AS p ON i.policy_id = p.policy_id
-                INNER JOIN base_resource_api AS a ON i.api_id = a.api_id
+                INNER JOIN base_api AS a ON i.api_id = a.api_id
         WHERE
             p.limit_type = 'url'
     </select>

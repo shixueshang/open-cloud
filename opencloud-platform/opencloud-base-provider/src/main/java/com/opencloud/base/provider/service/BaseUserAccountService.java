@@ -1,10 +1,9 @@
 package com.opencloud.base.provider.service;
 
-import com.opencloud.base.client.model.BaseUserAccountDto;
-import com.opencloud.base.client.model.BaseUserDto;
+import com.opencloud.base.client.model.UserAccount;
+import com.opencloud.base.client.model.UserInfo;
 import com.opencloud.base.client.model.entity.BaseUserAccount;
 import com.opencloud.base.client.model.entity.BaseUserAccountLogs;
-import com.opencloud.base.client.model.entity.GatewayIpLimit;
 import com.opencloud.common.mybatis.base.service.IBaseService;
 
 /**
@@ -21,7 +20,7 @@ public interface BaseUserAccountService extends IBaseService<BaseUserAccount> {
      * @param profileDto
      * @return
      */
-    Long register(BaseUserDto profileDto);
+    Long register(UserInfo profileDto);
 
 
     /**
@@ -83,7 +82,7 @@ public interface BaseUserAccountService extends IBaseService<BaseUserAccount> {
      * @param account 登陆账号
      * @return
      */
-    BaseUserAccountDto login(String account);
+    UserAccount login(String account);
 
     /**
      * 支持密码、手机号、QQ、微信等第三方登录
@@ -92,7 +91,7 @@ public interface BaseUserAccountService extends IBaseService<BaseUserAccount> {
      * @param account 登陆账号
      * @return
      */
-    BaseUserAccountDto applogin(String account);
+    UserAccount applogin(String account);
 
     /**
      * 重置用户密码

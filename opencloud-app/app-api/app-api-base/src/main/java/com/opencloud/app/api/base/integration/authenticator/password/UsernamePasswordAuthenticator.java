@@ -4,7 +4,7 @@ package com.opencloud.app.api.base.integration.authenticator.password;
 import com.opencloud.app.api.base.integration.authenticator.AbstractIntegrationAuthenticator;
 import com.opencloud.app.api.base.integration.model.IntegrationParams;
 import com.opencloud.app.api.base.service.feign.BaseUserAccountRemoteService;
-import com.opencloud.base.client.model.BaseUserAccountDto;
+import com.opencloud.base.client.model.UserAccount;
 import com.opencloud.common.model.ResultBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -22,7 +22,7 @@ public class UsernamePasswordAuthenticator extends AbstractIntegrationAuthentica
     private BaseUserAccountRemoteService accountRemoteService;
 
     @Override
-    public ResultBody<BaseUserAccountDto> authenticate(IntegrationParams integrationAuthentication) {
+    public ResultBody<UserAccount> authenticate(IntegrationParams integrationAuthentication) {
         return accountRemoteService.appLogin(integrationAuthentication.getAccountName());
     }
 

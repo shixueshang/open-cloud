@@ -75,7 +75,7 @@ opencloud:
         - /admin/logout
       # 忽略权限鉴定
       authority-ignores:
-        - /auth/user/me
+        - /auth/current/user
         - /base/authority/granted/me
         - /base/authority/granted/me/menu
-        - /base/user/me/**
+        - /base/current/user/**

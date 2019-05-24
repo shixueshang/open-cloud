@@ -1,14 +1,15 @@
 package com.opencloud.base.provider.service;
 
 import com.opencloud.base.client.constants.ResourceType;
-import com.opencloud.base.client.model.AccessAuthority;
-import com.opencloud.base.client.model.BaseApiAuthority;
-import com.opencloud.base.client.model.BaseMenuAuthority;
-import com.opencloud.base.client.model.entity.BaseApp;
+import com.opencloud.base.client.model.AuthorityAccess;
+import com.opencloud.base.client.model.AuthorityApi;
+import com.opencloud.base.client.model.AuthorityMenu;
 import com.opencloud.base.client.model.entity.BaseAuthority;
+import com.opencloud.base.client.model.entity.BaseAuthorityAction;
 import com.opencloud.common.mybatis.base.service.IBaseService;
 import com.opencloud.common.security.Authority;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -24,14 +25,15 @@ public interface BaseAuthorityService extends IBaseService<BaseAuthority> {
      *
      * @return
      */
-    List<AccessAuthority> findAccessAuthority();
+    List<AuthorityAccess> findAuthorityAccess();
 
     /**
      * 获取菜单权限列表
      *
+     * @param status
      * @return
      */
-    List<BaseMenuAuthority> findMenuAuthority(Integer status);
+    List<AuthorityMenu> findAuthorityMenu(Integer status);
 
 
     /**
@@ -41,8 +43,16 @@ public interface BaseAuthorityService extends IBaseService<BaseAuthority> {
      * @param serviceId
      * @return
      */
-    List<BaseApiAuthority> findApiAuthority(Integer isOpen, String serviceId);
+    List<AuthorityApi> findAuthorityApi(Integer isOpen, String serviceId);
 
+
+    /**
+     * 查询功能按钮权限列表
+     *
+     * @param actionId
+     * @return
+     */
+    List<BaseAuthorityAction> findAuthorityAction(Long actionId);
 
 
     /**
@@ -78,7 +88,14 @@ public interface BaseAuthorityService extends IBaseService<BaseAuthority> {
      *
      * @param appId
      */
-    void removeAppAuthority(String appId);
+    void removeAuthorityApp(String appId);
+
+
+    /**
+     * 移除功能按钮权限
+     * @param actionId
+     */
+    void  removeAuthorityAction(Long actionId);
 
     /**
      * 是否已被授权
@@ -98,7 +115,7 @@ public interface BaseAuthorityService extends IBaseService<BaseAuthority> {
      * @param authorityIds 权限集合
      * @return 权限标识
      */
-    void addRoleAuthority(Long roleId, Date expireTime, String... authorityIds);
+    void addAuthorityRole(Long roleId, Date expireTime, String... authorityIds);
 
 
     /**
@@ -110,7 +127,7 @@ public interface BaseAuthorityService extends IBaseService<BaseAuthority> {
      * @param authorityIds 权限集合
      * @return 权限标识
      */
-    void addUserAuthority(Long userId, Date expireTime, String... authorityIds);
+    void addAuthorityUser(Long userId, Date expireTime, String... authorityIds);
 
 
     /**
@@ -122,7 +139,7 @@ public interface BaseAuthorityService extends IBaseService<BaseAuthority> {
      * @param authorityIds 权限集合
      * @return
      */
-    void addAppAuthority(String appId, Date expireTime, String... authorityIds);
+    void addAuthorityApp(String appId, Date expireTime, String... authorityIds);
 
     /**
      * 应用授权-添加单个权限
@@ -131,7 +148,16 @@ public interface BaseAuthorityService extends IBaseService<BaseAuthority> {
      * @param expireTime
      * @param authorityId
      */
-    void addAppAuthority(String appId, Date expireTime, String authorityId);
+    void addAuthorityApp(String appId, Date expireTime, String authorityId);
+
+    /**
+     * 添加功能按钮权限
+     *
+     * @param actionId
+     * @param authorityIds
+     * @return
+     */
+    void addAuthorityAction(Long actionId, String... authorityIds);
 
     /**
      * 获取应用已授权权限
@@ -139,7 +165,7 @@ public interface BaseAuthorityService extends IBaseService<BaseAuthority> {
      * @param appId
      * @return
      */
-    List<Authority> findAppGrantedAuthority(String appId);
+    List<Authority> findAuthorityByApp(String appId);
 
     /**
      * 获取角色已授权权限
@@ -147,7 +173,7 @@ public interface BaseAuthorityService extends IBaseService<BaseAuthority> {
      * @param roleId
      * @return
      */
-    List<Authority> findRoleGrantedAuthority(Long roleId);
+    List<Authority> findAuthorityByRole(Long roleId);
 
     /**
      * 获取用户已授权权限
@@ -156,7 +182,7 @@ public interface BaseAuthorityService extends IBaseService<BaseAuthority> {
      * @param root
      * @return
      */
-    List<Authority> findUserGrantedAuthority(Long userId, Boolean root);
+    List<Authority> findAuthorityByUser(Long userId, Boolean root);
 
     /**
      * 获取开放对象权限
@@ -164,7 +190,7 @@ public interface BaseAuthorityService extends IBaseService<BaseAuthority> {
      * @param type = null 查询全部  type = 1 获取菜单和操作 type = 2 获取API
      * @return
      */
-    List<Authority> findGrantedAuthority(String type);
+    List<Authority> findAuthorityByType(String type);
 
     /**
      * 获取用户已授权权限详情
@@ -173,7 +199,7 @@ public interface BaseAuthorityService extends IBaseService<BaseAuthority> {
      * @param root
      * @return
      */
-    List<BaseMenuAuthority> findUserMenuAuthority(Long userId, Boolean root);
+    List<AuthorityMenu> findAuthorityMenuByUser(Long userId, Boolean root);
 
     /**
      * 检测全是是否被多个角色授权
@@ -182,7 +208,13 @@ public interface BaseAuthorityService extends IBaseService<BaseAuthority> {
      * @param roleIds
      * @return
      */
-    Boolean isGrantByRoles(String authorityId, Long... roleIds);
+    Boolean isGrantedByRoleIds(String authorityId, Long... roleIds);
 
 
+    /**
+     * 清理无效权限
+     * @param serviceId
+     * @param codes
+     */
+    void clearInvalidApi(String serviceId,Collection<String> codes);
 }

@@ -19,12 +19,12 @@ public interface BaseRoleUserMapper extends SuperMapper<BaseRoleUser> {
      * @param userId
      * @return
      */
-    List<BaseRole> selectUserRoleList(@Param("userId") Long userId);
+    List<BaseRole> selectRoleUserList(@Param("userId") Long userId);
 
     /**
      * 查询用户角色ID列表
      * @param userId
      * @return
      */
-    List<Long> selectUserRoleIdList(@Param("userId") Long userId);
+    List<Long> selectRoleUserIdList(@Param("userId") Long userId);
 }

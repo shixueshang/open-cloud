@@ -1,7 +1,7 @@
 package com.opencloud.app.api.base.listener;
 
 import com.opencloud.base.client.handler.UserInfoHandler;
-import com.opencloud.base.client.model.BaseAppUserDto;
+import com.opencloud.base.client.model.AppUser;
 import com.opencloud.common.constants.MqConstants;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -20,7 +20,7 @@ public class Receiver {
     private UserInfoHandler userInfoHandler;
 
     @RabbitHandler
-    public BaseAppUserDto process(BaseAppUserDto object) {
+    public AppUser process(AppUser object) {
         System.out.println("Receiver:" + object);
         object.setAccount("test");
         userInfoHandler.info(object);

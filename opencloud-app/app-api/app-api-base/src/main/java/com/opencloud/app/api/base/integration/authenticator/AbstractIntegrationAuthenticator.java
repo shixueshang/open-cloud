@@ -2,7 +2,7 @@ package com.opencloud.app.api.base.integration.authenticator;
 
 
 import com.opencloud.app.api.base.integration.model.IntegrationParams;
-import com.opencloud.base.client.model.BaseUserAccountDto;
+import com.opencloud.base.client.model.UserAccount;
 import com.opencloud.common.model.ResultBody;
 
 /**
@@ -11,7 +11,7 @@ import com.opencloud.common.model.ResultBody;
 public abstract class AbstractIntegrationAuthenticator implements IntegrationAuthenticator {
 
     @Override
-    public abstract ResultBody<BaseUserAccountDto> authenticate(IntegrationParams integrationParams);
+    public abstract ResultBody<UserAccount> authenticate(IntegrationParams integrationParams);
 
     @Override
     public abstract void prepare(IntegrationParams integrationParams);

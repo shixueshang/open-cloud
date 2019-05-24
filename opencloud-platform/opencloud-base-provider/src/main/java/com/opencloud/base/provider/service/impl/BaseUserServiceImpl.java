@@ -7,8 +7,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.opencloud.base.client.constants.BaseConstants;
 import com.opencloud.base.client.event.UserInfoEvent;
-import com.opencloud.base.client.model.BaseAppUserDto;
-import com.opencloud.base.client.model.BaseUserDto;
+import com.opencloud.base.client.model.AppUser;
+import com.opencloud.base.client.model.UserInfo;
 import com.opencloud.base.client.model.entity.BaseRole;
 import com.opencloud.base.client.model.entity.BaseUser;
 import com.opencloud.base.provider.mapper.BaseUserMapper;
@@ -24,7 +24,6 @@ import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.bus.BusProperties;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -129,7 +128,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl<BaseUserMapper, BaseUse
      * @return
      */
     @Override
-    public BaseUserDto getUserWithAuthoritiesById(Long userId) {
+    public UserInfo getUserWithAuthoritiesById(Long userId) {
         // 用户权限列表
         List<Authority> authorities = Lists.newArrayList();
         // 用户角色列表
@@ -154,11 +153,11 @@ public class BaseUserServiceImpl extends BaseServiceImpl<BaseUserMapper, BaseUse
         BaseUser baseUser = getUserById(userId);
 
         // 加入用户权限
-        List<Authority> userGrantedAuthority = baseAuthorityService.findUserGrantedAuthority(userId, CommonConstants.ROOT.equals(baseUser.getUserName()));
+        List<Authority> userGrantedAuthority = baseAuthorityService.findAuthorityByUser(userId, CommonConstants.ROOT.equals(baseUser.getUserName()));
         if (userGrantedAuthority != null && userGrantedAuthority.size() > 0) {
             authorities.addAll(userGrantedAuthority);
         }
-        BaseUserDto userProfile = new BaseUserDto();
+        UserInfo userProfile = new UserInfo();
         BeanUtils.copyProperties(baseUser, userProfile);
 
         //设置用户资料,权限信息
@@ -174,13 +173,13 @@ public class BaseUserServiceImpl extends BaseServiceImpl<BaseUserMapper, BaseUse
      * @return
      */
     @Override
-    public BaseAppUserDto getAppUserWithByUserId(Long userId) {
+    public AppUser getAppUserWithByUserId(Long userId) {
         //查询系统用户资料
         BaseUser baseUser = getUserById(userId);
-        BaseAppUserDto userProfile = new BaseAppUserDto();
+        AppUser userProfile = new AppUser();
         BeanUtils.copyProperties(baseUser, userProfile);
         //发布用户信息扩展事件
-        userProfile = (BaseAppUserDto) amqpTemplate.convertSendAndReceive(MqConstants.QUEUE_USERINFO, userProfile);
+        userProfile = (AppUser) amqpTemplate.convertSendAndReceive(MqConstants.QUEUE_USERINFO, userProfile);
         return userProfile;
     }
 
@@ -191,7 +190,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl<BaseUserMapper, BaseUse
      * @return
      */
     @Override
-    public BaseAppUserDto loginInit() {
+    public AppUser loginInit() {
       /*  OpenUser user = OpenHelper.getUser();
         Long userId = Optional.ofNullable(user.getUserId()).orElse(-1L);
         BaseAppUserDto appUserDto = new BaseAppUserDto();

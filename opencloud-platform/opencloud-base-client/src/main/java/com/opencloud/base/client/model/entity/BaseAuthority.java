@@ -34,7 +34,7 @@ public class BaseAuthority  implements Serializable {
     /**
      * 操作资源ID
      */
-    private Long operationId;
+    private Long actionId;
 
     /**
      * 状态
@@ -112,18 +112,12 @@ public class BaseAuthority  implements Serializable {
         this.apiId = apiId;
     }
 
-    /**
-     * @return operation_id
-     */
-    public Long getOperationId() {
-        return operationId;
+    public Long getActionId() {
+        return actionId;
     }
 
-    /**
-     * @param operationId
-     */
-    public void setOperationId(Long operationId) {
-        this.operationId = operationId;
+    public void setActionId(Long actionId) {
+        this.actionId = actionId;
     }
 
     public Integer getStatus() {

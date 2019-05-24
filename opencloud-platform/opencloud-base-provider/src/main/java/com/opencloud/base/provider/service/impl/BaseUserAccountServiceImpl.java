@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.opencloud.auth.client.constants.AuthConstants;
 import com.opencloud.base.client.constants.BaseConstants;
-import com.opencloud.base.client.model.BaseUserAccountDto;
-import com.opencloud.base.client.model.BaseUserDto;
+import com.opencloud.base.client.model.UserAccount;
+import com.opencloud.base.client.model.UserInfo;
 import com.opencloud.base.client.model.entity.BaseUser;
 import com.opencloud.base.client.model.entity.BaseUserAccount;
 import com.opencloud.base.client.model.entity.BaseUserAccountLogs;
@@ -56,7 +56,7 @@ public class BaseUserAccountServiceImpl extends BaseServiceImpl<BaseUserAccountM
      * @return
      */
     @Override
-    public Long register(BaseUserDto profileDto) {
+    public Long register(UserInfo profileDto) {
         if (profileDto == null) {
             return null;
         }
@@ -110,7 +110,7 @@ public class BaseUserAccountServiceImpl extends BaseServiceImpl<BaseUserAccountM
         if (isExist(account, accountType)) {
             return null;
         }
-        BaseUserDto user = new BaseUserDto();
+        UserInfo user = new UserInfo();
         String name = accountType + "_" + RandomValueUtils.randomNumeric(16);
         user.setPassword(password);
         user.setNickName(nickName);
@@ -166,7 +166,7 @@ public class BaseUserAccountServiceImpl extends BaseServiceImpl<BaseUserAccountM
      * @return
      */
     @Override
-    public BaseUserAccountDto login(String account) {
+    public UserAccount login(String account) {
         if (StringUtils.isBlank(account)) {
             return null;
         }
@@ -175,7 +175,7 @@ public class BaseUserAccountServiceImpl extends BaseServiceImpl<BaseUserAccountM
         String thirdParty = headers.get(AuthConstants.HEADER_X_THIRDPARTY_LOGIN);
         BaseUserAccount baseUserAccount = null;
         // 账号返回数据
-        BaseUserAccountDto baseUserAccountDto = null;
+        UserAccount baseUserAccountDto = null;
         QueryWrapper<BaseUserAccount> queryWrapper = new QueryWrapper();
         if (StringUtils.isNotBlank(thirdParty)) {
             queryWrapper.lambda()
@@ -213,7 +213,7 @@ public class BaseUserAccountServiceImpl extends BaseServiceImpl<BaseUserAccountM
 
         // 获取用户详细信息
         if (baseUserAccount != null) {
-            baseUserAccountDto = new BaseUserAccountDto();
+            baseUserAccountDto = new UserAccount();
             BeanUtils.copyProperties(baseUserAccount, baseUserAccountDto);
             baseUserAccountDto.setUserProfile(baseUserService.getUserWithAuthoritiesById(baseUserAccount.getUserId()));
             //添加登录日志
@@ -243,7 +243,7 @@ public class BaseUserAccountServiceImpl extends BaseServiceImpl<BaseUserAccountM
      * @return
      */
     @Override
-    public BaseUserAccountDto applogin(String accountName) {
+    public UserAccount applogin(String accountName) {
         if (StringUtils.isBlank(accountName)) {
             return null;
         }
@@ -252,7 +252,7 @@ public class BaseUserAccountServiceImpl extends BaseServiceImpl<BaseUserAccountM
         String thirdParty = headers.get(AuthConstants.HEADER_X_THIRDPARTY_LOGIN);
         BaseUserAccount account = null;
         // 账号返回数据
-        BaseUserAccountDto userAccountDto = null;
+        UserAccount userAccountDto = null;
         QueryWrapper<BaseUserAccount> qw = new QueryWrapper();
         qw.lambda().eq(BaseUserAccount::getAccount, accountName);
         if (StringUtils.isNotBlank(thirdParty)) {
@@ -262,7 +262,7 @@ public class BaseUserAccountServiceImpl extends BaseServiceImpl<BaseUserAccountM
         account = baseUserAccountMapper.selectOne(qw);
         // 获取用户详细信息
         if (account != null) {
-            userAccountDto = new BaseUserAccountDto();
+            userAccountDto = new UserAccount();
             BeanUtils.copyProperties(account, userAccountDto);
         }
         return userAccountDto;

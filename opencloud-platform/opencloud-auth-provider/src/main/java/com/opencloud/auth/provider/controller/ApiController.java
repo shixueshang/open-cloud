@@ -40,7 +40,7 @@ public class ApiController {
      * @return
      */
     @ApiOperation(value = "获取用户基础信息")
-    @GetMapping("/user/me")
+    @GetMapping("/current/user")
     public ResultBody getUserProfile() {
         OpenUser user = OpenHelper.getUser();
         return baseUserAccountRemoteService.getUserInfo(user.getUserId());
@@ -52,7 +52,7 @@ public class ApiController {
      * @return
      */
     @ApiOperation(value = "获取第三方登录配置", notes = "任何人都可访问")
-    @GetMapping("/login/other/config")
+    @GetMapping("/login/config")
     @ResponseBody
     public ResultBody getLoginOtherConfig() {
         Map<String, String> map = Maps.newHashMap();

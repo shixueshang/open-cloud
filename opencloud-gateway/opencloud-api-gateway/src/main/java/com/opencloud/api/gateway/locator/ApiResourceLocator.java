@@ -4,8 +4,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.opencloud.api.gateway.service.feign.BaseAuthorityRemoteService;
 import com.opencloud.api.gateway.service.feign.GatewayRemoteService;
-import com.opencloud.base.client.model.AccessAuthority;
-import com.opencloud.base.client.model.GatewayIpLimitApisDto;
+import com.opencloud.base.client.model.AuthorityAccess;
+import com.opencloud.base.client.model.IpLimitApi;
 import com.opencloud.common.event.GatewayRemoteRefreshRouteEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.route.RouteDefinitionLocator;
@@ -49,11 +49,11 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
     public static final int PERIOD_DAY_TTL = 2 * 3600 * 24 + 10;
 
 
-    private List<AccessAuthority> accessAuthorities;
+    private List<AuthorityAccess> accessAuthorities;
 
-    private List<GatewayIpLimitApisDto> ipBlacks;
+    private List<IpLimitApi> ipBlacks;
 
-    private List<GatewayIpLimitApisDto> ipWhites;
+    private List<IpLimitApi> ipWhites;
 
     /**
      * 缓存
@@ -134,9 +134,9 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
         ConfigAttribute cfg;
         try {
             // 查询所有接口
-            accessAuthorities = baseAuthorityRemoteService.getAccessAuthorityList().getData();
+            accessAuthorities = baseAuthorityRemoteService.findAuthorityAccess().getData();
             if (accessAuthorities != null) {
-                for (AccessAuthority item : accessAuthorities) {
+                for (AuthorityAccess item : accessAuthorities) {
                     String path = item.getPath();
                     if (path == null) {
                         continue;
@@ -168,7 +168,7 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
         try {
             ipBlacks = gatewayRemoteService.getApiBlackList().getData();
             if (ipBlacks != null) {
-                for (GatewayIpLimitApisDto item : ipBlacks) {
+                for (IpLimitApi item : ipBlacks) {
                     item.setPath(getFullPath(item.getServiceId(), item.getPath()));
                 }
                 log.info("=============加载IP黑名单:{}==============", ipBlacks.size());
@@ -186,7 +186,7 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
         try {
             ipWhites = gatewayRemoteService.getApiWhiteList().getData();
             if (ipWhites != null) {
-                for (GatewayIpLimitApisDto item : ipWhites) {
+                for (IpLimitApi item : ipWhites) {
                     item.setPath(getFullPath(item.getServiceId(), item.getPath()));
                 }
                 log.info("=============加载IP白名单:{}==============", ipWhites.size());
@@ -218,27 +218,27 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
     }
 
 
-    public List<AccessAuthority> getAccessAuthorities() {
+    public List<AuthorityAccess> getAccessAuthorities() {
         return accessAuthorities;
     }
 
-    public void setAccessAuthorities(List<AccessAuthority> accessAuthorities) {
+    public void setAccessAuthorities(List<AuthorityAccess> accessAuthorities) {
         this.accessAuthorities = accessAuthorities;
     }
 
-    public List<GatewayIpLimitApisDto> getIpBlacks() {
+    public List<IpLimitApi> getIpBlacks() {
         return ipBlacks;
     }
 
-    public void setIpBlacks(List<GatewayIpLimitApisDto> ipBlacks) {
+    public void setIpBlacks(List<IpLimitApi> ipBlacks) {
         this.ipBlacks = ipBlacks;
     }
 
-    public List<GatewayIpLimitApisDto> getIpWhites() {
+    public List<IpLimitApi> getIpWhites() {
         return ipWhites;
     }
 
-    public void setIpWhites(List<GatewayIpLimitApisDto> ipWhites) {
+    public void setIpWhites(List<IpLimitApi> ipWhites) {
         this.ipWhites = ipWhites;
     }
 

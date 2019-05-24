@@ -1,7 +1,7 @@
 package com.opencloud.zuul.filter;
 
-import com.opencloud.base.client.model.AccessAuthority;
-import com.opencloud.base.client.model.GatewayIpLimitApisDto;
+import com.opencloud.base.client.model.AuthorityAccess;
+import com.opencloud.base.client.model.IpLimitApi;
 import com.opencloud.common.constants.CommonConstants;
 import com.opencloud.common.constants.ResultEnum;
 import com.opencloud.common.security.Authority;
@@ -98,11 +98,11 @@ public class ApiAuthorizationManager {
             }
         }
         // 动态权限列表
-        List<AccessAuthority> authorityList = accessLocator.getAccessAuthorities();
+        List<AuthorityAccess> authorityList = accessLocator.getAccessAuthorities();
         if (authorityList != null) {
-            Iterator<AccessAuthority> it2 = authorityList.iterator();
+            Iterator<AuthorityAccess> it2 = authorityList.iterator();
             while (it.hasNext()) {
-                AccessAuthority auth = it2.next();
+                AuthorityAccess auth = it2.next();
                 Boolean isAuth = auth.getIsAuth() != null && auth.getIsAuth().equals(1) ? true : false;
                 String fullPath = auth.getPath();
                 // 无需认证,返回true
@@ -202,9 +202,9 @@ public class ApiAuthorizationManager {
 
 
     public boolean matchIpBlacklist(String requestPath, String remoteIpAddress) {
-        List<GatewayIpLimitApisDto> blackList = accessLocator.getIpBlacks();
+        List<IpLimitApi> blackList = accessLocator.getIpBlacks();
         if (blackList != null) {
-            for (GatewayIpLimitApisDto api : blackList) {
+            for (IpLimitApi api : blackList) {
                 if (pathMatch.match(api.getPath(), requestPath) && api.getIpAddressSet() != null && !api.getIpAddressSet().isEmpty()) {
                     if (matchIp(api.getIpAddressSet(), remoteIpAddress)) {
                         return true;
@@ -219,9 +219,9 @@ public class ApiAuthorizationManager {
     public boolean[] matchIpWhiteList(String requestPath, String remoteIpAddress) {
         boolean hasWhiteList = false;
         boolean allow = false;
-        List<GatewayIpLimitApisDto> whiteList = accessLocator.getIpWhites();
+        List<IpLimitApi> whiteList = accessLocator.getIpWhites();
         if (whiteList != null) {
-            for (GatewayIpLimitApisDto api : whiteList) {
+            for (IpLimitApi api : whiteList) {
                 if (pathMatch.match(api.getPath(), requestPath) && api.getIpAddressSet() != null && !api.getIpAddressSet().isEmpty()) {
                     hasWhiteList = true;
                     allow = matchIp(api.getIpAddressSet(), remoteIpAddress);

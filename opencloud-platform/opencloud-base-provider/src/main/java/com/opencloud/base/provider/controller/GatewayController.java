@@ -1,8 +1,8 @@
 package com.opencloud.base.provider.controller;
 
 import com.opencloud.base.client.api.GatewayRemoteApi;
-import com.opencloud.base.client.model.GatewayIpLimitApisDto;
-import com.opencloud.base.client.model.GatewayRateLimitApisDto;
+import com.opencloud.base.client.model.IpLimitApi;
+import com.opencloud.base.client.model.RateLimitApi;
 import com.opencloud.base.client.model.entity.GatewayRoute;
 import com.opencloud.base.provider.service.GatewayIpLimitService;
 import com.opencloud.base.provider.service.GatewayRateLimitService;
@@ -39,7 +39,7 @@ public class GatewayController implements GatewayRemoteApi {
      */
     @GetMapping("/gateway/api/blackList")
     @Override
-    public ResultBody<List<GatewayIpLimitApisDto>> getApiBlackList() {
+    public ResultBody<List<IpLimitApi>> getApiBlackList() {
         return ResultBody.success(gatewayIpLimitService.findBlackList());
     }
 
@@ -50,7 +50,7 @@ public class GatewayController implements GatewayRemoteApi {
      */
     @GetMapping("/gateway/api/whiteList")
     @Override
-    public ResultBody<List<GatewayIpLimitApisDto>> getApiWhiteList() {
+    public ResultBody<List<IpLimitApi>> getApiWhiteList() {
         return ResultBody.success(gatewayIpLimitService.findWhiteList());
     }
 
@@ -61,7 +61,7 @@ public class GatewayController implements GatewayRemoteApi {
      */
     @GetMapping("/gateway/api/rateLimit")
     @Override
-    public ResultBody<List<GatewayRateLimitApisDto>> getApiRateLimitList() {
+    public ResultBody<List<RateLimitApi>> getApiRateLimitList() {
         return ResultBody.success(gatewayRateLimitService.findRateLimitApiList());
     }
 

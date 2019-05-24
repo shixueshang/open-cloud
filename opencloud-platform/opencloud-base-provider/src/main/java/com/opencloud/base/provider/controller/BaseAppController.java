@@ -6,6 +6,7 @@ import com.opencloud.base.client.model.entity.BaseApp;
 import com.opencloud.base.provider.service.BaseAppService;
 import com.opencloud.common.model.PageParams;
 import com.opencloud.common.model.ResultBody;
+import com.opencloud.common.security.http.OpenRestTemplate;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -27,7 +28,8 @@ import java.util.Map;
 public class BaseAppController implements BaseAppRemoteApi {
     @Autowired
     private BaseAppService baseAppService;
-
+    @Autowired
+    private OpenRestTemplate openRestTemplate;
     /**
      * 获取分页应用列表
      *
@@ -196,6 +198,7 @@ public class BaseAppController implements BaseAppRemoteApi {
         app.setUserId(userId);
         app.setUserType(userType);
         baseAppService.updateInfo(app);
+        openRestTemplate.refreshGateway();
         return ResultBody.success();
     }
 
@@ -274,6 +277,7 @@ public class BaseAppController implements BaseAppRemoteApi {
             @RequestParam("appId") String appId
     ) {
         baseAppService.removeApp(appId);
+        openRestTemplate.refreshGateway();
         return ResultBody.success();
     }
 }

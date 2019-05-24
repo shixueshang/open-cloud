@@ -4,8 +4,8 @@ package com.opencloud.app.api.base.service.impl;
 import com.opencloud.app.api.base.integration.authenticator.IntegrationAuthenticator;
 import com.opencloud.app.api.base.integration.model.IntegrationAuthenticationContext;
 import com.opencloud.app.api.base.integration.model.IntegrationParams;
-import com.opencloud.base.client.model.BaseUserAccountDto;
-import com.opencloud.base.client.model.BaseUserDto;
+import com.opencloud.base.client.model.UserAccount;
+import com.opencloud.base.client.model.UserInfo;
 import com.opencloud.common.model.ResultBody;
 import com.opencloud.common.security.OpenUser;
 import lombok.extern.slf4j.Slf4j;
@@ -47,9 +47,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) {
         IntegrationParams integrationAuthentication = Optional.ofNullable(IntegrationAuthenticationContext.get()).orElse(new IntegrationParams());
         integrationAuthentication.setAccountName(username);
-        ResultBody<BaseUserAccountDto> resp = this.authenticate(integrationAuthentication);
-        BaseUserAccountDto account = Optional.ofNullable(resp).map(u -> resp.getData()).orElseThrow(() -> new UsernameNotFoundException("系统用户 " + username + " 不存在!"));
-        Optional<BaseUserDto> userDto = Optional.ofNullable(account.getUserProfile());
+        ResultBody<UserAccount> resp = this.authenticate(integrationAuthentication);
+        UserAccount account = Optional.ofNullable(resp).map(u -> resp.getData()).orElseThrow(() -> new UsernameNotFoundException("系统用户 " + username + " 不存在!"));
+        Optional<UserInfo> userDto = Optional.ofNullable(account.getUserProfile());
         AtomicReference<String> avatar = new AtomicReference<>("");
         AtomicReference<String> nickName = new AtomicReference<>("");
         userDto.ifPresent(user -> {
@@ -66,7 +66,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     /**
      * 根据登录类型适配具体执行类
      */
-    private ResultBody<BaseUserAccountDto> authenticate(IntegrationParams integrationAuthentication) {
+    private ResultBody<UserAccount> authenticate(IntegrationParams integrationAuthentication) {
         if (this.authenticators != null) {
             for (IntegrationAuthenticator authenticator : authenticators) {
                 if (authenticator.support(integrationAuthentication)) {

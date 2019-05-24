@@ -31,7 +31,7 @@ public class CommonConstants {
     /**
      * 端点监控权限标识
      */
-    public final static String AUTHORITY_ACTUATOR = "actuator";
+    public final static String AUTHORITY_ACTUATOR = "API_actuator";
 
     /**
      * 默认最小页码

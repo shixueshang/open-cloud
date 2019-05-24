@@ -2,8 +2,8 @@ package com.opencloud.base.provider.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.opencloud.base.client.model.entity.BaseResourceApi;
-import com.opencloud.base.provider.service.BaseResourceApiService;
+import com.opencloud.base.client.model.entity.BaseApi;
+import com.opencloud.base.provider.service.BaseApiService;
 import com.opencloud.common.model.PageParams;
 import com.opencloud.common.model.ResultBody;
 import com.opencloud.common.security.http.OpenRestTemplate;
@@ -24,7 +24,7 @@ import java.util.Map;
 @RestController
 public class BaseApiController {
     @Autowired
-    private BaseResourceApiService apiService;
+    private BaseApiService apiService;
     @Autowired
     private OpenRestTemplate openRestTemplate;
 
@@ -35,9 +35,9 @@ public class BaseApiController {
      */
     @ApiOperation(value = "获取分页接口列表", notes = "获取分页接口列表")
     @GetMapping(value = "/api")
-    public ResultBody<IPage<BaseResourceApi>> getApiList(@RequestParam(required = false) Map map) {
-        QueryWrapper<BaseResourceApi> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(BaseResourceApi::getIsOpen,1);
+    public ResultBody<IPage<BaseApi>> getApiList(@RequestParam(required = false) Map map) {
+        QueryWrapper<BaseApi> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(BaseApi::getIsOpen,1);
         int openApiCount = apiService.getCount(queryWrapper);
         return ResultBody.success(apiService.findListPage(new PageParams(map))).putExtra("openApiCount", openApiCount);
     }
@@ -50,7 +50,7 @@ public class BaseApiController {
      */
     @ApiOperation(value = "获取所有接口列表", notes = "获取所有接口列表")
     @GetMapping("/api/all")
-    public ResultBody<List<BaseResourceApi>> getApiAllList(String serviceId) {
+    public ResultBody<List<BaseApi>> getApiAllList(String serviceId) {
         return ResultBody.success(apiService.findAllList(serviceId));
     }
 
@@ -65,7 +65,7 @@ public class BaseApiController {
             @ApiImplicitParam(name = "apiId", required = true, value = "ApiId", paramType = "path"),
     })
     @GetMapping("/api/{apiId}/info")
-    public ResultBody<BaseResourceApi> getApi(@PathVariable("apiId") Long apiId) {
+    public ResultBody<BaseApi> getApi(@PathVariable("apiId") Long apiId) {
         return ResultBody.success(apiService.getApi(apiId));
     }
 
@@ -107,7 +107,7 @@ public class BaseApiController {
             @RequestParam(value = "isOpen", required = false, defaultValue = "0") Integer isOpen,
             @RequestParam(value = "isAuth", required = false, defaultValue = "1") Integer isAuth
     ) {
-        BaseResourceApi api = new BaseResourceApi();
+        BaseApi api = new BaseApi();
         api.setApiCode(apiCode);
         api.setApiName(apiName);
         api.setApiCategory(apiCategory);
@@ -119,7 +119,7 @@ public class BaseApiController {
         api.setIsOpen(isOpen);
         api.setIsAuth(isAuth);
         Long apiId = null;
-        BaseResourceApi result = apiService.addApi(api);
+        BaseApi result = apiService.addApi(api);
         if (result != null) {
             apiId = result.getApiId();
             // 刷新网关
@@ -169,7 +169,7 @@ public class BaseApiController {
             @RequestParam(value = "isOpen", required = false, defaultValue = "0") Integer isOpen,
             @RequestParam(value = "isAuth", required = false, defaultValue = "1") Integer isAuth
     ) {
-        BaseResourceApi api = new BaseResourceApi();
+        BaseApi api = new BaseApi();
         api.setApiId(apiId);
         api.setApiCode(apiCode);
         api.setApiName(apiName);

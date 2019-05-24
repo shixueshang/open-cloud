@@ -6,7 +6,7 @@ import com.opencloud.app.api.base.integration.authenticator.sms.event.SmsAuthent
 import com.opencloud.app.api.base.integration.authenticator.sms.event.SmsAuthenticateSuccessEvent;
 import com.opencloud.app.api.base.integration.model.IntegrationParams;
 import com.opencloud.app.api.base.service.feign.BaseUserAccountRemoteService;
-import com.opencloud.base.client.model.BaseUserAccountDto;
+import com.opencloud.base.client.model.UserAccount;
 import com.opencloud.common.constants.CommonConstants;
 import com.opencloud.common.model.ResultBody;
 
@@ -38,7 +38,7 @@ public class SmsIntegrationAuthenticator extends AbstractIntegrationAuthenticato
     private final static String SMS_AUTH_TYPE = "SMS";
 
     @Override
-    public ResultBody<BaseUserAccountDto> authenticate(IntegrationParams integrationAuthentication) {
+    public ResultBody<UserAccount> authenticate(IntegrationParams integrationAuthentication) {
         //获取密码，实际值是验证码
         String password = integrationAuthentication.getAuthParameter("password");
         //获取账户名，实际值是手机号
@@ -46,7 +46,7 @@ public class SmsIntegrationAuthenticator extends AbstractIntegrationAuthenticato
         //发布事件，可以监听事件进行自动注册用户
         this.applicationEventPublisher.publishEvent(new SmsAuthenticateBeforeEvent(integrationAuthentication, accountName));
         //通过手机号码查询用户
-        ResultBody<BaseUserAccountDto> sysUserAuthentication = accountRemoteService.appLogin(accountName);
+        ResultBody<UserAccount> sysUserAuthentication = accountRemoteService.appLogin(accountName);
         if (sysUserAuthentication != null) {
             //将密码设置为验证码
             //sysUserAuthentication.setPassword(passwordEncoder.encode(password));

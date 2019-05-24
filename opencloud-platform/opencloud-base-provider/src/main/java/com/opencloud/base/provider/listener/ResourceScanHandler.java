@@ -2,8 +2,10 @@ package com.opencloud.base.provider.listener;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.opencloud.base.client.model.entity.BaseResourceApi;
-import com.opencloud.base.provider.service.BaseResourceApiService;
+import com.google.common.collect.Lists;
+import com.opencloud.base.client.model.entity.BaseApi;
+import com.opencloud.base.provider.service.BaseApiService;
+import com.opencloud.base.provider.service.BaseAuthorityService;
 import com.opencloud.common.constants.MqConstants;
 import com.opencloud.common.security.http.OpenRestTemplate;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +17,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 
 import java.time.Duration;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * mq消息接收者
@@ -25,7 +28,9 @@ import java.util.Iterator;
 @Slf4j
 public class ResourceScanHandler {
     @Autowired
-    private BaseResourceApiService baseResourceApiService;
+    private BaseApiService baseApiService;
+    @Autowired
+    private BaseAuthorityService baseAuthorityService;
     @Autowired
     private OpenRestTemplate restTemplate;
     @Autowired
@@ -48,30 +53,36 @@ public class ResourceScanHandler {
             }
             JSONArray array = resource.getJSONArray("mapping");
             Iterator iterator = array.iterator();
+            List<String> codes = Lists.newArrayList();
             while (iterator.hasNext()) {
                 JSONObject jsonObject = (JSONObject) iterator.next();
                 try {
-                    BaseResourceApi api = jsonObject.toJavaObject(BaseResourceApi.class);
-                    BaseResourceApi save = baseResourceApiService.getApi(api.getApiCode());
+                    BaseApi api = jsonObject.toJavaObject(BaseApi.class);
+                    codes.add(api.getApiCode());
+                    BaseApi save = baseApiService.getApi(api.getApiCode());
                     if (save == null) {
                         api.setIsOpen(0);
                         api.setIsAuth(1);
                         api.setIsPersist(1);
-                        baseResourceApiService.addApi(api);
+                        baseApiService.addApi(api);
                     } else {
                         api.setIsOpen(null);
                         api.setApiId(save.getApiId());
-                        baseResourceApiService.updateApi(api);
+                        baseApiService.updateApi(api);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     log.error("添加资源error:", e.getMessage());
                 }
+
             }
             if (array != null && array.size() > 0) {
-                redisTemplate.opsForValue().set(key, array.size(), Duration.ofMinutes(3));
+                // 清理无效权限数据
+                baseAuthorityService.clearInvalidApi(serviceId, codes);
                 restTemplate.refreshGateway();
+                redisTemplate.opsForValue().set(key, array.size(), Duration.ofMinutes(3));
             }
+
         } catch (Exception e) {
             log.error("error:", e);
         }

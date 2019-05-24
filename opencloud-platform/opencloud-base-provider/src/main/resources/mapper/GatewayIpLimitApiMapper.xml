@@ -9,7 +9,7 @@
     <result column="api_id" jdbcType="BIGINT" property="apiId" />
   </resultMap>
 
-  <resultMap id="ApiResultMap" type="com.opencloud.base.client.model.entity.BaseResourceApi">
+  <resultMap id="ApiResultMap" type="com.opencloud.base.client.model.entity.BaseApi">
     <!--
       WARNING - @mbg.generated
     -->
@@ -29,7 +29,7 @@
     <result column="auth_type" property="authType" jdbcType="INTEGER"/>
   </resultMap>
 
-  <resultMap id="IpLimitApisDto" extends="ApiResultMap" type="com.opencloud.base.client.model.GatewayIpLimitApisDto">
+  <resultMap id="IpLimitApi" extends="ApiResultMap" type="com.opencloud.base.client.model.IpLimitApi">
     <!--
       WARNING - @mbg.generated
     -->
@@ -39,7 +39,7 @@
     <result column="ip_address" jdbcType="VARCHAR" property="ipAddress" />
   </resultMap>
 
-  <select id="selectIpLimitApisDto" resultMap="IpLimitApisDto">
+  <select id="selectIpLimitApi" resultMap="IpLimitApi">
     SELECT
     i.policy_id,
     i.api_id,
@@ -54,7 +54,7 @@
     FROM
     gateway_ip_limit_api AS i
     INNER JOIN gateway_ip_limit AS p ON i.policy_id = p.policy_id
-    INNER JOIN base_resource_api AS a ON i.api_id = a.api_id
+    INNER JOIN base_api AS a ON i.api_id = a.api_id
      <where>
        <if test="policyType!=null">
           p.policy_type = #{policyType}

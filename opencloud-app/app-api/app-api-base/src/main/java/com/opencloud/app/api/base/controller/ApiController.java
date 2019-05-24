@@ -2,7 +2,7 @@ package com.opencloud.app.api.base.controller;
 
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.opencloud.app.api.base.service.feign.BaseUserAccountRemoteService;
-import com.opencloud.base.client.model.BaseAppUserDto;
+import com.opencloud.base.client.model.AppUser;
 import com.opencloud.common.model.ResultBody;
 import com.opencloud.common.security.OpenHelper;
 import com.opencloud.common.security.OpenUser;
@@ -43,7 +43,7 @@ public class ApiController {
      */
     @ApiOperation(value = "获取APP用户基础信息")
     @GetMapping("/user/me")
-    public ResultBody<BaseAppUserDto> getUserProfile() {
+    public ResultBody<AppUser> getUserProfile() {
         OpenUser user = OpenHelper.getUser();
         return baseUserAccountRemoteService.getAppUserInfo(user.getUserId());
     }
@@ -85,7 +85,7 @@ public class ApiController {
      * 登录后初始化数据
      */
     @GetMapping("/login/init")
-    public ResultBody<BaseAppUserDto> loginInit() {
+    public ResultBody<AppUser> loginInit() {
         return baseUserAccountRemoteService.loginInit();
     }
 

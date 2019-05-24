@@ -1,10 +1,8 @@
 package com.opencloud.base.provider.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.opencloud.base.client.model.GatewayRateLimitApisDto;
+import com.opencloud.base.client.model.RateLimitApi;
 import com.opencloud.base.client.model.entity.GatewayRateLimit;
-import com.opencloud.base.client.model.entity.GatewayRateLimitApi;
-import com.opencloud.base.client.model.entity.GatewayRoute;
 import com.opencloud.common.model.PageParams;
 import com.opencloud.common.mybatis.base.service.IBaseService;
 
@@ -29,14 +27,14 @@ public interface GatewayRateLimitService extends IBaseService<GatewayRateLimit> 
      *
      * @return
      */
-    List<GatewayRateLimitApisDto> findRateLimitApiList();
+    List<RateLimitApi> findRateLimitApiList();
 
     /**
      * 查询策略已绑定API列表
      *
      * @return
      */
-    List<GatewayRateLimitApi> findRateLimitApiList(Long policyId);
+    List<com.opencloud.base.client.model.entity.GatewayRateLimitApi> findRateLimitApiList(Long policyId);
 
     /**
      * 获取限流策略

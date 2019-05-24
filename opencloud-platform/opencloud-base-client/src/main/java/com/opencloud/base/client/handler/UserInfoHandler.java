@@ -1,6 +1,6 @@
 package com.opencloud.base.client.handler;
 
-import com.opencloud.base.client.model.BaseAppUserDto;
+import com.opencloud.base.client.model.AppUser;
 
 public interface UserInfoHandler {
     /**
@@ -9,7 +9,7 @@ public interface UserInfoHandler {
      * @param baseUser
      * @return
      */
-    BaseAppUserDto info(BaseAppUserDto baseUser);
+    AppUser info(AppUser baseUser);
 
     /**
      * 登录初始扩展
@@ -17,5 +17,5 @@ public interface UserInfoHandler {
      * @param baseUser
      * @return
      */
-    BaseAppUserDto loginInit(BaseAppUserDto baseUser);
+    AppUser loginInit(AppUser baseUser);
 }

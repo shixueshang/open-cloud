@@ -3,9 +3,8 @@ package com.opencloud.base.provider.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
-import com.opencloud.base.client.model.GatewayRateLimitApisDto;
+import com.opencloud.base.client.model.RateLimitApi;
 import com.opencloud.base.client.model.entity.GatewayRateLimit;
-import com.opencloud.base.client.model.entity.GatewayRateLimitApi;
 import com.opencloud.base.provider.mapper.GatewayRateLimitApisMapper;
 import com.opencloud.base.provider.mapper.GatewayRateLimitMapper;
 import com.opencloud.base.provider.service.GatewayRateLimitService;
@@ -55,8 +54,8 @@ public class GatewayRateLimitServiceImpl extends BaseServiceImpl<GatewayRateLimi
      * @return
      */
     @Override
-    public List<GatewayRateLimitApisDto> findRateLimitApiList() {
-        List<GatewayRateLimitApisDto> list = gatewayRateLimitApisMapper.selectRateLimitApisDto();
+    public List<RateLimitApi> findRateLimitApiList() {
+        List<RateLimitApi> list = gatewayRateLimitApisMapper.selectRateLimitApi();
         return list;
     }
 
@@ -67,11 +66,11 @@ public class GatewayRateLimitServiceImpl extends BaseServiceImpl<GatewayRateLimi
      * @return
      */
     @Override
-    public List<GatewayRateLimitApi> findRateLimitApiList(Long policyId) {
-        QueryWrapper<GatewayRateLimitApi> queryWrapper = new QueryWrapper();
+    public List<com.opencloud.base.client.model.entity.GatewayRateLimitApi> findRateLimitApiList(Long policyId) {
+        QueryWrapper<com.opencloud.base.client.model.entity.GatewayRateLimitApi> queryWrapper = new QueryWrapper();
         queryWrapper.lambda()
-                .eq(GatewayRateLimitApi::getPolicyId, policyId);
-        List<GatewayRateLimitApi> list = gatewayRateLimitApisMapper.selectList(queryWrapper);
+                .eq(com.opencloud.base.client.model.entity.GatewayRateLimitApi::getPolicyId, policyId);
+        List<com.opencloud.base.client.model.entity.GatewayRateLimitApi> list = gatewayRateLimitApisMapper.selectList(queryWrapper);
         return list;
     }
 
@@ -137,7 +136,7 @@ public class GatewayRateLimitServiceImpl extends BaseServiceImpl<GatewayRateLimi
                 Long apiId = Long.parseLong(api);
                 // 先api解除所有绑定, 一个API只能绑定一个策略
                 clearRateLimitApisByApiId(apiId);
-                GatewayRateLimitApi item = new GatewayRateLimitApi();
+                com.opencloud.base.client.model.entity.GatewayRateLimitApi item = new com.opencloud.base.client.model.entity.GatewayRateLimitApi();
                 item.setApiId(apiId);
                 item.setPolicyId(policyId);
                 // 重新绑定策略
@@ -153,9 +152,9 @@ public class GatewayRateLimitServiceImpl extends BaseServiceImpl<GatewayRateLimi
      */
     @Override
     public void clearRateLimitApisByPolicyId(Long policyId) {
-        QueryWrapper<GatewayRateLimitApi> queryWrapper = new QueryWrapper();
+        QueryWrapper<com.opencloud.base.client.model.entity.GatewayRateLimitApi> queryWrapper = new QueryWrapper();
         queryWrapper.lambda()
-                .eq(GatewayRateLimitApi::getPolicyId, policyId);
+                .eq(com.opencloud.base.client.model.entity.GatewayRateLimitApi::getPolicyId, policyId);
         gatewayRateLimitApisMapper.delete(queryWrapper);
     }
 
@@ -166,9 +165,9 @@ public class GatewayRateLimitServiceImpl extends BaseServiceImpl<GatewayRateLimi
      */
     @Override
     public void clearRateLimitApisByApiId(Long apiId) {
-        QueryWrapper<GatewayRateLimitApi> queryWrapper = new QueryWrapper();
+        QueryWrapper<com.opencloud.base.client.model.entity.GatewayRateLimitApi> queryWrapper = new QueryWrapper();
         queryWrapper.lambda()
-                .eq(GatewayRateLimitApi::getApiId, apiId);
+                .eq(com.opencloud.base.client.model.entity.GatewayRateLimitApi::getApiId, apiId);
         gatewayRateLimitApisMapper.delete(queryWrapper);
     }
 }

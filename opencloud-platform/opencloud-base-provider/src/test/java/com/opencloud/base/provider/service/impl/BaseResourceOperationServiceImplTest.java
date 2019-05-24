@@ -1,6 +1,6 @@
 package com.opencloud.base.provider.service.impl;
 
-import com.opencloud.base.provider.service.BaseResourceOperationService;
+import com.opencloud.base.provider.service.BaseActionService;
 import com.opencloud.common.model.PageParams;
 import com.opencloud.common.test.BaseTest;
 import org.junit.Test;
@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class BaseResourceOperationServiceImplTest extends BaseTest {
     @Autowired
-    private BaseResourceOperationService baseResourceOperationService;
+    private BaseActionService baseResourceOperationService;
 
     @Test
     public void findListPage() throws Exception {

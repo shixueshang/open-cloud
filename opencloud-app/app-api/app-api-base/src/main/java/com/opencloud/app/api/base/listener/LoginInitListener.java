@@ -1,7 +1,7 @@
 package com.opencloud.app.api.base.listener;
 
 import com.opencloud.base.client.handler.UserInfoHandler;
-import com.opencloud.base.client.model.BaseAppUserDto;
+import com.opencloud.base.client.model.AppUser;
 import com.opencloud.common.constants.MqConstants;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
@@ -20,7 +20,7 @@ public class LoginInitListener {
     private UserInfoHandler userInfoHandler;
 
     @RabbitHandler
-    public BaseAppUserDto process(BaseAppUserDto object) {
+    public AppUser process(AppUser object) {
         log.debug("初始化登录:" + object.getUserName());
         userInfoHandler.loginInit(object);
         return object;

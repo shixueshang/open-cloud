@@ -5,7 +5,7 @@ package com.opencloud.app.api.base.integration.authenticator.third;
 import com.opencloud.app.api.base.integration.authenticator.AbstractIntegrationAuthenticator;
 import com.opencloud.app.api.base.integration.model.IntegrationParams;
 import com.opencloud.app.api.base.service.feign.BaseUserAccountRemoteService;
-import com.opencloud.base.client.model.BaseUserAccountDto;
+import com.opencloud.base.client.model.UserAccount;
 import com.opencloud.common.model.ResultBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -27,7 +27,7 @@ public class ThirdIntegrationAuthenticator extends AbstractIntegrationAuthentica
     public final static String SMS_AUTH_TYPE = "QQ,WEIXIN,WEIBO";
 
     @Override
-    public ResultBody<BaseUserAccountDto> authenticate(IntegrationParams integrationParams) {
+    public ResultBody<UserAccount> authenticate(IntegrationParams integrationParams) {
         //唯一标识openId
         String username = integrationParams.getAuthParameter("username");
         //头像

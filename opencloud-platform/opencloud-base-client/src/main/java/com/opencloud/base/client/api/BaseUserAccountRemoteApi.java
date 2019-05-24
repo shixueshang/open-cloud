@@ -1,8 +1,8 @@
 package com.opencloud.base.client.api;
 
-import com.opencloud.base.client.model.BaseAppUserDto;
-import com.opencloud.base.client.model.BaseUserAccountDto;
-import com.opencloud.base.client.model.BaseUserDto;
+import com.opencloud.base.client.model.AppUser;
+import com.opencloud.base.client.model.UserAccount;
+import com.opencloud.base.client.model.UserInfo;
 import com.opencloud.common.model.ResultBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,7 +18,7 @@ public interface BaseUserAccountRemoteApi {
      * @return
      */
     @PostMapping("/account/localLogin")
-    ResultBody<BaseUserAccountDto> localLogin(@RequestParam(value = "username") String username);
+    ResultBody<UserAccount> localLogin(@RequestParam(value = "username") String username);
 
     /**
      * 注册第三方登录账号
@@ -57,7 +57,7 @@ public interface BaseUserAccountRemoteApi {
      * @return
      */
     @PostMapping("/user/info")
-    ResultBody<BaseUserDto> getUserInfo(@RequestParam(value = "userId") Long userId);
+    ResultBody<UserInfo> getUserInfo(@RequestParam(value = "userId") Long userId);
     /**
      * APP登录
      *
@@ -65,7 +65,7 @@ public interface BaseUserAccountRemoteApi {
      * @return
      */
     @PostMapping("/account/appLogin")
-    ResultBody<BaseUserAccountDto> appLogin(@RequestParam(value = "username") String username);
+    ResultBody<UserAccount> appLogin(@RequestParam(value = "username") String username);
     /**
      * APP初始化登录
      *
@@ -73,7 +73,7 @@ public interface BaseUserAccountRemoteApi {
      * @return
      */
     @PostMapping("/login/init")
-    ResultBody<BaseAppUserDto> loginInit();
+    ResultBody<AppUser> loginInit();
     /**
      * 获取APP用户详细信息
      *
@@ -81,7 +81,7 @@ public interface BaseUserAccountRemoteApi {
      * @return
      */
     @PostMapping("/user/appInfo")
-    ResultBody<BaseAppUserDto> getAppUserInfo(@RequestParam(value = "userId") Long userId);
+    ResultBody<AppUser> getAppUserInfo(@RequestParam(value = "userId") Long userId);
 
 
 

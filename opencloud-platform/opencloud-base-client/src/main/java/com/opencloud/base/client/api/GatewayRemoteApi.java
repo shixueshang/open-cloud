@@ -1,7 +1,7 @@
 package com.opencloud.base.client.api;
 
-import com.opencloud.base.client.model.GatewayIpLimitApisDto;
-import com.opencloud.base.client.model.GatewayRateLimitApisDto;
+import com.opencloud.base.client.model.IpLimitApi;
+import com.opencloud.base.client.model.RateLimitApi;
 import com.opencloud.base.client.model.entity.GatewayRoute;
 import com.opencloud.common.model.ResultBody;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,21 +19,21 @@ public interface GatewayRemoteApi {
      * @return
      */
     @GetMapping("/gateway/api/blackList")
-     ResultBody<List<GatewayIpLimitApisDto>> getApiBlackList() ;
+     ResultBody<List<IpLimitApi>> getApiBlackList() ;
 
     /**
      * 获取接口白名单列表
      * @return
      */
     @GetMapping("/gateway/api/whiteList")
-    ResultBody<List<GatewayIpLimitApisDto> > getApiWhiteList();
+    ResultBody<List<IpLimitApi> > getApiWhiteList();
 
     /**
      * 获取限流列表
      * @return
      */
     @GetMapping("/gateway/api/rateLimit")
-    ResultBody<List<GatewayRateLimitApisDto> > getApiRateLimitList();
+    ResultBody<List<RateLimitApi> > getApiRateLimitList();
 
     /**
      * 获取路由列表

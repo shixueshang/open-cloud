@@ -1,7 +1,7 @@
 package com.opencloud.base.provider.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.opencloud.base.client.model.BaseUserDto;
+import com.opencloud.base.client.model.UserInfo;
 import com.opencloud.base.client.model.entity.BaseRole;
 import com.opencloud.base.client.model.entity.BaseUser;
 import com.opencloud.base.provider.service.BaseRoleService;
@@ -9,7 +9,6 @@ import com.opencloud.base.provider.service.BaseUserAccountService;
 import com.opencloud.base.provider.service.BaseUserService;
 import com.opencloud.common.model.PageParams;
 import com.opencloud.common.model.ResultBody;
-import com.opencloud.common.security.OpenHelper;
 import com.opencloud.common.utils.StringUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -87,7 +86,7 @@ public class BaseUserController {
             @RequestParam(value = "userDesc", required = false) String userDesc,
             @RequestParam(value = "avatar", required = false) String avatar
     ) {
-        BaseUserDto user = new BaseUserDto();
+        UserInfo user = new UserInfo();
         user.setUserName(userName);
         user.setPassword(password);
         user.setNickName(nickName);
@@ -126,7 +125,7 @@ public class BaseUserController {
             @RequestParam(value = "userDesc", required = false) String userDesc,
             @RequestParam(value = "avatar", required = false) String avatar
     ) {
-        BaseUserDto user = new BaseUserDto();
+        UserInfo user = new UserInfo();
         user.setUserId(userId);
         user.setNickName(nickName);
         user.setStatus(status);
@@ -187,41 +186,5 @@ public class BaseUserController {
         return ResultBody.success(baseRoleService.getUserRoles(userId));
     }
 
-    /**
-     * 修改当前登录用户密码
-     *
-     * @return
-     */
-    @ApiOperation(value = "修改当前登录用户密码", notes = "修改当前登录用户密码")
-    @GetMapping("/user/me/rest/password")
-    public ResultBody restMyPassword(@RequestParam(value = "oldPassword") String oldPassword,
-                                     @RequestParam(value = "newPassword") String newPassword
-    ) {
-        baseUserAccountService.resetPassword(OpenHelper.getUser().getUserId(), oldPassword, newPassword);
-        return ResultBody.success();
-    }
 
-    /**
-     * 修改当前登录用户基本信息
-     *
-     * @param nickName
-     * @param userDesc
-     * @param avatar
-     * @return
-     */
-    @ApiOperation(value = "修改当前登录用户基本信息", notes = "修改当前登录用户基本信息")
-    @PostMapping("/user/me/update")
-    public ResultBody updateMyUserInfo(
-            @RequestParam(value = "nickName") String nickName,
-            @RequestParam(value = "userDesc", required = false) String userDesc,
-            @RequestParam(value = "avatar", required = false) String avatar
-    ) {
-        BaseUserDto user = new BaseUserDto();
-        user.setUserId(OpenHelper.getUser().getUserId());
-        user.setNickName(nickName);
-        user.setUserDesc(userDesc);
-        user.setAvatar(avatar);
-        baseUserService.updateUser(user);
-        return ResultBody.success();
-    }
 }

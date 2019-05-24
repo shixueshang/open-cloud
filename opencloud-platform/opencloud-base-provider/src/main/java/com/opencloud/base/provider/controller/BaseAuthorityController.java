@@ -1,16 +1,17 @@
 package com.opencloud.base.provider.controller;
 
 import com.opencloud.base.client.api.BaseAuthorityRemoteApi;
-import com.opencloud.base.client.model.AccessAuthority;
-import com.opencloud.base.client.model.BaseApiAuthority;
-import com.opencloud.base.client.model.BaseMenuAuthority;
+import com.opencloud.base.client.model.AuthorityAccess;
+import com.opencloud.base.client.model.AuthorityApi;
+import com.opencloud.base.client.model.AuthorityMenu;
+import com.opencloud.base.client.model.entity.BaseAuthorityAction;
 import com.opencloud.base.client.model.entity.BaseUser;
 import com.opencloud.base.provider.service.BaseAuthorityService;
 import com.opencloud.base.provider.service.BaseUserService;
 import com.opencloud.common.constants.CommonConstants;
 import com.opencloud.common.model.ResultBody;
 import com.opencloud.common.security.Authority;
-import com.opencloud.common.security.OpenHelper;
+import com.opencloud.common.security.http.OpenRestTemplate;
 import com.opencloud.common.utils.StringUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -18,7 +19,6 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,6 +40,8 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
     private BaseAuthorityService baseAuthorityService;
     @Autowired
     private BaseUserService baseUserService;
+    @Autowired
+    private OpenRestTemplate openRestTemplate;
 
     /**
      * 获取所有访问权限列表
@@ -47,10 +49,10 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
      * @return
      */
     @ApiOperation(value = "获取所有访问权限列表", notes = "获取所有访问权限列表")
-    @GetMapping("/authority/access/list")
+    @GetMapping("/authority/access")
     @Override
-    public ResultBody<List<AccessAuthority>> getAccessAuthorityList() {
-        List<AccessAuthority> result =  baseAuthorityService.findAccessAuthority();
+    public ResultBody<List<AuthorityAccess>> findAuthorityAccess() {
+        List<AuthorityAccess> result = baseAuthorityService.findAuthorityAccess();
         return ResultBody.success(result);
     }
 
@@ -60,15 +62,14 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
      * @return
      */
     @ApiOperation(value = "获取接口权限列表", notes = "获取接口权限列表")
-    @GetMapping("/authority/api/list")
-    public ResultBody<List<BaseApiAuthority>> getApiAuthorityList(
+    @GetMapping("/authority/api")
+    public ResultBody<List<AuthorityApi>> findAuthorityApi(
             @RequestParam(value = "isOpen", required = false) Integer isOpen,
             @RequestParam(value = "serviceId", required = false) String serviceId
     ) {
-        List<BaseApiAuthority> result = baseAuthorityService.findApiAuthority(isOpen, serviceId);
+        List<AuthorityApi> result = baseAuthorityService.findAuthorityApi(isOpen, serviceId);
         return ResultBody.success(result);
     }
-
 
 
     /**
@@ -77,13 +78,86 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
      * @return
      */
     @ApiOperation(value = "获取菜单权限列表", notes = "获取菜单权限列表")
-    @GetMapping("/authority/menu/list")
+    @GetMapping("/authority/menu")
     @Override
-    public ResultBody<List<BaseMenuAuthority>> getMenuAuthorityList() {
-        List<BaseMenuAuthority> result = baseAuthorityService.findMenuAuthority(1);
+    public ResultBody<List<AuthorityMenu>> findAuthorityMenu() {
+        List<AuthorityMenu> result = baseAuthorityService.findAuthorityMenu(1);
         return ResultBody.success(result);
     }
 
+    /**
+     * 获取功能权限列表
+     *
+     * @param actionId
+     * @return
+     */
+    @ApiOperation(value = "获取功能权限列表", notes = "获取功能权限列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "actionId", required = true, value = "功能按钮ID", paramType = "form")
+    })
+    @GetMapping("/authority/action")
+    public ResultBody<List<BaseAuthorityAction>> findAuthorityAction(
+            @RequestParam(value = "actionId") Long actionId
+    ) {
+        List<BaseAuthorityAction> list = baseAuthorityService.findAuthorityAction(actionId);
+        return ResultBody.success(list);
+    }
+
+
+    /**
+     * 获取角色已分配权限
+     *
+     * @param roleId 角色ID
+     * @return
+     */
+    @ApiOperation(value = "获取角色已分配权限", notes = "获取角色已分配权限")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "roleId", value = "角色ID", defaultValue = "", required = true, paramType = "form")
+    })
+    @GetMapping("/authority/role")
+    public ResultBody<List<Authority>> findAuthorityRole(Long roleId) {
+        List<Authority> result = baseAuthorityService.findAuthorityByRole(roleId);
+        return ResultBody.success(result);
+    }
+
+
+    /**
+     * 获取用户已分配权限
+     *
+     * @param userId 用户ID
+     * @return
+     */
+    @ApiOperation(value = "获取用户已分配权限", notes = "获取用户已分配权限")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户ID", defaultValue = "", required = true, paramType = "form")
+    })
+    @GetMapping("/authority/user")
+    public ResultBody<List<Authority>> findAuthorityUser(
+            @RequestParam(value = "userId") Long userId
+    ) {
+        BaseUser user = baseUserService.getUserById(userId);
+        List<Authority> result = baseAuthorityService.findAuthorityByUser(userId, CommonConstants.ROOT.equals(user.getUserName()));
+        return ResultBody.success(result);
+    }
+
+
+    /**
+     * 获取应用已分配接口权限
+     *
+     * @param appId 角色ID
+     * @return
+     */
+    @ApiOperation(value = "获取应用已分配接口权限", notes = "获取应用已分配接口权限")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "appId", value = "应用Id", defaultValue = "", required = true, paramType = "form")
+    })
+    @GetMapping("/authority/app")
+    public ResultBody<List<Authority>> findAuthorityApp(
+            @RequestParam(value = "appId") String appId
+    ) {
+        List<Authority> result = baseAuthorityService.findAuthorityByApp(appId);
+        return ResultBody.success(result);
+    }
 
     /**
      * 分配角色权限
@@ -99,13 +173,14 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
             @ApiImplicitParam(name = "expireTime", value = "过期时间.选填", defaultValue = "", required = false, paramType = "form"),
             @ApiImplicitParam(name = "authorityIds", value = "权限ID.多个以,隔开.选填", defaultValue = "", required = false, paramType = "form")
     })
-    @PostMapping("/authority/grant/role")
-    public ResultBody grantRoleAuthority(
+    @PostMapping("/authority/role/grant")
+    public ResultBody grantAuthorityRole(
             @RequestParam(value = "roleId") Long roleId,
             @RequestParam(value = "expireTime", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date expireTime,
             @RequestParam(value = "authorityIds", required = false) String authorityIds
     ) {
-        baseAuthorityService.addRoleAuthority(roleId, expireTime, StringUtils.isNotBlank(authorityIds) ? authorityIds.split(",") : new String[]{});
+        baseAuthorityService.addAuthorityRole(roleId, expireTime, StringUtils.isNotBlank(authorityIds) ? authorityIds.split(",") : new String[]{});
+        openRestTemplate.refreshGateway();
         return ResultBody.success();
     }
 
@@ -124,13 +199,14 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
             @ApiImplicitParam(name = "expireTime", value = "过期时间.选填", defaultValue = "", required = false, paramType = "form"),
             @ApiImplicitParam(name = "authorityIds", value = "权限ID.多个以,隔开.选填", defaultValue = "", required = false, paramType = "form")
     })
-    @PostMapping("/authority/grant/user")
-    public ResultBody grantUserAuthority(
+    @PostMapping("/authority/user/grant")
+    public ResultBody grantAuthorityUser(
             @RequestParam(value = "userId") Long userId,
             @RequestParam(value = "expireTime", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date expireTime,
             @RequestParam(value = "authorityIds", required = false) String authorityIds
     ) {
-        baseAuthorityService.addUserAuthority(userId, expireTime, StringUtils.isNotBlank(authorityIds) ? authorityIds.split(",") : new String[]{});
+        baseAuthorityService.addAuthorityUser(userId, expireTime, StringUtils.isNotBlank(authorityIds) ? authorityIds.split(",") : new String[]{});
+        openRestTemplate.refreshGateway();
         return ResultBody.success();
     }
 
@@ -149,82 +225,37 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
             @ApiImplicitParam(name = "expireTime", value = "过期时间.选填", defaultValue = "", required = false, paramType = "form"),
             @ApiImplicitParam(name = "authorityIds", value = "权限ID.多个以,隔开.选填", defaultValue = "", required = false, paramType = "form")
     })
-    @PostMapping("/authority/grant/app")
-    public ResultBody grantAppAuthority(
+    @PostMapping("/authority/app/grant")
+    public ResultBody grantAuthorityApp(
             @RequestParam(value = "appId") String appId,
             @RequestParam(value = "expireTime", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date expireTime,
             @RequestParam(value = "authorityIds", required = false) String authorityIds
     ) {
-        baseAuthorityService.addAppAuthority(appId, expireTime, StringUtils.isNotBlank(authorityIds) ? authorityIds.split(",") : new String[]{});
+        baseAuthorityService.addAuthorityApp(appId, expireTime, StringUtils.isNotBlank(authorityIds) ? authorityIds.split(",") : new String[]{});
+        openRestTemplate.refreshGateway();
         return ResultBody.success();
     }
 
-
     /**
-     * 获取角色已分配权限
+     * 功能按钮绑定API
      *
-     * @param roleId 角色ID
+     * @param actionId
+     * @param authorityIds
      * @return
      */
-    @ApiOperation(value = "获取角色已分配权限", notes = "获取角色已分配权限")
+    @ApiOperation(value = "功能按钮授权", notes = "功能按钮授权")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "roleId", value = "角色ID", defaultValue = "", required = true, paramType = "form")
+            @ApiImplicitParam(name = "actionId", required = true, value = "功能按钮ID", paramType = "form"),
+            @ApiImplicitParam(name = "authorityIds", required = false, value = "全新ID:多个用,号隔开", paramType = "form"),
     })
-    @GetMapping("/authority/granted/role")
-    public ResultBody<List<GrantedAuthority>> getGrantedRoleAuthority(Long roleId) {
-        List<Authority> result = baseAuthorityService.findRoleGrantedAuthority(roleId);
-        return ResultBody.success(result);
-    }
-
-
-    /**
-     * 获取用户已分配权限
-     *
-     * @param userId 用户ID
-     * @return
-     */
-    @ApiOperation(value = "获取用户已分配权限", notes = "获取用户已分配权限")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "userId", value = "用户ID", defaultValue = "", required = true, paramType = "form")
-    })
-    @GetMapping("/authority/granted/user")
-    public ResultBody<List<GrantedAuthority>> getGrantedUserAuthority(
-            @RequestParam(value = "userId") Long userId
+    @PostMapping("/authority/action/grant")
+    public ResultBody grantAuthorityAction(
+            @RequestParam(value = "actionId") Long actionId,
+            @RequestParam(value = "authorityIds", required = false) String authorityIds
     ) {
-        BaseUser user = baseUserService.getUserById(userId);
-        List<Authority> result = baseAuthorityService.findUserGrantedAuthority(userId, CommonConstants.ROOT.equals(user.getUserName()));
-        return ResultBody.success(result);
-    }
-
-
-    /**
-     * 获取应用已分配接口权限
-     *
-     * @param appId 角色ID
-     * @return
-     */
-    @ApiOperation(value = "获取应用已分配接口权限", notes = "获取应用已分配接口权限")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "appId", value = "应用Id", defaultValue = "", required = true, paramType = "form")
-    })
-    @GetMapping("/authority/granted/app")
-    public ResultBody<List<Authority>> getGrantedAppAuthority(
-            @RequestParam(value = "appId") String appId
-    ) {
-        List<Authority> result = baseAuthorityService.findAppGrantedAuthority(appId);
-        return ResultBody.success(result);
-    }
-
-    /**
-     * 获取登陆用户已分配权限
-     *
-     * @return
-     */
-    @ApiOperation(value = "获取登陆用户已分配权限", notes = "获取登陆用户已分配权限")
-    @GetMapping("/authority/granted/me/menu")
-    public ResultBody<List<BaseMenuAuthority>> getGrantedMyMenuAuthority() {
-        List<BaseMenuAuthority> result = baseAuthorityService.findUserMenuAuthority(OpenHelper.getUser().getUserId(), CommonConstants.ROOT.equals(OpenHelper.getUser().getUsername()));
-        return ResultBody.success(result);
+        baseAuthorityService.addAuthorityAction(actionId, StringUtils.isNotBlank(authorityIds) ? authorityIds.split(",") : new String[]{});
+        openRestTemplate.refreshGateway();
+        return ResultBody.success();
     }
 
 
