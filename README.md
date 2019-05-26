@@ -1,5 +1,5 @@
 <p align="center">
-  <a target="_blank" href="https://nacos.io/en-us/"><img src="https://img.shields.io/badge/Nacos-0.2.1-blue.svg" alt="Nacos"></a>
+  <a target="_blank" href="https://nacos.io/en-us/"><img src="https://img.shields.io/badge/Nacos-0.2.2-blue.svg" alt="Nacos"></a>
   <a><img src="https://img.shields.io/badge/Spring%20Cloud-%20Greenwich.SR1-brightgreen.svg" alt="SpringCloud"></a>
   <a><img src="https://img.shields.io/badge/Spring%20Boot-2.1.4-brightgreen.svg" alt="SpringBoot"></a>
   <a><img src="https://img.shields.io/badge/Redis-orange.svg"></a>
@@ -20,32 +20,10 @@
 + 前后端分离方式开发应用，分工合作更高效!
 + 代码合理封装、简单易懂、
 
-#### 系统结构图
-
-![springcloud](/docs/springcloud.jpg)  
-
-#### 功能介绍
-![springcloud](/docs/opencloud.png)  
-
-#### 权限模型
-![springcloud](/docs/mode.png)  
-
 <a target="_blank" href="http://39.106.187.125/admin">演示地址</a>
 + 默认登录账号:admin 123456  
 + 测试登录账号:test 123456
 
-#### 服务端源码
-<a target="_blank" href="https://gitee.com/liuyadu">码云</a>  <a target="_blank" href="https://github.com/liuyadu/">github</a>  
-
-#### vue后台UI源码
-<a target="_blank" href="https://gitee.com/liuyadu/open-admin-ui">后台UI源码</a>
-
-#### 代码生成器
-<a target="_blank" href="https://gitee.com/liuyadu/generator.git">代码生成器</a>  
-
-#### 使用手册
-<a target="_blank" href="https://gitee.com/liuyadu/open-cloud/wikis/pages">使用手册</a>  
-        
 #### 更新日志
     v-2.1.0 2019-05-26 （重大变更）
         1. 重新梳理base表结构和权限相关接口,解决用户和客户端动态分配权。 机制问题暂不支持用户动态分配角色,需重新登录获取最新角色
@@ -69,6 +47,27 @@
         3. 重构授权逻辑
         4. 提取公共配置,并迁移到Nacos配置中心
         5. 优化功能
+        
+#### 系统结构图
+
+![springcloud](/docs/springcloud.jpg)  
+
+#### 功能介绍
+![springcloud](/docs/opencloud.png)  
+
+
+
+#### 服务端源码
+<a target="_blank" href="https://gitee.com/liuyadu">码云</a>  <a target="_blank" href="https://github.com/liuyadu/">github</a>  
+
+#### vue后台UI源码
+<a target="_blank" href="https://gitee.com/liuyadu/open-admin-ui">后台UI源码</a>
+
+#### 代码生成器
+<a target="_blank" href="https://gitee.com/liuyadu/generator.git">代码生成器</a>  
+
+#### 使用手册
+<a target="_blank" href="https://gitee.com/liuyadu/open-cloud/wikis/pages">使用手册</a>  
 
 #### 学习交流群 
 交流群:760809808  <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=b45f53bc72df5935af588df50a0f651285020356d1daa05f90ee3fb95a0607c9"><img  border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="open-cloud学习交流群" title="open-cloud学习交流群"></a>  
