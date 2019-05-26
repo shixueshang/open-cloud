@@ -30,7 +30,8 @@
         2. 优化页面功能
         3. 升级nacos客户端版本.支持1.0.0以上版本
         4. 禁用非平台认证服务(opencloud-auth-provider)客户端模式。只作为用户认证服务器 
-        5. 完善权限数据,升级方式ui和服务代码, 重新支持base.sql。手动删除无效表
+        5. 完善权限数据,去除外键约束.
+        6. 升级方式更新ui和服务代码, 重新执行base.sql。手动删除无效表
         
     v-2.0.0 2019-05-01
         1. 升级SpringCloud Greenwich.SR1,SpringBoot 2.1.4.RELEASE
