@@ -45,7 +45,7 @@ public class SchedulerController {
     @GetMapping(value = "/job/logs")
     public ResultBody<IPage<SchedulerJobLogs>> getJobLogList(@RequestParam(required = false) Map map) {
         IPage<SchedulerJobLogs> result = schedulerJobLogsService.findListPage(new PageParams(map));
-        return ResultBody.success(result);
+        return ResultBody.ok().data(result);
     }
 
     /**
@@ -60,7 +60,7 @@ public class SchedulerController {
         IPage page = new Page();
         page.setRecords(list);
         page.setTotal(list.size());
-        return ResultBody.success(page);
+        return ResultBody.ok().data(page);
     }
 
     /**
@@ -110,7 +110,7 @@ public class SchedulerController {
         taskInfo.setJobGroupName(Scheduler.DEFAULT_GROUP);
         taskInfo.setCronExpression(cron);
         schedulerService.addCronJob(taskInfo);
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 
     /**
@@ -160,7 +160,7 @@ public class SchedulerController {
         taskInfo.setJobGroupName(Scheduler.DEFAULT_GROUP);
         taskInfo.setCronExpression(cron);
         schedulerService.editCronJob(taskInfo);
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 
 
@@ -177,7 +177,7 @@ public class SchedulerController {
     @PostMapping("/job/delete")
     public ResultBody deleteJob(@RequestParam(name = "jobName") String jobName) {
         schedulerService.deleteJob(jobName, Scheduler.DEFAULT_GROUP);
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 
     /**
@@ -193,7 +193,7 @@ public class SchedulerController {
     @PostMapping("/job/pause")
     public ResultBody pauseJob(@RequestParam(name = "jobName") String jobName) {
         schedulerService.pauseJob(jobName, Scheduler.DEFAULT_GROUP);
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 
 
@@ -210,6 +210,6 @@ public class SchedulerController {
     @PostMapping("/job/resume")
     public ResultBody resumeJob(@RequestParam(name = "jobName") String jobName) {
         schedulerService.resumeJob(jobName, Scheduler.DEFAULT_GROUP);
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 }

@@ -63,8 +63,4 @@ public class BaseConstants {
      */
     public final static String APP_IOS = "ios";
     public final static String APP_ANDROID = "android";
-
-
-    public static final String ROLE_PREFIX = "ROLE_";
-
 }

@@ -34,7 +34,7 @@ public class EmailController implements EmailRemoteApi {
         mailMessage.setTitle(title);
         mailMessage.setContent(content);
         this.dispatcher.dispatch(mailMessage);
-        return ResultBody.success("");
+        return ResultBody.ok();
     }
 
 

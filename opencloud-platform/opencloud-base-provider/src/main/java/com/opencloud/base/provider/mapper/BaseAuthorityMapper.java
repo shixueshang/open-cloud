@@ -1,13 +1,13 @@
 package com.opencloud.base.provider.mapper;
 
 import com.opencloud.base.client.model.AuthorityAccess;
+import com.opencloud.base.client.model.AuthorityAction;
 import com.opencloud.base.client.model.AuthorityApi;
 import com.opencloud.base.client.model.AuthorityMenu;
-import com.opencloud.base.client.model.AuthorityAction;
 import com.opencloud.base.client.model.entity.BaseAuthority;
 import com.opencloud.common.mybatis.base.mapper.SuperMapper;
 import com.opencloud.common.security.Authority;
-import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * @author liuyadu
  */
-@Mapper
+@Repository
 public interface BaseAuthorityMapper extends SuperMapper<BaseAuthority> {
 
     /**
@@ -23,6 +23,23 @@ public interface BaseAuthorityMapper extends SuperMapper<BaseAuthority> {
      */
     List<AuthorityAccess> selectAuthorityAccess();
 
+    /**
+     * 查询所有APP相关权限
+     * @return
+     */
+    List<AuthorityAccess> selectAllAuthorityApp();
+
+    /**
+     * 查询所有用户相关权限
+     * @return
+     */
+    List<AuthorityAccess> selectAllAuthorityUser();
+
+    /**
+     * 查询所有角色相关权限
+     * @return
+     */
+    List<AuthorityAccess> selectAllAuthorityRole();
 
     /**
      * 查询已授权权限列表
@@ -56,4 +73,6 @@ public interface BaseAuthorityMapper extends SuperMapper<BaseAuthority> {
      * @return
      */
     List<AuthorityApi> selectAuthorityApi(Map map);
+
+
 }

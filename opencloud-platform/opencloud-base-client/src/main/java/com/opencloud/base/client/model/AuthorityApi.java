@@ -46,6 +46,16 @@ public class AuthorityApi extends BaseApi implements Serializable {
         return authority;
     }
 
+    @Override
+    public String getServiceId() {
+        return serviceId;
+    }
+
+    @Override
+    public void setServiceId(String serviceId) {
+        this.serviceId = serviceId;
+    }
+
     public void setAuthority(String authority) {
         this.authority = authority;
     }

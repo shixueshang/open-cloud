@@ -45,7 +45,7 @@ public class CurrentUserController {
                                    @RequestParam(value = "newPassword") String newPassword
     ) {
         baseUserAccountService.resetPassword(OpenHelper.getUser().getUserId(), oldPassword, newPassword);
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 
     /**
@@ -69,7 +69,7 @@ public class CurrentUserController {
         user.setUserDesc(userDesc);
         user.setAvatar(avatar);
         baseUserService.updateUser(user);
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 
     /**
@@ -81,6 +81,6 @@ public class CurrentUserController {
     @GetMapping("/current/user/menu")
     public ResultBody<List<AuthorityMenu>> findAuthorityMenu() {
         List<AuthorityMenu> result = baseAuthorityService.findAuthorityMenuByUser(OpenHelper.getUser().getUserId(), CommonConstants.ROOT.equals(OpenHelper.getUser().getUsername()));
-        return ResultBody.success(result);
+        return ResultBody.ok().data(result);
     }
 }

@@ -75,7 +75,7 @@ public class ApiController {
         HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity(postParameters, headers);
         Map result = openRestTemplate.postForObject("http://localhost:7211/oauth/token", request, Map.class);
         if (ObjectUtils.isNotEmpty(request) && result.containsKey("access_token")) {
-            return ResultBody.success(result);
+            return ResultBody.ok().data(result);
         } else {
             return result;
         }

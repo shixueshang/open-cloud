@@ -34,7 +34,7 @@ public class BaseRoleController {
     @ApiOperation(value = "获取分页角色列表", notes = "获取分页角色列表")
     @GetMapping("/role")
     public ResultBody<IPage<BaseRole>> getRoleListPage(@RequestParam(required = false) Map map) {
-        return ResultBody.success(baseRoleService.findListPage(new PageParams(map)));
+        return ResultBody.ok().data(baseRoleService.findListPage(new PageParams(map)));
     }
 
     /**
@@ -45,7 +45,7 @@ public class BaseRoleController {
     @ApiOperation(value = "获取所有角色列表", notes = "获取所有角色列表")
     @GetMapping("/role/all")
     public ResultBody<List<BaseRole>> getRoleAllList() {
-        return ResultBody.success(baseRoleService.findAllList());
+        return ResultBody.ok().data(baseRoleService.findAllList());
     }
 
     /**
@@ -61,7 +61,7 @@ public class BaseRoleController {
     @GetMapping("/role/{roleId}/info")
     public ResultBody<BaseRole> getRole(@PathVariable(value = "roleId") Long roleId) {
         BaseRole result = baseRoleService.getRole(roleId);
-        return ResultBody.success(result);
+        return ResultBody.ok().data(result);
     }
 
     /**
@@ -97,7 +97,7 @@ public class BaseRoleController {
         if (result != null) {
             roleId = result.getRoleId();
         }
-        return ResultBody.success(roleId);
+        return ResultBody.ok().data(roleId);
     }
 
     /**
@@ -133,7 +133,7 @@ public class BaseRoleController {
         role.setStatus(status);
         role.setRoleDesc(roleDesc);
         baseRoleService.updateRole(role);
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 
 
@@ -152,7 +152,7 @@ public class BaseRoleController {
             @RequestParam(value = "roleId") Long roleId
     ) {
         baseRoleService.removeRole(roleId);
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 
     /**
@@ -168,7 +168,7 @@ public class BaseRoleController {
             @RequestParam(value = "userIds", required = false) String userIds
     ) {
         baseRoleService.saveRoleUsers(roleId, StringUtils.isNotBlank(userIds) ? userIds.split(",") : new String[]{});
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 
     /**
@@ -182,7 +182,7 @@ public class BaseRoleController {
     public ResultBody<List<BaseRoleUser>> getRoleUsers(
             @RequestParam(value = "roleId") Long roleId
     ) {
-        return ResultBody.success(baseRoleService.findRoleUsers(roleId));
+        return ResultBody.ok().data(baseRoleService.findRoleUsers(roleId));
     }
 
 }

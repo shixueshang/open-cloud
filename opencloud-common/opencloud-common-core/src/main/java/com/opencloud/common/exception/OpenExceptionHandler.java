@@ -198,7 +198,7 @@ public class OpenExceptionHandler {
         } else if (className.contains("MethodArgumentNotValidException")) {
             BindingResult bindingResult = ((MethodArgumentNotValidException) ex).getBindingResult();
             code = ResultEnum.ALERT;
-            return ResultBody.failed(code.getCode(), bindingResult.getFieldError().getDefaultMessage());
+            return ResultBody.failed().code(code.getCode()).msg(bindingResult.getFieldError().getDefaultMessage());
         } else if (className.contains("IllegalArgumentException")) {
             //参数错误
             code = ResultEnum.ALERT;
@@ -218,12 +218,10 @@ public class OpenExceptionHandler {
      * @return
      */
     private static ResultBody buildBody(Exception exception, ResultEnum resultCode, String path, int httpStatus) {
-        String message = exception.getMessage();
         if (resultCode == null) {
             resultCode = ResultEnum.ERROR;
         }
-        int code = resultCode.getCode();
-        ResultBody resultBody = ResultBody.failed(code, message).setPath(path).setHttpStatus(httpStatus);
+        ResultBody resultBody = ResultBody.failed().code(resultCode.getCode()).msg(exception.getMessage()).path(path).httpStatus(httpStatus);
         log.error("==> error:{} exception: {}",resultBody, exception);
         return resultBody;
     }

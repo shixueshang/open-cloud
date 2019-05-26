@@ -1,6 +1,5 @@
 package com.opencloud.base.provider.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.opencloud.base.client.model.entity.BaseApi;
 import com.opencloud.base.provider.service.BaseApiService;
@@ -36,10 +35,7 @@ public class BaseApiController {
     @ApiOperation(value = "获取分页接口列表", notes = "获取分页接口列表")
     @GetMapping(value = "/api")
     public ResultBody<IPage<BaseApi>> getApiList(@RequestParam(required = false) Map map) {
-        QueryWrapper<BaseApi> queryWrapper = new QueryWrapper<>();
-        queryWrapper.lambda().eq(BaseApi::getIsOpen,1);
-        int openApiCount = apiService.getCount(queryWrapper);
-        return ResultBody.success(apiService.findListPage(new PageParams(map))).putExtra("openApiCount", openApiCount);
+        return ResultBody.ok().data(apiService.findListPage(new PageParams(map)));
     }
 
 
@@ -51,7 +47,7 @@ public class BaseApiController {
     @ApiOperation(value = "获取所有接口列表", notes = "获取所有接口列表")
     @GetMapping("/api/all")
     public ResultBody<List<BaseApi>> getApiAllList(String serviceId) {
-        return ResultBody.success(apiService.findAllList(serviceId));
+        return ResultBody.ok().data(apiService.findAllList(serviceId));
     }
 
     /**
@@ -66,7 +62,7 @@ public class BaseApiController {
     })
     @GetMapping("/api/{apiId}/info")
     public ResultBody<BaseApi> getApi(@PathVariable("apiId") Long apiId) {
-        return ResultBody.success(apiService.getApi(apiId));
+        return ResultBody.ok().data(apiService.getApi(apiId));
     }
 
     /**
@@ -91,7 +87,6 @@ public class BaseApiController {
             @ApiImplicitParam(name = "status", required = true, defaultValue = "1", allowableValues = "0,1", value = "是否启用", paramType = "form"),
             @ApiImplicitParam(name = "priority", required = false, value = "优先级越小越靠前", paramType = "form"),
             @ApiImplicitParam(name = "apiDesc", required = false, value = "描述", paramType = "form"),
-            @ApiImplicitParam(name = "isOpen", required = false, defaultValue = "0", allowableValues = "0,1", value = "是否开放接口", paramType = "form"),
             @ApiImplicitParam(name = "isAuth", required = false, defaultValue = "0", allowableValues = "0,1", value = "是否身份认证", paramType = "form")
     })
     @PostMapping("/api/add")
@@ -104,7 +99,6 @@ public class BaseApiController {
             @RequestParam(value = "status", defaultValue = "1") Integer status,
             @RequestParam(value = "priority", required = false, defaultValue = "0") Integer priority,
             @RequestParam(value = "apiDesc", required = false, defaultValue = "") String apiDesc,
-            @RequestParam(value = "isOpen", required = false, defaultValue = "0") Integer isOpen,
             @RequestParam(value = "isAuth", required = false, defaultValue = "1") Integer isAuth
     ) {
         BaseApi api = new BaseApi();
@@ -116,7 +110,6 @@ public class BaseApiController {
         api.setStatus(status);
         api.setPriority(priority);
         api.setApiDesc(apiDesc);
-        api.setIsOpen(isOpen);
         api.setIsAuth(isAuth);
         Long apiId = null;
         BaseApi result = apiService.addApi(api);
@@ -125,7 +118,7 @@ public class BaseApiController {
             // 刷新网关
             openRestTemplate.refreshGateway();
         }
-        return ResultBody.success(apiId);
+        return ResultBody.ok().data(apiId);
     }
 
     /**
@@ -152,7 +145,6 @@ public class BaseApiController {
             @ApiImplicitParam(name = "status", required = true, defaultValue = "1", allowableValues = "0,1", value = "是否启用", paramType = "form"),
             @ApiImplicitParam(name = "priority", required = false, value = "优先级越小越靠前", paramType = "form"),
             @ApiImplicitParam(name = "apiDesc", required = false, value = "描述", paramType = "form"),
-            @ApiImplicitParam(name = "isOpen", required = false, defaultValue = "0", allowableValues = "0,1", value = "是否开放接口", paramType = "form"),
             @ApiImplicitParam(name = "isAuth", required = false, defaultValue = "0", allowableValues = "0,1", value = "是否身份认证", paramType = "form")
     })
     @PostMapping("/api/update")
@@ -166,7 +158,6 @@ public class BaseApiController {
             @RequestParam(value = "status", defaultValue = "1") Integer status,
             @RequestParam(value = "priority", required = false, defaultValue = "0") Integer priority,
             @RequestParam(value = "apiDesc", required = false, defaultValue = "") String apiDesc,
-            @RequestParam(value = "isOpen", required = false, defaultValue = "0") Integer isOpen,
             @RequestParam(value = "isAuth", required = false, defaultValue = "1") Integer isAuth
     ) {
         BaseApi api = new BaseApi();
@@ -179,12 +170,11 @@ public class BaseApiController {
         api.setStatus(status);
         api.setPriority(priority);
         api.setApiDesc(apiDesc);
-        api.setIsOpen(isOpen);
         api.setIsAuth(isAuth);
         apiService.updateApi(api);
         // 刷新网关
         openRestTemplate.refreshGateway();
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 
 
@@ -205,6 +195,6 @@ public class BaseApiController {
         apiService.removeApi(apiId);
         // 刷新网关
         openRestTemplate.refreshGateway();
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 }

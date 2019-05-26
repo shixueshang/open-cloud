@@ -83,7 +83,7 @@ public class ServiceFallbackProvider implements FallbackProvider {
             @Override
             public InputStream getBody() throws IOException {
                 //响应体
-                String content = JSONObject.toJSONString(ResultBody.failed(ResultEnum.SERVICE_UNAVAILABLE.getCode(), ResultEnum.SERVICE_UNAVAILABLE.getMessage()));
+                String content = JSONObject.toJSONString(ResultBody.failed().code(ResultEnum.SERVICE_UNAVAILABLE.getCode()).msg(ResultEnum.SERVICE_UNAVAILABLE.getMessage()));
                 return new ByteArrayInputStream(content.getBytes());
             }
 

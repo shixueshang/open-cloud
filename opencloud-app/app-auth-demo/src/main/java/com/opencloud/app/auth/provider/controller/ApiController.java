@@ -25,7 +25,7 @@ public class ApiController {
     @GetMapping("/user/me")
     public ResultBody getUserProfile() {
         OpenUser user = OpenHelper.getUser();
-        return ResultBody.success(user != null ? user : null);
+        return ResultBody.ok().data(user != null ? user : null);
     }
 
 

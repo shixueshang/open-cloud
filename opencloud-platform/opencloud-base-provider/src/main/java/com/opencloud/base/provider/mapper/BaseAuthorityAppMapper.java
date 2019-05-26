@@ -3,15 +3,15 @@ package com.opencloud.base.provider.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.opencloud.base.client.model.entity.BaseAuthorityApp;
 import com.opencloud.common.security.Authority;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 /**
  * @author liuyadu
  */
-@Mapper
+@Repository
 public interface BaseAuthorityAppMapper extends BaseMapper<BaseAuthorityApp> {
 
     /**

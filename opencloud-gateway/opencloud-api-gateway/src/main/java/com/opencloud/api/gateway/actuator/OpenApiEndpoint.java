@@ -30,6 +30,6 @@ public class OpenApiEndpoint extends AbstractBusEndpoint {
     @PostMapping("/refresh")
     public ResultBody busRefreshWithDestination(@RequestParam(required = false)  String destination) {
         this.publish(new GatewayRemoteRefreshRouteEvent(this, this.getInstanceId(), destination));
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 }

@@ -44,7 +44,7 @@ public class BaseUserController {
     @ApiOperation(value = "系统分页用户列表", notes = "系统分页用户列表")
     @GetMapping("/user")
     public ResultBody<IPage<BaseUser>> getUserList(@RequestParam(required = false) Map map) {
-        return ResultBody.success(baseUserService.findListPage(new PageParams(map)));
+        return ResultBody.ok().data(baseUserService.findListPage(new PageParams(map)));
     }
 
 
@@ -56,7 +56,7 @@ public class BaseUserController {
     @ApiOperation(value = "获取所有用户列表", notes = "获取所有用户列表")
     @GetMapping("/user/all")
     public ResultBody<List<BaseRole>> getUserAllList() {
-        return ResultBody.success(baseUserService.findAllList());
+        return ResultBody.ok().data(baseUserService.findAllList());
     }
 
     /**
@@ -97,7 +97,7 @@ public class BaseUserController {
         user.setUserDesc(userDesc);
         user.setAvatar(avatar);
         Long userId = baseUserAccountService.register(user);
-        return ResultBody.success(userId);
+        return ResultBody.ok().data(userId);
     }
 
     /**
@@ -135,7 +135,7 @@ public class BaseUserController {
         user.setUserDesc(userDesc);
         user.setAvatar(avatar);
         baseUserService.updateUser(user);
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 
     /**
@@ -152,7 +152,7 @@ public class BaseUserController {
             @RequestParam(value = "password") String password
     ) {
         baseUserAccountService.resetPassword(userId, password);
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 
     /**
@@ -169,7 +169,7 @@ public class BaseUserController {
             @RequestParam(value = "roleIds", required = false) String roleIds
     ) {
         baseRoleService.saveUserRoles(userId, StringUtils.isNotBlank(roleIds) ? roleIds.split(",") : new String[]{});
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 
     /**
@@ -183,7 +183,7 @@ public class BaseUserController {
     public ResultBody<List<BaseRole>> getUserRoles(
             @RequestParam(value = "userId") Long userId
     ) {
-        return ResultBody.success(baseRoleService.getUserRoles(userId));
+        return ResultBody.ok().data(baseRoleService.getUserRoles(userId));
     }
 
 

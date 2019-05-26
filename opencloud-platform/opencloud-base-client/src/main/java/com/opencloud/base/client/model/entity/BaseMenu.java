@@ -44,9 +44,9 @@ public class BaseMenu implements Serializable {
     private Long parentId;
 
     /**
-     * 路径前缀:/,http://,https://
+     * 请求协议:/,http://,https://
      */
-    private String prefix;
+    private String scheme;
 
     /**
      * 请求路径
@@ -173,12 +173,12 @@ public class BaseMenu implements Serializable {
         this.parentId = parentId;
     }
 
-    public String getPrefix() {
-        return prefix;
+    public String getScheme() {
+        return scheme;
     }
 
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
+    public void setScheme(String scheme) {
+        this.scheme = scheme;
     }
 
     public String getPath() {

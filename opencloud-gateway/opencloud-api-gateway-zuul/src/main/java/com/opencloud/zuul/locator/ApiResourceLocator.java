@@ -57,7 +57,7 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
     /**
      * 权限列表
      */
-    private List<AuthorityAccess> accessAuthorities;
+    private List<AuthorityAccess> authorityAccesses;
 
     /**
      * IP黑名单
@@ -82,6 +82,11 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
 
 
     public ApiResourceLocator(JdbcRouteLocator zuulRoutesLocator, RateLimitProperties rateLimitProperties, BaseAuthorityRemoteService baseAuthorityRemoteService, GatewayRemoteService gatewayRemoteService) {
+        this.allConfigAttributes = Maps.newHashMap();
+        this.ipBlacks = Lists.newArrayList();
+        this.ipWhites = Lists.newArrayList();
+        this.authorityAccesses = Lists.newArrayList();
+        this.rateLimitApis = Lists.newArrayList();
         this.zuulRoutesLocator = zuulRoutesLocator;
         this.rateLimitProperties = rateLimitProperties;
         this.baseAuthorityRemoteService = baseAuthorityRemoteService;
@@ -110,7 +115,7 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
             for (Route route : routes) {
                 // 服务ID相同
                 if (route.getId().equals(serviceId)) {
-                    return route.getPrefix().concat(path);
+                    return route.getPrefix().concat(path.startsWith("/") ? path : "/" + path);
                 }
             }
         }
@@ -121,22 +126,21 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
      * 加载授权列表
      */
     public void loadAuthority() {
-        allConfigAttributes = Maps.newHashMap();
-        accessAuthorities = Lists.newArrayList();
         Collection<ConfigAttribute> array;
         ConfigAttribute cfg;
+        HashMap<String, Collection<ConfigAttribute>> configAttributes = Maps.newHashMap();
         try {
             // 查询所有接口
-            accessAuthorities = baseAuthorityRemoteService.findAuthorityAccess().getData();
-            if (accessAuthorities != null) {
-                for (AuthorityAccess item : accessAuthorities) {
+            List<AuthorityAccess> list = baseAuthorityRemoteService.findAuthorityAccess().getData();
+            if (list != null) {
+                for (AuthorityAccess item : list) {
                     String path = item.getPath();
                     if (path == null) {
                         continue;
                     }
                     String fullPath = getFullPath(item.getServiceId(), path);
                     item.setPath(fullPath);
-                    array = allConfigAttributes.get(fullPath);
+                    array = configAttributes.get(fullPath);
                     if (array == null) {
                         array = new ArrayList<>();
                     }
@@ -144,10 +148,14 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
                         cfg = new SecurityConfig(item.getAuthority());
                         array.add(cfg);
                     }
-                    allConfigAttributes.put(fullPath, array);
+                    configAttributes.put(fullPath, array);
                 }
+                this.allConfigAttributes.clear();
+                this.authorityAccesses.clear();
+                this.allConfigAttributes.putAll(configAttributes);
+                this.authorityAccesses.addAll(list);
             }
-            log.info("=============加载动态权限:{}==============", accessAuthorities.size());
+            log.info("=============加载动态权限:{}==============", this.authorityAccesses.size());
         } catch (Exception e) {
             log.error("加载动态权限错误:{}", e.getMessage());
         }
@@ -157,15 +165,16 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
      * 加载IP黑名单
      */
     public void loadIpBlacks() {
-        ipBlacks = Lists.newArrayList();
         try {
-            ipBlacks = gatewayRemoteService.getApiBlackList().getData();
-            if (ipBlacks != null) {
-                for (IpLimitApi item : ipBlacks) {
+            List<IpLimitApi> list = gatewayRemoteService.getApiBlackList().getData();
+            if (list != null) {
+                for (IpLimitApi item : list) {
                     item.setPath(getFullPath(item.getServiceId(), item.getPath()));
                 }
+                this.ipBlacks.clear();
+                this.ipBlacks.addAll(list);
             }
-            log.info("=============加载IP黑名单:{}==============", ipBlacks.size());
+            log.info("=============加载IP黑名单:{}==============", this.ipBlacks.size());
         } catch (Exception e) {
             log.error("加载IP黑名单错误:{}", e.getMessage());
         }
@@ -175,13 +184,14 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
      * 加载IP白名单
      */
     public void loadIpWhites() {
-        ipWhites = Lists.newArrayList();
         try {
-            ipWhites = gatewayRemoteService.getApiWhiteList().getData();
-            if (ipWhites != null) {
-                for (IpLimitApi item : ipWhites) {
+            List<IpLimitApi> list = gatewayRemoteService.getApiWhiteList().getData();
+            if (list != null) {
+                for (IpLimitApi item : list) {
                     item.setPath(getFullPath(item.getServiceId(), item.getPath()));
                 }
+                this.ipWhites.clear();
+                this.ipWhites.addAll(list);
             }
             log.info("=============加载IP白名单:{}==============", ipWhites.size());
         } catch (Exception e) {
@@ -217,9 +227,9 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
     protected Map<String, List<RateLimitProperties.Policy>> loadRateLimitPolicy() {
         Map<String, List<RateLimitProperties.Policy>> policyMap = Maps.newLinkedHashMap();
         try {
-            rateLimitApis = gatewayRemoteService.getApiRateLimitList().getData();
-            if (rateLimitApis != null && rateLimitApis.size() > 0) {
-                for (RateLimitApi item : rateLimitApis) {
+            List<RateLimitApi> list = gatewayRemoteService.getApiRateLimitList().getData();
+            if (list != null) {
+                for (RateLimitApi item : list) {
                     List<RateLimitProperties.Policy> policyList = policyMap.get(item.getServiceId());
                     if (policyList == null) {
                         policyList = Lists.newArrayList();
@@ -239,6 +249,8 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
                     policyList.add(policy);
                     policyMap.put(item.getServiceId(), policyList);
                 }
+                this.rateLimitApis.clear();
+                this.rateLimitApis.addAll(rateLimitApis);
             }
         } catch (Exception e) {
             log.error("加载动态限流错误:{}", e.getMessage());
@@ -266,13 +278,14 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
         }
     }
 
-    public List<AuthorityAccess> getAccessAuthorities() {
-        return accessAuthorities;
+    public List<AuthorityAccess> getAuthorityAccesses() {
+        return authorityAccesses;
     }
 
-    public void setAccessAuthorities(List<AuthorityAccess> accessAuthorities) {
-        this.accessAuthorities = accessAuthorities;
+    public void setAuthorityAccesses(List<AuthorityAccess> authorityAccesses) {
+        this.authorityAccesses = authorityAccesses;
     }
+
 
     public List<IpLimitApi> getIpBlacks() {
         return ipBlacks;

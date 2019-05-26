@@ -72,7 +72,21 @@ public class BaseAuthorityServiceImpl extends BaseServiceImpl<BaseAuthorityMappe
      */
     @Override
     public List<AuthorityAccess> findAuthorityAccess() {
-        return baseAuthorityMapper.selectAuthorityAccess();
+        List<AuthorityAccess> list = Lists.newArrayList();
+        List<AuthorityAccess> appList = baseAuthorityMapper.selectAllAuthorityApp();
+        List<AuthorityAccess> roleList = baseAuthorityMapper.selectAllAuthorityRole();
+        List<AuthorityAccess> userList = baseAuthorityMapper.selectAllAuthorityUser();
+
+        if (appList != null) {
+            list.addAll(appList);
+        }
+        if (appList != null) {
+            list.addAll(roleList);
+        }
+        if (appList != null) {
+            list.addAll(userList);
+        }
+        return list;
     }
 
     /**
@@ -90,11 +104,10 @@ public class BaseAuthorityServiceImpl extends BaseServiceImpl<BaseAuthorityMappe
     }
 
     @Override
-    public List<AuthorityApi> findAuthorityApi(Integer isOpen, String serviceId) {
+    public List<AuthorityApi> findAuthorityApi(String serviceId) {
         Map map = Maps.newHashMap();
         map.put("serviceId", serviceId);
         map.put("status", 1);
-        map.put("isOpen", isOpen);
         List<AuthorityApi> authorities = baseAuthorityMapper.selectAuthorityApi(map);
         return authorities;
 

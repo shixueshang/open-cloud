@@ -46,7 +46,7 @@ public class BaseUserUserAccountController implements BaseUserAccountRemoteApi {
     @Override
     public ResultBody<UserAccount> localLogin(@RequestParam(value = "username") String username) {
         UserAccount account = baseUserAccountService.login(username);
-        return ResultBody.success(account);
+        return ResultBody.ok().data(account);
     }
 
     /**
@@ -71,7 +71,7 @@ public class BaseUserUserAccountController implements BaseUserAccountRemoteApi {
         if (baseUserAccount != null) {
             userId = baseUserAccount.getUserId();
         }
-        return ResultBody.success(userId);
+        return ResultBody.ok().data(userId);
     }
 
 
@@ -92,7 +92,7 @@ public class BaseUserUserAccountController implements BaseUserAccountRemoteApi {
             @RequestParam(value = "newPassword") String newPassword
     ) {
         baseUserAccountService.resetPassword(userId, oldPassword, newPassword);
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 
     /**
@@ -105,7 +105,7 @@ public class BaseUserUserAccountController implements BaseUserAccountRemoteApi {
     @PostMapping("/user/info")
     @Override
     public ResultBody<UserInfo> getUserInfo(@RequestParam(value = "userId") Long userId) {
-        return ResultBody.success(baseUserService.getUserWithAuthoritiesById(userId));
+        return ResultBody.ok().data(baseUserService.getUserWithAuthoritiesById(userId));
     }
 
     /**
@@ -118,7 +118,7 @@ public class BaseUserUserAccountController implements BaseUserAccountRemoteApi {
     @PostMapping("/user/appInfo")
     @Override
     public ResultBody<AppUser> getAppUserInfo(@RequestParam(value = "userId") Long userId) {
-        return ResultBody.success(baseUserService.getAppUserWithByUserId(userId));
+        return ResultBody.ok().data(baseUserService.getAppUserWithByUserId(userId));
     }
 
 
@@ -132,7 +132,7 @@ public class BaseUserUserAccountController implements BaseUserAccountRemoteApi {
     @PostMapping("/login/init")
     @Override
     public ResultBody<AppUser> loginInit() {
-        return ResultBody.success(baseUserService.loginInit());
+        return ResultBody.ok().data(baseUserService.loginInit());
     }
 
     /**
@@ -147,7 +147,7 @@ public class BaseUserUserAccountController implements BaseUserAccountRemoteApi {
     @Override
     public ResultBody<UserAccount> appLogin(@RequestParam(value = "username") String username) {
         UserAccount account = baseUserAccountService.applogin(username);
-        return ResultBody.success(account);
+        return ResultBody.ok().data(account);
     }
 
 

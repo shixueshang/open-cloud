@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -103,6 +104,7 @@ public class IndexController {
      */
     @RequestMapping("/oauth/error")
     @ResponseBody
+    @ApiIgnore
     public Object handleError(HttpServletRequest request) {
         Object error = request.getAttribute("error");
         return error;

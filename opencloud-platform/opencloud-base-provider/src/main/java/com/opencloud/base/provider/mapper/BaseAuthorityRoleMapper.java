@@ -4,15 +4,15 @@ import com.opencloud.base.client.model.AuthorityMenu;
 import com.opencloud.base.client.model.entity.BaseAuthorityRole;
 import com.opencloud.common.mybatis.base.mapper.SuperMapper;
 import com.opencloud.common.security.Authority;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 /**
  * @author liuyadu
  */
-@Mapper
+@Repository
 public interface BaseAuthorityRoleMapper extends SuperMapper<BaseAuthorityRole> {
 
     /**

@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.opencloud.base.client.constants.BaseConstants;
 import com.opencloud.base.client.event.UserInfoEvent;
 import com.opencloud.base.client.model.AppUser;
 import com.opencloud.base.client.model.UserInfo;
@@ -20,6 +19,7 @@ import com.opencloud.common.constants.MqConstants;
 import com.opencloud.common.model.PageParams;
 import com.opencloud.common.mybatis.base.service.impl.BaseServiceImpl;
 import com.opencloud.common.security.Authority;
+import com.opencloud.common.security.SecurityConstants;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,6 +131,9 @@ public class BaseUserServiceImpl extends BaseServiceImpl<BaseUserMapper, BaseUse
     public UserInfo getUserWithAuthoritiesById(Long userId) {
         // 用户权限列表
         List<Authority> authorities = Lists.newArrayList();
+        // 默认用户ID作为权限标识
+        Authority defaultAuthority = new Authority(userId.toString(), SecurityConstants.AUTHORITY_PREFIX_USER + userId, null, "user");
+        authorities.add(defaultAuthority);
         // 用户角色列表
         List<Map> roles = Lists.newArrayList();
         List<BaseRole> rolesList = roleService.getUserRoles(userId);
@@ -143,8 +146,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl<BaseUserMapper, BaseUse
                 // 用户角色详情
                 roles.add(roleMap);
                 // 加入角色标识
-                Authority authority = new Authority(BaseConstants.ROLE_PREFIX + role.getRoleCode());
-                authority.setOwner("role");
+                Authority authority = new Authority(role.getRoleId().toString(), SecurityConstants.AUTHORITY_PREFIX_ROLE + role.getRoleCode(), null, "role");
                 authorities.add(authority);
             }
         }
@@ -159,10 +161,10 @@ public class BaseUserServiceImpl extends BaseServiceImpl<BaseUserMapper, BaseUse
         }
         UserInfo userProfile = new UserInfo();
         BeanUtils.copyProperties(baseUser, userProfile);
-
         //设置用户资料,权限信息
         userProfile.setAuthorities(authorities);
         userProfile.setRoles(roles);
+
         return userProfile;
     }
 

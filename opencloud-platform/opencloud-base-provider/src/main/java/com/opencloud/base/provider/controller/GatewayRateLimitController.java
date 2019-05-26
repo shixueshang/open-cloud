@@ -40,7 +40,7 @@ public class GatewayRateLimitController {
     @ApiOperation(value = "获取分页接口列表", notes = "获取分页接口列表")
     @GetMapping("/gateway/limit/rate")
     public ResultBody<IPage<GatewayRateLimit>> getRateLimitListPage(@RequestParam(required = false) Map map) {
-        return ResultBody.success(gatewayRateLimitService.findListPage(new PageParams(map)));
+        return ResultBody.ok().data(gatewayRateLimitService.findListPage(new PageParams(map)));
     }
 
     /**
@@ -57,7 +57,7 @@ public class GatewayRateLimitController {
     public ResultBody<IPage<GatewayRateLimit>> getRateLimitApiList(
             @RequestParam("policyId") Long policyId
     ) {
-        return ResultBody.success(gatewayRateLimitService.findRateLimitApiList(policyId));
+        return ResultBody.ok().data(gatewayRateLimitService.findRateLimitApiList(policyId));
     }
 
     /**
@@ -79,7 +79,7 @@ public class GatewayRateLimitController {
     ) {
         gatewayRateLimitService.addRateLimitApis(policyId, StringUtils.isNotBlank(apiIds) ? apiIds.split(",") : new String[]{});
         openRestTemplate.refreshGateway();
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 
     /**
@@ -94,7 +94,7 @@ public class GatewayRateLimitController {
     })
     @GetMapping("/gateway/limit/rate/{policyId}/info")
     public ResultBody<GatewayRateLimit> getRateLimit(@PathVariable("policyId") Long policyId) {
-        return ResultBody.success(gatewayRateLimitService.getRateLimitPolicy(policyId));
+        return ResultBody.ok().data(gatewayRateLimitService.getRateLimitPolicy(policyId));
     }
 
     /**
@@ -134,7 +134,7 @@ public class GatewayRateLimitController {
         if(result!=null){
             policyId = result.getPolicyId();
         }
-        return ResultBody.success(policyId);
+        return ResultBody.ok().data(policyId);
     }
 
     /**
@@ -175,7 +175,7 @@ public class GatewayRateLimitController {
         rateLimit.setLimitType(limitType);
         gatewayRateLimitService.updateRateLimitPolicy(rateLimit);
         openRestTemplate.refreshGateway();
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 
 
@@ -196,6 +196,6 @@ public class GatewayRateLimitController {
         gatewayRateLimitService.removeRateLimitPolicy(policyId);
         // 刷新网关
         openRestTemplate.refreshGateway();
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 }

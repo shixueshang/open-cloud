@@ -5,18 +5,18 @@
     <parent>
         <artifactId>app-api</artifactId>
         <groupId>com.opencloud</groupId>
-        <version>1.0.0</version>
+        <version>2.1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>app-api-server</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.0</version>
+    <version>2.1.0</version>
     <description>APP接口基础模块启动模块,子项目参考该模块编写接口扩展</description>
     <dependencies>
         <dependency>
             <groupId>com.opencloud</groupId>
             <artifactId>app-api-base</artifactId>
-            <version>1.0.0</version>
+            <version>2.1.0</version>
         </dependency>
     </dependencies>
     <build>

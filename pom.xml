@@ -6,7 +6,7 @@
     <groupId>com.opencloud</groupId>
     <artifactId>open-cloud</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0</version>
+    <version>2.1.0</version>
     <description>微服务开放平台</description>
     <modules>
         <module>opencloud-common</module>
@@ -41,12 +41,12 @@
         <swagger2.version>2.9.2</swagger2.version>
 
         <!--自定义版本-->
-        <opencloud.common.version>2.0.0-SNAPSHOT</opencloud.common.version>
-        <opencloud.base-client.version>2.0.0-SNAPSHOT</opencloud.base-client.version>
-        <opencloud.auth-client.version>2.0.0-SNAPSHOT</opencloud.auth-client.version>
-        <opencloud.msg-client.version>2.0.0-SNAPSHOT</opencloud.msg-client.version>
-        <opencloud.bpm-client.version>2.0.0-SNAPSHOT</opencloud.bpm-client.version>
-        <opencloud.scheduler-client.version>2.0.0-SNAPSHOT</opencloud.scheduler-client.version>
+        <opencloud.common.version>2.1.0-SNAPSHOT</opencloud.common.version>
+        <opencloud.base-client.version>2.1.0-SNAPSHOT</opencloud.base-client.version>
+        <opencloud.auth-client.version>2.1.0-SNAPSHOT</opencloud.auth-client.version>
+        <opencloud.msg-client.version>2.1.0-SNAPSHOT</opencloud.msg-client.version>
+        <opencloud.bpm-client.version>2.1.0-SNAPSHOT</opencloud.bpm-client.version>
+        <opencloud.scheduler-client.version>2.1.0-SNAPSHOT</opencloud.scheduler-client.version>
     </properties>
 
     <!-- 环境 -->

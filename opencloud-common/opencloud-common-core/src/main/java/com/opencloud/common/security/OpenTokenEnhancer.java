@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
  * @author fp295
  * @date 2018/4/16
  * 自定义JwtAccessToken转换器
@@ -18,6 +17,7 @@ public class OpenTokenEnhancer extends TokenEnhancerChain {
 
     /**
      * 生成token
+     *
      * @param accessToken
      * @param authentication
      * @return
@@ -25,15 +25,16 @@ public class OpenTokenEnhancer extends TokenEnhancerChain {
     @Override
     public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
         DefaultOAuth2AccessToken defaultOAuth2AccessToken = new DefaultOAuth2AccessToken(accessToken);
-        if(authentication.getPrincipal()!=null && authentication.getPrincipal() instanceof OpenUser){
-            // 设置额外用户信息
-            OpenUser baseUser = ((OpenUser) authentication.getPrincipal());
-            final Map<String, Object> additionalInfo = new HashMap<>(8);
-            additionalInfo.put(SecurityConstants.OPEN_ID, baseUser.getUserId());
-            additionalInfo.put(SecurityConstants.CENTER_ID, baseUser.getAuthCenterId());
-            defaultOAuth2AccessToken.setAdditionalInformation(additionalInfo);
+        final Map<String, Object> additionalInfo = new HashMap<>(8);
+        if (!authentication.isClientOnly()) {
+            if (authentication.getPrincipal() != null && authentication.getPrincipal() instanceof OpenUser) {
+                // 设置额外用户信息
+                OpenUser baseUser = ((OpenUser) authentication.getPrincipal());
+                additionalInfo.put(SecurityConstants.OPEN_ID, baseUser.getUserId());
+                additionalInfo.put(SecurityConstants.CENTER_ID, baseUser.getCenterId());
+            }
         }
-
+        defaultOAuth2AccessToken.setAdditionalInformation(additionalInfo);
         return super.enhance(defaultOAuth2AccessToken, authentication);
     }
 }

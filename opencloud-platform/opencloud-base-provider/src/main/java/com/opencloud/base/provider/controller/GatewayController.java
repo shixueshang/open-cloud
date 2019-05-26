@@ -40,7 +40,7 @@ public class GatewayController implements GatewayRemoteApi {
     @GetMapping("/gateway/api/blackList")
     @Override
     public ResultBody<List<IpLimitApi>> getApiBlackList() {
-        return ResultBody.success(gatewayIpLimitService.findBlackList());
+        return ResultBody.ok().data(gatewayIpLimitService.findBlackList());
     }
 
     /**
@@ -51,7 +51,7 @@ public class GatewayController implements GatewayRemoteApi {
     @GetMapping("/gateway/api/whiteList")
     @Override
     public ResultBody<List<IpLimitApi>> getApiWhiteList() {
-        return ResultBody.success(gatewayIpLimitService.findWhiteList());
+        return ResultBody.ok().data(gatewayIpLimitService.findWhiteList());
     }
 
     /**
@@ -62,7 +62,7 @@ public class GatewayController implements GatewayRemoteApi {
     @GetMapping("/gateway/api/rateLimit")
     @Override
     public ResultBody<List<RateLimitApi>> getApiRateLimitList() {
-        return ResultBody.success(gatewayRateLimitService.findRateLimitApiList());
+        return ResultBody.ok().data(gatewayRateLimitService.findRateLimitApiList());
     }
 
     /**
@@ -73,6 +73,6 @@ public class GatewayController implements GatewayRemoteApi {
     @GetMapping("/gateway/api/route")
     @Override
     public ResultBody<List<GatewayRoute>> getApiRouteList() {
-        return ResultBody.success(gatewayRouteService.findRouteList());
+        return ResultBody.ok().data(gatewayRouteService.findRouteList());
     }
 }

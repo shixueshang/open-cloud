@@ -7,6 +7,8 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.OAuth2Request;
 import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
 import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
@@ -31,12 +33,21 @@ public class OpenHelper {
      */
     public static OpenUser getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() != null) {
-            if (authentication.getPrincipal() instanceof OpenUser) {
-                return (OpenUser) authentication.getPrincipal();
-            }
-            if (authentication.getPrincipal() instanceof Map) {
-                return BeanConvertUtils.mapToObject((Map) authentication.getPrincipal(), OpenUser.class);
+        if (authentication != null && authentication.isAuthenticated() && authentication instanceof OAuth2Authentication) {
+            OAuth2Authentication oAuth2Authentication = (OAuth2Authentication) authentication;
+            OAuth2Request clientToken = oAuth2Authentication.getOAuth2Request();
+            if (!oAuth2Authentication.isClientOnly()) {
+                if (authentication.getPrincipal() instanceof OpenUser) {
+                    return (OpenUser) authentication.getPrincipal();
+                }
+                if (authentication.getPrincipal() instanceof Map) {
+                    return BeanConvertUtils.mapToObject((Map) authentication.getPrincipal(), OpenUser.class);
+                }
+            } else {
+                OpenUser openUser = new OpenUser();
+                openUser.setClientId(clientToken.getClientId());
+                openUser.setAuthorities(clientToken.getAuthorities());
+                return openUser;
             }
         }
         return null;
@@ -98,7 +109,7 @@ public class OpenHelper {
         tokenServices.setClientId(properties.getClientId());
         tokenServices.setClientSecret(properties.getClientSecret());
         tokenServices.setAccessTokenConverter(accessTokenConverter);
-        log.info("buildRemoteTokenServices[{}]",tokenServices);
+        log.info("buildRemoteTokenServices[{}]", tokenServices);
         return tokenServices;
     }
 
@@ -118,7 +129,7 @@ public class OpenHelper {
         tokenServices.setTokenStore(jwtTokenStore);
         tokenServices.setJwtAccessTokenConverter(converter);
         tokenServices.setDefaultAccessTokenConverter(accessTokenConverter);
-        log.info("buildJwtTokenServices[{}]",tokenServices);
+        log.info("buildJwtTokenServices[{}]", tokenServices);
         return tokenServices;
     }
 
@@ -132,7 +143,7 @@ public class OpenHelper {
         // 这里的签名key 保持和认证中心一致
         RedisTokenStore redisTokenStore = new RedisTokenStore(redisConnectionFactory);
         tokenServices.setTokenStore(redisTokenStore);
-        log.info("buildRedisTokenServices[{}]",tokenServices);
+        log.info("buildRedisTokenServices[{}]", tokenServices);
         return tokenServices;
     }
 }

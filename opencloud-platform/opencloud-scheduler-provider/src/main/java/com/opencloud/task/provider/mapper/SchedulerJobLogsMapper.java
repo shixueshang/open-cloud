@@ -2,8 +2,8 @@ package com.opencloud.task.provider.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.opencloud.task.client.model.entity.SchedulerJobLogs;
-import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 
-@Mapper
+@Repository
 public interface SchedulerJobLogsMapper extends BaseMapper<SchedulerJobLogs> {
 }

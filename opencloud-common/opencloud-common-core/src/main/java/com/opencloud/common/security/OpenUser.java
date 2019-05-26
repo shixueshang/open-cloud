@@ -53,11 +53,11 @@ public class OpenUser implements UserDetails {
     /**
      * 认证客户端ID
      */
-    private String authAppId;
+    private String clientId;
     /**
      * 认证中心ID,适用于区分多用户源,多认证中心
      */
-    private String authCenterId;
+    private String centerId;
 
     /**
      * 昵称
@@ -85,15 +85,15 @@ public class OpenUser implements UserDetails {
      *
      * @return
      */
-    public Boolean onlyClient() {
-        return authAppId != null && userId == null;
+    public Boolean isClientOnly() {
+        return clientId != null && username == null;
     }
 
     public OpenUser() {
     }
 
-    public OpenUser(String authCenterId, Long userId, String username, String password, Collection<Authority> authorities, boolean accountNonLocked, boolean accountNonExpired, boolean enabled, boolean credentialsNonExpired, String nickName, String avatar) {
-        this.authCenterId = authCenterId;
+    public OpenUser(String centerId, Long userId, String username, String password, Collection<Authority> authorities, boolean accountNonLocked, boolean accountNonExpired, boolean enabled, boolean credentialsNonExpired, String nickName, String avatar) {
+        this.centerId = centerId;
         this.userId = userId;
         this.username = username;
         this.password = password;
@@ -106,8 +106,8 @@ public class OpenUser implements UserDetails {
         this.nickName = nickName;
     }
 
-    public OpenUser(String authCenterId, Long accountId, Long userId, String username, String password, boolean accountNonLocked, boolean accountNonExpired, boolean enabled, boolean credentialsNonExpired, String nickName, String avatar, String accountType) {
-        this.authCenterId = authCenterId;
+    public OpenUser(String centerId, Long accountId, Long userId, String username, String password, boolean accountNonLocked, boolean accountNonExpired, boolean enabled, boolean credentialsNonExpired, String nickName, String avatar, String accountType) {
+        this.centerId = centerId;
         this.userId = userId;
         this.username = username;
         this.password = password;
@@ -194,25 +194,26 @@ public class OpenUser implements UserDetails {
         this.credentialsNonExpired = credentialsNonExpired;
     }
 
-    public String getAuthAppId() {
-        return authAppId;
+    public String getClientId() {
+        return clientId;
     }
 
-    public void setAuthAppId(String authAppId) {
-        this.authAppId = authAppId;
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    public String getCenterId() {
+        return centerId;
+    }
+
+    public void setCenterId(String centerId) {
+        this.centerId = centerId;
     }
 
     public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
         this.authorities = authorities;
     }
 
-    public String getAuthCenterId() {
-        return authCenterId;
-    }
-
-    public void setAuthCenterId(String authCenterId) {
-        this.authCenterId = authCenterId;
-    }
 
     public String getNickName() {
         return nickName;

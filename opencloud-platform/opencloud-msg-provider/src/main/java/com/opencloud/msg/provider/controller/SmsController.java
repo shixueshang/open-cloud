@@ -46,6 +46,6 @@ public class SmsController implements SmsRemoteApi {
         smsNotification.setSignName(signName);
         smsNotification.setParams(params);
         this.dispatcher.dispatch(smsNotification);
-        return ResultBody.success("");
+        return ResultBody.ok();
     }
 }

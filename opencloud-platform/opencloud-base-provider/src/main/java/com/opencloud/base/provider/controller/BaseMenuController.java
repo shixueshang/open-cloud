@@ -38,7 +38,7 @@ public class BaseMenuController {
     @ApiOperation(value = "获取分页菜单资源列表", notes = "获取分页菜单资源列表")
     @GetMapping("/menu")
     public ResultBody<IPage<BaseMenu>> getMenuListPage(@RequestParam(required = false) Map map) {
-        return ResultBody.success(baseResourceMenuService.findListPage(new PageParams(map)));
+        return ResultBody.ok().data(baseResourceMenuService.findListPage(new PageParams(map)));
     }
 
     /**
@@ -49,7 +49,7 @@ public class BaseMenuController {
     @ApiOperation(value = "菜单所有资源列表", notes = "菜单所有资源列表")
     @GetMapping("/menu/all")
     public ResultBody<List<BaseMenu>> getMenuAllList() {
-        return ResultBody.success(baseResourceMenuService.findAllList());
+        return ResultBody.ok().data(baseResourceMenuService.findAllList());
     }
 
 
@@ -65,7 +65,7 @@ public class BaseMenuController {
     })
     @GetMapping("/menu/action")
     public ResultBody<List<BaseAction>> getMenuAction(Long menuId) {
-        return ResultBody.success(baseResourceOperationService.findListByMenuId(menuId));
+        return ResultBody.ok().data(baseResourceOperationService.findListByMenuId(menuId));
     }
 
     /**
@@ -80,7 +80,7 @@ public class BaseMenuController {
     })
     @GetMapping("/menu/{menuId}/info")
     public ResultBody<BaseMenu> getMenu(@PathVariable("menuId") Long menuId) {
-        return ResultBody.success(baseResourceMenuService.getMenu(menuId));
+        return ResultBody.ok().data(baseResourceMenuService.getMenu(menuId));
     }
 
     /**
@@ -89,7 +89,7 @@ public class BaseMenuController {
      * @param menuCode 菜单编码
      * @param menuName 菜单名称
      * @param icon     图标
-     * @param prefix   请求前缀
+     * @param scheme   请求前缀
      * @param path     请求路径
      * @param target   打开方式
      * @param status   是否启用
@@ -103,7 +103,7 @@ public class BaseMenuController {
             @ApiImplicitParam(name = "menuCode", required = true, value = "菜单编码", paramType = "form"),
             @ApiImplicitParam(name = "menuName", required = true, value = "菜单名称", paramType = "form"),
             @ApiImplicitParam(name = "icon", required = false, value = "图标", paramType = "form"),
-            @ApiImplicitParam(name = "prefix", required = false, value = "请求路径", allowableValues = "/,http://,https://", paramType = "form"),
+            @ApiImplicitParam(name = "scheme", required = false, value = "请求协议", allowableValues = "/,http://,https://", paramType = "form"),
             @ApiImplicitParam(name = "path", required = false, value = "请求路径", paramType = "form"),
             @ApiImplicitParam(name = "target", required = false, value = "请求路径", allowableValues = "_self,_blank", paramType = "form"),
             @ApiImplicitParam(name = "parentId", required = false, defaultValue = "0", value = "父节点ID", paramType = "form"),
@@ -116,7 +116,7 @@ public class BaseMenuController {
             @RequestParam(value = "menuCode") String menuCode,
             @RequestParam(value = "menuName") String menuName,
             @RequestParam(value = "icon", required = false) String icon,
-            @RequestParam(value = "prefix", required = false, defaultValue = "/") String prefix,
+            @RequestParam(value = "scheme", required = false, defaultValue = "/") String scheme,
             @RequestParam(value = "path", required = false, defaultValue = "") String path,
             @RequestParam(value = "target", required = false, defaultValue = "_self") String target,
             @RequestParam(value = "status", defaultValue = "1") Integer status,
@@ -129,7 +129,7 @@ public class BaseMenuController {
         menu.setMenuName(menuName);
         menu.setIcon(icon);
         menu.setPath(path);
-        menu.setPrefix(prefix);
+        menu.setScheme(scheme);
         menu.setTarget(target);
         menu.setStatus(status);
         menu.setParentId(parentId);
@@ -140,7 +140,7 @@ public class BaseMenuController {
         if (result != null) {
             menuId = result.getMenuId();
         }
-        return ResultBody.success(menuId);
+        return ResultBody.ok().data(menuId);
     }
 
     /**
@@ -149,7 +149,7 @@ public class BaseMenuController {
      * @param menuCode 菜单编码
      * @param menuName 菜单名称
      * @param icon     图标
-     * @param prefix   请求前缀
+     * @param scheme   请求前缀
      * @param path     请求路径
      * @param target   打开方式
      * @param status   是否启用
@@ -164,7 +164,7 @@ public class BaseMenuController {
             @ApiImplicitParam(name = "menuCode", required = true, value = "菜单编码", paramType = "form"),
             @ApiImplicitParam(name = "menuName", required = true, value = "菜单名称", paramType = "form"),
             @ApiImplicitParam(name = "icon", required = false, value = "图标", paramType = "form"),
-            @ApiImplicitParam(name = "prefix", required = false, value = "请求路径", allowableValues = "/,http://,https://", paramType = "form"),
+            @ApiImplicitParam(name = "scheme", required = false, value = "请求协议", allowableValues = "/,http://,https://", paramType = "form"),
             @ApiImplicitParam(name = "path", required = false, value = "请求路径", paramType = "form"),
             @ApiImplicitParam(name = "target", required = false, value = "请求路径", allowableValues = "_self,_blank", paramType = "form"),
             @ApiImplicitParam(name = "parentId", required = false, defaultValue = "0", value = "父节点ID", paramType = "form"),
@@ -178,7 +178,7 @@ public class BaseMenuController {
             @RequestParam(value = "menuCode") String menuCode,
             @RequestParam(value = "menuName") String menuName,
             @RequestParam(value = "icon", required = false) String icon,
-            @RequestParam(value = "prefix", required = false, defaultValue = "/") String prefix,
+            @RequestParam(value = "scheme", required = false, defaultValue = "/") String scheme,
             @RequestParam(value = "path", required = false, defaultValue = "") String path,
             @RequestParam(value = "target", required = false, defaultValue = "_self") String target,
             @RequestParam(value = "status", defaultValue = "1") Integer status,
@@ -192,7 +192,7 @@ public class BaseMenuController {
         menu.setMenuName(menuName);
         menu.setIcon(icon);
         menu.setPath(path);
-        menu.setPrefix(prefix);
+        menu.setScheme(scheme);
         menu.setTarget(target);
         menu.setStatus(status);
         menu.setParentId(parentId);
@@ -200,7 +200,7 @@ public class BaseMenuController {
         menu.setMenuDesc(menuDesc);
         baseResourceMenuService.updateMenu(menu);
         openRestTemplate.refreshGateway();
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 
     /**
@@ -219,6 +219,6 @@ public class BaseMenuController {
     ) {
         baseResourceMenuService.removeMenu(menuId);
         openRestTemplate.refreshGateway();
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 }

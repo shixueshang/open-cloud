@@ -39,7 +39,7 @@ public class GatewayRouteController {
     @ApiOperation(value = "获取分页路由列表", notes = "获取分页路由列表")
     @GetMapping("/gateway/route")
     public ResultBody<IPage<GatewayRoute>> getRouteListPage(@RequestParam(required = false) Map map) {
-        return ResultBody.success(gatewayRouteService.findListPage(new PageParams(map)));
+        return ResultBody.ok().data(gatewayRouteService.findListPage(new PageParams(map)));
     }
 
 
@@ -55,7 +55,7 @@ public class GatewayRouteController {
     })
     @GetMapping("/gateway/route/{routeId}/info")
     public ResultBody<GatewayRoute> getRoute(@PathVariable("routeId") Long routeId) {
-        return ResultBody.success(gatewayRouteService.getRoute(routeId));
+        return ResultBody.ok().data(gatewayRouteService.getRoute(routeId));
     }
 
     /**
@@ -105,7 +105,7 @@ public class GatewayRouteController {
             // 刷新网关
             openRestTemplate.refreshGateway();
         }
-        return ResultBody.success(routeId);
+        return ResultBody.ok().data(routeId);
     }
 
     /**
@@ -155,7 +155,7 @@ public class GatewayRouteController {
         gatewayRouteService.updateRoute(route);
         // 刷新网关
         openRestTemplate.refreshGateway();
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 
 
@@ -176,6 +176,6 @@ public class GatewayRouteController {
         gatewayRouteService.removeRoute(routeId);
         // 刷新网关
         openRestTemplate.refreshGateway();
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 }

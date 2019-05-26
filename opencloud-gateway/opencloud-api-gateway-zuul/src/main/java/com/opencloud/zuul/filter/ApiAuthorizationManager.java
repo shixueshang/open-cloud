@@ -98,7 +98,7 @@ public class ApiAuthorizationManager {
             }
         }
         // 动态权限列表
-        List<AuthorityAccess> authorityList = accessLocator.getAccessAuthorities();
+        List<AuthorityAccess> authorityList = accessLocator.getAuthorityAccesses();
         if (authorityList != null) {
             Iterator<AuthorityAccess> it2 = authorityList.iterator();
             while (it.hasNext()) {

@@ -90,14 +90,9 @@ public class BaseAppServiceImpl extends BaseServiceImpl<BaseAppMapper, BaseApp> 
     @Override
     @Cacheable(value = "apps", key = "'client:'+#appId")
     public BaseClientDetails getAppClientInfo(String appId) {
-        try {
-            BaseClientDetails clientDetails = (BaseClientDetails) jdbcClientDetailsService.loadClientByClientId(appId);
-            clientDetails.setAuthorities(baseAuthorityService.findAuthorityByApp(appId));
-            return clientDetails;
-        } catch (Exception e) {
-            log.error("clientDetailsClient.getClient error:{}", e.getMessage());
-        }
-        return null;
+        BaseClientDetails baseClientDetails = (BaseClientDetails) jdbcClientDetailsService.loadClientByClientId(appId);
+        baseClientDetails.setAuthorities(baseAuthorityService.findAuthorityByApp(appId));
+        return baseClientDetails;
     }
 
     /**

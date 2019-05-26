@@ -8,6 +8,7 @@ import reactor.core.publisher.Mono;
 
 /**
  * 响应超时熔断处理器
+ *
  * @author liuyadu
  */
 @RestController
@@ -15,6 +16,6 @@ public class FallbackController {
 
     @RequestMapping("/fallback")
     public Mono<ResultBody> fallback() {
-        return Mono.just(ResultBody.failed(ResultEnum.GATEWAY_TIMEOUT.getCode(), "访问超时，请稍后再试!"));
+        return Mono.just(ResultBody.failed().code(ResultEnum.GATEWAY_TIMEOUT.getCode()).msg("访问超时，请稍后再试!"));
     }
 }

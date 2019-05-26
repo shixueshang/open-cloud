@@ -17,7 +17,6 @@
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
         <result column="is_persist" property="isPersist" jdbcType="INTEGER"/>
-        <result column="is_open" property="isOpen" jdbcType="INTEGER"/>
         <result column="auth_type" property="authType" jdbcType="INTEGER"/>
         <result column="content_type" property="contentType" jdbcType="VARCHAR"/>
         <result column="class_name" property="className" jdbcType="VARCHAR"/>

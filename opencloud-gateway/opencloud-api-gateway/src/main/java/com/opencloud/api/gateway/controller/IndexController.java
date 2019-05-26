@@ -51,6 +51,6 @@ public class IndexController {
                             service.put("serviceName", predicateDefinition.getArgs().get("name"));
                             services.add(service);
                         }));
-        return Mono.just(ResultBody.success(services));
+        return Mono.just(ResultBody.ok().data(services));
     }
 }

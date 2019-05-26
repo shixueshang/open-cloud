@@ -56,7 +56,7 @@
         m.*
         FROM
         base_authority AS a
-        INNER JOIN base_menu AS m ON a.menu_id = m.menu_id
+       LEFT JOIN base_menu AS m ON a.menu_id = m.menu_id
         <where>
             <if test="status!=null">
                 AND m.status = #{status}
@@ -71,12 +71,12 @@
         o.*
         FROM
         base_authority AS a
-        INNER JOIN base_action AS o ON a.action_id = o.action_id
+       LEFT JOIN base_action AS o ON a.action_id = o.action_id
         <if test="roleId!=null">
-            INNER JOIN base_authority_role AS ra ON ra.authority_id = a.authority_id
+           LEFT JOIN base_authority_role AS ra ON ra.authority_id = a.authority_id
         </if>
         <if test="userId!=null">
-            INNER JOIN base_authority_user AS ua ON ua.authority_id = a.authority_id
+           LEFT JOIN base_authority_user AS ua ON ua.authority_id = a.authority_id
         </if>
         <where>
             <if test="status!=null">
@@ -102,8 +102,8 @@
         route.path as prefix
         FROM
         base_authority AS a
-        INNER JOIN base_api AS api ON a.api_id = api.api_id
-        INNER JOIN gateway_route AS route ON route.service_id = api.service_id
+       LEFT JOIN base_api AS api ON a.api_id = api.api_id
+       LEFT JOIN gateway_route AS route ON route.service_id = api.service_id
         <where>
             <if test="status!=null">
                 AND api.status = #{status}
@@ -111,10 +111,8 @@
             <if test="serviceId!=null and serviceId!=''">
                 AND api.service_id = #{serviceId}
             </if>
-            <if test="isOpen!=null">
-                AND api.is_open = #{isOpen}
-            </if>
         </where>
+       order by api.create_time desc
     </select>
 
     <select id="selectAuthorityAll"
@@ -137,70 +135,114 @@
         </where>
     </select>
 
-    <select id="selectAuthorityAccess" resultMap="AccessAuthority">
-    SELECT
-        a.authority_id,
-        a.authority,
-        menu.path,
-        menu.service_id,
-        '1' AS is_auth,
-        route.path AS prefix
-    FROM
-        base_authority AS a
-    INNER JOIN base_menu AS menu ON a.menu_id = menu.menu_id
-    INNER JOIN gateway_route AS route ON route.service_id = menu.service_id
-    WHERE
-        menu.`status` = 1
-    UNION ALL
+    <select id="selectAllAuthorityRole" resultMap="AccessAuthority">
         SELECT
-            a.authority_id,
-            a.authority,
+            concat('ROLE_', r.role_code) AS authority,
+            '1' AS is_auth,
+            m.path,
+            m.service_id,
+            ar.authority_id,
+            route.service_id AS prefix
+        FROM
+            base_authority AS a
+               LEFT JOIN base_authority_role AS ar ON ar.authority_id = a.authority_id
+               LEFT JOIN base_role AS r ON ar.role_id = r.role_id
+               LEFT JOIN base_menu AS m ON a.menu_id = m.menu_id
+               LEFT JOIN gateway_route AS route ON m.service_id = route.service_id
+        WHERE
+            a.menu_id != ''
+            AND m.path != ''
+            AND r.`status` = 1
+            AND m.`status` = 1
+            AND m.scheme = '/'
+        UNION ALL
+        SELECT
+            concat('ROLE_', r.role_code) AS authority,
+            '1' AS is_auth,
             api.path,
             api.service_id,
-            api.is_auth,
+            a2.authority_id,
             route.path AS prefix
         FROM
             base_authority AS a
-        INNER JOIN base_api AS api ON a.api_id = api.api_id
-        INNER JOIN gateway_route AS route ON route.service_id = api.service_id
+               LEFT JOIN base_authority_role AS ar ON ar.authority_id = a.authority_id
+               LEFT JOIN base_role AS r ON ar.role_id = r.role_id
+               LEFT JOIN base_action AS act ON a.action_id = act.action_id
+               LEFT JOIN base_authority_action AS aa ON aa.action_id = act.action_id
+               LEFT JOIN base_authority AS a2 ON aa.authority_id = a2.authority_id
+               LEFT JOIN base_api AS api ON a2.api_id = api.api_id
+               LEFT JOIN gateway_route AS route ON route.service_id = api.service_id
         WHERE
-            api.`status` = 1
-        UNION ALL
-       SELECT
-            a.authority_id,
-            a.authority,
-            api.path,
-            api.service_id,
-            api.is_auth,
-            route.path AS prefix
-        FROM
-            base_authority_action AS ac
-        INNER JOIN base_authority AS a ON a.action_id = ac.action_id
-        INNER JOIN base_authority AS a2 ON ac.authority_id = a2.authority_id
-        INNER JOIN base_api AS api ON a2.api_id = api.api_id
-        INNER JOIN gateway_route AS route ON route.service_id = api.service_id
-        INNER JOIN base_action AS action ON ac.action_id = action.action_id
-        WHERE
-            action.`status` = 1
-        AND api.`status` = 1
-            UNION ALL
-                SELECT
-                    a.authority_id,
-                    a.authority,
-                    api.path,
-                    api.service_id,
-                    api.is_auth,
-                    route.path AS prefix
-                FROM
-                    base_authority AS a
-                INNER JOIN base_authority_app AS aa ON aa.authority_id = a.authority_id
-                INNER JOIN base_app AS app ON app.app_id = aa.app_id
-                INNER JOIN base_api AS api ON a.api_id = api.api_id
-                INNER JOIN gateway_route AS route ON route.service_id = api.service_id
-                WHERE
-                    app.`status` = 1
-                AND api.`status` = 1
+            a.action_id != ''
+            AND r.`status` = 1
+            AND api.path != ''
+            AND api.`status` = 1
     </select>
 
+
+    <select id="selectAllAuthorityUser" resultMap="AccessAuthority">
+        SELECT
+            concat('USER_', u.user_id) AS authority,
+            '1' AS is_auth,
+            m.path,
+            m.service_id,
+            au.authority_id,
+            route.service_id AS prefix
+        FROM
+            base_authority AS a
+               LEFT JOIN base_authority_user AS au ON au.authority_id = a.authority_id
+               LEFT JOIN base_user AS u ON au.user_id = u.user_id
+               LEFT JOIN base_menu AS m ON a.menu_id = m.menu_id
+               LEFT JOIN gateway_route AS route ON m.service_id = route.service_id
+        WHERE
+            a.menu_id != ''
+            AND m.path != ''
+            AND u.`status` = 1
+            AND m.`status` = 1
+            AND m.scheme = '/'
+        UNION ALL
+        SELECT
+            concat('USER_', u.user_id) AS authority,
+            '1' AS is_auth,
+            api.path,
+            api.service_id,
+            a2.authority_id,
+            route.path AS prefix
+        FROM
+            base_authority AS a
+               LEFT JOIN base_authority_user AS au ON au.authority_id = a.authority_id
+               LEFT JOIN base_user AS u ON au.user_id = u.user_id
+               LEFT JOIN base_action AS act ON a.action_id = act.action_id
+               LEFT JOIN base_authority_action AS aa ON aa.action_id = act.action_id
+               LEFT JOIN base_authority AS a2 ON aa.authority_id = a2.authority_id
+               LEFT JOIN base_api AS api ON a2.api_id = api.api_id
+               LEFT JOIN gateway_route AS route ON route.service_id = api.service_id
+        WHERE
+            a.action_id != ''
+            AND u.`status` = 1
+            AND api.path != ''
+            AND api.`status` = 1
+    </select>
+
+
+    <select id="selectAllAuthorityApp" resultMap="AccessAuthority">
+        SELECT
+            a.authority_id,
+            concat('APP_', app.app_id) AS authority,
+            api.path,
+            api.is_auth,
+            api.service_id,
+            route.path AS prefix
+        FROM
+            base_authority AS a
+               LEFT JOIN base_authority_app AS aa ON aa.authority_id = a.authority_id
+               LEFT JOIN base_app AS app ON aa.app_id = app.app_id
+               LEFT JOIN base_api AS api ON api.api_id = a.api_id
+               LEFT JOIN gateway_route AS route ON api.service_id = route.service_id
+        WHERE
+            a.api_id != ''
+            AND app.`status` = 1
+            AND api.`status` = 1
+    </select>
 
 </mapper>

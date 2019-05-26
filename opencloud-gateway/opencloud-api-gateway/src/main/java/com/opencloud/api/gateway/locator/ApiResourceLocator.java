@@ -119,7 +119,7 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
                 .map(routeDefinition -> {
                     String fullPath = routeDefinition.getPredicates().stream().filter(predicateDefinition ->
                             ("Path").equalsIgnoreCase(predicateDefinition.getName())
-                    ).findFirst().get().getArgs().get(NameUtils.GENERATED_NAME_PREFIX + "0").replace("/**", path);
+                    ).findFirst().get().getArgs().get(NameUtils.GENERATED_NAME_PREFIX + "0").replace("/**", path.startsWith("/")  ? path : "/" + path);
                     return fullPath;
                 }).findFirst().orElse(path);
     }

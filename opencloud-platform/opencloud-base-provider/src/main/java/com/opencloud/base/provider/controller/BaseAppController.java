@@ -39,7 +39,7 @@ public class BaseAppController implements BaseAppRemoteApi {
     @GetMapping("/app")
     public ResultBody<IPage<BaseApp>> getAppListPage(@RequestParam(required = false) Map map) {
         IPage<BaseApp> IPage = baseAppService.findListPage(new PageParams(map));
-        return ResultBody.success(IPage);
+        return ResultBody.ok().data(IPage);
     }
 
     /**
@@ -58,7 +58,7 @@ public class BaseAppController implements BaseAppRemoteApi {
             @PathVariable("appId") String appId
     ) {
         BaseApp appInfo = baseAppService.getAppInfo(appId);
-        return ResultBody.success(appInfo);
+        return ResultBody.ok().data(appInfo);
     }
 
     /**
@@ -77,7 +77,7 @@ public class BaseAppController implements BaseAppRemoteApi {
             @PathVariable("appId") String appId
     ) {
         BaseClientDetails clientInfo = baseAppService.getAppClientInfo(appId);
-        return ResultBody.success(clientInfo);
+        return ResultBody.ok().data(clientInfo);
     }
 
     /**
@@ -137,7 +137,7 @@ public class BaseAppController implements BaseAppRemoteApi {
         if (result != null) {
             appId = result.getAppId();
         }
-        return ResultBody.success(appId);
+        return ResultBody.ok().data(appId);
     }
 
     /**
@@ -199,7 +199,7 @@ public class BaseAppController implements BaseAppRemoteApi {
         app.setUserType(userType);
         baseAppService.updateInfo(app);
         openRestTemplate.refreshGateway();
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 
 
@@ -240,7 +240,7 @@ public class BaseAppController implements BaseAppRemoteApi {
         client.setRefreshTokenValiditySeconds(refreshTokenValidity);
         client.setAutoApproveScopes(autoApproveScopes != null ? Arrays.asList(autoApproveScopes.split(",")) : null);
         baseAppService.updateAppClientInfo(client);
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 
 
@@ -259,7 +259,7 @@ public class BaseAppController implements BaseAppRemoteApi {
             @RequestParam("appId") String appId
     ) {
         String result = baseAppService.restSecret(appId);
-        return ResultBody.success(result);
+        return ResultBody.ok().data(result);
     }
 
     /**
@@ -278,6 +278,6 @@ public class BaseAppController implements BaseAppRemoteApi {
     ) {
         baseAppService.removeApp(appId);
         openRestTemplate.refreshGateway();
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 }

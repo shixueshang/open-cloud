@@ -48,8 +48,7 @@ public class BaseApiServiceImpl extends BaseServiceImpl<BaseApiMapper, BaseApi> 
                 .likeRight(ObjectUtils.isNotEmpty(query.getApiCode()), BaseApi::getApiCode, query.getApiCode())
                 .eq(ObjectUtils.isNotEmpty(query.getServiceId()), BaseApi::getServiceId, query.getServiceId())
                 .eq(ObjectUtils.isNotEmpty(query.getStatus()), BaseApi::getStatus, query.getStatus())
-                .eq(ObjectUtils.isNotEmpty(query.getIsAuth()), BaseApi::getIsAuth, query.getIsAuth())
-                .eq(ObjectUtils.isNotEmpty(query.getIsOpen()), BaseApi::getIsOpen, query.getIsOpen());
+                .eq(ObjectUtils.isNotEmpty(query.getIsAuth()), BaseApi::getIsAuth, query.getIsAuth());
         queryWrapper.orderByDesc("create_time");
         return baseApiMapper.selectPage(pageParams, queryWrapper);
     }
@@ -115,9 +114,6 @@ public class BaseApiServiceImpl extends BaseServiceImpl<BaseApiMapper, BaseApi> 
         }
         if (api.getIsPersist() == null) {
             api.setIsPersist(0);
-        }
-        if (api.getIsOpen() == null) {
-            api.setIsOpen(0);
         }
         if (api.getIsAuth() == null) {
             api.setIsAuth(0);

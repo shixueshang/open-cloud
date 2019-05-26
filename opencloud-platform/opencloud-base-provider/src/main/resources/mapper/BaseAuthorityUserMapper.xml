@@ -43,8 +43,8 @@
             ua.expire_time
         FROM
             base_authority_user AS ua
-        INNER JOIN base_authority AS a ON ua.authority_id = a.authority_id
-        INNER JOIN base_menu AS m ON a.menu_id = m.menu_id
+       LEFT JOIN base_authority AS a ON ua.authority_id = a.authority_id
+       LEFT JOIN base_menu AS m ON a.menu_id = m.menu_id
         WHERE
                 ua.user_id = #{userId}
                 and a.status = 1

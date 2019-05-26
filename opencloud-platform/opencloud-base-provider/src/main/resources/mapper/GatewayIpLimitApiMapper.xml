@@ -25,7 +25,6 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
     <result column="is_persist" property="isPersist" jdbcType="INTEGER"/>
-    <result column="is_open" property="isOpen" jdbcType="INTEGER"/>
     <result column="auth_type" property="authType" jdbcType="INTEGER"/>
   </resultMap>
 
@@ -53,8 +52,8 @@
     p.ip_address
     FROM
     gateway_ip_limit_api AS i
-    INNER JOIN gateway_ip_limit AS p ON i.policy_id = p.policy_id
-    INNER JOIN base_api AS a ON i.api_id = a.api_id
+   LEFT JOIN gateway_ip_limit AS p ON i.policy_id = p.policy_id
+   LEFT JOIN base_api AS a ON i.api_id = a.api_id
      <where>
        <if test="policyType!=null">
           p.policy_type = #{policyType}

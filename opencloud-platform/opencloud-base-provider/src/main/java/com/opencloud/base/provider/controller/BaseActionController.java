@@ -35,7 +35,7 @@ public class BaseActionController {
     @ApiOperation(value = "获取分页功能按钮列表", notes = "获取分页功能按钮列表")
     @GetMapping("/action")
     public ResultBody<IPage<AuthorityAction>> findActionListPage(@RequestParam(required = false) Map map) {
-        return ResultBody.success(baseActionService.findListPage(new PageParams(map)));
+        return ResultBody.ok().data(baseActionService.findListPage(new PageParams(map)));
     }
 
 
@@ -51,7 +51,7 @@ public class BaseActionController {
     })
     @GetMapping("/action/{actionId}/info")
     public ResultBody<AuthorityAction> getAction(@PathVariable("actionId") Long actionId) {
-        return ResultBody.success(baseActionService.getAction(actionId));
+        return ResultBody.ok().data(baseActionService.getAction(actionId));
     }
 
     /**
@@ -96,7 +96,7 @@ public class BaseActionController {
             actionId = result.getActionId();
             openRestTemplate.refreshGateway();
         }
-        return ResultBody.success(actionId);
+        return ResultBody.ok().data(actionId);
     }
 
     /**
@@ -142,7 +142,7 @@ public class BaseActionController {
         baseActionService.updateAction(action);
         // 刷新网关
         openRestTemplate.refreshGateway();
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 
 
@@ -163,6 +163,6 @@ public class BaseActionController {
         baseActionService.removeAction(actionId);
         // 刷新网关
         openRestTemplate.refreshGateway();
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 }

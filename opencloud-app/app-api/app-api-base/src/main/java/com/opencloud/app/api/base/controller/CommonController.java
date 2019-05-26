@@ -44,7 +44,7 @@ public class CommonController {
         //发送验证码
         Map<String, Integer> params = new HashMap<>();
         params.put("code", code);
-        return ResultBody.success("发送成功", params);
+        return ResultBody.ok().msg("发送成功").data(params);
     }
 
     public static void main(String[] args) {

@@ -132,8 +132,8 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
                 .tokenKeyAccess("permitAll()")
                 // 开启/oauth/check_token验证端口认证权限访问
                 .checkTokenAccess("isAuthenticated()")
-                //开启客户端授权
-                .allowFormAuthenticationForClients()
+                //只作为用户认证中心,禁用客户端授权
+                //.allowFormAuthenticationForClients()
                 .addTokenEndpointAuthenticationFilter(integrationAuthenticationFilter);
     }
 

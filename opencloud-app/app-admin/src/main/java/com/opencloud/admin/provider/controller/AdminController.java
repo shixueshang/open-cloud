@@ -65,7 +65,7 @@ public class AdminController {
         HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity(postParameters, headers);
         Map result = openRestTemplate.postForObject(resourceDetails.getAccessTokenUri(), request, Map.class);
         if (result.containsKey("access_token")) {
-            return ResultBody.success(result);
+            return ResultBody.ok().data(result);
         } else {
             return result;
         }
@@ -94,6 +94,6 @@ public class AdminController {
         params.putAll(appMap);
         String sign = SignatureUtils.getSign(params, resourceDetails.getClientSecret());
         appMap.put("sign", sign);
-        return ResultBody.success(appMap);
+        return ResultBody.ok().data(appMap);
     }
 }

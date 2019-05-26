@@ -53,7 +53,7 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
     @Override
     public ResultBody<List<AuthorityAccess>> findAuthorityAccess() {
         List<AuthorityAccess> result = baseAuthorityService.findAuthorityAccess();
-        return ResultBody.success(result);
+        return ResultBody.ok().data(result);
     }
 
     /**
@@ -64,11 +64,10 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
     @ApiOperation(value = "获取接口权限列表", notes = "获取接口权限列表")
     @GetMapping("/authority/api")
     public ResultBody<List<AuthorityApi>> findAuthorityApi(
-            @RequestParam(value = "isOpen", required = false) Integer isOpen,
             @RequestParam(value = "serviceId", required = false) String serviceId
     ) {
-        List<AuthorityApi> result = baseAuthorityService.findAuthorityApi(isOpen, serviceId);
-        return ResultBody.success(result);
+        List<AuthorityApi> result = baseAuthorityService.findAuthorityApi(serviceId);
+        return ResultBody.ok().data(result);
     }
 
 
@@ -82,7 +81,7 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
     @Override
     public ResultBody<List<AuthorityMenu>> findAuthorityMenu() {
         List<AuthorityMenu> result = baseAuthorityService.findAuthorityMenu(1);
-        return ResultBody.success(result);
+        return ResultBody.ok().data(result);
     }
 
     /**
@@ -100,7 +99,7 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
             @RequestParam(value = "actionId") Long actionId
     ) {
         List<BaseAuthorityAction> list = baseAuthorityService.findAuthorityAction(actionId);
-        return ResultBody.success(list);
+        return ResultBody.ok().data(list);
     }
 
 
@@ -117,7 +116,7 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
     @GetMapping("/authority/role")
     public ResultBody<List<Authority>> findAuthorityRole(Long roleId) {
         List<Authority> result = baseAuthorityService.findAuthorityByRole(roleId);
-        return ResultBody.success(result);
+        return ResultBody.ok().data(result);
     }
 
 
@@ -137,7 +136,7 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
     ) {
         BaseUser user = baseUserService.getUserById(userId);
         List<Authority> result = baseAuthorityService.findAuthorityByUser(userId, CommonConstants.ROOT.equals(user.getUserName()));
-        return ResultBody.success(result);
+        return ResultBody.ok().data(result);
     }
 
 
@@ -156,7 +155,7 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
             @RequestParam(value = "appId") String appId
     ) {
         List<Authority> result = baseAuthorityService.findAuthorityByApp(appId);
-        return ResultBody.success(result);
+        return ResultBody.ok().data(result);
     }
 
     /**
@@ -181,7 +180,7 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
     ) {
         baseAuthorityService.addAuthorityRole(roleId, expireTime, StringUtils.isNotBlank(authorityIds) ? authorityIds.split(",") : new String[]{});
         openRestTemplate.refreshGateway();
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 
 
@@ -207,7 +206,7 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
     ) {
         baseAuthorityService.addAuthorityUser(userId, expireTime, StringUtils.isNotBlank(authorityIds) ? authorityIds.split(",") : new String[]{});
         openRestTemplate.refreshGateway();
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 
 
@@ -233,7 +232,7 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
     ) {
         baseAuthorityService.addAuthorityApp(appId, expireTime, StringUtils.isNotBlank(authorityIds) ? authorityIds.split(",") : new String[]{});
         openRestTemplate.refreshGateway();
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 
     /**
@@ -255,7 +254,7 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
     ) {
         baseAuthorityService.addAuthorityAction(actionId, StringUtils.isNotBlank(authorityIds) ? authorityIds.split(",") : new String[]{});
         openRestTemplate.refreshGateway();
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 
 

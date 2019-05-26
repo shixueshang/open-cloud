@@ -62,110 +62,32 @@ public class ResultBody<T> implements Serializable {
     @ApiModelProperty(value = "响应时间")
     private long timestamp = System.currentTimeMillis();
 
-    @JSONField(serialize = false, deserialize = false)
-    @JsonIgnore
-    public boolean isOk() {
-        return this.code == 0;
-    }
-
     public ResultBody() {
         super();
-    }
-
-    public static <T> ResultBody success() {
-        return new ResultBody().setCode(ResultEnum.OK.getCode());
-    }
-
-    public static <T> ResultBody success(T data) {
-        return new ResultBody().setData(data).setCode(ResultEnum.OK.getCode());
-    }
-
-    public static <T> ResultBody success(String msg, T result) {
-        return new ResultBody().setMessage(msg).setData(result);
-    }
-
-    public static ResultBody failed(String msg) {
-        return new ResultBody().setCode(ResultEnum.FAIL.getCode()).setMessage(msg);
-    }
-
-    public static ResultBody failed() {
-        return new ResultBody().setCode(ResultEnum.FAIL.getCode()).setMessage(ResultEnum.FAIL.getMessage());
-    }
-
-    public static ResultBody error() {
-        return new ResultBody().setCode(ResultEnum.ERROR.getCode()).setMessage(ResultEnum.ERROR.getMessage());
-    }
-
-    public static ResultBody failed(Integer code, String msg) {
-        return new ResultBody().setCode(code).setMessage(msg);
-    }
-
-    public static ResultBody failed(ResultEnum code, String msg) {
-        return failed(code.getCode(), msg);
     }
 
     public int getCode() {
         return code;
     }
 
-    public ResultBody setCode(int code) {
-        this.code = code;
-        return this;
-    }
-
     public String getMessage() {
-        return i18n(ResultEnum.getResultEnum(this.code).getMessage(), this.message);
+        return message;
     }
 
-    public ResultBody setMessage(String message) {
-        this.message = message;
-        return this;
+    public String getPath() {
+        return path;
     }
 
     public T getData() {
         return data;
     }
 
-    public ResultBody setData(T data) {
-        this.data = data;
-        return this;
-    }
-
-    public long getTimestamp() {
-        return timestamp;
-    }
-
-    public ResultBody setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
-        return this;
-    }
-
     public Map<String, Object> getExtra() {
         return extra;
     }
 
-    public ResultBody setExtra(Map<String, Object> extra) {
-        this.extra = extra;
-        return this;
-    }
-
-    public ResultBody putExtra(String key, Object value) {
-        if (this.extra == null) {
-            this.extra = Maps.newHashMap();
-        }
-        this.extra.put(key, value);
-        return this;
-    }
-
-
-
-    public String getPath() {
-        return path;
-    }
-
-    public ResultBody setPath(String path) {
-        this.path = path;
-        return this;
+    public long getTimestamp() {
+        return timestamp;
     }
 
     @JSONField(serialize = false, deserialize = false)
@@ -174,8 +96,51 @@ public class ResultBody<T> implements Serializable {
         return httpStatus;
     }
 
-    public ResultBody setHttpStatus(int httpStatus) {
+    @JSONField(serialize = false, deserialize = false)
+    @JsonIgnore
+    public boolean isOk() {
+        return this.code == ResultEnum.OK.getCode();
+    }
+
+
+    public static ResultBody ok() {
+        return new ResultBody().code(ResultEnum.OK.getCode()).msg(ResultEnum.OK.getMessage());
+    }
+
+    public static ResultBody failed() {
+        return new ResultBody().code(ResultEnum.FAIL.getCode()).msg(ResultEnum.FAIL.getMessage());
+    }
+
+    public ResultBody code(int code) {
+        this.code = code;
+        return this;
+    }
+
+    public ResultBody msg(String message) {
+        this.message = i18n(ResultEnum.getResultEnum(this.code).getMessage(), message);
+        return this;
+    }
+
+    public ResultBody data(T data) {
+        this.data = data;
+        return this;
+    }
+
+    public ResultBody path(String path) {
+        this.path = path;
+        return this;
+    }
+
+    public ResultBody httpStatus(int httpStatus) {
         this.httpStatus = httpStatus;
+        return this;
+    }
+
+    public ResultBody put(String key, Object value) {
+        if (this.extra == null) {
+            this.extra = Maps.newHashMap();
+        }
+        this.extra.put(key, value);
         return this;
     }
 
@@ -208,4 +173,6 @@ public class ResultBody<T> implements Serializable {
         MessageSource messageSource = SpringContextHolder.getBean(MessageSource.class);
         return messageSource.getMessage(message, null, defaultMessage, locale);
     }
+
+
 }

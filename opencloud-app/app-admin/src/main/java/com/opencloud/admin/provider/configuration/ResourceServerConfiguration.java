@@ -96,7 +96,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
             } catch (Exception e) {
                 log.error("sso logout error:", e);
             }
-            WebUtils.writeJson(response, ResultBody.success("退出成功", null));
+            WebUtils.writeJson(response, ResultBody.ok().msg("退出成功"));
         }
     }
 

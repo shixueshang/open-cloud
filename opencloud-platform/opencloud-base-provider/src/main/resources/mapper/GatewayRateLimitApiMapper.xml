@@ -35,8 +35,8 @@
             a.path
         FROM
             gateway_rate_limit_api AS i
-                INNER JOIN gateway_rate_limit AS p ON i.policy_id = p.policy_id
-                INNER JOIN base_api AS a ON i.api_id = a.api_id
+               LEFT JOIN gateway_rate_limit AS p ON i.policy_id = p.policy_id
+               LEFT JOIN base_api AS a ON i.api_id = a.api_id
         WHERE
             p.limit_type = 'url'
     </select>

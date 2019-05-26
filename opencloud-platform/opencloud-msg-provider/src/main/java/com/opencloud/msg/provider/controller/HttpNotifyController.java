@@ -36,9 +36,9 @@ public class HttpNotifyController implements HttpNotifyRemoteApi {
     ) {
         try {
             delayMessageService.httpNotify(httpNotify.getUrl(), httpNotify.getType(), httpNotify.getData());
-            return ResultBody.success("");
+            return ResultBody.ok();
         } catch (Exception e) {
-            return ResultBody.failed(e.getMessage());
+            return ResultBody.failed().msg(e.getMessage());
         }
     }
 
@@ -51,7 +51,7 @@ public class HttpNotifyController implements HttpNotifyRemoteApi {
     @ApiOperation(value = "获取分页异步通知列表", notes = "获取分页异步通知列表")
     @GetMapping("/http/notify/logs")
     public ResultBody<IPage<NotifyHttpLogs>> getNotifyHttpLogListPage(@RequestParam(required = false) Map map) {
-        return ResultBody.success(notifyHttpLogsService.findListPage(new PageParams(map)));
+        return ResultBody.ok().data(notifyHttpLogsService.findListPage(new PageParams(map)));
     }
 
 }

@@ -3,15 +3,15 @@ package com.opencloud.base.provider.mapper;
 import com.opencloud.base.client.model.entity.BaseRole;
 import com.opencloud.base.client.model.entity.BaseRoleUser;
 import com.opencloud.common.mybatis.base.mapper.SuperMapper;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 /**
  * @author liuyadu
  */
-@Mapper
+@Repository
 public interface BaseRoleUserMapper extends SuperMapper<BaseRoleUser> {
     /**
      * 查询系统用户角色

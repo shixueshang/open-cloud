@@ -1,13 +1,12 @@
 package com.opencloud.auth.provider.controller;
 
+import com.google.common.collect.Maps;
 import com.opencloud.auth.provider.service.feign.BaseUserAccountRemoteService;
 import com.opencloud.auth.provider.service.impl.GiteeAuthServiceImpl;
 import com.opencloud.auth.provider.service.impl.QQAuthServiceImpl;
 import com.opencloud.auth.provider.service.impl.WechatAuthServiceImpl;
 import com.opencloud.common.model.ResultBody;
-import com.opencloud.common.security.OpenUser;
 import com.opencloud.common.security.OpenHelper;
-import com.google.common.collect.Maps;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +41,7 @@ public class ApiController {
     @ApiOperation(value = "获取用户基础信息")
     @GetMapping("/current/user")
     public ResultBody getUserProfile() {
-        OpenUser user = OpenHelper.getUser();
-        return baseUserAccountRemoteService.getUserInfo(user.getUserId());
+        return ResultBody.ok().data(OpenHelper.getUser());
     }
 
     /**
@@ -59,7 +57,7 @@ public class ApiController {
         map.put("qq", qqAuthService.getAuthorizationUrl());
         map.put("wechat", wechatAuthService.getAuthorizationUrl());
         map.put("gitee", giteeAuthService.getAuthorizationUrl());
-        return ResultBody.success(map);
+        return ResultBody.ok().data(map);
     }
 
 }

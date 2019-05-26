@@ -61,12 +61,10 @@ public class ResourceScanHandler {
                     codes.add(api.getApiCode());
                     BaseApi save = baseApiService.getApi(api.getApiCode());
                     if (save == null) {
-                        api.setIsOpen(0);
                         api.setIsAuth(1);
                         api.setIsPersist(1);
                         baseApiService.addApi(api);
                     } else {
-                        api.setIsOpen(null);
                         api.setApiId(save.getApiId());
                         baseApiService.updateApi(api);
                     }
@@ -87,4 +85,5 @@ public class ResourceScanHandler {
             log.error("error:", e);
         }
     }
+
 }

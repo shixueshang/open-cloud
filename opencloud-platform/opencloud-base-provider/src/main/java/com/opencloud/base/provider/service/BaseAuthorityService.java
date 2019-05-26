@@ -39,11 +39,10 @@ public interface BaseAuthorityService extends IBaseService<BaseAuthority> {
     /**
      * 获取API权限列表
      *
-     * @param isOpen
      * @param serviceId
      * @return
      */
-    List<AuthorityApi> findAuthorityApi(Integer isOpen, String serviceId);
+    List<AuthorityApi> findAuthorityApi(String serviceId);
 
 
     /**

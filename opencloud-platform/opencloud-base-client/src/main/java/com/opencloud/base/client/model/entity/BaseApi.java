@@ -72,11 +72,6 @@ public class BaseApi extends AbstractEntity {
     private Integer isPersist;
 
     /**
-     * 是否为开放接口：0-否  1-是
-     */
-    private Integer isOpen;
-
-    /**
      * 安全认证:0-否 1-是 默认:1
      */
     private Integer isAuth;
@@ -228,14 +223,6 @@ public class BaseApi extends AbstractEntity {
 
     public void setIsPersist(Integer isPersist) {
         this.isPersist = isPersist;
-    }
-
-    public Integer getIsOpen() {
-        return isOpen;
-    }
-
-    public void setIsOpen(Integer isOpen) {
-        this.isOpen = isOpen;
     }
 
     public Integer getIsAuth() {

@@ -40,7 +40,7 @@ public class GatewayIpLimitController {
     @ApiOperation(value = "获取分页接口列表", notes = "获取分页接口列表")
     @GetMapping("/gateway/limit/ip")
     public ResultBody<IPage<GatewayIpLimit>> getIpLimitListPage(@RequestParam(required = false) Map map) {
-        return ResultBody.success(gatewayIpLimitService.findListPage(new PageParams(map)));
+        return ResultBody.ok().data(gatewayIpLimitService.findListPage(new PageParams(map)));
     }
 
     /**
@@ -57,7 +57,7 @@ public class GatewayIpLimitController {
     public ResultBody<IPage<GatewayIpLimit>> getIpLimitApiList(
             @RequestParam("policyId") Long policyId
     ) {
-        return ResultBody.success(gatewayIpLimitService.findIpLimitApiList(policyId));
+        return ResultBody.ok().data(gatewayIpLimitService.findIpLimitApiList(policyId));
     }
 
     /**
@@ -79,7 +79,7 @@ public class GatewayIpLimitController {
     ) {
         gatewayIpLimitService.addIpLimitApis(policyId, StringUtils.isNotBlank(apiIds) ? apiIds.split(",") : new String[]{});
         openRestTemplate.refreshGateway();
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 
     /**
@@ -94,7 +94,7 @@ public class GatewayIpLimitController {
     })
     @GetMapping("/gateway/limit/ip/{policyId}/info")
     public ResultBody<GatewayIpLimit> getIpLimit(@PathVariable("policyId") Long policyId) {
-        return ResultBody.success(gatewayIpLimitService.getIpLimitPolicy(policyId));
+        return ResultBody.ok().data(gatewayIpLimitService.getIpLimitPolicy(policyId));
     }
 
     /**
@@ -126,7 +126,7 @@ public class GatewayIpLimitController {
         if(result!=null){
             policyId = result.getPolicyId();
         }
-        return ResultBody.success(policyId);
+        return ResultBody.ok().data(policyId);
     }
 
     /**
@@ -159,7 +159,7 @@ public class GatewayIpLimitController {
         ipLimit.setIpAddress(ipAddress);
         gatewayIpLimitService.updateIpLimitPolicy(ipLimit);
         openRestTemplate.refreshGateway();
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 
 
@@ -180,6 +180,6 @@ public class GatewayIpLimitController {
         gatewayIpLimitService.removeIpLimitPolicy(policyId);
         // 刷新网关
         openRestTemplate.refreshGateway();
-        return ResultBody.success();
+        return ResultBody.ok();
     }
 }

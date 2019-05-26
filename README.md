@@ -24,6 +24,12 @@
 
 ![springcloud](/docs/springcloud.jpg)  
 
+#### 功能介绍
+![springcloud](/docs/opencloud.png)  
+
+#### 权限模型
+![springcloud](/docs/mode.png)  
+
 <a target="_blank" href="http://39.106.187.125/admin">演示地址</a>
 + 默认登录账号:admin 123456  
 + 测试登录账号:test 123456
@@ -41,6 +47,13 @@
 <a target="_blank" href="https://gitee.com/liuyadu/open-cloud/wikis/pages">使用手册</a>  
         
 #### 更新日志
+    v-2.1.0 2019-05-26 （重大变更）
+        1. 重新梳理base表结构和权限相关接口,解决用户和客户端动态分配权。 机制问题暂不支持用户动态分配角色,需重新登录获取最新角色
+        2. 优化页面功能
+        3. 升级nacos客户端版本.支持1.0.0以上版本
+        4. 禁用非平台认证服务(opencloud-auth-provider)客户端模式。只作为用户认证服务器 
+        5. 完善权限数据,升级方式ui和服务代码, 重新支持base.sql。手动删除无效表
+        
     v-2.0.0 2019-05-01
         1. 升级SpringCloud Greenwich.SR1,SpringBoot 2.1.4.RELEASE
         2. 重构项目结构
@@ -80,11 +93,12 @@ open-cloud
 ├── opencloud-common  -- 公共类和jar包依赖
     ├── opencloud-common-core    -- 提供微服务相关依赖包、工具类、全局异常解析等...
     ├── opencloud-common-starter -- SpringBoot自动扫描
-    
+       
 ├── opencloud-gateway  -- 开放API服务模块
     ├── opencloud-api-gateway       -- API开放网关-基于SpringCloudGateway-(port = 8888)  
     ├── opencloud-api-gateway-zuul  --（较为稳定推荐使用）API开放网关-基于Zuul-(port = 8888)  
-    
+    ├── opencloud-api-sdk           -- 对API服务第三方调用集成Jar包的封装(待完善)  
+     
 ├── opencloud-platform    --  平台服务模块
     ├── opencloud-base-client    -- 平台基础服务接口
     ├── opencloud-base-provider  -- 平台基础服务(port = 8233)  
