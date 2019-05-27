@@ -70,9 +70,7 @@ CREATE TABLE `gateway_ip_limit_api` (
                                       `policy_id` bigint(20) NOT NULL COMMENT '策略ID',
                                       `api_id` bigint(20) NOT NULL COMMENT '接口资源ID',
                                       KEY `policy_id` (`policy_id`) USING BTREE,
-                                      KEY `api_id` (`api_id`) USING BTREE,
-                                      CONSTRAINT `gateway_ip_limit_api_ibfk_1` FOREIGN KEY (`policy_id`) REFERENCES `gateway_ip_limit` (`policy_id`),
-                                      CONSTRAINT `gateway_ip_limit_api_ibfk_2` FOREIGN KEY (`api_id`) REFERENCES `base_resource_api` (`api_id`)
+                                      KEY `api_id` (`api_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='开放网关-IP访问控制-API接口';
 
 -- ----------------------------
@@ -107,9 +105,7 @@ CREATE TABLE `gateway_rate_limit_api` (
                                         `policy_id` bigint(11) NOT NULL DEFAULT '0' COMMENT '限制数量',
                                         `api_id` bigint(11) NOT NULL DEFAULT '1' COMMENT '时间间隔(秒)',
                                         KEY `policy_id` (`policy_id`) USING BTREE,
-                                        KEY `api_id` (`api_id`) USING BTREE,
-                                        CONSTRAINT `gateway_rate_limit_api_ibfk_1` FOREIGN KEY (`policy_id`) REFERENCES `gateway_rate_limit` (`policy_id`),
-                                        CONSTRAINT `gateway_rate_limit_api_ibfk_2` FOREIGN KEY (`api_id`) REFERENCES `base_resource_api` (`api_id`)
+                                        KEY `api_id` (`api_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='开放网关-流量控制-API接口';
 
 -- ----------------------------
@@ -123,8 +119,7 @@ DROP TABLE IF EXISTS `gateway_rate_limit_origin`;
 CREATE TABLE `gateway_rate_limit_origin` (
                                            `policy_id` bigint(11) NOT NULL DEFAULT '0' COMMENT '限制数量',
                                            `origins` bigint(11) NOT NULL DEFAULT '1' COMMENT '来源域名',
-                                           KEY `policy_id` (`policy_id`) USING BTREE,
-                                           CONSTRAINT `gateway_rate_limit_origin_ibfk_1` FOREIGN KEY (`policy_id`) REFERENCES `gateway_rate_limit` (`policy_id`)
+                                           KEY `policy_id` (`policy_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='开放网关-流量控制-来源限流';
 
 -- ----------------------------
@@ -139,9 +134,7 @@ CREATE TABLE `gateway_rate_limit_role` (
                                          `policy_id` bigint(11) NOT NULL DEFAULT '0' COMMENT '限制数量',
                                          `role_id` bigint(11) NOT NULL DEFAULT '1' COMMENT '角色Id',
                                          KEY `policy_id` (`policy_id`) USING BTREE,
-                                         KEY `role_id` (`role_id`) USING BTREE,
-                                         CONSTRAINT `gateway_rate_limit_role_ibfk_1` FOREIGN KEY (`policy_id`) REFERENCES `gateway_rate_limit` (`policy_id`),
-                                         CONSTRAINT `gateway_rate_limit_role_ibfk_2` FOREIGN KEY (`role_id`) REFERENCES `base_role` (`role_id`)
+                                         KEY `role_id` (`role_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='开放网关-流量控制-角色限流';
 
 -- ----------------------------
