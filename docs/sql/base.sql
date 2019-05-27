@@ -702,7 +702,7 @@ CREATE TABLE `base_tentant_modules` (
                                       `service_id` varchar(100) NOT NULL COMMENT '服务名称',
                                       `module_desc` varchar(255) NOT NULL COMMENT '模块描述',
                                       `is_persist` tinyint(3) NOT NULL DEFAULT '0' COMMENT '保留数据0-否 1-是 不允许删除',
-                                      PRIMARY KEY (`module_id`),
+                                      PRIMARY KEY (`module_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='租户模块';
 
 -- ----------------------------
