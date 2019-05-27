@@ -28,7 +28,6 @@
         <spring-cloud.version>Greenwich.SR1</spring-cloud.version>
         <alibaba.cloud.version>0.2.2.RELEASE</alibaba.cloud.version>
         <alibaba.fastjson.version>1.2.37</alibaba.fastjson.version>
-        <alibaba.druid.version>1.1.16</alibaba.druid.version>
 
         <apache.commons-lang3.version>3.3.2</apache.commons-lang3.version>
         <apache.commons-io.version>2.5</apache.commons-io.version>
