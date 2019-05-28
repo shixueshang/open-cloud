@@ -92,6 +92,9 @@ CREATE TABLE `base_api` (
 -- ----------------------------
 -- Records of base_api
 -- ----------------------------
+
+INSERT INTO `base_api` VALUES ('1', 'all', '全部', 'default', '所有请求', 'get,post', null, 'opencloud-api-gateway-zuul', '/**', '0', '1', '2019-03-07 21:52:17', '2019-03-14 21:41:28', '1', '1', null, null);
+INSERT INTO `base_api` VALUES ('2', 'actuator', '监控端点', 'default', '监控端点', 'post', null, 'opencloud-api-gateway-zuul', '/actuator/**', '0', '1', '2019-03-07 21:52:17', '2019-03-14 21:41:28', '1', '1',  null, null);
 INSERT INTO `base_api` VALUES ('1131753764703858689', 'b6af926a59f609ecb77435c8fdaf6b56', '添加接口资源', 'default', '添加接口资源', 'POST', '', 'opencloud-base-provider', '/api/add', '0', '1', '2019-05-24 02:48:18', '2019-05-25 17:20:40', '1', '1', 'com.opencloud.base.provider.controller.BaseApiController', 'addApi');
 INSERT INTO `base_api` VALUES ('1131753764963905538', 'a18f290e608900b65f36ab2ae349914b', '编辑接口资源', 'default', '编辑接口资源', 'POST', '', 'opencloud-base-provider', '/api/update', '0', '1', '2019-05-24 02:48:19', '2019-05-25 17:20:40', '1', '1', 'com.opencloud.base.provider.controller.BaseApiController', 'updateApi');
 INSERT INTO `base_api` VALUES ('1131753765098123266', 'f831ec70dd67c92fd321770c5526255b', '获取分页接口列表', 'default', '获取分页接口列表', 'GET', '', 'opencloud-base-provider', '/api', '0', '1', '2019-05-24 02:48:19', '2019-05-25 17:20:40', '1', '1', 'com.opencloud.base.provider.controller.BaseApiController', 'getApiList');
@@ -263,6 +266,8 @@ INSERT INTO `base_authority` VALUES ('16', 'MENU_job', '16', null, null, '1');
 INSERT INTO `base_authority` VALUES ('17', 'MENU_message', '17', null, null, '1');
 INSERT INTO `base_authority` VALUES ('18', 'MENU_notifyHttpLogs', '18', null, null, '1');
 INSERT INTO `base_authority` VALUES ('19', 'MENU_schedulerLogs', '19', null, null, '1');
+INSERT INTO `base_authority` VALUES ('99', 'API_all', null, '1', null, '1');
+INSERT INTO `base_authority` VALUES ('100', 'API_actuator', null, '2', null, '1');
 INSERT INTO `base_authority` VALUES ('1131753764884213761', 'API_b6af926a59f609ecb77435c8fdaf6b56', null, '1131753764703858689', null, '1');
 INSERT INTO `base_authority` VALUES ('1131753765026820098', 'API_a18f290e608900b65f36ab2ae349914b', null, '1131753764963905538', null, '1');
 INSERT INTO `base_authority` VALUES ('1131753765182009346', 'API_f831ec70dd67c92fd321770c5526255b', null, '1131753765098123266', null, '1');

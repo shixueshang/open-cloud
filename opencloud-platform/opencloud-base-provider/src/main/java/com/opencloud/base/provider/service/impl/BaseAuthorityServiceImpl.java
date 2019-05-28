@@ -593,11 +593,14 @@ public class BaseAuthorityServiceImpl extends BaseServiceImpl<BaseAuthorityMappe
             return;
         }
         List<String> invalidApiIds = baseApiService.listObjs(new QueryWrapper<BaseApi>().select("api_id").eq("service_id", serviceId).notIn("api_code", codes), e -> e.toString());
-        if (invalidApiIds != null && !invalidApiIds.isEmpty()) {
+        if (invalidApiIds != null) {
             // 防止删除默认api
             invalidApiIds.remove("1");
             invalidApiIds.remove("2");
             // 获取无效的权限
+            if(!invalidApiIds.isEmpty()){
+                return;
+            }
             List<String> invalidAuthorityIds = listObjs(new QueryWrapper<BaseAuthority>().select("authority_id").in("api_id", invalidApiIds), e -> e.toString());
             if (invalidAuthorityIds != null && !invalidAuthorityIds.isEmpty()) {
                 // 移除关联数据
