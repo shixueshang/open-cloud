@@ -598,7 +598,7 @@ public class BaseAuthorityServiceImpl extends BaseServiceImpl<BaseAuthorityMappe
             invalidApiIds.remove("1");
             invalidApiIds.remove("2");
             // 获取无效的权限
-            if(!invalidApiIds.isEmpty()){
+            if(invalidApiIds.isEmpty()){
                 return;
             }
             List<String> invalidAuthorityIds = listObjs(new QueryWrapper<BaseAuthority>().select("authority_id").in("api_id", invalidApiIds), e -> e.toString());
