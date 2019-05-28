@@ -160,7 +160,6 @@ CREATE TABLE `gateway_route` (
 -- ----------------------------
 -- Records of gateway_route
 -- ----------------------------
-INSERT INTO `gateway_route` VALUES ('55659578597467766', '平台后台管理服务', '/admin/**', 'app-admin', '', '0', '0', '1', '1');
 INSERT INTO `gateway_route` VALUES ('556587504019439616', '平台基础支撑服务', '/base/**', 'opencloud-base-provider', '', '0', '0', '1', '1');
 INSERT INTO `gateway_route` VALUES ('556595619813130240', '平台统一认证服务', '/auth/**', 'opencloud-auth-provider', '', '0', '0', '1', '1');
 INSERT INTO `gateway_route` VALUES ('556595914240688128', '平台消息服务', '/msg/**', 'opencloud-msg-provider', '', '0', '0', '1', '1');

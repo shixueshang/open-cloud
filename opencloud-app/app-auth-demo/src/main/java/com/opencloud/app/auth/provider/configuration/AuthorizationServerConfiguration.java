@@ -126,9 +126,9 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
         security
                 // 开启/oauth/check_token验证端口认证权限访问
-                .checkTokenAccess("isAuthenticated()");
+                .checkTokenAccess("isAuthenticated()")
                 //只作为用户认证中心,禁用客户端授权
-                //.allowFormAuthenticationForClients()
+                .allowFormAuthenticationForClients();
     }
 
 }

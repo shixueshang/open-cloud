@@ -12,8 +12,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>app-auth-demo</module>
-        <module>app-admin</module>
-        <module>app-api</module>
         <module>tenant-demo</module>
     </modules>
 

@@ -26,6 +26,9 @@ public class ClientDetailsServiceImpl implements ClientDetailsService {
     @Override
     public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
         BaseClientDetails details = baseAppRemoteService.getAppClientInfo(clientId).getData();
+        if(details!=null && !"1".equals(details.getAdditionalInformation().get("status").toString())){
+            throw new ClientRegistrationException("客户端已被禁用");
+        }
         return details;
     }
 }

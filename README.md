@@ -32,6 +32,7 @@
         4. 禁用非平台认证服务(opencloud-auth-provider)客户端模式。只作为用户认证服务器 
         5. 完善权限数据,去除外键约束.
         6. 升级方式更新ui和服务代码, 重新执行base.sql。手动删除无效表
+        7. 移除app-admin模块 相关功能迁移到opencloud-auth-provider中
         
     v-2.0.0 2019-05-01
         1. 升级SpringCloud Greenwich.SR1,SpringBoot 2.1.4.RELEASE
@@ -84,11 +85,7 @@ open-cloud
     ├── sql           -- sql文件
     
 ├── opencloud-app    -- 应用服务模块
-    ├── app-admin  -- 运营后台服务(port = 8301)  
     ├── app-auth-demo  -- 移动应用用户认证中心(多认证中心演示)(port = 7211)  
-    ├── app-api        -- APP接口模块 
-       ├── app-api-base    -- APP接口基础模块
-       ├── app-api-server  -- APP接口服务(port = 7211)
      
 ├── opencloud-common  -- 公共类和jar包依赖
     ├── opencloud-common-core    -- 提供微服务相关依赖包、工具类、全局异常解析等...
@@ -160,8 +157,7 @@ open-cloud
 5. 本地启动(顺序启动)
      1. BaseApplication
      2. AuthApplication
-     3. AdminApplication
-     4. ZuulGatewayApplication(推荐) 或 ApiGatewayApplication 
+     3. ZuulGatewayApplication(推荐) 或 ApiGatewayApplication 
      访问 http://localhost:8888
      
 6. 前端启动
