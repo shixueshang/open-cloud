@@ -177,7 +177,6 @@ open-cloud
     ```bush
     ./docs/bin/startup.sh {start|stop|restart|status} opencloud-base-provider.jar
     ./docs/bin/startup.sh {start|stop|restart|status} opencloud-auth-provider.jar
-    ./docs/bin/startup.sh {start|stop|restart|status} app-admin.jar
     ./docs/bin/startup.sh {start|stop|restart|status} opencloud-api-gateway-zuul.jar
     ```
     
