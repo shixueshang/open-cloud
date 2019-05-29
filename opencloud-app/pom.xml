@@ -11,7 +11,7 @@
     <artifactId>opencloud-app</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>app-auth-demo</module>
+        <module>app-opensite-provider</module>
         <module>tenant-demo</module>
     </modules>
 

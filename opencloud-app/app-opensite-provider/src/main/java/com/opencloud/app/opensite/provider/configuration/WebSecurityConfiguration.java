@@ -1,6 +1,6 @@
-package com.opencloud.app.auth.provider.configuration;
+package com.opencloud.app.opensite.provider.configuration;
 
-import com.opencloud.app.auth.provider.service.impl.UserDetailsServiceImpl;
+import com.opencloud.app.opensite.provider.service.impl.UserDetailsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package com.opencloud.app.auth.provider.service.impl;
+package com.opencloud.app.opensite.provider.service.impl;
 
 import com.opencloud.common.security.Authority;
 import com.opencloud.common.security.OpenUser;

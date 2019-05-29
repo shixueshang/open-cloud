@@ -1,6 +1,6 @@
-package com.opencloud.app.auth.provider.service.feign;
+package com.opencloud.app.opensite.provider.service.feign;
 
-import com.opencloud.base.client.api.BaseAppRemoteApi;
+import com.opencloud.base.client.api.BaseAuthorityRemoteApi;
 import com.opencloud.base.client.constants.BaseConstants;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @FeignClient(value = BaseConstants.BASE_SERVICE)
-public interface BaseAppRemoteService extends BaseAppRemoteApi {
+public interface BaseAuthorityRemoteService extends BaseAuthorityRemoteApi {
 
 
 }

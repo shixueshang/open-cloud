@@ -1,8 +1,6 @@
-package com.opencloud.app.auth.provider.controller;
+package com.opencloud.app.opensite.provider.controller;
 
-import com.opencloud.app.auth.provider.service.feign.BaseAppRemoteService;
-import com.opencloud.common.exception.OpenExceptionHandler;
-import com.opencloud.common.model.ResultBody;
+import com.opencloud.app.opensite.provider.service.feign.BaseAppRemoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.provider.AuthorizationRequest;
 import org.springframework.security.oauth2.provider.ClientDetails;
@@ -12,10 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

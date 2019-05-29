@@ -42,7 +42,18 @@ management:
                 include: refresh,health
 opencloud:
     swagger2:
-        description: APP认证服务Demo
+        description: 平台门户网站服务
         enabled: true
-        title: APP认证服务Demo
+        title: 平台门户网站服务
 
+security:
+    oauth2:
+        client:
+            access-token-uri: ${opencloud.common.access-token-uri}
+            client-id: 1552294656514
+            client-secret: 74a02bade18a42388c3127751b96e1f7
+            scope: ${opencloud.common.scope}
+            user-authorization-uri: ${opencloud.common.user-authorization-uri}
+        resource:
+            token-info-uri: ${opencloud.common.token-info-uri}
+            user-info-uri: ${opencloud.common.user-info-uri}

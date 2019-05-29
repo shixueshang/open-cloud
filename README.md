@@ -85,7 +85,7 @@ open-cloud
     ├── sql           -- sql文件
     
 ├── opencloud-app    -- 应用服务模块
-    ├── app-auth-demo  -- 移动应用用户认证中心(多认证中心演示)(port = 7211)  
+    ├── app-opensite-provider  -- 平台门户网站服务(port = 7211)  
      
 ├── opencloud-common  -- 公共类和jar包依赖
     ├── opencloud-common-core    -- 提供微服务相关依赖包、工具类、全局异常解析等...

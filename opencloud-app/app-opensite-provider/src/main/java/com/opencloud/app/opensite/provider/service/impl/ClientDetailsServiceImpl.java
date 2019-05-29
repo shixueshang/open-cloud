@@ -1,6 +1,6 @@
-package com.opencloud.app.auth.provider.service.impl;
+package com.opencloud.app.opensite.provider.service.impl;
 
-import com.opencloud.app.auth.provider.service.feign.BaseAppRemoteService;
+import com.opencloud.app.opensite.provider.service.feign.BaseAppRemoteService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.provider.ClientDetails;

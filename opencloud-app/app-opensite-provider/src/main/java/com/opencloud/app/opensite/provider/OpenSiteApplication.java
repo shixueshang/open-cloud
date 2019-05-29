@@ -22,7 +22,7 @@
  * SOFTWARE.
  *
  */
-package com.opencloud.app.auth.provider;
+package com.opencloud.app.opensite.provider;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -38,10 +38,10 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableFeignClients
 @SpringBootApplication
 @EnableDiscoveryClient
-public class AppAuthDemoApplication {
+public class OpenSiteApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(AppAuthDemoApplication.class, args);
+        SpringApplication.run(OpenSiteApplication.class, args);
     }
 
 

@@ -1,4 +1,4 @@
-package com.opencloud.app.auth.provider.controller;
+package com.opencloud.app.opensite.provider.controller;
 
 import com.google.common.collect.Maps;
 import com.opencloud.common.model.ResultBody;

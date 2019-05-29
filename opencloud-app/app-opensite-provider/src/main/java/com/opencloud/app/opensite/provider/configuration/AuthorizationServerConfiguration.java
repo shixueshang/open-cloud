@@ -1,4 +1,4 @@
-package com.opencloud.app.auth.provider.configuration;
+package com.opencloud.app.opensite.provider.configuration;
 
 import com.opencloud.auth.client.config.SocialOAuth2ClientProperties;
 import com.opencloud.common.exception.Oauth2WebResponseExceptionTranslator;
