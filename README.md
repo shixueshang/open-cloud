@@ -18,11 +18,15 @@
 + 统一API网关、访问鉴权、参数验签、接口调用更安全.
 + 深度整合SpringSecurity+Oauth2,更细粒度、灵活的ABAC权限控制.
 + 前后端分离方式开发应用，分工合作更高效!
-+ 代码合理封装、简单易懂、
++ 代码合理封装、简单易懂、 
 
-<a target="_blank" href="http://39.106.187.125/admin">演示地址</a>
-+ 默认登录账号:admin 123456  
-+ 测试登录账号:test 123456
+<a target="_blank" href="http://39.106.187.125/open">开放平台网站预览</a> 
+
+<a target="_blank" href="http://39.106.187.125/admin">运营后台预览</a>
++ 后台默认账号:admin 123456  
++ 后台测试账号:test 123456
+
+
 
 #### 更新日志
     v-2.1.0 2019-05-26 （重大变更）
@@ -64,6 +68,10 @@
 
 #### vue后台UI源码
 <a target="_blank" href="https://gitee.com/liuyadu/open-admin-ui">后台UI源码</a>
+
+#### vue门户UI源码
+<a target="_blank" href="https://gitee.com/liuyadu_open/open-site-antd.git">门户UI源码</a>
+
 
 #### 代码生成器
 <a target="_blank" href="https://gitee.com/liuyadu/generator.git">代码生成器</a>  
