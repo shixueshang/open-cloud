@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.config.properties.RateLimitProperties;
 import com.netflix.zuul.ZuulFilter;
 import com.opencloud.zuul.actuator.OpenApiEndpoint;
+import com.opencloud.zuul.filter.ZuulErrorFilter;
 import com.opencloud.zuul.filter.ZuulResponseFilter;
 import com.opencloud.zuul.locator.ApiResourceLocator;
 import com.opencloud.zuul.locator.JdbcRouteLocator;
@@ -64,6 +65,17 @@ public class ApiConfiguration {
     public ZuulFilter zuulResponseFilter() {
         return new ZuulResponseFilter(accessLogService);
     }
+
+    /**
+     * 错误过滤器
+     *
+     * @return
+     */
+    @Bean
+    public ZuulFilter zuulErrorFilter() {
+        return new ZuulErrorFilter(accessLogService);
+    }
+
 
     /**
      * 访问控制加载器

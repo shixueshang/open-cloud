@@ -54,16 +54,11 @@ public class ZuulResponseFilter extends ZuulFilter {
     public Object run() {
         // 代理后响应日志处理
         RequestContext ctx = RequestContext.getCurrentContext();
-        Exception exception = null;
-        Throwable throwable = ctx.getThrowable();
-        if (throwable != null) {
-            exception = (Exception) throwable;
-        }
         HttpServletRequest request = ctx.getRequest();
         HttpServletResponse response = ctx.getResponse();
         // 把路由的serviceId放入作用域
         request.setAttribute(FilterConstants.SERVICE_ID_KEY, ctx.get(FilterConstants.SERVICE_ID_KEY));
-        accessLogService.sendLog(request, response, exception);
+        accessLogService.sendLog(request, response,null);
         return null;
     }
 
