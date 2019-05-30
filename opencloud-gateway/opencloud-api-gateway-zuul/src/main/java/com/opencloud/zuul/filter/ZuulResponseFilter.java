@@ -57,7 +57,7 @@ public class ZuulResponseFilter extends ZuulFilter {
         Exception exception = null;
         Throwable throwable = ctx.getThrowable();
         if (throwable != null) {
-            throwable = (Exception) throwable;
+            exception = (Exception) throwable;
         }
         HttpServletRequest request = ctx.getRequest();
         HttpServletResponse response = ctx.getResponse();
