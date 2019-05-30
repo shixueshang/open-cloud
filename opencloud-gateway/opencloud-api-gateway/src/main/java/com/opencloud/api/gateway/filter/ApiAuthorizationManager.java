@@ -10,6 +10,7 @@ import com.opencloud.common.constants.ResultEnum;
 import com.opencloud.common.security.Authority;
 import com.opencloud.common.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -161,6 +162,8 @@ public class ApiAuthorizationManager implements ReactiveAuthorizationManager<Aut
 
     public boolean mathAuthorities(ServerWebExchange exchange, Authentication authentication, String requestPath) {
         Collection<ConfigAttribute> attributes = getAttributes(requestPath);
+        int result = 0;
+        int expires = 0;
         if (authentication == null) {
             return false;
         } else {
@@ -176,20 +179,23 @@ public class ApiAuthorizationManager implements ReactiveAuthorizationManager<Aut
                 while (var8.hasNext()) {
                     GrantedAuthority authority = (GrantedAuthority) var8.next();
                     if (attribute.getAttribute().equals(authority.getAuthority())) {
+                        result++;
                         if (authority instanceof Authority) {
                             Authority customer = (Authority) authority;
                             if (customer.getIsExpired() != null && customer.getIsExpired()) {
-                                // 授权已过期
-                                log.debug("==> access_denied:path={},message={}", requestPath, ResultEnum.ACCESS_DENIED_AUTHORITY_EXPIRED.getMessage());
-                                exchange.getAttributes().put(CommonConstants.X_ACCESS_DENIED, ResultEnum.ACCESS_DENIED_AUTHORITY_EXPIRED);
-                                return false;
+                                // 授权过期数
+                                expires++;
                             }
                         }
-                        return true;
                     }
                 }
             }
-            return false;
+            log.debug("mathAuthorities result[{}] expires[{}]", result, expires);
+            if (expires > 0) {
+                // 授权已过期
+                throw new AccessDeniedException(ResultEnum.ACCESS_DENIED_AUTHORITY_EXPIRED.getMessage());
+            }
+            return result > 0;
         }
     }
 

@@ -174,11 +174,11 @@ public class OpenExceptionHandler {
         } else if (className.contains("AccessDeniedException")) {
             code = ResultEnum.ACCESS_DENIED;
             httpStatus = HttpStatus.FORBIDDEN.value();
-            if ("access_denied_black_ip_limited".contains(message)) {
+            if (ResultEnum.ACCESS_DENIED_BLACK_IP_LIMITED.getMessage().contains(message)) {
                 code = ResultEnum.ACCESS_DENIED_BLACK_IP_LIMITED;
-            } else if ("access_denied_white_ip_limited".contains(message)) {
+            } else if (ResultEnum.ACCESS_DENIED_WHITE_IP_LIMITED.getMessage().contains(message)) {
                 code = ResultEnum.ACCESS_DENIED_WHITE_IP_LIMITED;
-            } else if ("access_denied_authority_expired".contains(message)) {
+            } else if (ResultEnum.ACCESS_DENIED_AUTHORITY_EXPIRED.getMessage().contains(message)) {
                 code = ResultEnum.ACCESS_DENIED_AUTHORITY_EXPIRED;
             }
         } else if (className.contains("HttpMessageNotReadableException")

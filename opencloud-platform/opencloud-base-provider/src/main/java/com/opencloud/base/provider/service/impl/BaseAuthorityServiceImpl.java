@@ -73,9 +73,14 @@ public class BaseAuthorityServiceImpl extends BaseServiceImpl<BaseAuthorityMappe
     @Override
     public List<AuthorityAccess> findAuthorityAccess() {
         List<AuthorityAccess> list = Lists.newArrayList();
+        // 已授权应用权限
         List<AuthorityAccess> appList = baseAuthorityMapper.selectAllAuthorityApp();
+        // 已授权角色权限
         List<AuthorityAccess> roleList = baseAuthorityMapper.selectAllAuthorityRole();
+        // 已授权用户权限
         List<AuthorityAccess> userList = baseAuthorityMapper.selectAllAuthorityUser();
+        // 已授权资源权限
+        List<AuthorityAccess> resourceList = baseAuthorityMapper.selectAllAuthorityResource();
 
         if (appList != null) {
             list.addAll(appList);
@@ -85,6 +90,9 @@ public class BaseAuthorityServiceImpl extends BaseServiceImpl<BaseAuthorityMappe
         }
         if (appList != null) {
             list.addAll(userList);
+        }
+        if (resourceList != null) {
+            list.addAll(resourceList);
         }
         return list;
     }
@@ -598,7 +606,7 @@ public class BaseAuthorityServiceImpl extends BaseServiceImpl<BaseAuthorityMappe
             invalidApiIds.remove("1");
             invalidApiIds.remove("2");
             // 获取无效的权限
-            if(invalidApiIds.isEmpty()){
+            if (invalidApiIds.isEmpty()) {
                 return;
             }
             List<String> invalidAuthorityIds = listObjs(new QueryWrapper<BaseAuthority>().select("authority_id").in("api_id", invalidApiIds), e -> e.toString());

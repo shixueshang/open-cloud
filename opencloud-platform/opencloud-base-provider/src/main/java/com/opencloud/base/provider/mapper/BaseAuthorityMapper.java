@@ -19,27 +19,28 @@ import java.util.Map;
 public interface BaseAuthorityMapper extends SuperMapper<BaseAuthority> {
 
     /**
-     * 查询所有访问权限列表
-     */
-    List<AuthorityAccess> selectAuthorityAccess();
-
-    /**
      * 查询所有APP相关权限
      * @return
      */
     List<AuthorityAccess> selectAllAuthorityApp();
 
     /**
-     * 查询所有用户相关权限
+     * 查询所有用户授权列表
      * @return
      */
     List<AuthorityAccess> selectAllAuthorityUser();
 
     /**
-     * 查询所有角色相关权限
+     * 查询所有角色授权列表
      * @return
      */
     List<AuthorityAccess> selectAllAuthorityRole();
+
+    /**
+     * 查询所有资源授权列表
+     * @return
+     */
+    List<AuthorityAccess> selectAllAuthorityResource();
 
     /**
      * 查询已授权权限列表
