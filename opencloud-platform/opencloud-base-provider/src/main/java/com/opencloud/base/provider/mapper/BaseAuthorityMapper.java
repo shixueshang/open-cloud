@@ -22,18 +22,21 @@ public interface BaseAuthorityMapper extends SuperMapper<BaseAuthority> {
      * 查询所有APP相关权限
      * @return
      */
+    @Deprecated
     List<AuthorityAccess> selectAllAuthorityApp();
 
     /**
      * 查询所有用户授权列表
      * @return
      */
+    @Deprecated
     List<AuthorityAccess> selectAllAuthorityUser();
 
     /**
      * 查询所有角色授权列表
      * @return
      */
+    @Deprecated
     List<AuthorityAccess> selectAllAuthorityRole();
 
     /**

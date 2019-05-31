@@ -256,8 +256,8 @@
         route.path AS prefix
         FROM
             base_authority AS a
-        INNER JOIN base_menu AS menu ON a.menu_id = menu.menu_id
-        INNER JOIN gateway_route AS route ON route.service_id = menu.service_id
+        LEFT JOIN base_menu AS menu ON a.menu_id = menu.menu_id
+        LEFT JOIN gateway_route AS route ON route.service_id = menu.service_id
         WHERE
             menu.`status` = 1
         UNION ALL
@@ -270,8 +270,8 @@
                 route.path AS prefix
             FROM
                 base_authority AS a
-            INNER JOIN base_api AS api ON a.api_id = api.api_id
-            INNER JOIN gateway_route AS route ON route.service_id = api.service_id
+            LEFT JOIN base_api AS api ON a.api_id = api.api_id
+            LEFT JOIN gateway_route AS route ON route.service_id = api.service_id
             WHERE
                 api.`status` = 1
             UNION ALL
@@ -284,11 +284,11 @@
                     route.path AS prefix
                 FROM
                     base_authority_action AS ac
-                INNER JOIN base_authority AS a ON a.action_id = ac.action_id
-                INNER JOIN base_authority AS a2 ON ac.authority_id = a2.authority_id
-                INNER JOIN base_api AS api ON a2.api_id = api.api_id
-                INNER JOIN gateway_route AS route ON route.service_id = api.service_id
-                INNER JOIN base_action AS action ON ac.action_id = action.action_id
+                LEFT JOIN base_authority AS a ON a.action_id = ac.action_id
+                LEFT JOIN base_authority AS a2 ON ac.authority_id = a2.authority_id
+                LEFT JOIN base_api AS api ON a2.api_id = api.api_id
+                LEFT JOIN gateway_route AS route ON route.service_id = api.service_id
+                LEFT JOIN base_action AS action ON ac.action_id = action.action_id
                 WHERE
                     action.`status` = 1
                 AND api.`status` = 1
@@ -302,10 +302,10 @@
                         route.path AS prefix
                     FROM
                         base_authority AS a
-                    INNER JOIN base_authority_app AS aa ON aa.authority_id = a.authority_id
-                    INNER JOIN base_app AS app ON app.app_id = aa.app_id
-                    INNER JOIN base_api AS api ON a.api_id = api.api_id
-                    INNER JOIN gateway_route AS route ON route.service_id = api.service_id
+                    LEFT JOIN base_authority_app AS aa ON aa.authority_id = a.authority_id
+                    LEFT JOIN base_app AS app ON app.app_id = aa.app_id
+                    LEFT JOIN base_api AS api ON a.api_id = api.api_id
+                    LEFT JOIN gateway_route AS route ON route.service_id = api.service_id
                     WHERE
                         app.`status` = 1
                     AND api.`status` = 1

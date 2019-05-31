@@ -13,9 +13,11 @@ import com.opencloud.common.exception.OpenAlertException;
 import com.opencloud.common.model.PageParams;
 import com.opencloud.common.mybatis.base.service.impl.BaseServiceImpl;
 import com.opencloud.common.mybatis.query.CriteriaQuery;
+import com.opencloud.common.security.OpenClient;
 import com.opencloud.common.utils.BeanConvertUtils;
 import com.opencloud.common.utils.RandomValueUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -89,25 +91,29 @@ public class BaseAppServiceImpl extends BaseServiceImpl<BaseAppMapper, BaseApp> 
      */
     @Override
     @Cacheable(value = "apps", key = "'client:'+#appId")
-    public BaseClientDetails getAppClientInfo(String appId) {
+    public OpenClient getAppClientInfo(String appId) {
         BaseClientDetails baseClientDetails = (BaseClientDetails) jdbcClientDetailsService.loadClientByClientId(appId);
-        baseClientDetails.setAuthorities(baseAuthorityService.findAuthorityByApp(appId));
-        return baseClientDetails;
+        if (baseClientDetails == null) {
+            return null;
+        }
+        OpenClient openClient = new OpenClient();
+        BeanUtils.copyProperties(baseClientDetails, openClient);
+        openClient.setAuthorities(baseAuthorityService.findAuthorityByApp(appId));
+        return openClient;
     }
 
     /**
      * 更新应用开发新型
      *
-     * @param baseClientDetails
+     * @param openClient
      */
     @CacheEvict(value = {"apps"}, key = "'client:'+#baseClientDetails.clientId")
     @Override
-    public BaseClientDetails updateAppClientInfo(BaseClientDetails baseClientDetails) {
-        BaseApp app = getAppInfo(baseClientDetails.getClientId());
+    public void updateAppClientInfo(OpenClient openClient) {
+        BaseApp app = getAppInfo(openClient.getClientId());
         Map info = BeanConvertUtils.objectToMap(app);
-        baseClientDetails.setAdditionalInformation(info);
-        jdbcClientDetailsService.updateClientDetails(baseClientDetails);
-        return baseClientDetails;
+        openClient.setAdditionalInformation(info);
+        jdbcClientDetailsService.updateClientDetails(openClient);
     }
 
 

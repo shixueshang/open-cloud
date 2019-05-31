@@ -17,10 +17,14 @@ import com.opencloud.common.exception.OpenException;
 import com.opencloud.common.mybatis.base.service.impl.BaseServiceImpl;
 import com.opencloud.common.security.Authority;
 import com.opencloud.common.security.SecurityConstants;
+import com.opencloud.common.utils.ReflectionUtils;
 import com.opencloud.common.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,8 +63,8 @@ public class BaseAuthorityServiceImpl extends BaseServiceImpl<BaseAuthorityMappe
     private BaseUserService baseUserService;
     @Autowired
     private BaseAppService baseAppService;
-
-    private final static String SEPARATOR = "_";
+    @Autowired
+    private RedisTokenStore redisTokenStore;
 
     @Value("${spring.application.name}")
     private String DEFAULT_SERVICE_ID;
@@ -73,24 +77,8 @@ public class BaseAuthorityServiceImpl extends BaseServiceImpl<BaseAuthorityMappe
     @Override
     public List<AuthorityAccess> findAuthorityAccess() {
         List<AuthorityAccess> list = Lists.newArrayList();
-        // 已授权应用权限
-        List<AuthorityAccess> appList = baseAuthorityMapper.selectAllAuthorityApp();
-        // 已授权角色权限
-        List<AuthorityAccess> roleList = baseAuthorityMapper.selectAllAuthorityRole();
-        // 已授权用户权限
-        List<AuthorityAccess> userList = baseAuthorityMapper.selectAllAuthorityUser();
         // 已授权资源权限
         List<AuthorityAccess> resourceList = baseAuthorityMapper.selectAllAuthorityResource();
-
-        if (appList != null) {
-            list.addAll(appList);
-        }
-        if (appList != null) {
-            list.addAll(roleList);
-        }
-        if (appList != null) {
-            list.addAll(userList);
-        }
         if (resourceList != null) {
             list.addAll(resourceList);
         }
@@ -389,14 +377,30 @@ public class BaseAuthorityServiceImpl extends BaseServiceImpl<BaseAuthorityMappe
         QueryWrapper<BaseAuthorityApp> appQueryWrapper = new QueryWrapper();
         appQueryWrapper.lambda().eq(BaseAuthorityApp::getAppId, appId);
         baseAuthorityAppMapper.delete(appQueryWrapper);
-        BaseAuthorityApp authority = null;
+        BaseAuthorityApp authorityApp = null;
         if (authorityIds != null && authorityIds.length > 0) {
             for (String id : authorityIds) {
-                authority = new BaseAuthorityApp();
-                authority.setAuthorityId(Long.parseLong(id));
-                authority.setAppId(appId);
-                authority.setExpireTime(expireTime);
-                baseAuthorityAppMapper.insert(authority);
+                authorityApp = new BaseAuthorityApp();
+                authorityApp.setAuthorityId(Long.parseLong(id));
+                authorityApp.setAppId(appId);
+                authorityApp.setExpireTime(expireTime);
+                baseAuthorityAppMapper.insert(authorityApp);
+
+            }
+        }
+        // 获取应用最新的权限列表
+        List<Authority> authorities = findAuthorityByApp(appId);
+        // 动态更新客户端生成的token
+        Collection<OAuth2AccessToken> accessTokens = redisTokenStore.findTokensByClientId(appId);
+        if (accessTokens != null && !accessTokens.isEmpty()) {
+            Iterator<OAuth2AccessToken> iterator = accessTokens.iterator();
+            while (iterator.hasNext()) {
+                OAuth2AccessToken token = iterator.next();
+                OAuth2Authentication oAuth2Authentication = redisTokenStore.readAuthentication(token);
+                // 由于没有set方法,使用反射机制强制赋值
+                ReflectionUtils.setFieldValue(oAuth2Authentication, "authorities", authorities);
+                // 重新保存
+                redisTokenStore.storeAccessToken(token, oAuth2Authentication);
             }
         }
     }
@@ -460,9 +464,6 @@ public class BaseAuthorityServiceImpl extends BaseServiceImpl<BaseAuthorityMappe
     @Override
     public List<Authority> findAuthorityByApp(String appId) {
         List<Authority> authorities = Lists.newArrayList();
-        // 添加客户端默认标识,APP_appId
-        Authority authority = new Authority(appId, SecurityConstants.AUTHORITY_PREFIX_APP + appId, null, "app");
-        authorities.add(authority);
         List<Authority> list = baseAuthorityAppMapper.selectAuthorityByApp(appId);
         if (list != null) {
             authorities.addAll(list);

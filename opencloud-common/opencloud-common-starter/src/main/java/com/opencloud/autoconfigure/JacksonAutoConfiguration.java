@@ -14,6 +14,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -31,8 +32,8 @@ public class JacksonAutoConfiguration {
         WriteNullListAsEmpty,
         WriteNullStringAsEmpty,
         WriteNullNumberAsZero,
-        WriteNullBooleanAsFalse;
-
+        WriteNullBooleanAsFalse,
+        WriteNullMapAsEmpty;
         public final int mask;
 
         SerializerFeature() {
@@ -45,6 +46,7 @@ public class JacksonAutoConfiguration {
         final private JsonSerializer<Object> nullNumberJsonSerializer;
         final private JsonSerializer<Object> nullListJsonSerializer;
         final private JsonSerializer<Object> nullStringJsonSerializer;
+        final private JsonSerializer<Object> nullMapJsonSerializer;
 
         FastJsonSerializerFeatureCompatibleForJackson(SerializerFeature... features) {
             int config = 0;
@@ -55,6 +57,7 @@ public class JacksonAutoConfiguration {
             nullNumberJsonSerializer = (config & WriteNullNumberAsZero.mask) != 0 ? new NullNumberSerializer() : null;
             nullListJsonSerializer = (config & WriteNullListAsEmpty.mask) != 0 ? new NullListJsonSerializer() : null;
             nullStringJsonSerializer = (config & WriteNullStringAsEmpty.mask) != 0 ? new NullStringSerializer() : null;
+            nullMapJsonSerializer =(config & WriteNullMapAsEmpty.mask) != 0 ? new NullMapSerializer() : null;
         }
 
         @Override
@@ -68,8 +71,10 @@ public class JacksonAutoConfiguration {
                     writer.assignNullSerializer(nullNumberJsonSerializer);
                 } else if (Boolean.class.equals(rawClass)) {
                     writer.assignNullSerializer(nullBooleanJsonSerializer);
-                } else if (String.class.equals(rawClass)) {
+                } else if (String.class.equals(rawClass) || Date.class.equals(rawClass)) {
                     writer.assignNullSerializer(nullStringJsonSerializer);
+                }else if(!Date.class.equals(rawClass)){
+                    writer.assignNullSerializer(nullMapJsonSerializer);
                 }
             }
             return beanProperties;
@@ -103,6 +108,14 @@ public class JacksonAutoConfiguration {
                 jgen.writeString("");
             }
         }
+
+        private static class NullMapSerializer extends JsonSerializer<Object> {
+            @Override
+            public void serialize(Object value, JsonGenerator jgen, SerializerProvider provider) throws IOException {
+                jgen.writeStartObject();
+                jgen.writeEndObject();
+            }
+        }
     }
 
     @Bean
@@ -114,6 +127,10 @@ public class JacksonAutoConfiguration {
         objectMapper.setTimeZone(TimeZone.getTimeZone("GMT+8"));
         // 排序key
         objectMapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
+        //忽略空bean转json错误
+        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        //忽略在json字符串中存在，在java类中不存在字段，防止错误。
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         /**
          * 序列换成json时,将所有的long变成string
          * js中long过长精度丢失
@@ -131,7 +148,8 @@ public class JacksonAutoConfiguration {
                 WriteNullListAsEmpty,
                 WriteNullStringAsEmpty,
                 WriteNullNumberAsZero,
-                WriteNullBooleanAsFalse
+                WriteNullBooleanAsFalse,
+                WriteNullMapAsEmpty
         };
         objectMapper.setSerializerFactory(objectMapper.getSerializerFactory().withSerializerModifier(new FastJsonSerializerFeatureCompatibleForJackson(features)));
         return objectMapper;

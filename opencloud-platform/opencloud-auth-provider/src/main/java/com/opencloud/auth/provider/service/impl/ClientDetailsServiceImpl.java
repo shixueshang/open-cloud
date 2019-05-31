@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.ClientRegistrationException;
-import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,9 +24,12 @@ public class ClientDetailsServiceImpl implements ClientDetailsService {
 
     @Override
     public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
-        BaseClientDetails details = baseAppRemoteService.getAppClientInfo(clientId).getData();
-        if(details!=null && !"1".equals(details.getAdditionalInformation().get("status").toString())){
-            throw new ClientRegistrationException("客户端已被禁用");
+        ClientDetails details = baseAppRemoteService.getAppClientInfo(clientId).getData();
+        if (details != null && details.getAdditionalInformation() != null) {
+            String status = details.getAdditionalInformation().getOrDefault("status", "0").toString();
+            if(!"1".equals(status)){
+                throw new ClientRegistrationException("客户端已被禁用");
+            }
         }
         return details;
     }

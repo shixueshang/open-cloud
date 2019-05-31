@@ -131,9 +131,6 @@ public class BaseUserServiceImpl extends BaseServiceImpl<BaseUserMapper, BaseUse
     public UserInfo getUserWithAuthoritiesById(Long userId) {
         // 用户权限列表
         List<Authority> authorities = Lists.newArrayList();
-        // 默认用户ID作为权限标识
-        Authority defaultAuthority = new Authority(userId.toString(), SecurityConstants.AUTHORITY_PREFIX_USER + userId, null, "user");
-        authorities.add(defaultAuthority);
         // 用户角色列表
         List<Map> roles = Lists.newArrayList();
         List<BaseRole> rolesList = roleService.getUserRoles(userId);

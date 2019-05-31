@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.opencloud.base.client.model.entity.BaseApp;
 import com.opencloud.common.model.PageParams;
 import com.opencloud.common.mybatis.base.service.IBaseService;
-import org.springframework.security.oauth2.provider.client.BaseClientDetails;
+import com.opencloud.common.security.OpenClient;
 
 /**
  * 应用信息管理
@@ -35,15 +35,15 @@ public interface BaseAppService extends IBaseService<BaseApp> {
      * @param appId
      * @return
      */
-    BaseClientDetails getAppClientInfo(String appId);
+    OpenClient getAppClientInfo(String appId);
 
 
     /**
      * 更新应用开发新型
      *
-     * @param baseClientDetails
+     * @param openClient
      */
-    BaseClientDetails updateAppClientInfo(BaseClientDetails baseClientDetails);
+    void updateAppClientInfo(OpenClient client);
 
     /**
      * 添加应用

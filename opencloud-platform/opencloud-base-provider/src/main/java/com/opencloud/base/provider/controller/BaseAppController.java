@@ -6,13 +6,13 @@ import com.opencloud.base.client.model.entity.BaseApp;
 import com.opencloud.base.provider.service.BaseAppService;
 import com.opencloud.common.model.PageParams;
 import com.opencloud.common.model.ResultBody;
+import com.opencloud.common.security.OpenClient;
 import com.opencloud.common.security.http.OpenRestTemplate;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -73,10 +73,10 @@ public class BaseAppController implements BaseAppRemoteApi {
     })
     @GetMapping("/app/client/{appId}/info")
     @Override
-    public ResultBody<BaseClientDetails> getAppClientInfo(
+    public ResultBody<OpenClient> getAppClientInfo(
             @PathVariable("appId") String appId
     ) {
-        BaseClientDetails clientInfo = baseAppService.getAppClientInfo(appId);
+        OpenClient clientInfo = baseAppService.getAppClientInfo(appId);
         return ResultBody.ok().data(clientInfo);
     }
 
@@ -235,7 +235,7 @@ public class BaseAppController implements BaseAppRemoteApi {
             @RequestParam(value = "refreshTokenValidity", required = true) Integer refreshTokenValidity,
             @RequestParam(value = "autoApproveScopes", required = false) String autoApproveScopes
     ) {
-        BaseClientDetails client = new BaseClientDetails(appId, "", scopes, grantTypes, "", redirectUrls);
+        OpenClient client = new OpenClient(appId, "", scopes, grantTypes, "", redirectUrls);
         client.setAccessTokenValiditySeconds(accessTokenValidity);
         client.setRefreshTokenValiditySeconds(refreshTokenValidity);
         client.setAutoApproveScopes(autoApproveScopes != null ? Arrays.asList(autoApproveScopes.split(",")) : null);

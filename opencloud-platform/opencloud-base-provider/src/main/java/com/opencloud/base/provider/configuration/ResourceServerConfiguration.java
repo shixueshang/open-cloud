@@ -1,9 +1,9 @@
 package com.opencloud.base.provider.configuration;
 
-import com.opencloud.common.security.OpenHelper;
 import com.opencloud.common.constants.CommonConstants;
 import com.opencloud.common.exception.OpenAccessDeniedHandler;
 import com.opencloud.common.exception.OpenAuthenticationEntryPoint;
+import com.opencloud.common.security.OpenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.context.annotation.Bean;
@@ -16,12 +16,14 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
+import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
 import javax.sql.DataSource;
 
 /**
  * oauth2资源服务器配置
  * 如过新建一个资源服务器，直接复制该类到项目中.
+ *
  * @author: liuyadu
  * @date: 2018/10/23 10:31
  * @description:
@@ -35,6 +37,12 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     private DataSource dataSource;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Bean
+    public RedisTokenStore redisTokenStore() {
+        return new RedisTokenStore(redisConnectionFactory);
+    }
+
 
     @Bean
     public JdbcClientDetailsService clientDetailsService() {
@@ -71,7 +79,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                         "/user/info",
                         "/user/appInfo",
                         "/gateway/api/**"
-                        ).permitAll()
+                ).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 //认证鉴权错误处理,为了统一异常处理。每个资源服务器都应该加上。

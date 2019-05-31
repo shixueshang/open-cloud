@@ -1,6 +1,7 @@
 package com.opencloud.common.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.util.Assert;
 
@@ -8,6 +9,7 @@ import java.util.Date;
 
 /**
  * 自定义已授权权限标识
+ *
  * @author liuyadu
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -32,6 +34,7 @@ public final class Authority implements GrantedAuthority {
      */
     private String owner;
 
+    @JsonProperty("isExpired")
     public Boolean getIsExpired() {
         if (expireTime != null && System.currentTimeMillis() > expireTime.getTime()) {
             return true;

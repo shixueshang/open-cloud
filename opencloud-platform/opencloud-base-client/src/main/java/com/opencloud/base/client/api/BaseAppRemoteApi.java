@@ -2,7 +2,7 @@ package com.opencloud.base.client.api;
 
 import com.opencloud.base.client.model.entity.BaseApp;
 import com.opencloud.common.model.ResultBody;
-import org.springframework.security.oauth2.provider.client.BaseClientDetails;
+import com.opencloud.common.security.OpenClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -26,5 +26,5 @@ public interface BaseAppRemoteApi {
      * @return
      */
     @GetMapping("/app/client/{appId}/info")
-    ResultBody<BaseClientDetails> getAppClientInfo(@PathVariable("appId") String appId);
+    ResultBody<OpenClient> getAppClientInfo(@PathVariable("appId") String appId);
 }
