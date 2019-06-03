@@ -68,16 +68,15 @@ public class GatewayRouteServiceImpl extends BaseServiceImpl<GatewayRouteMapper,
      * @param route
      */
     @Override
-    public GatewayRoute addRoute(GatewayRoute route) {
+    public void addRoute(GatewayRoute route) {
         if (StringUtils.isBlank(route.getPath())) {
             throw new OpenAlertException(String.format("path不能为空!"));
         }
-        if (isExist(route.getPath())) {
-            throw new OpenAlertException(String.format("path已存在!"));
+        if (isExist(route.getRouteName())) {
+            throw new OpenAlertException(String.format("路由名称已存在!"));
         }
         route.setIsPersist(0);
         save(route);
-        return route;
     }
 
     /**
@@ -86,7 +85,7 @@ public class GatewayRouteServiceImpl extends BaseServiceImpl<GatewayRouteMapper,
      * @param route
      */
     @Override
-    public GatewayRoute updateRoute(GatewayRoute route) {
+    public void updateRoute(GatewayRoute route) {
         if (StringUtils.isBlank(route.getPath())) {
             throw new OpenAlertException(String.format("path不能为空"));
         }
@@ -97,14 +96,13 @@ public class GatewayRouteServiceImpl extends BaseServiceImpl<GatewayRouteMapper,
         if (saved != null && saved.getIsPersist().equals(BaseConstants.ENABLED)) {
             throw new OpenAlertException(String.format("保留数据,不允许修改"));
         }
-        if (!saved.getPath().equals(route.getPath())) {
+        if (!saved.getRouteName().equals(route.getRouteName())) {
             // 和原来不一致重新检查唯一性
-            if (isExist(route.getPath())) {
-                throw new OpenAlertException("path已存在!");
+            if (isExist(route.getRouteName())) {
+                throw new OpenAlertException("路由名称已存在!");
             }
         }
         updateById(route);
-        return route;
     }
 
     /**
@@ -124,12 +122,12 @@ public class GatewayRouteServiceImpl extends BaseServiceImpl<GatewayRouteMapper,
     /**
      * 查询地址是否存在
      *
-     * @param path
+     * @param routeName
      */
     @Override
-    public Boolean isExist(String path) {
+    public Boolean isExist(String routeName) {
         QueryWrapper<GatewayRoute> queryWrapper = new QueryWrapper();
-        queryWrapper.lambda().eq(GatewayRoute::getPath, path);
+        queryWrapper.lambda().eq(GatewayRoute::getRouteName, routeName);
         int count = count(queryWrapper);
         return count > 0;
     }

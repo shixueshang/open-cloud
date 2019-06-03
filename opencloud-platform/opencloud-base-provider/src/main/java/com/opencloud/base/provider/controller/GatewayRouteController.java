@@ -98,14 +98,10 @@ public class GatewayRouteController {
         route.setStripPrefix(stripPrefix);
         route.setStatus(status);
         route.setRouteName(routeName);
-        Long routeId = null;
-        GatewayRoute result = gatewayRouteService.addRoute(route);
-        if (result != null) {
-            routeId = result.getRouteId();
-            // 刷新网关
-            openRestTemplate.refreshGateway();
-        }
-        return ResultBody.ok().data(routeId);
+        gatewayRouteService.addRoute(route);
+        // 刷新网关
+        openRestTemplate.refreshGateway();
+        return ResultBody.ok();
     }
 
     /**

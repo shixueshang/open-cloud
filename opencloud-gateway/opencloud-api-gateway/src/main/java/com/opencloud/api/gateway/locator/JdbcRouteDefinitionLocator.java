@@ -103,7 +103,7 @@ public class JdbcRouteDefinitionLocator implements RouteDefinitionLocator, Appli
                     RouteDefinition definition = new RouteDefinition();
                     List<PredicateDefinition> predicates = Lists.newArrayList();
                     List<FilterDefinition> filters = Lists.newArrayList();
-                    definition.setId(gatewayRoute.getRouteId().toString());
+                    definition.setId(gatewayRoute.getRouteName());
 
                     // 路由条件
                     // 路由地址

@@ -109,12 +109,12 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
      *
      * @return
      */
-    protected String getFullPath(String serviceId, String path) {
+    protected String getFullPath(String routeId, String path) {
         List<Route> routes = zuulRoutesLocator.getRoutes();
         if (routes != null && !routes.isEmpty()) {
             for (Route route : routes) {
                 // 服务ID相同
-                if (route.getId().equals(serviceId)) {
+                if (route.getId().equals(routeId)) {
                     return route.getPrefix().concat(path.startsWith("/") ? path : "/" + path);
                 }
             }

@@ -102,12 +102,12 @@ public class ApiAuthorizationManager {
         List<AuthorityAccess> authorityList = accessLocator.getAuthorityAccesses();
         if (authorityList != null) {
             Iterator<AuthorityAccess> it2 = authorityList.iterator();
-            while (it.hasNext()) {
+            while (it2.hasNext()) {
                 AuthorityAccess auth = it2.next();
                 Boolean isAuth = auth.getIsAuth() != null && auth.getIsAuth().equals(1) ? true : false;
                 String fullPath = auth.getPath();
                 // 无需认证,返回true
-                if (StringUtils.isNotBlank(fullPath) && pathMatch.match(fullPath, requestPath) && isAuth) {
+                if (StringUtils.isNotBlank(fullPath) && pathMatch.match(fullPath, requestPath) && !isAuth) {
                     return true;
                 }
             }

@@ -112,7 +112,7 @@ public class JdbcRouteLocator extends SimpleRouteLocator implements ApplicationL
                     ZuulProperties.ZuulRoute zuulRoute = new ZuulProperties.ZuulRoute();
 
                     BeanUtils.copyProperties(result, zuulRoute);
-                    zuulRoute.setId(result.getServiceId());
+                    zuulRoute.setId(result.getRouteName());
                     routes.put(zuulRoute.getPath(), zuulRoute);
                 }
             }

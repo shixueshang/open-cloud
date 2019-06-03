@@ -41,14 +41,14 @@ public interface GatewayRouteService extends IBaseService<GatewayRoute> {
      *
      * @param route
      */
-    GatewayRoute addRoute(GatewayRoute route);
+    void addRoute(GatewayRoute route);
 
     /**
      * 更新路由
      *
      * @param route
      */
-    GatewayRoute updateRoute(GatewayRoute route);
+    void updateRoute(GatewayRoute route);
 
     /**
      * 删除路由
@@ -60,8 +60,8 @@ public interface GatewayRouteService extends IBaseService<GatewayRoute> {
     /**
      * 是否存在
      *
-     * @param path
+     * @param routeName
      * @return
      */
-    Boolean isExist(String path);
+    Boolean isExist(String routeName);
 }

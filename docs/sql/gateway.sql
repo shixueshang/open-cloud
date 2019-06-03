@@ -160,10 +160,10 @@ CREATE TABLE `gateway_route` (
 -- ----------------------------
 -- Records of gateway_route
 -- ----------------------------
-INSERT INTO `gateway_route` VALUES ('556587504019439616', '平台基础支撑服务', '/base/**', 'opencloud-base-provider', '', '0', '0', '1', '1');
-INSERT INTO `gateway_route` VALUES ('556595619813130240', '平台统一认证服务', '/auth/**', 'opencloud-auth-provider', '', '0', '0', '1', '1');
-INSERT INTO `gateway_route` VALUES ('556595914240688128', '平台消息服务', '/msg/**', 'opencloud-msg-provider', '', '0', '0', '1', '1');
-INSERT INTO `gateway_route` VALUES ('556595914240688139', '平台任务调度服务', '/scheduler/**', 'opencloud-scheduler-provider', '', '0', '0', '1', '1');
-INSERT INTO `gateway_route` VALUES ('556595914240688145', '平台工作流服务', '/bpm/**', 'opencloud-bpm-provider', '', '0', '0', '1', '1');
+INSERT INTO `gateway_route` VALUES ('556587504019439616', 'opencloud-base-provider', '/base/**', 'opencloud-base-provider', '', '0', '0', '1', '1');
+INSERT INTO `gateway_route` VALUES ('556595619813130240', 'opencloud-auth-provider', '/auth/**', 'opencloud-auth-provider', '', '0', '0', '1', '1');
+INSERT INTO `gateway_route` VALUES ('556595914240688128', 'opencloud-msg-provider', '/msg/**', 'opencloud-msg-provider', '', '0', '0', '1', '1');
+INSERT INTO `gateway_route` VALUES ('556595914240688139', 'opencloud-scheduler-provider', '/scheduler/**', 'opencloud-scheduler-provider', '', '0', '0', '1', '1');
+INSERT INTO `gateway_route` VALUES ('556595914240688145', 'opencloud-bpm-provider', '/bpm/**', 'opencloud-bpm-provider', '', '0', '0', '1', '1');
 SET FOREIGN_KEY_CHECKS=1;
 
