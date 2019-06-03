@@ -70,42 +70,42 @@ public class AccessLogService {
     }
 
     public void sendLog(HttpServletRequest request, HttpServletResponse response, Exception ex) {
+        int httpStatus = response.getStatus();
+        String requestPath = request.getRequestURI();
+        String method = request.getMethod();
+        Map headers = WebUtils.getHttpHeaders(request);
+        Map data = WebUtils.getParameterMap(request);
+        Object serviceId = request.getAttribute(FilterConstants.SERVICE_ID_KEY);
+        String ip = WebUtils.getRemoteAddress(request);
+        String userAgent = request.getHeader(HttpHeaders.USER_AGENT);
+        Object requestTime = request.getAttribute("requestTime");
+        String error = null;
+        if (ex != null) {
+            error = ex.getMessage();
+        }
+        if (isIgnore(requestPath)) {
+            return;
+        }
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("requestTime", requestTime);
+        map.put("serviceId", serviceId == null ? defaultServiceId : serviceId);
+        map.put("httpStatus", httpStatus);
+        map.put("headers", JSONObject.toJSON(headers));
+        map.put("path", requestPath);
+        map.put("params", JSONObject.toJSON(data));
+        map.put("ip", ip);
+        map.put("method", method);
+        map.put("userAgent", userAgent);
+        map.put("responseTime", new Date());
+        map.put("error", error);
+        OpenUser user = OpenHelper.getUser();
+        if (user != null) {
+            map.put("authentication", JSONObject.toJSONString(user));
+        }
         executorService.submit(new Runnable() {
             @Override
             public void run() {
                 try {
-                    int httpStatus = response.getStatus();
-                    String requestPath = request.getRequestURI();
-                    String method = request.getMethod();
-                    Map headers = WebUtils.getHttpHeaders(request);
-                    Map data = WebUtils.getParameterMap(request);
-                    Object serviceId = request.getAttribute(FilterConstants.SERVICE_ID_KEY);
-                    String ip = WebUtils.getRemoteAddress(request);
-                    String userAgent = request.getHeader(HttpHeaders.USER_AGENT);
-                    Object requestTime = request.getAttribute("requestTime");
-                    String error = null;
-                    if (ex != null) {
-                        error = ex.getMessage();
-                    }
-                    if (isIgnore(requestPath)) {
-                        return;
-                    }
-                    Map<String, Object> map = Maps.newHashMap();
-                    map.put("requestTime", requestTime);
-                    map.put("serviceId", serviceId == null ? defaultServiceId : serviceId);
-                    map.put("httpStatus", httpStatus);
-                    map.put("headers", JSONObject.toJSON(headers));
-                    map.put("path", requestPath);
-                    map.put("params", JSONObject.toJSON(data));
-                    map.put("ip", ip);
-                    map.put("method", method);
-                    map.put("userAgent", userAgent);
-                    map.put("responseTime", new Date());
-                    map.put("error", error);
-                    OpenUser user = OpenHelper.getUser();
-                    if (user != null) {
-                        map.put("authentication", JSONObject.toJSONString(user));
-                    }
                     amqpTemplate.convertAndSend(MqConstants.QUEUE_ACCESS_LOGS, map);
                 } catch (Exception e) {
                     log.error("access logs save error:{}", e);
