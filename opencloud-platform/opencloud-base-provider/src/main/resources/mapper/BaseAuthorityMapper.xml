@@ -103,7 +103,7 @@
         FROM
         base_authority AS a
        LEFT JOIN base_api AS api ON a.api_id = api.api_id
-       LEFT JOIN gateway_route AS route ON route.service_id = api.service_id
+       LEFT JOIN gateway_route AS route ON route.route_name = api.service_id
         <where>
             <if test="status!=null">
                 AND api.status = #{status}
@@ -142,13 +142,13 @@
             m.path,
             m.service_id,
             ar.authority_id,
-            route.service_id AS prefix
+            route.path AS prefix
         FROM
             base_authority AS a
                LEFT JOIN base_authority_role AS ar ON ar.authority_id = a.authority_id
                LEFT JOIN base_role AS r ON ar.role_id = r.role_id
                LEFT JOIN base_menu AS m ON a.menu_id = m.menu_id
-               LEFT JOIN gateway_route AS route ON m.service_id = route.service_id
+               LEFT JOIN gateway_route AS route ON m.service_id = route.route_name
         WHERE
             a.menu_id != ''
             AND m.path != ''
@@ -171,7 +171,7 @@
                LEFT JOIN base_authority_action AS aa ON aa.action_id = act.action_id
                LEFT JOIN base_authority AS a2 ON aa.authority_id = a2.authority_id
                LEFT JOIN base_api AS api ON a2.api_id = api.api_id
-               LEFT JOIN gateway_route AS route ON route.service_id = api.service_id
+               LEFT JOIN gateway_route AS route ON route.route_name = api.service_id
         WHERE
             a.action_id != ''
             AND r.`status` = 1
@@ -187,13 +187,13 @@
             m.path,
             m.service_id,
             au.authority_id,
-            route.service_id AS prefix
+            route.path AS prefix
         FROM
             base_authority AS a
                LEFT JOIN base_authority_user AS au ON au.authority_id = a.authority_id
                LEFT JOIN base_user AS u ON au.user_id = u.user_id
                LEFT JOIN base_menu AS m ON a.menu_id = m.menu_id
-               LEFT JOIN gateway_route AS route ON m.service_id = route.service_id
+               LEFT JOIN gateway_route AS route ON m.service_id = route.route_name
         WHERE
             a.menu_id != ''
             AND m.path != ''
@@ -216,7 +216,7 @@
                LEFT JOIN base_authority_action AS aa ON aa.action_id = act.action_id
                LEFT JOIN base_authority AS a2 ON aa.authority_id = a2.authority_id
                LEFT JOIN base_api AS api ON a2.api_id = api.api_id
-               LEFT JOIN gateway_route AS route ON route.service_id = api.service_id
+               LEFT JOIN gateway_route AS route ON route.route_name = api.service_id
         WHERE
             a.action_id != ''
             AND u.`status` = 1
@@ -238,7 +238,7 @@
                LEFT JOIN base_authority_app AS aa ON aa.authority_id = a.authority_id
                LEFT JOIN base_app AS app ON aa.app_id = app.app_id
                LEFT JOIN base_api AS api ON api.api_id = a.api_id
-               LEFT JOIN gateway_route AS route ON api.service_id = route.service_id
+               LEFT JOIN gateway_route AS route ON api.service_id = route.route_name
         WHERE
             a.api_id != ''
             AND app.`status` = 1
@@ -257,7 +257,7 @@
         FROM
             base_authority AS a
         LEFT JOIN base_menu AS menu ON a.menu_id = menu.menu_id
-        LEFT JOIN gateway_route AS route ON route.service_id = menu.service_id
+        LEFT JOIN gateway_route AS route ON route.route_name = menu.service_id
         WHERE
             menu.`status` = 1
         UNION ALL
@@ -271,7 +271,7 @@
             FROM
                 base_authority AS a
             LEFT JOIN base_api AS api ON a.api_id = api.api_id
-            LEFT JOIN gateway_route AS route ON route.service_id = api.service_id
+            LEFT JOIN gateway_route AS route ON route.route_name = api.service_id
             WHERE
                 api.`status` = 1
             UNION ALL
@@ -287,7 +287,7 @@
                 LEFT JOIN base_authority AS a ON a.action_id = ac.action_id
                 LEFT JOIN base_authority AS a2 ON ac.authority_id = a2.authority_id
                 LEFT JOIN base_api AS api ON a2.api_id = api.api_id
-                LEFT JOIN gateway_route AS route ON route.service_id = api.service_id
+                LEFT JOIN gateway_route AS route ON route.route_name = api.service_id
                 LEFT JOIN base_action AS action ON ac.action_id = action.action_id
                 WHERE
                     action.`status` = 1
@@ -305,7 +305,7 @@
                     LEFT JOIN base_authority_app AS aa ON aa.authority_id = a.authority_id
                     LEFT JOIN base_app AS app ON app.app_id = aa.app_id
                     LEFT JOIN base_api AS api ON a.api_id = api.api_id
-                    LEFT JOIN gateway_route AS route ON route.service_id = api.service_id
+                    LEFT JOIN gateway_route AS route ON route.route_name = api.service_id
                     WHERE
                         app.`status` = 1
                     AND api.`status` = 1
