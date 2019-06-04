@@ -67,13 +67,6 @@ zuul:
     key-prefix: cloud_rate_limit
     repository: REDIS
     add-response-headers: false
-    default-policy-list:
-     - limit: 10 #可选 - 每个刷新时间窗口对应的请求数量限制
-       quota: 1000 #可选-  每个刷新时间窗口对应的请求时间限制（秒）
-       refresh-interval: 60 # 刷新时间窗口的时间，默认值 (秒)
-       type: #可选 限流方式
-        - url=/**
-
   semaphore:
     max-semaphores: 1000
   sensitive-headers: ''
