@@ -6,9 +6,11 @@ import com.opencloud.base.client.model.entity.GatewayRoute;
 import com.opencloud.common.event.GatewayRemoteRefreshRouteEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.cloud.netflix.zuul.RoutesRefreshedEvent;
 import org.springframework.cloud.netflix.zuul.filters.SimpleRouteLocator;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties.ZuulRoute;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -33,11 +35,20 @@ public class JdbcRouteLocator extends SimpleRouteLocator implements ApplicationL
     private JdbcTemplate jdbcTemplate;
     private ZuulProperties properties;
     private List<GatewayRoute> routeList;
+    private ApplicationEventPublisher publisher;
 
-    public JdbcRouteLocator(String servletPath, ZuulProperties properties, JdbcTemplate jdbcTemplate) {
+    public JdbcRouteLocator(String servletPath, ZuulProperties properties, JdbcTemplate jdbcTemplate,ApplicationEventPublisher publisher) {
         super(servletPath, properties);
         this.properties = properties;
         this.jdbcTemplate = jdbcTemplate;
+        this.publisher = publisher;
+    }
+
+    @Override
+    public void doRefresh() {
+        super.doRefresh();
+        // 发布本地刷新事件, 更新相关本地缓存, 解决动态加载完,新路由映射无效的问题
+        publisher.publishEvent(new RoutesRefreshedEvent(this));
     }
 
     /**
@@ -68,11 +79,6 @@ public class JdbcRouteLocator extends SimpleRouteLocator implements ApplicationL
             values.put(path, entry.getValue());
         }
         return values;
-    }
-
-    @Override
-    public void doRefresh() {
-        super.doRefresh();
     }
 
     /**
