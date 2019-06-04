@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.opencloud.api.gateway.service.feign.BaseAuthorityRemoteService;
 import com.opencloud.api.gateway.service.feign.GatewayRemoteService;
-import com.opencloud.base.client.model.AuthorityAccess;
+import com.opencloud.base.client.model.AuthorityResource;
 import com.opencloud.base.client.model.IpLimitApi;
 import com.opencloud.common.event.GatewayRemoteRefreshRouteEvent;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +49,7 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
     public static final int PERIOD_DAY_TTL = 2 * 3600 * 24 + 10;
 
 
-    private List<AuthorityAccess> accessAuthorities;
+    private List<AuthorityResource> authorityResources;
 
     private List<IpLimitApi> ipBlacks;
 
@@ -72,7 +72,7 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
 
     public ApiResourceLocator() {
         allConfigAttributes = Maps.newHashMap();
-        accessAuthorities = cache.put("accessAuthorities", new ArrayList<>());
+        authorityResources = cache.put("authorityResources", new ArrayList<>());
         ipBlacks = cache.put("ipBlacks", new ArrayList<>());
         ipWhites = cache.put("ipWhites", new ArrayList<>());
     }
@@ -129,14 +129,14 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
      */
     public void loadAuthority() {
         allConfigAttributes = Maps.newHashMap();
-        accessAuthorities = Lists.newArrayList();
+        authorityResources = Lists.newArrayList();
         Collection<ConfigAttribute> array;
         ConfigAttribute cfg;
         try {
             // 查询所有接口
-            accessAuthorities = baseAuthorityRemoteService.findAuthorityAccess().getData();
-            if (accessAuthorities != null) {
-                for (AuthorityAccess item : accessAuthorities) {
+            authorityResources = baseAuthorityRemoteService.findAuthorityResource().getData();
+            if (authorityResources != null) {
+                for (AuthorityResource item : authorityResources) {
                     String path = item.getPath();
                     if (path == null) {
                         continue;
@@ -153,7 +153,7 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
                     }
                     allConfigAttributes.put(fullPath, array);
                 }
-                log.info("=============加载动态权限:{}==============", accessAuthorities.size());
+                log.info("=============加载动态权限:{}==============", authorityResources.size());
             }
         } catch (Exception e) {
             log.error("加载动态权限错误:{}", e.getMessage());
@@ -218,12 +218,12 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
     }
 
 
-    public List<AuthorityAccess> getAccessAuthorities() {
-        return accessAuthorities;
+    public List<AuthorityResource> getAuthorityResources() {
+        return authorityResources;
     }
 
-    public void setAccessAuthorities(List<AuthorityAccess> accessAuthorities) {
-        this.accessAuthorities = accessAuthorities;
+    public void setAuthorityResources(List<AuthorityResource> authorityResources) {
+        this.authorityResources = authorityResources;
     }
 
     public List<IpLimitApi> getIpBlacks() {

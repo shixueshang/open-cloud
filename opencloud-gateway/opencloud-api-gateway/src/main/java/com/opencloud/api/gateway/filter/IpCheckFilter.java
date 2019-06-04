@@ -35,6 +35,14 @@ public class IpCheckFilter implements WebFilter {
         ServerHttpResponse response = exchange.getResponse();
         String requestPath = request.getURI().getPath();
         String remoteIpAddress = ReactiveWebUtils.getRemoteAddress(exchange);
+        String status = apiAccessManager.getResourceStatus(requestPath);
+        if ("0".equals(status)) {
+            // 禁用
+            return accessDeniedHandler.handle(exchange, new AccessDeniedException(ResultEnum.ACCESS_DENIED_DISABLED.getMessage()));
+        } else if ("2".equals(status)) {
+            // 维护中
+            return accessDeniedHandler.handle(exchange, new AccessDeniedException(ResultEnum.ACCESS_DENIED_UPDATING.getMessage()));
+        }
         // 1.ip黑名单检测
         boolean deny = apiAccessManager.matchIpBlacklist(requestPath, remoteIpAddress);
         if (deny) {

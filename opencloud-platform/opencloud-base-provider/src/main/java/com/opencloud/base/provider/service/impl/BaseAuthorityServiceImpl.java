@@ -5,7 +5,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.opencloud.base.client.constants.BaseConstants;
 import com.opencloud.base.client.constants.ResourceType;
-import com.opencloud.base.client.model.AuthorityAccess;
+import com.opencloud.base.client.model.AuthorityResource;
 import com.opencloud.base.client.model.AuthorityApi;
 import com.opencloud.base.client.model.AuthorityMenu;
 import com.opencloud.base.client.model.entity.*;
@@ -75,10 +75,10 @@ public class BaseAuthorityServiceImpl extends BaseServiceImpl<BaseAuthorityMappe
      * @return
      */
     @Override
-    public List<AuthorityAccess> findAuthorityAccess() {
-        List<AuthorityAccess> list = Lists.newArrayList();
+    public List<AuthorityResource> findAuthorityResource() {
+        List<AuthorityResource> list = Lists.newArrayList();
         // 已授权资源权限
-        List<AuthorityAccess> resourceList = baseAuthorityMapper.selectAllAuthorityResource();
+        List<AuthorityResource> resourceList = baseAuthorityMapper.selectAllAuthorityResource();
         if (resourceList != null) {
             list.addAll(resourceList);
         }

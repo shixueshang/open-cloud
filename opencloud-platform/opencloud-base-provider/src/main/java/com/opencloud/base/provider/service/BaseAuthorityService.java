@@ -1,7 +1,7 @@
 package com.opencloud.base.provider.service;
 
 import com.opencloud.base.client.constants.ResourceType;
-import com.opencloud.base.client.model.AuthorityAccess;
+import com.opencloud.base.client.model.AuthorityResource;
 import com.opencloud.base.client.model.AuthorityApi;
 import com.opencloud.base.client.model.AuthorityMenu;
 import com.opencloud.base.client.model.entity.BaseAuthority;
@@ -25,7 +25,7 @@ public interface BaseAuthorityService extends IBaseService<BaseAuthority> {
      *
      * @return
      */
-    List<AuthorityAccess> findAuthorityAccess();
+    List<AuthorityResource> findAuthorityResource();
 
     /**
      * 获取菜单权限列表

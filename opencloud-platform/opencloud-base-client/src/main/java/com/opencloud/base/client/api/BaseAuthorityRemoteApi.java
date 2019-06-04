@@ -1,6 +1,6 @@
 package com.opencloud.base.client.api;
 
-import com.opencloud.base.client.model.AuthorityAccess;
+import com.opencloud.base.client.model.AuthorityResource;
 import com.opencloud.base.client.model.AuthorityMenu;
 import com.opencloud.common.model.ResultBody;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +18,7 @@ public interface BaseAuthorityRemoteApi {
      * @return
      */
     @GetMapping("/authority/access")
-    ResultBody<List<AuthorityAccess>> findAuthorityAccess();
+    ResultBody<List<AuthorityResource>> findAuthorityResource();
 
     /**
      * 获取菜单权限列表

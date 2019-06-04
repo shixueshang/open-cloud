@@ -3,11 +3,11 @@ package com.opencloud.base.client.model;
 import java.io.Serializable;
 
 /**
- * 访问权限
+ * 资源权限
  *
  * @author liuyadu
  */
-public class AuthorityAccess implements Serializable {
+public class AuthorityResource implements Serializable {
     private static final long serialVersionUID = -320031660125425711L;
 
     /**
@@ -39,6 +39,11 @@ public class AuthorityAccess implements Serializable {
      * 前缀
      */
     private String prefix;
+
+    /**
+     * 资源状态
+     */
+    private Integer status;
 
     public Long getAuthorityId() {
         return authorityId;
@@ -86,5 +91,13 @@ public class AuthorityAccess implements Serializable {
 
     public void setPrefix(String prefix) {
         this.prefix = prefix;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

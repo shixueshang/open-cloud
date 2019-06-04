@@ -1,7 +1,7 @@
 package com.opencloud.base.provider.controller;
 
 import com.opencloud.base.client.api.BaseAuthorityRemoteApi;
-import com.opencloud.base.client.model.AuthorityAccess;
+import com.opencloud.base.client.model.AuthorityResource;
 import com.opencloud.base.client.model.AuthorityApi;
 import com.opencloud.base.client.model.AuthorityMenu;
 import com.opencloud.base.client.model.entity.BaseAuthorityAction;
@@ -51,8 +51,8 @@ public class BaseAuthorityController implements BaseAuthorityRemoteApi {
     @ApiOperation(value = "获取所有访问权限列表", notes = "获取所有访问权限列表")
     @GetMapping("/authority/access")
     @Override
-    public ResultBody<List<AuthorityAccess>> findAuthorityAccess() {
-        List<AuthorityAccess> result = baseAuthorityService.findAuthorityAccess();
+    public ResultBody<List<AuthorityResource>> findAuthorityResource() {
+        List<AuthorityResource> result = baseAuthorityService.findAuthorityResource();
         return ResultBody.ok().data(result);
     }
 

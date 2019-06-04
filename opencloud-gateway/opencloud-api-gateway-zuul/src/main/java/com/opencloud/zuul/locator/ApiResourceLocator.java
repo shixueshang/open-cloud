@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.config.properties.RateLimitProperties;
 import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.support.StringToMatchTypeConverter;
-import com.opencloud.base.client.model.AuthorityAccess;
+import com.opencloud.base.client.model.AuthorityResource;
 import com.opencloud.base.client.model.IpLimitApi;
 import com.opencloud.base.client.model.RateLimitApi;
 import com.opencloud.common.event.GatewayRemoteRefreshRouteEvent;
@@ -57,7 +57,7 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
     /**
      * 权限列表
      */
-    private List<AuthorityAccess> authorityAccesses;
+    private List<AuthorityResource> authorityResources;
 
     /**
      * IP黑名单
@@ -85,7 +85,7 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
         this.allConfigAttributes = Maps.newHashMap();
         this.ipBlacks = Lists.newArrayList();
         this.ipWhites = Lists.newArrayList();
-        this.authorityAccesses = Lists.newArrayList();
+        this.authorityResources = Lists.newArrayList();
         this.rateLimitApis = Lists.newArrayList();
         this.zuulRoutesLocator = zuulRoutesLocator;
         this.rateLimitProperties = rateLimitProperties;
@@ -131,9 +131,9 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
         HashMap<String, Collection<ConfigAttribute>> configAttributes = Maps.newHashMap();
         try {
             // 查询所有接口
-            List<AuthorityAccess> list = baseAuthorityRemoteService.findAuthorityAccess().getData();
+            List<AuthorityResource> list = baseAuthorityRemoteService.findAuthorityResource().getData();
             if (list != null) {
-                for (AuthorityAccess item : list) {
+                for (AuthorityResource item : list) {
                     String path = item.getPath();
                     if (path == null) {
                         continue;
@@ -151,11 +151,11 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
                     configAttributes.put(fullPath, array);
                 }
                 this.allConfigAttributes.clear();
-                this.authorityAccesses.clear();
+                this.authorityResources.clear();
                 this.allConfigAttributes.putAll(configAttributes);
-                this.authorityAccesses.addAll(list);
+                this.authorityResources.addAll(list);
             }
-            log.info("=============加载动态权限:{}==============", this.authorityAccesses.size());
+            log.info("=============加载动态权限:{}==============", this.authorityResources.size());
         } catch (Exception e) {
             log.error("加载动态权限错误:{}", e.getMessage());
         }
@@ -278,14 +278,13 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
         }
     }
 
-    public List<AuthorityAccess> getAuthorityAccesses() {
-        return authorityAccesses;
+    public List<AuthorityResource> getAuthorityResources() {
+        return authorityResources;
     }
 
-    public void setAuthorityAccesses(List<AuthorityAccess> authorityAccesses) {
-        this.authorityAccesses = authorityAccesses;
+    public void setAuthorityResources(List<AuthorityResource> authorityResources) {
+        this.authorityResources = authorityResources;
     }
-
 
     public List<IpLimitApi> getIpBlacks() {
         return ipBlacks;

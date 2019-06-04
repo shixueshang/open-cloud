@@ -1,6 +1,6 @@
 package com.opencloud.base.provider.mapper;
 
-import com.opencloud.base.client.model.AuthorityAccess;
+import com.opencloud.base.client.model.AuthorityResource;
 import com.opencloud.base.client.model.AuthorityAction;
 import com.opencloud.base.client.model.AuthorityApi;
 import com.opencloud.base.client.model.AuthorityMenu;
@@ -19,31 +19,10 @@ import java.util.Map;
 public interface BaseAuthorityMapper extends SuperMapper<BaseAuthority> {
 
     /**
-     * 查询所有APP相关权限
-     * @return
-     */
-    @Deprecated
-    List<AuthorityAccess> selectAllAuthorityApp();
-
-    /**
-     * 查询所有用户授权列表
-     * @return
-     */
-    @Deprecated
-    List<AuthorityAccess> selectAllAuthorityUser();
-
-    /**
-     * 查询所有角色授权列表
-     * @return
-     */
-    @Deprecated
-    List<AuthorityAccess> selectAllAuthorityRole();
-
-    /**
      * 查询所有资源授权列表
      * @return
      */
-    List<AuthorityAccess> selectAllAuthorityResource();
+    List<AuthorityResource> selectAllAuthorityResource();
 
     /**
      * 查询已授权权限列表

@@ -180,6 +180,10 @@ public class OpenExceptionHandler {
                 code = ResultEnum.ACCESS_DENIED_WHITE_IP_LIMITED;
             } else if (ResultEnum.ACCESS_DENIED_AUTHORITY_EXPIRED.getMessage().contains(message)) {
                 code = ResultEnum.ACCESS_DENIED_AUTHORITY_EXPIRED;
+            }else if (ResultEnum.ACCESS_DENIED_UPDATING.getMessage().contains(message)) {
+                code = ResultEnum.ACCESS_DENIED_UPDATING;
+            }else if (ResultEnum.ACCESS_DENIED_DISABLED.getMessage().contains(message)) {
+                code = ResultEnum.ACCESS_DENIED_DISABLED;
             }
         } else if (className.contains("HttpMessageNotReadableException")
                 || className.contains("TypeMismatchException")

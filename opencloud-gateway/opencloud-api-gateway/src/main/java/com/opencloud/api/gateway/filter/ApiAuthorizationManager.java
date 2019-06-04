@@ -3,7 +3,7 @@ package com.opencloud.api.gateway.filter;
 import com.opencloud.api.gateway.configuration.ApiProperties;
 import com.opencloud.api.gateway.locator.ApiResourceLocator;
 import com.opencloud.api.gateway.util.matcher.IpAddressMatcher;
-import com.opencloud.base.client.model.AuthorityAccess;
+import com.opencloud.base.client.model.AuthorityResource;
 import com.opencloud.base.client.model.IpLimitApi;
 import com.opencloud.common.constants.CommonConstants;
 import com.opencloud.common.constants.ResultEnum;
@@ -102,11 +102,11 @@ public class ApiAuthorizationManager implements ReactiveAuthorizationManager<Aut
             }
         }
         // 动态权限列表
-        List<AuthorityAccess> authorityList = accessLocator.getAccessAuthorities();
+        List<AuthorityResource> authorityList = accessLocator.getAuthorityResources();
         if (authorityList != null) {
-            Iterator<AuthorityAccess> it2 = authorityList.iterator();
+            Iterator<AuthorityResource> it2 = authorityList.iterator();
             while (it2.hasNext()) {
-                AuthorityAccess auth = it2.next();
+                AuthorityResource auth = it2.next();
                 Boolean isAuth = auth.getIsAuth() != null && auth.getIsAuth().intValue() == 1 ? true : false;
                 String fullPath = auth.getPath();
                 // 无需认证,返回true
@@ -116,6 +116,28 @@ public class ApiAuthorizationManager implements ReactiveAuthorizationManager<Aut
             }
         }
         return false;
+    }
+
+    /**
+     * 获取资源状态
+     * @param requestPath
+     * @return
+     */
+    public String getResourceStatus(String requestPath) {
+        // 动态权限列表
+        List<AuthorityResource> authorityList = accessLocator.getAuthorityResources();
+        if (authorityList != null) {
+            Iterator<AuthorityResource> it2 = authorityList.iterator();
+            while (it2.hasNext()) {
+                AuthorityResource auth = it2.next();
+                String fullPath = auth.getPath();
+                String status = auth.getStatus() != null ? auth.getStatus().toString() : "1";
+                if (!"/**".equals(fullPath) && StringUtils.isNotBlank(fullPath) && pathMatch.match(fullPath, requestPath)) {
+                    return status;
+                }
+            }
+        }
+        return "1";
     }
 
     /**
@@ -138,7 +160,7 @@ public class ApiAuthorizationManager implements ReactiveAuthorizationManager<Aut
     /**
      * 检查权限
      *
-     * @param request
+     * @param exchange
      * @param authentication
      * @param requestPath
      * @return
@@ -210,21 +232,6 @@ public class ApiAuthorizationManager implements ReactiveAuthorizationManager<Aut
             }
         }
         return SecurityConfig.createList("AUTHORITIES_REQUIRED");
-    }
-
-    private boolean isAuthAccess(String requestPath) {
-        List<AuthorityAccess> authorityList = accessLocator.getAccessAuthorities();
-        if (authorityList != null) {
-            for (AuthorityAccess auth : authorityList) {
-                String fullPath = auth.getPath();
-                Boolean isAuth = auth.getIsAuth() != null && auth.getIsAuth().equals(1) ? true : false;
-                // 需认证,返回true
-                if (StringUtils.isNotBlank(fullPath) && pathMatch.match(fullPath, requestPath) && !isAuth) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
 

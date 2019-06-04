@@ -34,7 +34,8 @@ public enum ResultEnum {
     ACCESS_DENIED_BLACK_IP_LIMITED(4031, "access_denied_black_ip_limited"),
     ACCESS_DENIED_WHITE_IP_LIMITED(4032, "access_denied_white_ip_limited"),
     ACCESS_DENIED_AUTHORITY_EXPIRED(4033, "access_denied_authority_expired"),
-
+    ACCESS_DENIED_UPDATING(4034, "access_denied_updating"),
+    ACCESS_DENIED_DISABLED(4035, "access_denied_disabled"),
     /**
      * 账号错误
      */

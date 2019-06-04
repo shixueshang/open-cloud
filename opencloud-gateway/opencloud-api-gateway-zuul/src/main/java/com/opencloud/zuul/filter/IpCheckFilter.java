@@ -34,6 +34,17 @@ public class IpCheckFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String requestPath = apiAccessManager.getRequestPath(request);
         String remoteIpAddress = WebUtils.getRemoteAddress(request);
+        String status = apiAccessManager.getResourceStatus(requestPath);
+        if ("0".equals(status)) {
+            // 禁用
+            accessDeniedHandler.handle(request, response, new AccessDeniedException(ResultEnum.ACCESS_DENIED_DISABLED.getMessage()));
+            return;
+        } else if ("2".equals(status)) {
+            // 维护中
+            accessDeniedHandler.handle(request, response, new AccessDeniedException(ResultEnum.ACCESS_DENIED_UPDATING.getMessage()));
+            return;
+        }
+
         // 1.ip黑名单检测
         boolean deny = apiAccessManager.matchIpBlacklist(requestPath, remoteIpAddress);
         if (deny) {
