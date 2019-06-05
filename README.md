@@ -13,27 +13,25 @@
 #### 开源不易，请随手给个Star! 感谢支持！
 
 #### 简介
-搭建基于OAuth2的开放平台、为APP端提供统一接口管控平台、为第三方合作伙伴的业务对接提供授信可控的技术对接平台.
-+ 分布式架构,统一配置中心,服务治理.fegin(RPC)内部调用,微服务管理开发更便捷
-+ 统一API网关、访问鉴权、参数验签、接口调用更安全.
-+ 深度整合SpringSecurity+Oauth2,更细粒度、灵活的ABAC权限控制.
+搭建基于OAuth2的开放平台、为APP端、应用服务提供统一接口管控平台、为第三方合作伙伴的业务对接提供授信可控的技术对接平台
++ 分布式架构,统一配置中心,服务治理.fegin(RPC)内部调用,微服务管理开发更便捷!
++ 统一API网关、访问鉴权、接口管理、参数验签、接口调用更安全!
++ 深度整合SpringSecurity+Oauth2,统一认证协议、url级鉴权、更细粒度、灵活的ABAC权限控制!
 + 前后端分离方式开发应用，分工合作更高效!
-+ 代码合理封装、简单易懂、 
++ 代码合理封装、简单易懂、简化开发流程!
 
-<a target="_blank" href="http://39.106.187.125/open">开放平台网站预览</a> 
 
-<a target="_blank" href="http://39.106.187.125/admin">运营后台预览</a>
+<a target="_blank" href="http://39.106.187.125/open">开发平台门户预览</a> 
+
+<a target="_blank" href="http://39.106.187.125/admin">运营管理后台预览</a>
 + 后台默认账号:admin 123456  
 + 后台测试账号:test 123456
-
-
 
 #### 更新日志
     v-2.1.0 2019-05-26 （重大变更）
         1. 重新梳理base表结构和权限相关接口,解决用户和客户端动态分配权。 机制问题暂不支持用户动态分配角色,需重新登录获取最新角色
         2. 优化页面功能
         3. 升级nacos客户端版本.支持1.0.0以上版本
-        4. 禁用非平台认证服务(opencloud-auth-provider)客户端模式。只作为用户认证服务器 
         5. 完善权限数据,去除外键约束.
         6. 升级方式更新ui和服务代码, 重新执行base.sql。手动删除无效表
         7. 移除app-admin模块 相关功能迁移到opencloud-auth-provider中
@@ -56,11 +54,10 @@
         
 #### 系统结构图
 
-![springcloud](/docs/springcloud.jpg)  
+![拓扑图](/docs/拓扑图.jpg)  
 
 #### 功能介绍
-![springcloud](/docs/opencloud.png)  
-
+![功能介绍](/docs/功能介绍.png)  
 
 
 #### 服务端源码
@@ -72,7 +69,6 @@
 #### vue门户UI源码
 <a target="_blank" href="https://gitee.com/liuyadu_open/open-site-antd.git">门户UI源码</a>
 
-
 #### 代码生成器
 <a target="_blank" href="https://gitee.com/liuyadu/generator.git">代码生成器</a>  
 
@@ -80,8 +76,8 @@
 <a target="_blank" href="https://gitee.com/liuyadu/open-cloud/wikis/pages">使用手册</a>  
 
 #### 学习交流群 
-交流群:760809808  <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=b45f53bc72df5935af588df50a0f651285020356d1daa05f90ee3fb95a0607c9"><img  border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="open-cloud学习交流群" title="open-cloud学习交流群"></a>  
-扫码进群： ![760809808](/docs/1548831206525.png)  
+交流群:760809808  
+扫码进群： ![760809808](/docs/qq.png)  
 
 #### 代码结构
 ``` lua
@@ -93,7 +89,7 @@ open-cloud
     ├── sql           -- sql文件
     
 ├── opencloud-app    -- 应用服务模块
-    ├── app-opensite-provider  -- 平台门户网站服务(port = 7211)  
+    ├── app-opensite-provider  -- 门户网站开发者认证中心和资源服务器(port = 7211)  
      
 ├── opencloud-common  -- 公共类和jar包依赖
     ├── opencloud-common-core    -- 提供微服务相关依赖包、工具类、全局异常解析等...
@@ -109,16 +105,16 @@ open-cloud
     ├── opencloud-base-provider  -- 平台基础服务(port = 8233)  
     ├── opencloud-auth-client    -- 平台认证服务接口
     ├── opencloud-auth-provider  -- 平台认证服务(port = 8211)  
-    ├── opencloud-msg-client    -- 消息服务接口
-    ├── opencloud-msg-provider  -- 消息服务(port = 8266) 
-    ├── opencloud-scheduler-client    -- 任务调度接口
-    ├── opencloud-scheduler-provider  -- 任务调度服务(port = 8501)
-    ├── opencloud-bpm-client   -- 工作流接口
-    ├── opencloud-bpm-provider -- 工作流服务(port = 8255)
+    ├── opencloud-msg-client    --  平台消息服务接口
+    ├── opencloud-msg-provider  --  平台消息服务(port = 8266) 
+    ├── opencloud-scheduler-client    -- 平台任务调度接口
+    ├── opencloud-scheduler-provider  -- 平台任务调度服务(port = 8501)
+    ├── opencloud-bpm-client   -- 平台工作流接口
+    ├── opencloud-bpm-provider -- 平台工作流服务(port = 8255)
 ```
 
 #### 快速开始
-上手难度：★★★
+上手难度：★★★★
 
 本项目基于springCloud打造的分布式快速开发框架. 需要了解SpringCloud,SpringBoot开发,分布式原理。
 
@@ -131,24 +127,25 @@ open-cloud
     + Maven
     + Nodejs
    
-2. 导入sql脚本
+2. 执行创建数据库open-platform并执行sql脚本
     + docs/sql/oauth2.sql
     + docs/sql/base.sql
     + docs/sql/gateway.sql
     + docs/sql/quartz.sql && scheduler.sql
     
-3. 导入配置中心,Nacos公共配置 
+3.  启动nacos服务发现&配置中心,新建公共配置文件 
     + 访问 http://localhost:8848/nacos/index.html 
-    + 新建配置 
+    + 新建配置文件 ```
         + 项目目录/docs/config/db.properties >  db.properties
         + 项目目录/docs/config/rabbitmq.properties > rabbitmq.properties
         + 项目目录/docs/config/redis.properties > redis.properties
-        + 项目目录/docs/config/common.properties  > common.properties  
+        + 项目目录/docs/config/common.properties  > common.properties
+          
      如图:
-     ![输入图片说明](https://gitee.com/uploads/images/2019/0425/231436_fce24434_791541.png "nacos.png")
+     ![nacos](https://gitee.com/uploads/images/2019/0425/231436_fce24434_791541.png "nacos.png")
 4. 修改主pom.xml  
 
-    初始化
+    初始化maven项目
     ``` bush
         maven clean install
     ```
@@ -166,8 +163,9 @@ open-cloud
      1. BaseApplication
      2. AuthApplication
      3. ZuulGatewayApplication(推荐) 或 ApiGatewayApplication 
+     ```
      访问 http://localhost:8888
-     
+     ```
 6. 前端启动
     ```bush
         npm install 
@@ -191,5 +189,5 @@ open-cloud
 #### 集成开发 
 <a target="_blank" href="https://gitee.com/liuyadu/open-cloud/wikis/pages?sort_id=1396933&doc_id=256893">集成开发</a>
 
-#### 第三方应用接入(OAUTH2)
-<a target="_blank" href="https://gitee.com/liuyadu/open-cloud/wikis/pages?sort_id=1396294&doc_id=256893">第三方应用接入</a>
+#### Oauth2使用说明
+<a target="_blank" href="https://gitee.com/liuyadu/open-cloud/wikis/pages?sort_id=1396294&doc_id=256893">Oauth2</a>
