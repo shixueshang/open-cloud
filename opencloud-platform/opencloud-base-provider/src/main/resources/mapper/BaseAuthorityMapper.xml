@@ -57,7 +57,7 @@
         m.*
         FROM
         base_authority AS a
-       LEFT JOIN base_menu AS m ON a.menu_id = m.menu_id
+        INNER JOIN base_menu AS m ON a.menu_id = m.menu_id
         <where>
             <if test="status!=null">
                 AND m.status = #{status}
@@ -72,12 +72,12 @@
         o.*
         FROM
         base_authority AS a
-       LEFT JOIN base_action AS o ON a.action_id = o.action_id
+        INNER JOIN base_action AS o ON a.action_id = o.action_id
         <if test="roleId!=null">
-           LEFT JOIN base_authority_role AS ra ON ra.authority_id = a.authority_id
+            INNER JOIN base_authority_role AS ra ON ra.authority_id = a.authority_id
         </if>
         <if test="userId!=null">
-           LEFT JOIN base_authority_user AS ua ON ua.authority_id = a.authority_id
+            INNER JOIN base_authority_user AS ua ON ua.authority_id = a.authority_id
         </if>
         <where>
             <if test="status!=null">
@@ -103,8 +103,8 @@
         route.path as prefix
         FROM
         base_authority AS a
-       LEFT JOIN base_api AS api ON a.api_id = api.api_id
-       LEFT JOIN gateway_route AS route ON route.route_name = api.service_id
+        INNER JOIN base_api AS api ON a.api_id = api.api_id
+        INNER JOIN gateway_route AS route ON route.route_name = api.service_id
         <where>
             <if test="status!=null">
                 AND api.status = #{status}

@@ -21,7 +21,7 @@
         base_role.update_time
         FROM
         base_role_user
-        LEFT JOIN base_role ON base_role_user.role_id = base_role.role_id
+        INNER JOIN base_role ON base_role_user.role_id = base_role.role_id
         WHERE user_id = #{userId}  and status = 1
     </select>
 
@@ -31,7 +31,7 @@
         base_role.role_id
         FROM
         base_role_user
-        LEFT JOIN base_role ON base_role_user.role_id = base_role.role_id
+        INNER JOIN base_role ON base_role_user.role_id = base_role.role_id
         WHERE user_id = #{userId}  and status = 1
     </select>
 </mapper>
