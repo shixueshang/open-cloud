@@ -145,7 +145,6 @@ public class AnnotationScan implements ApplicationListener<ApplicationReadyEvent
                     if (requestMatcher instanceof AntPathRequestMatcher) {
                         AntPathRequestMatcher pathRequestMatcher = (AntPathRequestMatcher) requestMatcher;
                         if (pathMatch.match(pathRequestMatcher.getPattern(), url)) {
-                            System.out.println(url);
                             // 忽略验证
                             isAuth = "0";
                         }
