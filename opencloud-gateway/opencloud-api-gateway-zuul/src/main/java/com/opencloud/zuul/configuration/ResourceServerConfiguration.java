@@ -3,8 +3,8 @@ package com.opencloud.zuul.configuration;
 import com.opencloud.common.security.OpenHelper;
 import com.opencloud.zuul.exception.JsonAccessDeniedHandler;
 import com.opencloud.zuul.exception.JsonAuthenticationEntryPoint;
-import com.opencloud.zuul.filter.ApiAuthorizationManager;
-import com.opencloud.zuul.filter.IpCheckFilter;
+import com.opencloud.zuul.filter.AccessAuthorizationManager;
+import com.opencloud.zuul.filter.PreCheckFilter;
 import com.opencloud.zuul.filter.PreRequestFilter;
 import com.opencloud.zuul.filter.SignatureFilter;
 import com.opencloud.zuul.service.AccessLogService;
@@ -43,7 +43,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     @Autowired
     private AccessLogService accessLogService;
     @Autowired
-    private ApiAuthorizationManager apiAccessManager;
+    private AccessAuthorizationManager apiAccessManager;
 
     private OAuth2WebSecurityExpressionHandler expressionHandler;
 
@@ -68,7 +68,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .authorizeRequests()
                 .anyRequest().authenticated()
                 // 动态访问控制
-                .anyRequest().access("@apiAuthorizationManager.check(request,authentication)")
+                .anyRequest().access("@accessAuthorizationManager.check(request,authentication)")
                 .and()
                 //认证鉴权错误处理,为了统一异常处理。每个资源服务器都应该加上。
                 .exceptionHandling()
@@ -81,7 +81,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
         // 增加签名验证过滤器
         http.addFilterAfter(new SignatureFilter(baseAppRemoteService, apiProperties), AbstractPreAuthenticatedProcessingFilter.class);
         // 增加IP检测过滤器
-        http.addFilterAfter(new IpCheckFilter(apiAccessManager, new JsonAccessDeniedHandler(accessLogService)), AbstractPreAuthenticatedProcessingFilter.class);
+        http.addFilterAfter(new PreCheckFilter(apiAccessManager, new JsonAccessDeniedHandler(accessLogService)), AbstractPreAuthenticatedProcessingFilter.class);
     }
 }
 

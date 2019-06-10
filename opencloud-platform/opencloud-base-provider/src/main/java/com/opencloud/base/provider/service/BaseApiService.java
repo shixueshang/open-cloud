@@ -52,7 +52,7 @@ public interface BaseApiService extends IBaseService<BaseApi> {
      * @param api
      * @return
      */
-    BaseApi addApi(BaseApi api);
+    void addApi(BaseApi api);
 
     /**
      * 修改接口
@@ -60,7 +60,7 @@ public interface BaseApiService extends IBaseService<BaseApi> {
      * @param api
      * @return
      */
-    BaseApi updateApi(BaseApi api);
+    void updateApi(BaseApi api);
 
     /**
      * 查询接口

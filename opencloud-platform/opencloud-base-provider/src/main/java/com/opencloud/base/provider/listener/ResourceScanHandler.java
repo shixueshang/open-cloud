@@ -61,6 +61,7 @@ public class ResourceScanHandler {
                     codes.add(api.getApiCode());
                     BaseApi save = baseApiService.getApi(api.getApiCode());
                     if (save == null) {
+                        api.setIsOpen(0);
                         api.setIsPersist(1);
                         baseApiService.addApi(api);
                     } else {

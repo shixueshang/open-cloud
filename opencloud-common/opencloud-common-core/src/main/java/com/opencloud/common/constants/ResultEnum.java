@@ -36,6 +36,7 @@ public enum ResultEnum {
     ACCESS_DENIED_AUTHORITY_EXPIRED(4033, "access_denied_authority_expired"),
     ACCESS_DENIED_UPDATING(4034, "access_denied_updating"),
     ACCESS_DENIED_DISABLED(4035, "access_denied_disabled"),
+    ACCESS_DENIED_NOT_OPEN(4036, "access_denied_not_open"),
     /**
      * 账号错误
      */

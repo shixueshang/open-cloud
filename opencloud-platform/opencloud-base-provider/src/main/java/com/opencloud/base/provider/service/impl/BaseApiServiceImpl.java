@@ -99,7 +99,7 @@ public class BaseApiServiceImpl extends BaseServiceImpl<BaseApiMapper, BaseApi> 
      * @return
      */
     @Override
-    public BaseApi addApi(BaseApi api) {
+    public void addApi(BaseApi api) {
         if (isExist(api.getApiCode())) {
             throw new OpenAlertException(String.format("%s编码已存在!", api.getApiCode()));
         }
@@ -123,7 +123,6 @@ public class BaseApiServiceImpl extends BaseServiceImpl<BaseApiMapper, BaseApi> 
         baseApiMapper.insert(api);
         // 同步权限表里的信息
         baseAuthorityService.saveOrUpdateAuthority(api.getApiId(), ResourceType.api);
-        return api;
     }
 
     /**
@@ -133,7 +132,7 @@ public class BaseApiServiceImpl extends BaseServiceImpl<BaseApiMapper, BaseApi> 
      * @return
      */
     @Override
-    public BaseApi updateApi(BaseApi api) {
+    public void updateApi(BaseApi api) {
         BaseApi saved = getApi(api.getApiId());
         if (saved == null) {
             throw new OpenAlertException("信息不存在!");
@@ -154,7 +153,6 @@ public class BaseApiServiceImpl extends BaseServiceImpl<BaseApiMapper, BaseApi> 
         baseApiMapper.updateById(api);
         // 同步权限表里的信息
         baseAuthorityService.saveOrUpdateAuthority(api.getApiId(), ResourceType.api);
-        return api;
     }
 
     /**

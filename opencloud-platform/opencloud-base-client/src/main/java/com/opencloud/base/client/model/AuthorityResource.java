@@ -31,6 +31,11 @@ public class AuthorityResource implements Serializable {
     private Integer isAuth;
 
     /**
+     * 是否公开访问
+     */
+    private Integer isOpen;
+
+    /**
      * 服务名称
      */
     private String serviceId;
@@ -99,5 +104,13 @@ public class AuthorityResource implements Serializable {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Integer getIsOpen() {
+        return isOpen;
+    }
+
+    public void setIsOpen(Integer isOpen) {
+        this.isOpen = isOpen;
     }
 }

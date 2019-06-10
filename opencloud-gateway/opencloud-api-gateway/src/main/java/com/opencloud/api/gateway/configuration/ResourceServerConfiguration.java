@@ -3,8 +3,8 @@ package com.opencloud.api.gateway.configuration;
 import com.opencloud.api.gateway.exception.JsonAccessDeniedHandler;
 import com.opencloud.api.gateway.exception.JsonAuthenticationEntryPoint;
 import com.opencloud.api.gateway.filter.AccessLogFilter;
-import com.opencloud.api.gateway.filter.ApiAuthorizationManager;
-import com.opencloud.api.gateway.filter.IpCheckFilter;
+import com.opencloud.api.gateway.filter.AccessAuthorizationManager;
+import com.opencloud.api.gateway.filter.PreCheckFilter;
 import com.opencloud.api.gateway.filter.PreRequestFilter;
 import com.opencloud.api.gateway.locator.ApiResourceLocator;
 import com.opencloud.api.gateway.oauth2.RedisAuthenticationManager;
@@ -88,7 +88,7 @@ public class ResourceServerConfiguration {
         // 自定义oauth2 认证, 使用redis读取token,而非jwt方式
         JsonAuthenticationEntryPoint entryPoint = new JsonAuthenticationEntryPoint(accessLogService);
         JsonAccessDeniedHandler accessDeniedHandler = new JsonAccessDeniedHandler(accessLogService);
-        ApiAuthorizationManager apiAuthorizationManager = new ApiAuthorizationManager(apiAccessLocator, apiGatewayProperties);
+        AccessAuthorizationManager apiAuthorizationManager = new AccessAuthorizationManager(apiAccessLocator, apiGatewayProperties);
         AuthenticationWebFilter oauth2 = new AuthenticationWebFilter(new RedisAuthenticationManager(new RedisTokenStore(redisConnectionFactory)));
         oauth2.setServerAuthenticationConverter(new ServerBearerTokenAuthenticationConverter());
         oauth2.setAuthenticationFailureHandler(new ServerAuthenticationEntryPointFailureHandler(entryPoint));
@@ -105,7 +105,7 @@ public class ResourceServerConfiguration {
                 // 跨域过滤器
                 .addFilterAt(corsFilter(), SecurityWebFiltersOrder.CORS)
                 // IP访问限制过滤器
-                .addFilterAt(new IpCheckFilter(apiAuthorizationManager, accessDeniedHandler), SecurityWebFiltersOrder.CSRF)
+                .addFilterAt(new PreCheckFilter(apiAuthorizationManager, accessDeniedHandler), SecurityWebFiltersOrder.CSRF)
                 // oauth2认证过滤器
                 .addFilterAt(oauth2, SecurityWebFiltersOrder.AUTHENTICATION)
                 // 日志过滤器放到最后

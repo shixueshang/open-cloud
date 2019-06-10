@@ -87,7 +87,8 @@ public class BaseApiController {
             @ApiImplicitParam(name = "status", required = true, defaultValue = "1", allowableValues = "0,1", value = "是否启用", paramType = "form"),
             @ApiImplicitParam(name = "priority", required = false, value = "优先级越小越靠前", paramType = "form"),
             @ApiImplicitParam(name = "apiDesc", required = false, value = "描述", paramType = "form"),
-            @ApiImplicitParam(name = "isAuth", required = false, defaultValue = "0", allowableValues = "0,1", value = "是否身份认证", paramType = "form")
+            @ApiImplicitParam(name = "isAuth", required = false, defaultValue = "0", allowableValues = "0,1", value = "是否身份认证", paramType = "form"),
+            @ApiImplicitParam(name = "isOpen", required = false, defaultValue = "0", allowableValues = "0,1", value = "是否公开: 0-内部的 1-公开的", paramType = "form")
     })
     @PostMapping("/api/add")
     public ResultBody<Long> addApi(
@@ -99,7 +100,8 @@ public class BaseApiController {
             @RequestParam(value = "status", defaultValue = "1") Integer status,
             @RequestParam(value = "priority", required = false, defaultValue = "0") Integer priority,
             @RequestParam(value = "apiDesc", required = false, defaultValue = "") String apiDesc,
-            @RequestParam(value = "isAuth", required = false, defaultValue = "1") Integer isAuth
+            @RequestParam(value = "isAuth", required = false, defaultValue = "1") Integer isAuth,
+            @RequestParam(value = "isOpen", required = false, defaultValue = "0") Integer isOpen
     ) {
         BaseApi api = new BaseApi();
         api.setApiCode(apiCode);
@@ -111,13 +113,10 @@ public class BaseApiController {
         api.setPriority(priority);
         api.setApiDesc(apiDesc);
         api.setIsAuth(isAuth);
+        api.setIsOpen(isOpen);
         Long apiId = null;
-        BaseApi result = apiService.addApi(api);
-        if (result != null) {
-            apiId = result.getApiId();
-            // 刷新网关
-            openRestTemplate.refreshGateway();
-        }
+        apiService.addApi(api);
+        openRestTemplate.refreshGateway();
         return ResultBody.ok().data(apiId);
     }
 
@@ -145,7 +144,8 @@ public class BaseApiController {
             @ApiImplicitParam(name = "status", required = true, defaultValue = "1", allowableValues = "0,1", value = "是否启用", paramType = "form"),
             @ApiImplicitParam(name = "priority", required = false, value = "优先级越小越靠前", paramType = "form"),
             @ApiImplicitParam(name = "apiDesc", required = false, value = "描述", paramType = "form"),
-            @ApiImplicitParam(name = "isAuth", required = false, defaultValue = "0", allowableValues = "0,1", value = "是否身份认证", paramType = "form")
+            @ApiImplicitParam(name = "isAuth", required = false, defaultValue = "0", allowableValues = "0,1", value = "是否身份认证", paramType = "form"),
+            @ApiImplicitParam(name = "isOpen", required = false, defaultValue = "0", allowableValues = "0,1", value = "是否公开: 0-内部的 1-公开的", paramType = "form")
     })
     @PostMapping("/api/update")
     public ResultBody updateApi(
@@ -158,7 +158,8 @@ public class BaseApiController {
             @RequestParam(value = "status", defaultValue = "1") Integer status,
             @RequestParam(value = "priority", required = false, defaultValue = "0") Integer priority,
             @RequestParam(value = "apiDesc", required = false, defaultValue = "") String apiDesc,
-            @RequestParam(value = "isAuth", required = false, defaultValue = "1") Integer isAuth
+            @RequestParam(value = "isAuth", required = false, defaultValue = "1") Integer isAuth,
+            @RequestParam(value = "isOpen", required = false, defaultValue = "0") Integer isOpen
     ) {
         BaseApi api = new BaseApi();
         api.setApiId(apiId);
@@ -171,6 +172,7 @@ public class BaseApiController {
         api.setPriority(priority);
         api.setApiDesc(apiDesc);
         api.setIsAuth(isAuth);
+        api.setIsOpen(isOpen);
         apiService.updateApi(api);
         // 刷新网关
         openRestTemplate.refreshGateway();

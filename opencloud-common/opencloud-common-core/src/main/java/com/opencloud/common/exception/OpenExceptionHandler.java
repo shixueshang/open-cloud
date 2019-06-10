@@ -184,6 +184,8 @@ public class OpenExceptionHandler {
                 code = ResultEnum.ACCESS_DENIED_UPDATING;
             }else if (ResultEnum.ACCESS_DENIED_DISABLED.getMessage().contains(message)) {
                 code = ResultEnum.ACCESS_DENIED_DISABLED;
+            } else if (ResultEnum.ACCESS_DENIED_NOT_OPEN.getMessage().contains(message)) {
+                code = ResultEnum.ACCESS_DENIED_NOT_OPEN;
             }
         } else if (className.contains("HttpMessageNotReadableException")
                 || className.contains("TypeMismatchException")

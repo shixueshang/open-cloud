@@ -1,29 +1,24 @@
-package com.opencloud.api.gateway.filter;
+package com.opencloud.zuul.filter;
 
-import com.opencloud.api.gateway.configuration.ApiProperties;
-import com.opencloud.api.gateway.locator.ApiResourceLocator;
-import com.opencloud.api.gateway.util.matcher.IpAddressMatcher;
 import com.opencloud.base.client.model.AuthorityResource;
 import com.opencloud.base.client.model.IpLimitApi;
 import com.opencloud.common.constants.CommonConstants;
 import com.opencloud.common.constants.ResultEnum;
 import com.opencloud.common.security.Authority;
 import com.opencloud.common.utils.StringUtils;
+import com.opencloud.zuul.configuration.ApiProperties;
+import com.opencloud.zuul.locator.ApiResourceLocator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.authorization.AuthorizationDecision;
-import org.springframework.security.authorization.ReactiveAuthorizationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.web.server.authorization.AuthorizationContext;
+import org.springframework.security.web.util.matcher.IpAddressMatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
-import org.springframework.web.server.ServerWebExchange;
-import reactor.core.publisher.Mono;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -33,11 +28,11 @@ import java.util.*;
  */
 @Slf4j
 @Component
-public class ApiAuthorizationManager implements ReactiveAuthorizationManager<AuthorizationContext> {
+public class AccessAuthorizationManager {
 
     private ApiResourceLocator accessLocator;
 
-    private ApiProperties apiGatewayProperties;
+    private ApiProperties apiProperties;
 
     private static final AntPathMatcher pathMatch = new AntPathMatcher();
 
@@ -46,46 +41,48 @@ public class ApiAuthorizationManager implements ReactiveAuthorizationManager<Aut
     private Set<String> authorityIgnores = new HashSet<>();
 
 
-    public ApiAuthorizationManager(ApiResourceLocator accessLocator, ApiProperties apiGatewayProperties) {
+    public AccessAuthorizationManager(ApiResourceLocator accessLocator, ApiProperties apiProperties) {
         this.accessLocator = accessLocator;
-        this.apiGatewayProperties = apiGatewayProperties;
-        // 默认放行
-        permitAll.add("/");
-        permitAll.add("/error");
-        permitAll.add("/favicon.ico");
-        if (apiGatewayProperties != null) {
-            if (apiGatewayProperties.getPermitAll() != null) {
-                permitAll.addAll(apiGatewayProperties.getPermitAll());
+        this.apiProperties = apiProperties;
+        if (apiProperties != null) {
+            if (apiProperties.getPermitAll() != null) {
+                permitAll.addAll(apiProperties.getPermitAll());
             }
-            if (apiGatewayProperties.getApiDebug()) {
+            if (apiProperties.getApiDebug()) {
                 permitAll.add("/**/v2/api-docs/**");
                 permitAll.add("/**/swagger-resources/**");
                 permitAll.add("/webjars/**");
                 permitAll.add("/doc.html");
                 permitAll.add("/swagger-ui.html");
             }
-            if (apiGatewayProperties.getAuthorityIgnores() != null) {
-                authorityIgnores.addAll(apiGatewayProperties.getAuthorityIgnores());
+            if (apiProperties.getAuthorityIgnores() != null) {
+                authorityIgnores.addAll(apiProperties.getAuthorityIgnores());
             }
         }
     }
 
-
-    @Override
-    public Mono<AuthorizationDecision> check(Mono<Authentication> authentication, AuthorizationContext authorizationContext) {
-        ServerWebExchange exchange = authorizationContext.getExchange();
-        String requestPath = exchange.getRequest().getURI().getPath();
-        if (!apiGatewayProperties.getAccessControl()) {
-            return Mono.just(new AuthorizationDecision(true));
+    /**
+     * 访问控制
+     * 1.IP黑名单
+     * 2.IP白名单
+     * 3.权限控制
+     *
+     * @param request
+     * @param authentication
+     * @return
+     */
+    public boolean check(HttpServletRequest request, Authentication authentication) {
+        if (!apiProperties.getAccessControl()) {
+            return true;
         }
+        String requestPath = getRequestPath(request);
         // 是否直接放行
         if (permitAll(requestPath)) {
-            return Mono.just(new AuthorizationDecision(true));
+            return true;
         }
-        return authentication.map((a) -> {
-            return new AuthorizationDecision(checkAuthorities(exchange, a, requestPath));
-        });
+        return checkAuthorities(request, authentication, requestPath);
     }
+
 
     /**
      * 始终放行
@@ -107,7 +104,7 @@ public class ApiAuthorizationManager implements ReactiveAuthorizationManager<Aut
             Iterator<AuthorityResource> it2 = authorityList.iterator();
             while (it2.hasNext()) {
                 AuthorityResource auth = it2.next();
-                Boolean isAuth = auth.getIsAuth() != null && auth.getIsAuth().intValue() == 1 ? true : false;
+                Boolean isAuth = auth.getIsAuth() != null && auth.getIsAuth().equals(1) ? true : false;
                 String fullPath = auth.getPath();
                 // 无需认证,返回true
                 if (StringUtils.isNotBlank(fullPath) && pathMatch.match(fullPath, requestPath) && !isAuth) {
@@ -120,10 +117,11 @@ public class ApiAuthorizationManager implements ReactiveAuthorizationManager<Aut
 
     /**
      * 获取资源状态
+     *
      * @param requestPath
      * @return
      */
-    public String getResourceStatus(String requestPath) {
+    public AuthorityResource getResource(String requestPath) {
         // 动态权限列表
         List<AuthorityResource> authorityList = accessLocator.getAuthorityResources();
         if (authorityList != null) {
@@ -131,13 +129,12 @@ public class ApiAuthorizationManager implements ReactiveAuthorizationManager<Aut
             while (it2.hasNext()) {
                 AuthorityResource auth = it2.next();
                 String fullPath = auth.getPath();
-                String status = auth.getStatus() != null ? auth.getStatus().toString() : "1";
                 if (!"/**".equals(fullPath) && StringUtils.isNotBlank(fullPath) && pathMatch.match(fullPath, requestPath)) {
-                    return status;
+                    return auth;
                 }
             }
         }
-        return "1";
+        return null;
     }
 
     /**
@@ -146,7 +143,7 @@ public class ApiAuthorizationManager implements ReactiveAuthorizationManager<Aut
      * @param requestPath
      * @return
      */
-    private boolean authorityIgnores(String requestPath) {
+    public boolean authorityIgnores(String requestPath) {
         Iterator<String> it = authorityIgnores.iterator();
         while (it.hasNext()) {
             String path = it.next();
@@ -157,32 +154,29 @@ public class ApiAuthorizationManager implements ReactiveAuthorizationManager<Aut
         return false;
     }
 
+
     /**
      * 检查权限
      *
-     * @param exchange
+     * @param request
      * @param authentication
      * @param requestPath
      * @return
      */
-    private boolean checkAuthorities(ServerWebExchange exchange, Authentication authentication, String requestPath) {
+    public boolean checkAuthorities(HttpServletRequest request, Authentication authentication, String requestPath) {
         Object principal = authentication.getPrincipal();
         // 已认证身份
         if (principal != null) {
-            if (authentication instanceof AnonymousAuthenticationToken) {
-                //check if this uri can be access by anonymous
-                //return
-            }
             if (authorityIgnores(requestPath)) {
                 // 认证通过,并且无需权限
                 return true;
             }
-            return mathAuthorities(exchange, authentication, requestPath);
+            return mathAuthorities(request, authentication, requestPath);
         }
         return false;
     }
 
-    public boolean mathAuthorities(ServerWebExchange exchange, Authentication authentication, String requestPath) {
+    public boolean mathAuthorities(HttpServletRequest request, Authentication authentication, String requestPath) {
         Collection<ConfigAttribute> attributes = getAttributes(requestPath);
         int result = 0;
         int expires = 0;
@@ -221,7 +215,7 @@ public class ApiAuthorizationManager implements ReactiveAuthorizationManager<Aut
         }
     }
 
-    private Collection<ConfigAttribute> getAttributes(String requestPath) {
+    public Collection<ConfigAttribute> getAttributes(String requestPath) {
         // 匹配动态权限
         for (Iterator<String> iter = accessLocator.getAllConfigAttributes().keySet().iterator(); iter.hasNext(); ) {
             String url = iter.next();
@@ -278,5 +272,15 @@ public class ApiAuthorizationManager implements ReactiveAuthorizationManager<Aut
             }
         }
         return false;
+    }
+
+
+    public String getRequestPath(HttpServletRequest request) {
+        String url = request.getServletPath();
+        String pathInfo = request.getPathInfo();
+        if (pathInfo != null) {
+            url = StringUtils.isNotBlank(url) ? url + pathInfo : pathInfo;
+        }
+        return url;
     }
 }

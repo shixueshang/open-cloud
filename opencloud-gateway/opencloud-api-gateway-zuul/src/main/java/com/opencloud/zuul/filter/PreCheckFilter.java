@@ -1,5 +1,6 @@
 package com.opencloud.zuul.filter;
 
+import com.opencloud.base.client.model.AuthorityResource;
 import com.opencloud.common.constants.ResultEnum;
 import com.opencloud.common.utils.WebUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -19,13 +20,13 @@ import java.io.IOException;
  * @author liuyadu
  */
 @Slf4j
-public class IpCheckFilter extends OncePerRequestFilter {
+public class PreCheckFilter extends OncePerRequestFilter {
 
     private AccessDeniedHandler accessDeniedHandler;
 
-    private ApiAuthorizationManager apiAccessManager;
+    private AccessAuthorizationManager apiAccessManager;
 
-    public IpCheckFilter(ApiAuthorizationManager apiAccessManager, AccessDeniedHandler accessDeniedHandler) {
+    public PreCheckFilter(AccessAuthorizationManager apiAccessManager, AccessDeniedHandler accessDeniedHandler) {
         this.apiAccessManager = apiAccessManager;
         this.accessDeniedHandler = accessDeniedHandler;
     }
@@ -34,16 +35,24 @@ public class IpCheckFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String requestPath = apiAccessManager.getRequestPath(request);
         String remoteIpAddress = WebUtils.getRemoteAddress(request);
-        String status = apiAccessManager.getResourceStatus(requestPath);
-        if ("0".equals(status)) {
-            // 禁用
-            accessDeniedHandler.handle(request, response, new AccessDeniedException(ResultEnum.ACCESS_DENIED_DISABLED.getMessage()));
-            return;
-        } else if ("2".equals(status)) {
-            // 维护中
-            accessDeniedHandler.handle(request, response, new AccessDeniedException(ResultEnum.ACCESS_DENIED_UPDATING.getMessage()));
-            return;
+        AuthorityResource resource = apiAccessManager.getResource(requestPath);
+        if(resource!=null){
+            if("0".equals(resource.getIsOpen().toString())){
+                // 未公开
+                accessDeniedHandler.handle(request, response, new AccessDeniedException(ResultEnum.ACCESS_DENIED_NOT_OPEN.getMessage()));
+                return;
+            }
+            if ("0".equals(resource.getStatus().toString())) {
+                // 禁用
+                accessDeniedHandler.handle(request, response, new AccessDeniedException(ResultEnum.ACCESS_DENIED_DISABLED.getMessage()));
+                return;
+            } else if ("2".equals(resource.getStatus().toString())) {
+                // 维护中
+                accessDeniedHandler.handle(request, response, new AccessDeniedException(ResultEnum.ACCESS_DENIED_UPDATING.getMessage()));
+                return;
+            }
         }
+
 
         // 1.ip黑名单检测
         boolean deny = apiAccessManager.matchIpBlacklist(requestPath, remoteIpAddress);

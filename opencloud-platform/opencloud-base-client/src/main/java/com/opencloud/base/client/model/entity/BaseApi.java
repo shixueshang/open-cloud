@@ -77,6 +77,10 @@ public class BaseApi extends AbstractEntity {
     private Integer isAuth;
 
     /**
+     * 是否公开访问: 0-内部的 1-公开的
+     */
+    private Integer isOpen;
+    /**
      * 请求方式
      */
     private String requestMethod;
@@ -263,5 +267,13 @@ public class BaseApi extends AbstractEntity {
 
     public void setMethodName(String methodName) {
         this.methodName = methodName;
+    }
+
+    public Integer getIsOpen() {
+        return isOpen;
+    }
+
+    public void setIsOpen(Integer isOpen) {
+        this.isOpen = isOpen;
     }
 }
