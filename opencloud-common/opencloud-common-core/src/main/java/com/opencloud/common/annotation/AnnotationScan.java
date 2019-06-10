@@ -1,8 +1,10 @@
 package com.opencloud.common.annotation;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.opencloud.common.constants.MqConstants;
 import com.opencloud.common.utils.EncryptUtils;
+import com.opencloud.common.utils.ReflectionUtils;
 import com.opencloud.common.utils.StringUtils;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +16,15 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.ConfigAttribute;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
+import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,10 +35,7 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import springfox.documentation.annotations.ApiIgnore;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -40,6 +47,7 @@ import java.util.concurrent.Executors;
 @Slf4j
 public class AnnotationScan implements ApplicationListener<ApplicationReadyEvent> {
     private AmqpTemplate amqpTemplate;
+    private static final AntPathMatcher pathMatch = new AntPathMatcher();
 
     public AnnotationScan(AmqpTemplate amqpTemplate) {
         this.amqpTemplate = amqpTemplate;
@@ -65,10 +73,34 @@ public class AnnotationScan implements ApplicationListener<ApplicationReadyEvent
             return;
         }
         Environment env = applicationContext.getEnvironment();
+        // 服务名称
         String serviceId = env.getProperty("spring.application.name", "application");
+        // 所有接口映射
         RequestMappingHandlerMapping mapping = applicationContext.getBean(RequestMappingHandlerMapping.class);
         // 获取url与类和方法的对应信息
         Map<RequestMappingInfo, HandlerMethod> map = mapping.getHandlerMethods();
+        List<RequestMatcher> permitAll = Lists.newArrayList();
+        try {
+            // 获取所有安全配置适配器
+            Map<String, WebSecurityConfigurerAdapter> securityConfigurerAdapterMap = applicationContext.getBeansOfType(WebSecurityConfigurerAdapter.class);
+            Iterator<Map.Entry<String, WebSecurityConfigurerAdapter>> iterable = securityConfigurerAdapterMap.entrySet().iterator();
+            while (iterable.hasNext()) {
+                WebSecurityConfigurerAdapter configurer = iterable.next().getValue();
+                HttpSecurity httpSecurity = (HttpSecurity) ReflectionUtils.getFieldValue(configurer, "http");
+                FilterSecurityInterceptor filterSecurityInterceptor = httpSecurity.getSharedObject(FilterSecurityInterceptor.class);
+                FilterInvocationSecurityMetadataSource metadataSource = filterSecurityInterceptor.getSecurityMetadataSource();
+                Map<RequestMatcher, Collection<ConfigAttribute>> requestMap = (Map) ReflectionUtils.getFieldValue(metadataSource, "requestMap");
+                Iterator<Map.Entry<RequestMatcher, Collection<ConfigAttribute>>> requestIterable = requestMap.entrySet().iterator();
+                while (requestIterable.hasNext()) {
+                    Map.Entry<RequestMatcher, Collection<ConfigAttribute>> match = requestIterable.next();
+                    if (match.getValue().toString().contains("permitAll")) {
+                        permitAll.add(match.getKey());
+                    }
+                }
+            }
+        } catch (Exception e) {
+            log.error("error:{}", e);
+        }
         List<Map<String, String>> list = new ArrayList<Map<String, String>>();
         for (Map.Entry<RequestMappingInfo, HandlerMethod> m : map.entrySet()) {
             RequestMappingInfo info = m.getKey();
@@ -105,6 +137,21 @@ public class AnnotationScan implements ApplicationListener<ApplicationReadyEvent
             String md5 = EncryptUtils.md5Hex(serviceId + urls);
             String name = "";
             String desc = "";
+            // 是否需要安全认证 默认:1-是 0-否
+            String isAuth = "1";
+            // 匹配项目中.permitAll()配置
+            for (String url : p.getPatterns()) {
+                for (RequestMatcher requestMatcher : permitAll) {
+                    if (requestMatcher instanceof AntPathRequestMatcher) {
+                        AntPathRequestMatcher pathRequestMatcher = (AntPathRequestMatcher) requestMatcher;
+                        if (pathMatch.match(pathRequestMatcher.getPattern(), url)) {
+                            System.out.println(url);
+                            // 忽略验证
+                            isAuth = "0";
+                        }
+                    }
+                }
+            }
 
             ApiOperation apiOperation = method.getMethodAnnotation(ApiOperation.class);
             if (apiOperation != null) {
@@ -122,6 +169,7 @@ public class AnnotationScan implements ApplicationListener<ApplicationReadyEvent
             api.put("requestMethod", methods);
             api.put("serviceId", serviceId);
             api.put("contentType", mediaTypes);
+            api.put("isAuth", isAuth);
             list.add(api);
         }
         Map resource = Maps.newHashMap();
