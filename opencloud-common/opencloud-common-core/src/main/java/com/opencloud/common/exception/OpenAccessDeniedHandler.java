@@ -21,7 +21,7 @@ public class OpenAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response,
                        AccessDeniedException exception) throws IOException, ServletException {
-        ResultBody resultBody = OpenExceptionHandler.resolveException(exception,request.getRequestURI());
+        ResultBody resultBody = OpenGlobalExceptionHandler.resolveException(exception,request.getRequestURI());
         response.setStatus(resultBody.getHttpStatus());
         WebUtils.writeJson(response, resultBody);
     }

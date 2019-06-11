@@ -29,7 +29,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
-        // 构建redis获取token,这里是为了支持自定义用户信息转换器
+        // 构建redis获取token服务类
         resources.tokenServices(OpenHelper.buildRedisTokenServices(redisConnectionFactory));
     }
 
@@ -38,7 +38,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .and()
                 .authorizeRequests()
-                //只有超级管理员角色可执行远程端点
+                // 指定监控可访问权限
                 .requestMatchers(EndpointRequest.toAnyEndpoint()).hasAnyAuthority(CommonConstants.AUTHORITY_ACTUATOR)
                 .anyRequest().authenticated()
                 .and()

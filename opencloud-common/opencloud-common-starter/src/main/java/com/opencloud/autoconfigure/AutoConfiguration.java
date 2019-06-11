@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.opencloud.common.annotation.AnnotationScan;
 import com.opencloud.common.configuration.OpenCommonProperties;
 import com.opencloud.common.configuration.OpenIdGenProperties;
-import com.opencloud.common.exception.OpenExceptionHandler;
+import com.opencloud.common.exception.OpenGlobalExceptionHandler;
 import com.opencloud.common.filter.XssFilter;
 import com.opencloud.common.gen.SnowflakeIdGenerator;
 import com.opencloud.common.health.DbHealthIndicator;
@@ -83,9 +83,9 @@ public class AutoConfiguration {
      * @return
      */
     @Bean
-    @ConditionalOnMissingBean(OpenExceptionHandler.class)
-    public OpenExceptionHandler exceptionHandler() {
-        OpenExceptionHandler exceptionHandler = new OpenExceptionHandler();
+    @ConditionalOnMissingBean(OpenGlobalExceptionHandler.class)
+    public OpenGlobalExceptionHandler exceptionHandler() {
+        OpenGlobalExceptionHandler exceptionHandler = new OpenGlobalExceptionHandler();
         log.info("bean [{}]", exceptionHandler);
         return exceptionHandler;
     }

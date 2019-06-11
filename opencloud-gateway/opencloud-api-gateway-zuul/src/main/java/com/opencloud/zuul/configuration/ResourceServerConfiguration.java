@@ -43,7 +43,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     @Autowired
     private AccessLogService accessLogService;
     @Autowired
-    private AccessAuthorizationManager apiAccessManager;
+    private AccessAuthorizationManager accessAuthorizationManager;
 
     private OAuth2WebSecurityExpressionHandler expressionHandler;
 
@@ -56,7 +56,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
-        // 构建redis获取token,这里是为了支持自定义用户信息转换器
+        // 构建redis获取token服务类
         resources.tokenServices(OpenHelper.buildRedisTokenServices(redisConnectionFactory));
         resources.expressionHandler(expressionHandler);
     }
@@ -67,7 +67,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .and()
                 .authorizeRequests()
                 .anyRequest().authenticated()
-                // 动态访问控制
+                // 动态权限验证
                 .anyRequest().access("@accessAuthorizationManager.check(request,authentication)")
                 .and()
                 //认证鉴权错误处理,为了统一异常处理。每个资源服务器都应该加上。
@@ -76,12 +76,12 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .authenticationEntryPoint(new JsonAuthenticationEntryPoint(accessLogService))
                 .and()
                 .csrf().disable();
-        // 网关日志前置过滤器
+        // 日志前置过滤器
         http.addFilterBefore(new PreRequestFilter(), AbstractPreAuthenticatedProcessingFilter.class);
-        // 增加签名验证过滤器
+        // 签名验证过滤器
         http.addFilterAfter(new SignatureFilter(baseAppRemoteService, apiProperties), AbstractPreAuthenticatedProcessingFilter.class);
-        // 增加IP检测过滤器
-        http.addFilterAfter(new PreCheckFilter(apiAccessManager, new JsonAccessDeniedHandler(accessLogService)), AbstractPreAuthenticatedProcessingFilter.class);
+        // 访问验证前置过滤器
+        http.addFilterAfter(new PreCheckFilter(accessAuthorizationManager, new JsonAccessDeniedHandler(accessLogService)), AbstractPreAuthenticatedProcessingFilter.class);
     }
 }
 

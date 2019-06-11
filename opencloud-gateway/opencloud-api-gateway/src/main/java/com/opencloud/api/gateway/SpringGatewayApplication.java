@@ -46,14 +46,14 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableDiscoveryClient
 @SpringBootApplication
 @RemoteApplicationEventScan(basePackages = "com.opencloud")
-public class ApiGatewayApplication implements CommandLineRunner {
+public class SpringGatewayApplication implements CommandLineRunner {
     @Autowired
     public ApiResourceLocator apiResourceLocator;
     @Autowired
     private JdbcRouteDefinitionLocator jdbcRouteDefinitionLocator;
 
     public static void main(String[] args) {
-        SpringApplication.run(ApiGatewayApplication.class, args);
+        SpringApplication.run(SpringGatewayApplication.class, args);
     }
 
     @Override

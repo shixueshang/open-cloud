@@ -38,10 +38,10 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableFeignClients
 @SpringBootApplication
 @EnableDiscoveryClient
-public class OpenSiteApplication {
+public class SiteApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(OpenSiteApplication.class, args);
+        SpringApplication.run(SiteApplication.class, args);
     }
 
 

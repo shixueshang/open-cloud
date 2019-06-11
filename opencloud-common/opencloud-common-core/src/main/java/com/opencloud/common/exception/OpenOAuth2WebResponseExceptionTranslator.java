@@ -14,12 +14,12 @@ import javax.servlet.http.HttpServletRequest;
  * @author liuyadu
  */
 @Slf4j
-public class Oauth2WebResponseExceptionTranslator implements WebResponseExceptionTranslator {
+public class OpenOAuth2WebResponseExceptionTranslator implements WebResponseExceptionTranslator {
 
     @Override
     public ResponseEntity translate(Exception e) throws Exception {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        ResultBody responseData = OpenExceptionHandler.resolveOauthException(e,request.getRequestURI());
+        ResultBody responseData = OpenGlobalExceptionHandler.resolveOauthException(e,request.getRequestURI());
         return ResponseEntity.status(responseData.getHttpStatus()).body(responseData);
     }
 }

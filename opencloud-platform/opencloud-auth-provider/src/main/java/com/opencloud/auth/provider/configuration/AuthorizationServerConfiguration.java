@@ -1,7 +1,7 @@
 package com.opencloud.auth.provider.configuration;
 
 import com.opencloud.auth.client.config.SocialOAuth2ClientProperties;
-import com.opencloud.common.exception.Oauth2WebResponseExceptionTranslator;
+import com.opencloud.common.exception.OpenOAuth2WebResponseExceptionTranslator;
 import com.opencloud.common.security.OpenHelper;
 import com.opencloud.common.security.OpenTokenEnhancer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +64,6 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     }
 
 
-
     /**
      * 授权store
      *
@@ -76,7 +75,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     }
 
     /**
-     * 自定义生成令牌
+     * 令牌信息拓展
      *
      * @return
      */
@@ -86,7 +85,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     }
 
     /**
-     * 授权码存放
+     * 授权码
      *
      * @return
      */
@@ -119,7 +118,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
         // 自定义错误页
         endpoints.pathMapping("/oauth/error", "/oauth/error");
         // 自定义异常转换类
-        endpoints.exceptionTranslator(new Oauth2WebResponseExceptionTranslator());
+        endpoints.exceptionTranslator(new OpenOAuth2WebResponseExceptionTranslator());
     }
 
     @Override
@@ -127,7 +126,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
         security
                 // 开启/oauth/check_token验证端口认证权限访问
                 .checkTokenAccess("isAuthenticated()")
-                //开启客户端授权
+                // 开启表单认证
                 .allowFormAuthenticationForClients();
     }
 

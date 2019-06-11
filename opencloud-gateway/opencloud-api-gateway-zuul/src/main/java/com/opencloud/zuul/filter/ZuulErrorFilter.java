@@ -2,9 +2,14 @@ package com.opencloud.zuul.filter;
 
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
+import com.opencloud.common.exception.OpenGlobalExceptionHandler;
+import com.opencloud.common.model.ResultBody;
+import com.opencloud.common.utils.StringUtils;
+import com.opencloud.common.utils.WebUtils;
 import com.opencloud.zuul.service.AccessLogService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
+import org.springframework.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,7 +48,13 @@ public class ZuulErrorFilter extends ZuulFilter {
         RequestContext ctx = RequestContext.getCurrentContext();
         HttpServletRequest request = ctx.getRequest();
         HttpServletResponse response = ctx.getResponse();
-        accessLogService.sendLog(request, response,(Exception) ctx.getThrowable());
+        Exception exception = new Exception(ctx.getThrowable());
+        if(StringUtils.toBoolean(ctx.get("rateLimitExceeded"))){
+            exception = new Exception(HttpStatus.TOO_MANY_REQUESTS.name());
+        }
+        accessLogService.sendLog(request, response,exception);
+        ResultBody resultBody = OpenGlobalExceptionHandler.resolveException(exception,request.getRequestURI());
+        WebUtils.writeJson(response, resultBody);
         return null;
     }
 }

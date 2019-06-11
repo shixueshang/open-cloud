@@ -20,7 +20,7 @@ public class OpenSignatureDeniedHandler implements SignatureDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response,
                        Exception exception) throws IOException, ServletException {
-        ResultBody resultBody = OpenExceptionHandler.resolveException(exception, request.getRequestURI());
+        ResultBody resultBody = OpenGlobalExceptionHandler.resolveException(exception, request.getRequestURI());
         response.setStatus(resultBody.getHttpStatus());
         WebUtils.writeJson(response, resultBody);
     }

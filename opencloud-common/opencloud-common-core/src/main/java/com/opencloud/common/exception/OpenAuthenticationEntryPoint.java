@@ -22,7 +22,7 @@ public class OpenAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException exception) throws IOException, ServletException {
-        ResultBody resultBody = OpenExceptionHandler.resolveException(exception,request.getRequestURI());
+        ResultBody resultBody = OpenGlobalExceptionHandler.resolveException(exception,request.getRequestURI());
         response.setStatus(resultBody.getHttpStatus());
         WebUtils.writeJson(response, resultBody);
     }

@@ -12,7 +12,7 @@ public class RateLimitApi extends BaseApi implements Serializable {
     private Long itemId;
     private Long policyId;
     private String policyName;
-    private Long limit;
+    private Long limitQuota;
     private String intervalUnit;
 
     public Long getItemId() {
@@ -39,12 +39,12 @@ public class RateLimitApi extends BaseApi implements Serializable {
         this.policyName = policyName;
     }
 
-    public Long getLimit() {
-        return limit;
+    public Long getLimitQuota() {
+        return limitQuota;
     }
 
-    public void setLimit(Long limit) {
-        this.limit = limit;
+    public void setLimitQuota(Long limitQuota) {
+        this.limitQuota = limitQuota;
     }
 
     public String getIntervalUnit() {

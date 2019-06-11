@@ -41,7 +41,7 @@ public interface BaseAppService extends IBaseService<BaseApp> {
     /**
      * 更新应用开发新型
      *
-     * @param openClient
+     * @param client
      */
     void updateAppClientInfo(OpenClient client);
 

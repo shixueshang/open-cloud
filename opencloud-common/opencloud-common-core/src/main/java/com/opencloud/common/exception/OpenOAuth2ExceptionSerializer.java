@@ -14,14 +14,14 @@ import java.util.Map;
  * @author liuyadu
  */
 @Slf4j
-public class Oauth2ExceptionSerializer extends StdSerializer<Oauth2Exception> {
+public class OpenOAuth2ExceptionSerializer extends StdSerializer<OpenOAuth2Exception> {
 
-    public Oauth2ExceptionSerializer() {
-        super(Oauth2Exception.class);
+    public OpenOAuth2ExceptionSerializer() {
+        super(OpenOAuth2Exception.class);
     }
 
     @Override
-    public void serialize(Oauth2Exception ex, JsonGenerator gen, SerializerProvider provider) throws IOException {
+    public void serialize(OpenOAuth2Exception ex, JsonGenerator gen, SerializerProvider provider) throws IOException {
         gen.writeStartObject();
         gen.writeStringField("message", ex.getMessage());
         gen.writeStringField("data", "");

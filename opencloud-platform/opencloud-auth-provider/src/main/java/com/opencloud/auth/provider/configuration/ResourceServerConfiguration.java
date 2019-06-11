@@ -45,7 +45,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .and()
                 .authorizeRequests()
                 .antMatchers("/login/**","/oauth/**").permitAll()
-                // 只有拥有actuator权限可执行远程端点
+                // 指定监控访问权限
                 .requestMatchers(EndpointRequest.toAnyEndpoint()).hasAnyAuthority(CommonConstants.AUTHORITY_ACTUATOR)
                 .anyRequest().authenticated()
                 .and()

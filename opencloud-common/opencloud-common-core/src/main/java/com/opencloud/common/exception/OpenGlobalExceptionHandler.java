@@ -26,7 +26,7 @@ import java.util.Optional;
 @ControllerAdvice
 @ResponseBody
 @Slf4j
-public class OpenExceptionHandler {
+public class OpenGlobalExceptionHandler {
 
 
     /**
@@ -213,6 +213,8 @@ public class OpenExceptionHandler {
             code = ResultEnum.ALERT;
         } else if (className.contains("OpenSignatureException")) {
             code = ResultEnum.SIGNATURE_DENIED;
+        }else if(message.equalsIgnoreCase(ResultEnum.TOO_MANY_REQUESTS.name())){
+            code = ResultEnum.TOO_MANY_REQUESTS;
         }
         return buildBody(ex, code, path, httpStatus);
     }

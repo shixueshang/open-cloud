@@ -43,7 +43,7 @@ public class GatewayRateLimitServiceImpl extends BaseServiceImpl<GatewayRateLimi
         QueryWrapper<GatewayRateLimit> queryWrapper = new QueryWrapper();
         queryWrapper.lambda()
                 .likeRight(ObjectUtils.isNotEmpty(query.getPolicyName()),GatewayRateLimit::getPolicyName, query.getPolicyName())
-                .eq(ObjectUtils.isNotEmpty(query.getLimitType()),GatewayRateLimit::getLimitType, query.getLimitType());
+                .eq(ObjectUtils.isNotEmpty(query.getPolicyType()),GatewayRateLimit::getPolicyType, query.getPolicyType());
         queryWrapper.orderByDesc("create_time");
         return gatewayRateLimitMapper.selectPage(pageParams,queryWrapper);
     }

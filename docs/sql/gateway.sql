@@ -84,10 +84,9 @@ DROP TABLE IF EXISTS `gateway_rate_limit`;
 CREATE TABLE `gateway_rate_limit` (
                                     `policy_id` bigint(20) NOT NULL,
                                     `policy_name` varchar(255) DEFAULT NULL,
-                                    `service_id` varchar(0) NOT NULL COMMENT '服务名',
-                                    `limit` bigint(20) NOT NULL DEFAULT '0' COMMENT '流量限制',
-                                    `interval_unit` varchar(10) NOT NULL DEFAULT 'second' COMMENT '时间单位:second-秒,minute-分钟,hour-小时,day-天',
-                                    `limit_type` varchar(255) DEFAULT NULL COMMENT '限流规则类型:url,origin,user',
+                                    `limit_quota` bigint(20) NOT NULL DEFAULT '0' COMMENT '限流数',
+                                    `interval_unit` varchar(10) NOT NULL DEFAULT 'seconds' COMMENT '单位时间:seconds-秒,minutes-分钟,hours-小时,days-天',
+                                    `policy_type` varchar(255) DEFAULT NULL COMMENT '限流规则类型:url,origin,user',
                                     `create_time` datetime NOT NULL,
                                     `update_time` datetime NOT NULL,
                                     PRIMARY KEY (`policy_id`)
@@ -107,35 +106,6 @@ CREATE TABLE `gateway_rate_limit_api` (
                                         KEY `policy_id` (`policy_id`) USING BTREE,
                                         KEY `api_id` (`api_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='开放网关-流量控制-API接口';
-
--- ----------------------------
--- Records of gateway_rate_limit_api
--- ----------------------------
-
--- ----------------------------
--- Table structure for gateway_rate_limit_origin
--- ----------------------------
-DROP TABLE IF EXISTS `gateway_rate_limit_origin`;
-CREATE TABLE `gateway_rate_limit_origin` (
-                                           `policy_id` bigint(11) NOT NULL DEFAULT '0' COMMENT '限制数量',
-                                           `origins` bigint(11) NOT NULL DEFAULT '1' COMMENT '来源域名',
-                                           KEY `policy_id` (`policy_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='开放网关-流量控制-来源限流';
-
--- ----------------------------
--- Records of gateway_rate_limit_origin
--- ----------------------------
-
--- ----------------------------
--- Table structure for gateway_rate_limit_role
--- ----------------------------
-DROP TABLE IF EXISTS `gateway_rate_limit_role`;
-CREATE TABLE `gateway_rate_limit_role` (
-                                         `policy_id` bigint(11) NOT NULL DEFAULT '0' COMMENT '限制数量',
-                                         `role_id` bigint(11) NOT NULL DEFAULT '1' COMMENT '角色Id',
-                                         KEY `policy_id` (`policy_id`) USING BTREE,
-                                         KEY `role_id` (`role_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='开放网关-流量控制-角色限流';
 
 -- ----------------------------
 -- Records of gateway_rate_limit_role

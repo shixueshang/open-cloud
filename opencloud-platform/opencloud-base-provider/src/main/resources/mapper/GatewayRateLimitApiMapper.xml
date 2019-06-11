@@ -16,17 +16,16 @@
         -->
         <result column="policy_id" jdbcType="BIGINT" property="policyId"/>
         <result column="policy_name" jdbcType="VARCHAR" property="policyName"/>
-        <result column="limit" jdbcType="BIGINT" property="limit"/>
+        <result column="limit_quota" jdbcType="BIGINT" property="limitQuota"/>
         <result column="interval_unit" jdbcType="VARCHAR" property="intervalUnit"/>
     </resultMap>
 
     <select id="selectRateLimitApi" resultMap="RateLimitApi">
         SELECT
             i.policy_id,
-            p.`limit`,
+            p.limit_quota,
             p.interval_unit,
             p.policy_name,
-            i.api_id,
             a.api_id,
             a.api_code,
             a.api_name,
@@ -38,6 +37,6 @@
                INNER JOIN gateway_rate_limit AS p ON i.policy_id = p.policy_id
                INNER JOIN base_api AS a ON i.api_id = a.api_id
         WHERE
-            p.limit_type = 'url'
+            p.policy_type = 'url'
     </select>
 </mapper>

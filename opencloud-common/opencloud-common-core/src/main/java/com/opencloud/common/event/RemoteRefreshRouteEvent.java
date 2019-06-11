@@ -6,12 +6,12 @@ import org.springframework.cloud.bus.event.RemoteApplicationEvent;
  * 自定义网关刷新远程事件
  * @author liuyadu
  */
-public class GatewayRemoteRefreshRouteEvent extends RemoteApplicationEvent {
+public class RemoteRefreshRouteEvent extends RemoteApplicationEvent {
 
-    private GatewayRemoteRefreshRouteEvent() {
+    private RemoteRefreshRouteEvent() {
     }
 
-    public GatewayRemoteRefreshRouteEvent(Object source, String originService, String destinationService) {
+    public RemoteRefreshRouteEvent(Object source, String originService, String destinationService) {
         super(source, originService, destinationService);
     }
 }

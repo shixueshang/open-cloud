@@ -88,7 +88,7 @@ public class ResourceServerConfiguration {
         // 自定义oauth2 认证, 使用redis读取token,而非jwt方式
         JsonAuthenticationEntryPoint entryPoint = new JsonAuthenticationEntryPoint(accessLogService);
         JsonAccessDeniedHandler accessDeniedHandler = new JsonAccessDeniedHandler(accessLogService);
-        AccessAuthorizationManager apiAuthorizationManager = new AccessAuthorizationManager(apiAccessLocator, apiGatewayProperties);
+        AccessAuthorizationManager accessAuthorizationManager = new AccessAuthorizationManager(apiAccessLocator, apiGatewayProperties);
         AuthenticationWebFilter oauth2 = new AuthenticationWebFilter(new RedisAuthenticationManager(new RedisTokenStore(redisConnectionFactory)));
         oauth2.setServerAuthenticationConverter(new ServerBearerTokenAuthenticationConverter());
         oauth2.setAuthenticationFailureHandler(new ServerAuthenticationEntryPointFailureHandler(entryPoint));
@@ -96,19 +96,20 @@ public class ResourceServerConfiguration {
                 .httpBasic().disable()
                 .csrf().disable()
                 .authorizeExchange()
-                .anyExchange().access(apiAuthorizationManager)
+                // 动态权限验证
+                .anyExchange().access(accessAuthorizationManager)
                 .and().exceptionHandling()
                 .accessDeniedHandler(accessDeniedHandler)
                 .authenticationEntryPoint(entryPoint).and()
-                // 前置过滤器 添加请求时间
+                // 日志前置过滤器
                 .addFilterAt(new PreRequestFilter(), SecurityWebFiltersOrder.FIRST)
                 // 跨域过滤器
                 .addFilterAt(corsFilter(), SecurityWebFiltersOrder.CORS)
-                // IP访问限制过滤器
-                .addFilterAt(new PreCheckFilter(apiAuthorizationManager, accessDeniedHandler), SecurityWebFiltersOrder.CSRF)
+                // 访问验证前置过滤器
+                .addFilterAt(new PreCheckFilter(accessAuthorizationManager, accessDeniedHandler), SecurityWebFiltersOrder.CSRF)
                 // oauth2认证过滤器
                 .addFilterAt(oauth2, SecurityWebFiltersOrder.AUTHENTICATION)
-                // 日志过滤器放到最后
+                // 日志过滤器
                 .addFilterAt(new AccessLogFilter(accessLogService), SecurityWebFiltersOrder.LAST);
         return http.build();
     }

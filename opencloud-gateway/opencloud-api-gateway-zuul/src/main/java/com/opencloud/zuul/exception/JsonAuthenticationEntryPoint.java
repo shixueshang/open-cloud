@@ -1,6 +1,6 @@
 package com.opencloud.zuul.exception;
 
-import com.opencloud.common.exception.OpenExceptionHandler;
+import com.opencloud.common.exception.OpenGlobalExceptionHandler;
 import com.opencloud.common.model.ResultBody;
 import com.opencloud.common.utils.WebUtils;
 import com.opencloud.zuul.service.AccessLogService;
@@ -28,7 +28,7 @@ public class JsonAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException exception) throws IOException, ServletException {
-        ResultBody resultBody = OpenExceptionHandler.resolveException(exception,request.getRequestURI());
+        ResultBody resultBody = OpenGlobalExceptionHandler.resolveException(exception,request.getRequestURI());
         response.setStatus(resultBody.getHttpStatus());
         // 保存日志
         accessLogService.sendLog(request, response,exception);

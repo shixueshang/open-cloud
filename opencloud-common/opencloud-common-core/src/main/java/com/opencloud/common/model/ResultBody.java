@@ -5,15 +5,12 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Maps;
 import com.opencloud.common.constants.ResultEnum;
-import com.opencloud.common.utils.SpringContextHolder;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 
 import java.io.Serializable;
-import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
  * @author admin
@@ -158,9 +155,11 @@ public class ResultBody<T> implements Serializable {
     }
 
     /**
-     * 国际化配置
+     * 错误信息配置
      */
-    private static Locale locale = LocaleContextHolder.getLocale();
+    @JSONField(serialize = false, deserialize = false)
+    @JsonIgnore
+    private static ResourceBundle resourceBundle = ResourceBundle.getBundle("error");
 
     /**
      * 提示信息国际化
@@ -169,9 +168,10 @@ public class ResultBody<T> implements Serializable {
      * @param defaultMessage
      * @return
      */
+    @JSONField(serialize = false, deserialize = false)
+    @JsonIgnore
     private static String i18n(String message, String defaultMessage) {
-        MessageSource messageSource = SpringContextHolder.getBean(MessageSource.class);
-        return messageSource.getMessage(message, null, defaultMessage, locale);
+        return resourceBundle.containsKey(message)?resourceBundle.getString(message):defaultMessage;
     }
 
 

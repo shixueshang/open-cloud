@@ -2,7 +2,7 @@ package com.opencloud.api.gateway.locator;
 
 import com.google.common.collect.Lists;
 import com.opencloud.base.client.model.entity.GatewayRoute;
-import com.opencloud.common.event.GatewayRemoteRefreshRouteEvent;
+import com.opencloud.common.event.RemoteRefreshRouteEvent;
 import com.opencloud.common.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.FilterDefinition;
@@ -31,7 +31,7 @@ import java.util.Map;
  * @author liuyadu
  */
 @Slf4j
-public class JdbcRouteDefinitionLocator implements RouteDefinitionLocator, ApplicationListener<GatewayRemoteRefreshRouteEvent> {
+public class JdbcRouteDefinitionLocator implements RouteDefinitionLocator, ApplicationListener<RemoteRefreshRouteEvent> {
     private JdbcTemplate jdbcTemplate;
     private Flux<RouteDefinition> routeDefinitions;
     private Map<String, List> cache = new HashMap<>();
@@ -58,7 +58,7 @@ public class JdbcRouteDefinitionLocator implements RouteDefinitionLocator, Appli
     }
 
     @Override
-    public void onApplicationEvent(GatewayRemoteRefreshRouteEvent event) {
+    public void onApplicationEvent(RemoteRefreshRouteEvent event) {
         refresh();
     }
 

@@ -101,34 +101,31 @@ public class GatewayRateLimitController {
      * 添加流量控制
      *
      * @param policyName   策略名称
-     * @param serviceId    服务名
-     * @param limit        限制数
+     * @param limitQuota        限制数
      * @param intervalUnit 单位时间
-     * @param limitType    限流规则类型
+     * @param policyType    限流规则类型
      * @return
      */
     @ApiOperation(value = "添加流量控制", notes = "添加流量控制")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "policyName", required = true, value = "策略名称", paramType = "form"),
-            @ApiImplicitParam(name = "serviceId", required = true, value = "服务名", paramType = "form"),
-            @ApiImplicitParam(name = "limit", required = true, value = "限制数", paramType = "form"),
-            @ApiImplicitParam(name = "intervalUnit", required = true, value = "单位时间:second-秒,minute-分钟,hour-小时,day-天", allowableValues = "second,minute,hour,day", paramType = "form"),
-            @ApiImplicitParam(name = "limitType", required = true, value = "限流规则类型:url,origin,user", allowableValues = "url,origin,user", paramType = "form")
+            @ApiImplicitParam(name = "policyType", required = true, value = "限流规则类型:url,origin,user", allowableValues = "url,origin,user", paramType = "form"),
+            @ApiImplicitParam(name = "limitQuota", required = true, value = "限制数", paramType = "form"),
+            @ApiImplicitParam(name = "intervalUnit", required = true, value = "单位时间:seconds-秒,minutes-分钟,hours-小时,days-天", allowableValues = "seconds,minutes,hours,days", paramType = "form"),
     })
     @PostMapping("/gateway/limit/rate/add")
     public ResultBody<Long> addRateLimit(
             @RequestParam(value = "policyName") String policyName,
-            @RequestParam(value = "serviceId") String serviceId,
-            @RequestParam(value = "limit") Long limit,
-            @RequestParam(value = "intervalUnit") String intervalUnit,
-            @RequestParam(value = "limitType") String limitType
+            @RequestParam(value = "policyType") String policyType,
+            @RequestParam(value = "limitQuota") Long limitQuota,
+            @RequestParam(value = "intervalUnit") String intervalUnit
+
     ) {
         GatewayRateLimit rateLimit = new GatewayRateLimit();
         rateLimit.setPolicyName(policyName);
-        rateLimit.setServiceId(serviceId);
-        rateLimit.setLimit(limit);
+        rateLimit.setLimitQuota(limitQuota);
         rateLimit.setIntervalUnit(intervalUnit);
-        rateLimit.setLimitType(limitType);
+        rateLimit.setPolicyType(policyType);
         Long policyId = null;
         GatewayRateLimit result = gatewayRateLimitService.addRateLimitPolicy(rateLimit);
         if(result!=null){
@@ -142,37 +139,33 @@ public class GatewayRateLimitController {
      *
      * @param policyId     流量控制ID
      * @param policyName   策略名称
-     * @param serviceId    服务名
-     * @param limit        限制数
+     * @param limitQuota        限制数
      * @param intervalUnit 单位时间
-     * @param limitType    限流规则类型
+     * @param policyType    限流规则类型
      * @return
      */
     @ApiOperation(value = "编辑流量控制", notes = "编辑流量控制")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "policyId", required = true, value = "接口Id", paramType = "form"),
             @ApiImplicitParam(name = "policyName", required = true, value = "策略名称", paramType = "form"),
-            @ApiImplicitParam(name = "serviceId", required = true, value = "服务名", paramType = "form"),
-            @ApiImplicitParam(name = "limit", required = true, value = "限制数", paramType = "form"),
-            @ApiImplicitParam(name = "intervalUnit", required = true, value = "单位时间:second-秒,minute-分钟,hour-小时,day-天", allowableValues = "second,minute,hour,day", paramType = "form"),
-            @ApiImplicitParam(name = "limitType", required = true, value = "限流规则类型:url,origin,user", allowableValues = "url,origin,user", paramType = "form")
+            @ApiImplicitParam(name = "policyType", required = true, value = "限流规则类型:url,origin,user", allowableValues = "url,origin,user", paramType = "form"),
+            @ApiImplicitParam(name = "limitQuota", required = true, value = "限制数", paramType = "form"),
+            @ApiImplicitParam(name = "intervalUnit", required = true, value = "单位时间:seconds-秒,minutes-分钟,hours-小时,days-天", allowableValues = "seconds,minutes,hours,days", paramType = "form"),
     })
     @PostMapping("/gateway/limit/rate/update")
     public ResultBody updateRateLimit(
             @RequestParam("policyId") Long policyId,
             @RequestParam(value = "policyName") String policyName,
-            @RequestParam(value = "serviceId") String serviceId,
-            @RequestParam(value = "limit") Long limit,
-            @RequestParam(value = "intervalUnit") String intervalUnit,
-            @RequestParam(value = "limitType") String limitType
+            @RequestParam(value = "policyType") String policyType,
+            @RequestParam(value = "limitQuota") Long limitQuota,
+            @RequestParam(value = "intervalUnit") String intervalUnit
     ) {
         GatewayRateLimit rateLimit = new GatewayRateLimit();
         rateLimit.setPolicyId(policyId);
         rateLimit.setPolicyName(policyName);
-        rateLimit.setServiceId(serviceId);
-        rateLimit.setLimit(limit);
+        rateLimit.setLimitQuota(limitQuota);
         rateLimit.setIntervalUnit(intervalUnit);
-        rateLimit.setLimitType(limitType);
+        rateLimit.setPolicyType(policyType);
         gatewayRateLimitService.updateRateLimitPolicy(rateLimit);
         openRestTemplate.refreshGateway();
         return ResultBody.ok();

@@ -3,7 +3,7 @@ package com.opencloud.zuul.locator;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.opencloud.base.client.model.entity.GatewayRoute;
-import com.opencloud.common.event.GatewayRemoteRefreshRouteEvent;
+import com.opencloud.common.event.RemoteRefreshRouteEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.cloud.netflix.zuul.RoutesRefreshedEvent;
@@ -30,7 +30,7 @@ import java.util.Map;
  * @description:
  */
 @Slf4j
-public class JdbcRouteLocator extends SimpleRouteLocator implements ApplicationListener<GatewayRemoteRefreshRouteEvent> {
+public class JdbcRouteLocator extends SimpleRouteLocator implements ApplicationListener<RemoteRefreshRouteEvent> {
 
     private JdbcTemplate jdbcTemplate;
     private ZuulProperties properties;
@@ -138,7 +138,7 @@ public class JdbcRouteLocator extends SimpleRouteLocator implements ApplicationL
     }
 
     @Override
-    public void onApplicationEvent(GatewayRemoteRefreshRouteEvent gatewayRemoteRefreshRouteEvent) {
+    public void onApplicationEvent(RemoteRefreshRouteEvent gatewayRemoteRefreshRouteEvent) {
         doRefresh();
     }
 }

@@ -21,23 +21,19 @@ public class GatewayRateLimit implements Serializable {
     private String policyName;
 
     /**
-     * 服务名称
+     * 限流规则类型:url,origin,user
      */
-    private String serviceId;
+    private String policyType;
+
     /**
      * 限制数
      */
-    private Long limit;
+    private Long limitQuota;
 
     /**
-     * 单位时间:second-秒,minute-分钟,hour-小时,day-天
+     * 单位时间:seconds-秒,minutes-分钟,hours-小时,days-天
      */
     private String intervalUnit;
-
-    /**
-     * 限流规则类型:url,origin,user
-     */
-    private String limitType;
 
     private Date createTime;
 
@@ -46,29 +42,18 @@ public class GatewayRateLimit implements Serializable {
     private static final long serialVersionUID = 1L;
 
 
-    /**
-     * 获取流量限制
-     *
-     * @return limit - 流量限制
-     */
-    public Long getLimit() {
-        return limit;
+    public Long getLimitQuota() {
+        return limitQuota;
+    }
+
+    public void setLimitQuota(Long limitQuota) {
+        this.limitQuota = limitQuota;
     }
 
     /**
-     * 设置流量限制
+     * 获取时间单位:seconds-秒,minutes-分钟,hours-小时,days-天
      *
-     * @param limit 流量限制
-     */
-    public void setLimit(Long limit) {
-        this.limit = limit;
-    }
-
-
-    /**
-     * 获取时间单位:second-秒,minute-分钟,hour-小时,day-天
-     *
-     * @return interval_unit - 时间单位:second-秒,minute-分钟,hour-小时,day-天
+     * @return interval_unit - 时间单位:seconds-秒,minutes-分钟,hours-小时,days-天
      */
     public String getIntervalUnit() {
         return intervalUnit;
@@ -128,19 +113,11 @@ public class GatewayRateLimit implements Serializable {
         this.policyName = policyName;
     }
 
-    public String getServiceId() {
-        return serviceId;
+    public String getPolicyType() {
+        return policyType;
     }
 
-    public void setServiceId(String serviceId) {
-        this.serviceId = serviceId;
-    }
-
-    public String getLimitType() {
-        return limitType;
-    }
-
-    public void setLimitType(String limitType) {
-        this.limitType = limitType;
+    public void setPolicyType(String policyType) {
+        this.policyType = policyType;
     }
 }

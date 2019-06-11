@@ -2,7 +2,7 @@ package com.opencloud.api.gateway.exception;
 
 import com.alibaba.fastjson.JSONObject;
 import com.opencloud.api.gateway.service.AccessLogService;
-import com.opencloud.common.exception.OpenExceptionHandler;
+import com.opencloud.common.exception.OpenGlobalExceptionHandler;
 import com.opencloud.common.model.ResultBody;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.buffer.DataBuffer;
@@ -32,7 +32,7 @@ public class JsonAuthenticationEntryPoint implements ServerAuthenticationEntryPo
 
     @Override
     public Mono<Void> commence(ServerWebExchange exchange, AuthenticationException e) {
-        ResultBody resultBody = OpenExceptionHandler.resolveException(e,exchange.getRequest().getURI().getPath());
+        ResultBody resultBody = OpenGlobalExceptionHandler.resolveException(e,exchange.getRequest().getURI().getPath());
         return Mono.defer(() -> {
             return Mono.just(exchange.getResponse());
         }).flatMap((response) -> {

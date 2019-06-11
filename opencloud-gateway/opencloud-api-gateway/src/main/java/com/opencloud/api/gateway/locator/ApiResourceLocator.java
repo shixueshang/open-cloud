@@ -6,7 +6,7 @@ import com.opencloud.api.gateway.service.feign.BaseAuthorityRemoteService;
 import com.opencloud.api.gateway.service.feign.GatewayRemoteService;
 import com.opencloud.base.client.model.AuthorityResource;
 import com.opencloud.base.client.model.IpLimitApi;
-import com.opencloud.common.event.GatewayRemoteRefreshRouteEvent;
+import com.opencloud.common.event.RemoteRefreshRouteEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.route.RouteDefinitionLocator;
 import org.springframework.cloud.gateway.support.NameUtils;
@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
  * @author liuyadu
  */
 @Slf4j
-public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefreshRouteEvent> {
+public class ApiResourceLocator implements ApplicationListener<RemoteRefreshRouteEvent> {
     /**
      * 单位时间
      */
@@ -97,7 +97,7 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
     }
 
     @Override
-    public void onApplicationEvent(GatewayRemoteRefreshRouteEvent event) {
+    public void onApplicationEvent(RemoteRefreshRouteEvent event) {
         refresh();
     }
 
@@ -199,13 +199,13 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
      * @return
      */
     private long[] getIntervalAndQuota(String timeUnit) {
-        if (timeUnit.equals(TimeUnit.SECONDS.name())) {
+        if (timeUnit.equalsIgnoreCase(TimeUnit.SECONDS.name())) {
             return new long[]{SECONDS_IN_MINUTE, PERIOD_SECOND_TTL};
-        } else if (timeUnit.equals(TimeUnit.MINUTES.name())) {
+        } else if (timeUnit.equalsIgnoreCase(TimeUnit.MINUTES.name())) {
             return new long[]{SECONDS_IN_MINUTE, PERIOD_MINUTE_TTL};
-        } else if (timeUnit.equals(TimeUnit.HOURS.name())) {
+        } else if (timeUnit.equalsIgnoreCase(TimeUnit.HOURS.name())) {
             return new long[]{SECONDS_IN_HOUR, PERIOD_HOUR_TTL};
-        } else if (timeUnit.equals(TimeUnit.DAYS.name())) {
+        } else if (timeUnit.equalsIgnoreCase(TimeUnit.DAYS.name())) {
             return new long[]{SECONDS_IN_DAY, PERIOD_DAY_TTL};
         } else {
             throw new IllegalArgumentException("Don't support this TimeUnit: " + timeUnit);

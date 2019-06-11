@@ -1,6 +1,6 @@
 package com.opencloud.api.gateway.actuator;
 
-import com.opencloud.common.event.GatewayRemoteRefreshRouteEvent;
+import com.opencloud.common.event.RemoteRefreshRouteEvent;
 import com.opencloud.common.model.ResultBody;
 import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
 import org.springframework.cloud.bus.endpoint.AbstractBusEndpoint;
@@ -29,7 +29,7 @@ public class OpenApiEndpoint extends AbstractBusEndpoint {
      */
     @PostMapping("/refresh")
     public ResultBody busRefreshWithDestination(@RequestParam(required = false)  String destination) {
-        this.publish(new GatewayRemoteRefreshRouteEvent(this, this.getInstanceId(), destination));
+        this.publish(new RemoteRefreshRouteEvent(this, this.getInstanceId(), destination));
         return ResultBody.ok();
     }
 }

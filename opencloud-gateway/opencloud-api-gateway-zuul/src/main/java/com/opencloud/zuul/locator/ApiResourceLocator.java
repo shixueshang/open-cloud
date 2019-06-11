@@ -7,7 +7,7 @@ import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.support.StringToMatc
 import com.opencloud.base.client.model.AuthorityResource;
 import com.opencloud.base.client.model.IpLimitApi;
 import com.opencloud.base.client.model.RateLimitApi;
-import com.opencloud.common.event.GatewayRemoteRefreshRouteEvent;
+import com.opencloud.common.event.RemoteRefreshRouteEvent;
 import com.opencloud.zuul.service.feign.BaseAuthorityRemoteService;
 import com.opencloud.zuul.service.feign.GatewayRemoteService;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
  * @author liuyadu
  */
 @Slf4j
-public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefreshRouteEvent> {
+public class ApiResourceLocator implements ApplicationListener<RemoteRefreshRouteEvent> {
     /**
      * 单位时间
      */
@@ -238,9 +238,7 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
                     long[] arry = getIntervalAndQuota(item.getIntervalUnit());
                     Long refreshInterval = arry[0];
                     Long quota = arry[1];
-                    String url = getFullPath(item.getServiceId(), item.getPath());
-                    item.setPath(url);
-                    policy.setLimit(item.getLimit());
+                    policy.setLimit(item.getLimitQuota());
                     policy.setRefreshInterval(refreshInterval);
                     policy.setQuota(quota);
                     String type = "url=".concat(item.getPath());
@@ -265,13 +263,13 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
      * @return
      */
     private long[] getIntervalAndQuota(String timeUnit) {
-        if (timeUnit.equals(TimeUnit.SECONDS.name())) {
+        if (timeUnit.equalsIgnoreCase(TimeUnit.SECONDS.name())) {
             return new long[]{SECONDS_IN_MINUTE, PERIOD_SECOND_TTL};
-        } else if (timeUnit.equals(TimeUnit.MINUTES.name())) {
+        } else if (timeUnit.equalsIgnoreCase(TimeUnit.MINUTES.name())) {
             return new long[]{SECONDS_IN_MINUTE, PERIOD_MINUTE_TTL};
-        } else if (timeUnit.equals(TimeUnit.HOURS.name())) {
+        } else if (timeUnit.equalsIgnoreCase(TimeUnit.HOURS.name())) {
             return new long[]{SECONDS_IN_HOUR, PERIOD_HOUR_TTL};
-        } else if (timeUnit.equals(TimeUnit.DAYS.name())) {
+        } else if (timeUnit.equalsIgnoreCase(TimeUnit.DAYS.name())) {
             return new long[]{SECONDS_IN_DAY, PERIOD_DAY_TTL};
         } else {
             throw new java.lang.IllegalArgumentException("Don't support this TimeUnit: " + timeUnit);
@@ -319,7 +317,7 @@ public class ApiResourceLocator implements ApplicationListener<GatewayRemoteRefr
     }
 
     @Override
-    public void onApplicationEvent(GatewayRemoteRefreshRouteEvent gatewayRemoteRefreshRouteEvent) {
+    public void onApplicationEvent(RemoteRefreshRouteEvent gatewayRemoteRefreshRouteEvent) {
         refresh();
     }
 }

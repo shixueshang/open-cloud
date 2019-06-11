@@ -2,6 +2,8 @@ package com.opencloud.zuul.configuration;
 
 import com.google.common.collect.Lists;
 import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.config.properties.RateLimitProperties;
+import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.config.repository.DefaultRateLimiterErrorHandler;
+import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.config.repository.RateLimiterErrorHandler;
 import com.netflix.zuul.ZuulFilter;
 import com.opencloud.zuul.actuator.OpenApiEndpoint;
 import com.opencloud.zuul.filter.ZuulErrorFilter;
@@ -138,5 +140,4 @@ public class ApiConfiguration {
         bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return bean;
     }
-
 }

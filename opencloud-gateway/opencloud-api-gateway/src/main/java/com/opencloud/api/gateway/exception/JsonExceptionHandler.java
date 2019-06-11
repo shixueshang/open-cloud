@@ -2,7 +2,7 @@ package com.opencloud.api.gateway.exception;
 
 import com.opencloud.api.gateway.service.AccessLogService;
 import com.opencloud.common.constants.ResultEnum;
-import com.opencloud.common.exception.OpenExceptionHandler;
+import com.opencloud.common.exception.OpenGlobalExceptionHandler;
 import com.opencloud.common.model.ResultBody;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
@@ -98,7 +98,7 @@ public class JsonExceptionHandler implements ErrorWebExceptionHandler {
             resultBody = ResultBody.failed().code(ResultEnum.SERVICE_UNAVAILABLE.getCode()).msg(ResultEnum.SERVICE_UNAVAILABLE.getMessage()).httpStatus(HttpStatus.SERVICE_UNAVAILABLE.value()).path(request.getURI().getPath());
             log.error("==> 错误解析:{}", resultBody);
         } else {
-            resultBody = OpenExceptionHandler.resolveException((Exception) ex, exchange.getRequest().getURI().getPath());
+            resultBody = OpenGlobalExceptionHandler.resolveException((Exception) ex, exchange.getRequest().getURI().getPath());
         }
         /**
          * 参考AbstractErrorWebExceptionHandler

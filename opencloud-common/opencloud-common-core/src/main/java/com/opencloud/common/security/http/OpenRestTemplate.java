@@ -1,7 +1,7 @@
 package com.opencloud.common.security.http;
 
 import com.opencloud.common.configuration.OpenCommonProperties;
-import com.opencloud.common.event.GatewayRemoteRefreshRouteEvent;
+import com.opencloud.common.event.RemoteRefreshRouteEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.bus.BusProperties;
 import org.springframework.context.ApplicationEventPublisher;
@@ -99,7 +99,7 @@ public class OpenRestTemplate extends RestTemplate {
      */
     public void refreshGateway() {
         try {
-            publisher.publishEvent(new GatewayRemoteRefreshRouteEvent(this,busProperties.getId(),null));
+            publisher.publishEvent(new RemoteRefreshRouteEvent(this,busProperties.getId(),null));
             log.info("refreshGateway:success");
         } catch (Exception e) {
             log.error("refreshGateway error:{}", e.getMessage());

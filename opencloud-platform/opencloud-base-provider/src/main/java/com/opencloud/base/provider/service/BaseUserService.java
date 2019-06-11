@@ -78,7 +78,7 @@ public interface BaseUserService extends IBaseService<BaseUser> {
     /**
      * 登录初始化
      *
-     * @param userId
+     * @param
      * @return
      */
     AppUser loginInit();
