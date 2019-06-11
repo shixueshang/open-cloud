@@ -105,15 +105,15 @@ public class BaseAppServiceImpl extends BaseServiceImpl<BaseAppMapper, BaseApp> 
     /**
      * 更新应用开发新型
      *
-     * @param openClient
+     * @param client
      */
-    @CacheEvict(value = {"apps"}, key = "'client:'+#baseClientDetails.clientId")
+    @CacheEvict(value = {"apps"}, key = "'client:'+#client.clientId")
     @Override
-    public void updateAppClientInfo(OpenClient openClient) {
-        BaseApp app = getAppInfo(openClient.getClientId());
+    public void updateAppClientInfo(OpenClient client) {
+        BaseApp app = getAppInfo(client.getClientId());
         Map info = BeanConvertUtils.objectToMap(app);
-        openClient.setAdditionalInformation(info);
-        jdbcClientDetailsService.updateClientDetails(openClient);
+        client.setAdditionalInformation(info);
+        jdbcClientDetailsService.updateClientDetails(client);
     }
 
 
