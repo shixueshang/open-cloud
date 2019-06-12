@@ -39,6 +39,7 @@
         <hutool.version>4.1.19</hutool.version>
         <com.google.zxing.version>3.1.0</com.google.zxing.version>
         <swagger2.version>2.9.2</swagger2.version>
+        <oracle.version>10.2.0.4.0</oracle.version>
 
         <!--自定义版本-->
         <opencloud.common.version>2.1.0-SNAPSHOT</opencloud.common.version>
