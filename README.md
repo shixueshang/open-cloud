@@ -124,12 +124,12 @@ open-cloud
 
 1. 准备环境
     + Java1.8
-    + 阿里巴巴Nacos服务发现和注册中心 <a href="https://nacos.io/zh-cn/">nacos.io</a>
-    + Redis
-    + RabbitMq （需安装rabbitmq_delayed_message_exchange插件 <a href="https://www.rabbitmq.com/community-plugins.html" target="_blank">下载地址</a>）
-    + Mysql
-    + Maven
-    + Nodejs
+    + Nacos服务发现和注册中心(v1.0.0+) <a href="https://nacos.io/zh-cn/">阿里巴巴nacos.io</a>
+    + Redis (v3.2.00+)
+    + RabbitMq (v3.7+)（需安装rabbitmq_delayed_message_exchange插件 <a href="https://www.rabbitmq.com/community-plugins.html" target="_blank">下载地址</a>）
+    + Mysql (v5.5.28+)
+    + Maven (v3+)
+    + Nodejs (v10.14.2+)
    
 2. 执行创建数据库open-platform并执行sql脚本
     + docs/sql/oauth2.sql
@@ -166,7 +166,7 @@ open-cloud
 5. 本地启动(顺序启动)
      1. BaseApplication
      2. AuthApplication
-     3. ZuulGatewayApplication(推荐) 或 ApiGatewayApplication 
+     3. ZuulGatewayApplication(推荐) 或 SpringGatewayApplication 
      ```
      访问 http://localhost:8888
      ```
