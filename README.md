@@ -123,7 +123,7 @@ open-cloud
 本项目基于springCloud打造的分布式快速开发框架. 需要了解SpringCloud,SpringBoot开发,分布式原理。
 
 1. 准备环境
-    + Java1.8
+    + Java1.8  (v1.8.0_131+)
     + Nacos服务发现和注册中心(v1.0.0+) <a href="https://nacos.io/zh-cn/">阿里巴巴nacos.io</a>
     + Redis (v3.2.00+)
     + RabbitMq (v3.7+)（需安装rabbitmq_delayed_message_exchange插件 <a href="https://www.rabbitmq.com/community-plugins.html" target="_blank">下载地址</a>）
