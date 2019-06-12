@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.opencloud.base.client.model.IpLimitApi;
 import com.opencloud.base.client.model.entity.GatewayIpLimit;
+import com.opencloud.base.client.model.entity.GatewayIpLimitApi;
 import com.opencloud.base.provider.mapper.GatewayIpLimitApisMapper;
 import com.opencloud.base.provider.mapper.GatewayIpLimitMapper;
 import com.opencloud.base.provider.service.GatewayIpLimitService;
@@ -77,11 +78,11 @@ public class GatewayIpLimitServiceImpl extends BaseServiceImpl<GatewayIpLimitMap
      * @return
      */
     @Override
-    public List<com.opencloud.base.client.model.entity.GatewayIpLimitApi> findIpLimitApiList(Long policyId) {
-        QueryWrapper<com.opencloud.base.client.model.entity.GatewayIpLimitApi> queryWrapper = new QueryWrapper();
+    public List<GatewayIpLimitApi> findIpLimitApiList(Long policyId) {
+        QueryWrapper<GatewayIpLimitApi> queryWrapper = new QueryWrapper();
         queryWrapper.lambda()
-                .eq(com.opencloud.base.client.model.entity.GatewayIpLimitApi::getPolicyId, policyId);
-        List<com.opencloud.base.client.model.entity.GatewayIpLimitApi> list = gatewayIpLimitApisMapper.selectList(queryWrapper);
+                .eq(GatewayIpLimitApi::getPolicyId, policyId);
+        List<GatewayIpLimitApi> list = gatewayIpLimitApisMapper.selectList(queryWrapper);
         return list;
     }
 
@@ -147,7 +148,7 @@ public class GatewayIpLimitServiceImpl extends BaseServiceImpl<GatewayIpLimitMap
                 // 先api解除所有绑定, 一个API只能绑定一个策略
                 Long apiId = Long.parseLong(api);
                 clearIpLimitApisByApiId(apiId);
-                com.opencloud.base.client.model.entity.GatewayIpLimitApi item = new com.opencloud.base.client.model.entity.GatewayIpLimitApi();
+                GatewayIpLimitApi item = new GatewayIpLimitApi();
                 item.setApiId(apiId);
                 item.setPolicyId(policyId);
                 // 重新绑定策略
@@ -164,9 +165,9 @@ public class GatewayIpLimitServiceImpl extends BaseServiceImpl<GatewayIpLimitMap
      */
     @Override
     public void clearIpLimitApisByPolicyId(Long policyId) {
-        QueryWrapper<com.opencloud.base.client.model.entity.GatewayIpLimitApi> queryWrapper = new QueryWrapper();
+        QueryWrapper<GatewayIpLimitApi> queryWrapper = new QueryWrapper();
         queryWrapper.lambda()
-                .eq(com.opencloud.base.client.model.entity.GatewayIpLimitApi::getPolicyId, policyId);
+                .eq(GatewayIpLimitApi::getPolicyId, policyId);
         gatewayIpLimitApisMapper.delete(queryWrapper);
     }
 
@@ -177,9 +178,9 @@ public class GatewayIpLimitServiceImpl extends BaseServiceImpl<GatewayIpLimitMap
      */
     @Override
     public void clearIpLimitApisByApiId(Long apiId) {
-        QueryWrapper<com.opencloud.base.client.model.entity.GatewayIpLimitApi> queryWrapper = new QueryWrapper();
+        QueryWrapper<GatewayIpLimitApi> queryWrapper = new QueryWrapper();
         queryWrapper.lambda()
-                .eq(com.opencloud.base.client.model.entity.GatewayIpLimitApi::getApiId, apiId);
+                .eq(GatewayIpLimitApi::getApiId, apiId);
         gatewayIpLimitApisMapper.delete(queryWrapper);
     }
 }
