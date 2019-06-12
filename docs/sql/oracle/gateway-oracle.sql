@@ -151,10 +151,9 @@ create table gateway_rate_limit
 (
   policy_id     number(18) not null,
   policy_name   varchar2(255),
-  service_id    varchar2(255) not null,
-  limit         number(20) not null,
-  interval_unit varchar2(10) default 'second',
-  limit_type    varchar2(255),
+  limit_quota   number(20) not null,
+  interval_unit varchar2(10) default 'seconds',
+  policy_type    varchar2(255),
   create_time   timestamp not null,
   update_time   timestamp not null
 )
@@ -162,14 +161,11 @@ create table gateway_rate_limit
 -- Add comments to the table
 comment on table gateway_rate_limit
   is '开放网关-流量控制-策略';
--- Add comments to the columns
-comment on column gateway_rate_limit.service_id
-  is '服务名';
-comment on column gateway_rate_limit.limit
+comment on column gateway_rate_limit.limit_quota
   is '流量限制';
 comment on column gateway_rate_limit.interval_unit
-  is '时间单位:second-秒,minute-分钟,hour-小时,day-天';
-comment on column gateway_rate_limit.limit_type
+  is '单位时间:seconds-秒,minutes-分钟,hours-小时,days-天';
+comment on column gateway_rate_limit.policy_type
   is '限流规则类型';
 -- Create/Recreate primary, unique and foreign key constraints
 alter table gateway_rate_limit
@@ -201,65 +197,6 @@ alter table gateway_rate_limit_api
 alter table gateway_rate_limit_api
   add constraint gateway_rate_limit_api_ibfk_2 foreign key (API_ID)
   references base_resource_api (API_ID);
-
-
-
--- Create table
-create table gateway_rate_limit_origin
-(
-  policy_id number(11) default 0 NOT NULL,
-  origins   number(11) default 1 NOT NULL
-)
-;
--- Add comments to the table
-comment on table gateway_rate_limit_origin
-  is '开放网关-流量控制-来源限流';
--- Add comments to the columns
-comment on column gateway_rate_limit_origin.policy_id
-  is '限制数量';
-comment on column gateway_rate_limit_origin.origins
-  is '来源域名';
--- Create/Recreate primary, unique and foreign key constraints
-alter table gateway_rate_limit_origin
-  add constraint gateway_rate_limit_or_ibfk_1 foreign key (POLICY_ID)
-  references gateway_rate_limit (POLICY_ID);
-
--- ----------------------------
--- Records of gateway_rate_limit_origin
--- ----------------------------
-
--- ----------------------------
--- Table structure for gateway_rate_limit_role
--- ----------------------------
--- Create table
-create table gateway_rate_limit_role
-(
-  policy_id number(11) default 0 not null,
-  role_id   number(11) default 1 not null
-)
-;
--- Add comments to the table
-comment on table gateway_rate_limit_role
-  is '开放网关-流量控制-角色限流';
--- Add comments to the columns
-comment on column gateway_rate_limit_role.policy_id
-  is '限制数量';
-comment on column gateway_rate_limit_role.role_id
-  is '角色Id';
--- Create/Recreate indexes
-create index idx_rate_limit_role_policy on gateway_rate_limit_role (policy_id);
-create index idx_rate_limit_role_id on gateway_rate_limit_role (role_id);
--- Create/Recreate primary, unique and foreign key constraints
-alter table gateway_rate_limit_role
-  add constraint gateway_rate_limit_role_ibfk_1 foreign key (POLICY_ID)
-  references gateway_rate_limit (POLICY_ID);
-alter table gateway_rate_limit_role
-  add constraint gateway_rate_limit_role_ibfk_2 foreign key (ROLE_ID)
-  references base_role (ROLE_ID);
-
--- ----------------------------
--- Records of gateway_rate_limit_role
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for gateway_route
