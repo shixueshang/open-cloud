@@ -20,7 +20,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 自定义动态权限加载器
+ * 资源加载器
  *
  * @author liuyadu
  */
@@ -70,7 +70,7 @@ public class ApiResourceLocator implements ApplicationListener<RemoteRefreshRout
     private List<IpLimitApi> ipWhites;
 
     /**
-     * 网关API接口流量控制列表
+     * 流量限制
      */
     private List<RateLimitApi> rateLimitApis;
 
@@ -95,7 +95,7 @@ public class ApiResourceLocator implements ApplicationListener<RemoteRefreshRout
     }
 
     /**
-     * 刷新访问配置
+     * 刷新配置
      */
     public void refresh() {
         loadAuthority();
@@ -105,7 +105,7 @@ public class ApiResourceLocator implements ApplicationListener<RemoteRefreshRout
     }
 
     /**
-     * 获取路由后的地址
+     * 获取路由后的完整地址
      *
      * @return
      */
@@ -224,6 +224,11 @@ public class ApiResourceLocator implements ApplicationListener<RemoteRefreshRout
     }
 
 
+    /**
+     * 加载并转换限流策略
+     *
+     * @return
+     */
     protected Map<String, List<RateLimitProperties.Policy>> loadRateLimitPolicy() {
         Map<String, List<RateLimitProperties.Policy>> policyMap = Maps.newLinkedHashMap();
         try {
@@ -316,6 +321,11 @@ public class ApiResourceLocator implements ApplicationListener<RemoteRefreshRout
         this.allConfigAttributes = allConfigAttributes;
     }
 
+    /**
+     * 远程刷新事件
+     *
+     * @param gatewayRemoteRefreshRouteEvent
+     */
     @Override
     public void onApplicationEvent(RemoteRefreshRouteEvent gatewayRemoteRefreshRouteEvent) {
         refresh();

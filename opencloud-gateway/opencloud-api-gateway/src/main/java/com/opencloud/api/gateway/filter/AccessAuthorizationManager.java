@@ -27,7 +27,7 @@ import reactor.core.publisher.Mono;
 import java.util.*;
 
 /**
- * 自定义动态访问控制
+ * 访问权限控制管理类
  *
  * @author liuyadu
  */

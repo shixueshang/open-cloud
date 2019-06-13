@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 /**
+ * 网关配置类
  * @author liuyadu
  */
 @Slf4j

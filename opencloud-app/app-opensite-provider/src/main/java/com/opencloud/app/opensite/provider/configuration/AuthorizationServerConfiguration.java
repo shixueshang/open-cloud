@@ -1,12 +1,10 @@
 package com.opencloud.app.opensite.provider.configuration;
 
-import com.opencloud.auth.client.config.SocialOAuth2ClientProperties;
 import com.opencloud.common.exception.OpenOAuth2WebResponseExceptionTranslator;
 import com.opencloud.common.security.OpenHelper;
 import com.opencloud.common.security.OpenTokenEnhancer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -36,7 +34,6 @@ import javax.sql.DataSource;
  */
 @Configuration
 @EnableAuthorizationServer
-@EnableConfigurationProperties(SocialOAuth2ClientProperties.class)
 public class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
     @Autowired
     private AuthenticationManager authenticationManager;

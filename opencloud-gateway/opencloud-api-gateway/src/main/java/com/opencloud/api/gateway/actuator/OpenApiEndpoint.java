@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
- * 自定义网关刷新端点
+ * 自定义网关监控端点
  * @author liuyadu
  */
 @RestControllerEndpoint(

@@ -18,7 +18,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 自定义动态权限加载器
+ * 资源加载器
  *
  * @author liuyadu
  */

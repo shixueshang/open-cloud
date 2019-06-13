@@ -14,7 +14,7 @@ import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
 /**
- * IP访问限制过滤器
+ * 访问验证前置过滤器
  *
  * @author liuyadu
  */

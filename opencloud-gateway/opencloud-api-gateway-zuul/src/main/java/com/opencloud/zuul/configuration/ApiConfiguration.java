@@ -2,8 +2,6 @@ package com.opencloud.zuul.configuration;
 
 import com.google.common.collect.Lists;
 import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.config.properties.RateLimitProperties;
-import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.config.repository.DefaultRateLimiterErrorHandler;
-import com.marcosbarbero.cloud.autoconfigure.zuul.ratelimit.config.repository.RateLimiterErrorHandler;
 import com.netflix.zuul.ZuulFilter;
 import com.opencloud.zuul.actuator.OpenApiEndpoint;
 import com.opencloud.zuul.filter.ZuulErrorFilter;
@@ -34,7 +32,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 /**
- * 自定义bus配置类
+ * 网关配置类
  *
  * @author: liuyadu
  * @date: 2018/10/23 10:31
@@ -81,7 +79,7 @@ public class ApiConfiguration {
 
 
     /**
-     * 访问控制加载器
+     * 资源加载器
      *
      * @return
      */
@@ -91,19 +89,19 @@ public class ApiConfiguration {
     }
 
     /**
-     * 初始化路由加载器
+     * 路由加载器
      *
      * @return
      */
     @Bean
     public JdbcRouteLocator zuulRouteLocator(ZuulProperties zuulProperties, ServerProperties serverProperties, JdbcTemplate jdbcTemplate, ApplicationEventPublisher publisher) {
-        zuulRoutesLocator = new JdbcRouteLocator(serverProperties.getServlet().getContextPath(), zuulProperties, jdbcTemplate,publisher);
+        zuulRoutesLocator = new JdbcRouteLocator(serverProperties.getServlet().getContextPath(), zuulProperties, jdbcTemplate, publisher);
         log.info("ZuulRoutesLocator:{}", zuulRoutesLocator);
         return zuulRoutesLocator;
     }
 
     /**
-     * 配置网关刷新bus端点
+     * 自定义网关监控端点
      *
      * @param context
      * @param bus

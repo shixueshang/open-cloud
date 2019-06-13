@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.util.Set;
 
 /**
- * 自定义网关配置
+ * 网关属性配置类
  *
  * @author: liuyadu
  * @date: 2018/11/23 14:40
@@ -36,7 +36,6 @@ public class ApiProperties {
      * 无需鉴权的请求
      */
     private Set<String> authorityIgnores;
-
 
 
     public Boolean getCheckSign() {

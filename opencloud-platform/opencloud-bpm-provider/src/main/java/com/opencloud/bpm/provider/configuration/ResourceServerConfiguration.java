@@ -16,7 +16,6 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
 
 /**
  * oauth2资源服务器配置
- * 如过新建一个资源服务器，直接复制该类到项目中.
  * @author: liuyadu
  * @date: 2018/10/23 10:31
  * @description:

@@ -8,6 +8,7 @@ import com.opencloud.common.exception.OpenGlobalExceptionHandler;
 import com.opencloud.common.filter.XssFilter;
 import com.opencloud.common.gen.SnowflakeIdGenerator;
 import com.opencloud.common.health.DbHealthIndicator;
+import com.opencloud.common.oauth2.client.OpenOAuth2ClientProperties;
 import com.opencloud.common.security.CustomResponseErrorHandler;
 import com.opencloud.common.security.http.OpenRestTemplate;
 import com.opencloud.common.utils.RedisUtils;
@@ -31,7 +32,7 @@ import org.springframework.web.client.RestTemplate;
  */
 @Slf4j
 @Configuration
-@EnableConfigurationProperties({OpenCommonProperties.class,  OpenIdGenProperties.class})
+@EnableConfigurationProperties({OpenCommonProperties.class,  OpenIdGenProperties.class, OpenOAuth2ClientProperties.class})
 public class AutoConfiguration {
 
 

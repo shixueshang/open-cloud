@@ -6,7 +6,7 @@ import com.opencloud.zuul.exception.JsonAuthenticationEntryPoint;
 import com.opencloud.zuul.filter.AccessAuthorizationManager;
 import com.opencloud.zuul.filter.PreCheckFilter;
 import com.opencloud.zuul.filter.PreRequestFilter;
-import com.opencloud.zuul.filter.SignatureFilter;
+import com.opencloud.zuul.filter.PreSignatureFilter;
 import com.opencloud.zuul.service.AccessLogService;
 import com.opencloud.zuul.service.feign.BaseAppRemoteService;
 import lombok.extern.slf4j.Slf4j;
@@ -79,7 +79,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
         // 日志前置过滤器
         http.addFilterBefore(new PreRequestFilter(), AbstractPreAuthenticatedProcessingFilter.class);
         // 签名验证过滤器
-        http.addFilterAfter(new SignatureFilter(baseAppRemoteService, apiProperties), AbstractPreAuthenticatedProcessingFilter.class);
+        http.addFilterAfter(new PreSignatureFilter(baseAppRemoteService, apiProperties), AbstractPreAuthenticatedProcessingFilter.class);
         // 访问验证前置过滤器
         http.addFilterAfter(new PreCheckFilter(accessAuthorizationManager, new JsonAccessDeniedHandler(accessLogService)), AbstractPreAuthenticatedProcessingFilter.class);
     }

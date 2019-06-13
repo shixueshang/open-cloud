@@ -37,7 +37,7 @@ public class JdbcRouteLocator extends SimpleRouteLocator implements ApplicationL
     private List<GatewayRoute> routeList;
     private ApplicationEventPublisher publisher;
 
-    public JdbcRouteLocator(String servletPath, ZuulProperties properties, JdbcTemplate jdbcTemplate,ApplicationEventPublisher publisher) {
+    public JdbcRouteLocator(String servletPath, ZuulProperties properties, JdbcTemplate jdbcTemplate, ApplicationEventPublisher publisher) {
         super(servletPath, properties);
         this.properties = properties;
         this.jdbcTemplate = jdbcTemplate;
@@ -52,7 +52,7 @@ public class JdbcRouteLocator extends SimpleRouteLocator implements ApplicationL
     }
 
     /**
-     * 加载数据库路由配置
+     * 加载路由配置
      *
      * @return
      */
@@ -82,10 +82,7 @@ public class JdbcRouteLocator extends SimpleRouteLocator implements ApplicationL
     }
 
     /**
-     * @return
-     * @description 加载路由配置，由子类去实现
-     * @date 2017年7月3日 下午6:04:42
-     * @version 1.0.0
+     * 加载路由配置
      */
     public Map<String, ZuulRoute> loadRoutes() {
         Map<String, ZuulProperties.ZuulRoute> routes = Maps.newLinkedHashMap();
@@ -137,6 +134,11 @@ public class JdbcRouteLocator extends SimpleRouteLocator implements ApplicationL
         this.routeList = routeList;
     }
 
+    /**
+     * 远程刷新事件
+     *
+     * @param gatewayRemoteRefreshRouteEvent
+     */
     @Override
     public void onApplicationEvent(RemoteRefreshRouteEvent gatewayRemoteRefreshRouteEvent) {
         doRefresh();

@@ -8,6 +8,11 @@ import reactor.core.publisher.Flux;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 响应内容解析类
+ *
+ * @author liuyadu
+ */
 public class RecorderServerHttpRequestDecorator extends ServerHttpRequestDecorator {
 
     private final List<DataBuffer> dataBuffers = new ArrayList<>();

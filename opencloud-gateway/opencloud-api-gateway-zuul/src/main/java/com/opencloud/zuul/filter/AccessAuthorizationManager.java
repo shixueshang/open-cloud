@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
- * 自定义动态访问控制
+ * 访问权限控制管理类
  *
  * @author liuyadu
  */
@@ -62,11 +62,7 @@ public class AccessAuthorizationManager {
     }
 
     /**
-     * 访问控制
-     * 1.IP黑名单
-     * 2.IP白名单
-     * 3.权限控制
-     *
+     * 权限验证
      * @param request
      * @param authentication
      * @return
@@ -116,7 +112,7 @@ public class AccessAuthorizationManager {
     }
 
     /**
-     * 获取资源状态
+     * 获取资源信息
      *
      * @param requestPath
      * @return
@@ -176,6 +172,13 @@ public class AccessAuthorizationManager {
         return false;
     }
 
+    /**
+     * 权限验证
+     * @param request
+     * @param authentication
+     * @param requestPath
+     * @return
+     */
     public boolean mathAuthorities(HttpServletRequest request, Authentication authentication, String requestPath) {
         Collection<ConfigAttribute> attributes = getAttributes(requestPath);
         int result = 0;
@@ -215,6 +218,11 @@ public class AccessAuthorizationManager {
         }
     }
 
+    /**
+     * 获取请求资源所需权限列表
+     * @param requestPath
+     * @return
+     */
     public Collection<ConfigAttribute> getAttributes(String requestPath) {
         // 匹配动态权限
         for (Iterator<String> iter = accessLocator.getAllConfigAttributes().keySet().iterator(); iter.hasNext(); ) {
@@ -229,6 +237,12 @@ public class AccessAuthorizationManager {
     }
 
 
+    /**
+     * IP黑名单验证
+     * @param requestPath
+     * @param remoteIpAddress
+     * @return
+     */
     public boolean matchIpBlacklist(String requestPath, String remoteIpAddress) {
         List<IpLimitApi> blackList = accessLocator.getIpBlacks();
         if (blackList != null) {
@@ -244,6 +258,12 @@ public class AccessAuthorizationManager {
 
     }
 
+    /**
+     * 白名单验证
+     * @param requestPath
+     * @param remoteIpAddress
+     * @return [hasWhiteList,allow]
+     */
     public boolean[] matchIpWhiteList(String requestPath, String remoteIpAddress) {
         boolean hasWhiteList = false;
         boolean allow = false;
@@ -260,6 +280,12 @@ public class AccessAuthorizationManager {
         return new boolean[]{hasWhiteList, allow};
     }
 
+    /**
+     * 匹配IP
+     * @param ips
+     * @param remoteIpAddress
+     * @return
+     */
     public boolean matchIp(Set<String> ips, String remoteIpAddress) {
         IpAddressMatcher ipAddressMatcher = null;
         for (String ip : ips) {
@@ -273,6 +299,7 @@ public class AccessAuthorizationManager {
         }
         return false;
     }
+
 
 
     public String getRequestPath(HttpServletRequest request) {

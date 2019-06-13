@@ -54,7 +54,7 @@ security:
             user-info-uri: ${opencloud.common.user-info-uri}
 
 opencloud:
-    social:
+    client:
         oauth2:
             gitee:
                 access-token-uri: https://gitee.com/oauth/token

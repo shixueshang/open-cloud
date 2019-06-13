@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 动态路由加载器
+ * 自定义动态路由加载器
  *
  * @author liuyadu
  */

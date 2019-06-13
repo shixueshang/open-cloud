@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.util.Date;
 
 /**
+ * 请求前缀过滤器,增加请求时间
+ *
  * @author liuyadu
  */
 @Slf4j
@@ -18,7 +20,7 @@ public class PreRequestFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        request.setAttribute("requestTime",new Date());
+        request.setAttribute("requestTime", new Date());
         filterChain.doFilter(request, response);
     }
 }

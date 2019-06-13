@@ -1,12 +1,12 @@
 package com.opencloud.auth.provider.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.opencloud.auth.client.constants.AuthConstants;
-import com.opencloud.auth.client.config.SocialOAuth2ClientDetails;
-import com.opencloud.auth.client.config.SocialOAuth2ClientProperties;
-import com.opencloud.auth.client.service.ThirdPartyAuthService;
-import com.opencloud.common.security.http.OpenRestTemplate;
 import com.google.common.collect.Maps;
+import com.opencloud.auth.client.constants.AuthConstants;
+import com.opencloud.common.oauth2.client.OpenOAuth2ClientDetails;
+import com.opencloud.common.oauth2.client.OpenOAuth2ClientProperties;
+import com.opencloud.common.oauth2.client.OpenOAuth2Service;
+import com.opencloud.common.security.http.OpenRestTemplate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,12 +20,12 @@ import java.util.Map;
  */
 @Service("giteeService")
 @Slf4j
-public class GiteeAuthServiceImpl implements ThirdPartyAuthService {
+public class GiteeAuthServiceImpl implements OpenOAuth2Service {
 
     @Autowired
     private OpenRestTemplate restTemplate;
     @Autowired
-    private SocialOAuth2ClientProperties socialAuthProperties;
+    private OpenOAuth2ClientProperties openOAuth2ClientProperties;
     /**
      * 微信 登陆页面的URL
      */
@@ -94,8 +94,8 @@ public class GiteeAuthServiceImpl implements ThirdPartyAuthService {
      * @return
      */
     @Override
-    public SocialOAuth2ClientDetails getClientDetails() {
-        return socialAuthProperties.getOauth2().get(AuthConstants.LOGIN_GITEE);
+    public OpenOAuth2ClientDetails getClientDetails() {
+        return openOAuth2ClientProperties.getOauth2().get(AuthConstants.LOGIN_GITEE);
     }
 
 }

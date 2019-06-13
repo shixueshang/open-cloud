@@ -1,14 +1,13 @@
-package com.opencloud.auth.client.service;
+package com.opencloud.common.oauth2.client;
 
 import com.alibaba.fastjson.JSONObject;
-import com.opencloud.auth.client.config.SocialOAuth2ClientDetails;
 
 /**
  * 第三方登录接口
  *
  * @author liuyadu
  */
-public interface ThirdPartyAuthService {
+public interface OpenOAuth2Service {
     /**
      * 根据code获得Token
      *
@@ -59,5 +58,5 @@ public interface ThirdPartyAuthService {
      * 获取客户端配置信息
      * @return
      */
-    SocialOAuth2ClientDetails getClientDetails();
+    OpenOAuth2ClientDetails getClientDetails();
 }

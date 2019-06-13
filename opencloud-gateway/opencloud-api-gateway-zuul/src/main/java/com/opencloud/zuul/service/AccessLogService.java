@@ -22,6 +22,8 @@ import java.util.*;
 import java.util.concurrent.*;
 
 /**
+ * 访问日志处理类
+ *
  * @author: liuyadu
  * @date: 2019/5/8 11:27
  * @description:
@@ -58,7 +60,7 @@ public class AccessLogService {
      * @param requestPath
      * @return
      */
-    public boolean isIgnore(String requestPath) {
+    public boolean ignore(String requestPath) {
         Iterator<String> iterator = ignores.iterator();
         while (iterator.hasNext()) {
             String path = iterator.next();
@@ -83,7 +85,7 @@ public class AccessLogService {
         if (ex != null) {
             error = ex.getMessage();
         }
-        if (isIgnore(requestPath)) {
+        if (ignore(requestPath)) {
             return;
         }
         Map<String, Object> map = Maps.newHashMap();

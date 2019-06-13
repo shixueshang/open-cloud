@@ -1,4 +1,4 @@
-package com.opencloud.auth.client.config;
+package com.opencloud.common.oauth2.client;
 
 import java.io.Serializable;
 
@@ -8,7 +8,8 @@ import java.io.Serializable;
  * @date: 2019/2/14 14:56
  * @description:
  */
-public class SocialOAuth2ClientDetails implements Serializable {
+public class OpenOAuth2ClientDetails implements Serializable {
+    private static final long serialVersionUID = -6103012432819993075L;
     /**
      * 客户端ID
      */

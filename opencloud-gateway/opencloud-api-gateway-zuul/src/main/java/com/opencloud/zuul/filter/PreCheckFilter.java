@@ -15,12 +15,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * IP访问限制过滤器
+ * 访问验证前置过滤器
  *
  * @author liuyadu
  */
 @Slf4j
 public class PreCheckFilter extends OncePerRequestFilter {
+
+    private static final String STATUS_0 = "0";
+    private static final String STATUS_2 = "2";
 
     private AccessDeniedHandler accessDeniedHandler;
 
@@ -36,17 +39,19 @@ public class PreCheckFilter extends OncePerRequestFilter {
         String requestPath = apiAccessManager.getRequestPath(request);
         String remoteIpAddress = WebUtils.getRemoteAddress(request);
         AuthorityResource resource = apiAccessManager.getResource(requestPath);
-        if(resource!=null){
-            if("0".equals(resource.getIsOpen().toString())){
+        if (resource != null) {
+            // 资源是否公共访问验证
+            if (STATUS_0.equals(resource.getIsOpen().toString())) {
                 // 未公开
                 accessDeniedHandler.handle(request, response, new AccessDeniedException(ResultEnum.ACCESS_DENIED_NOT_OPEN.getMessage()));
                 return;
             }
-            if ("0".equals(resource.getStatus().toString())) {
+            // 资源状态验证
+            if (STATUS_0.equals(resource.getStatus().toString())) {
                 // 禁用
                 accessDeniedHandler.handle(request, response, new AccessDeniedException(ResultEnum.ACCESS_DENIED_DISABLED.getMessage()));
                 return;
-            } else if ("2".equals(resource.getStatus().toString())) {
+            } else if (STATUS_2.equals(resource.getStatus().toString())) {
                 // 维护中
                 accessDeniedHandler.handle(request, response, new AccessDeniedException(ResultEnum.ACCESS_DENIED_UPDATING.getMessage()));
                 return;
@@ -54,7 +59,7 @@ public class PreCheckFilter extends OncePerRequestFilter {
         }
 
 
-        // 1.ip黑名单检测
+        // ip黑名单验证
         boolean deny = apiAccessManager.matchIpBlacklist(requestPath, remoteIpAddress);
         if (deny) {
             // 拒绝
@@ -62,11 +67,10 @@ public class PreCheckFilter extends OncePerRequestFilter {
             return;
         }
 
-        // 3.ip白名单检测
+        // ip白名单验证
         boolean[] matchIpWhiteListResult = apiAccessManager.matchIpWhiteList(requestPath, remoteIpAddress);
         boolean hasWhiteList = matchIpWhiteListResult[0];
         boolean allow = matchIpWhiteListResult[1];
-
         if (hasWhiteList) {
             // 接口存在白名单限制
             if (!allow) {

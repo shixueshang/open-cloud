@@ -24,13 +24,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 数字签名验证过滤器,认证完成之后执行
+ * 数字验签前置过滤器
  *
  * @author: liuyadu
  * @date: 2018/11/28 18:26
  * @description:
  */
-public class SignatureFilter extends OncePerRequestFilter {
+public class PreSignatureFilter extends OncePerRequestFilter {
     private SignatureDeniedHandler signatureDeniedHandler;
     private BaseAppRemoteService baseAppRemoteService;
     private ApiProperties apiGatewayProperties;
@@ -42,7 +42,7 @@ public class SignatureFilter extends OncePerRequestFilter {
             "/**/logout/**"
     );
 
-    public SignatureFilter(BaseAppRemoteService systemAppClient, ApiProperties apiGatewayProperties) {
+    public PreSignatureFilter(BaseAppRemoteService systemAppClient, ApiProperties apiGatewayProperties) {
         this.baseAppRemoteService = systemAppClient;
         this.apiGatewayProperties = apiGatewayProperties;
         this.signatureDeniedHandler = new OpenSignatureDeniedHandler();

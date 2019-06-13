@@ -37,9 +37,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /**
  * 网关服务
- * 提供微服务统一外部调用入口、身份认证(@EnableResourceServer)、接口调用鉴权、接口限流、黑白名单
+ * 接口调用统一入口、数字验签、身份认证、接口鉴权、接口限流、黑白名单限制
  * 开发环境下提供在线调试文档.
- *
  * @author liuyadu
  */
 @EnableFeignClients

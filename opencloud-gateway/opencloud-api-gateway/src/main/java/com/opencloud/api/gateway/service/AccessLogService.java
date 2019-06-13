@@ -57,7 +57,7 @@ public class AccessLogService {
      * @param requestPath
      * @return
      */
-    public boolean isIgnore(String requestPath) {
+    public boolean ignore(String requestPath) {
         Iterator<String> iterator = ignores.iterator();
         while (iterator.hasNext()) {
             String path = iterator.next();
@@ -94,7 +94,7 @@ public class AccessLogService {
             if (ex != null) {
                 error = ex.getMessage();
             }
-            if (isIgnore(requestPath)) {
+            if (ignore(requestPath)) {
                 return;
             }
             Map<String, Object> map = Maps.newHashMap();
