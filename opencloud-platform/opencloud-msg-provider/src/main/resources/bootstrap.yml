@@ -46,7 +46,6 @@ opencloud:
         aliyun:
             accessKeyId: xxxxx
             accessKeySecret: xxxxx
-        type: aliyun
     swagger2:
         description: 平台消息服务
         enabled: true

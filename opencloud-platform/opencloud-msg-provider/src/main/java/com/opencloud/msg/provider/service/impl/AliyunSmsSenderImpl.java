@@ -1,12 +1,11 @@
 package com.opencloud.msg.provider.service.impl;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.aliyuncs.CommonRequest;
 import com.aliyuncs.CommonResponse;
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
-import com.aliyuncs.exceptions.ClientException;
-import com.aliyuncs.exceptions.ServerException;
 import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.opencloud.msg.client.model.SmsNotify;
@@ -24,39 +23,41 @@ public class AliyunSmsSenderImpl implements SmsSender {
 
     private String accessKeySecret;
 
-    public AliyunSmsSenderImpl(){
+    private final static String OK = "OK";
+
+    private final static String CODE = "Code";
+
+    public AliyunSmsSenderImpl() {
         log.info("init aliyunSMS sender:" + this);
     }
 
     @Override
     public Boolean send(SmsNotify parameter) {
-        DefaultProfile profile = DefaultProfile.getProfile(
-                "cn-guangzhou",          // 地域ID
-                accessKeyId,
-                accessKeySecret);
-        IAcsClient client = new DefaultAcsClient(profile);
         boolean result = false;
-        CommonRequest request = new CommonRequest();
-        //request.setProtocol(ProtocolType.HTTPS);
-        request.setMethod(MethodType.POST);
-        request.setDomain("dysmsapi.aliyuncs.com");
-        request.setVersion("2017-05-25");
-        request.setAction("SendSms");
-        request.putQueryParameter("RegionId", "cn-hangzhou");
-        request.putQueryParameter("PhoneNumbers", parameter.getParams());
-        request.putQueryParameter("SignName", parameter.getSignName());
-        request.putQueryParameter("TemplateCode", parameter.getTemplateCode());
-        request.putQueryParameter("TemplateParam", parameter.getParams());
-
-        CommonResponse response = null;
         try {
-            response = client.getCommonResponse(request);
-        } catch (ServerException e) {
-            log.error("发送短信失败：" + e.getMessage(), e);
-            throw new RuntimeException("发送短信发生错误：" + e);
-        } catch (ClientException e) {
-            log.error("发送短信失败：" + e.getMessage(), e);
-            throw new RuntimeException("发送短信发生错误：" + e);
+            // 地域ID
+            DefaultProfile profile = DefaultProfile.getProfile(
+                    "cn-hangzhou",
+                    accessKeyId,
+                    accessKeySecret);
+            IAcsClient client = new DefaultAcsClient(profile);
+            CommonRequest request = new CommonRequest();
+            request.setMethod(MethodType.POST);
+            request.setDomain("dysmsapi.aliyuncs.com");
+            request.setVersion("2017-05-25");
+            request.setAction("SendSms");
+            request.putQueryParameter("RegionId", "cn-hangzhou");
+            request.putQueryParameter("PhoneNumbers", parameter.getPhoneNumber());
+            request.putQueryParameter("SignName", parameter.getSignName());
+            request.putQueryParameter("TemplateCode", parameter.getTemplateCode());
+            request.putQueryParameter("TemplateParam", parameter.getParams());
+            CommonResponse response = client.getCommonResponse(request);
+            System.out.println(response.toString());
+            JSONObject json = JSONObject.parseObject(response.getData());
+            result = OK.equalsIgnoreCase(json.getString(CODE));
+            log.info("result:{}", response.getData());
+        } catch (Exception e) {
+            log.error("发送短信失败：{}", e.getMessage(), e);
         }
         return result;
     }
