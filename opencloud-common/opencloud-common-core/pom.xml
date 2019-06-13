@@ -88,11 +88,11 @@
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
         </dependency>
-        <dependency>
+      <!--  <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>ojdbc14</artifactId>
             <version>${oracle.version}</version>
-        </dependency>
+        </dependency>-->
         <!--fastjson -->
         <dependency>
             <groupId>com.alibaba</groupId>
