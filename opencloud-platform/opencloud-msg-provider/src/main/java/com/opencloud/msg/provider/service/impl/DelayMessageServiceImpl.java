@@ -74,7 +74,7 @@ public class DelayMessageServiceImpl implements DelayMessageService {
             //添加消息到队列时添加 headers={'x-delay': 8000}
             message.getMessageProperties().setDelay(Integer.parseInt(delay));
             // x-delay 这个版本请求头获取不到, 自定义了一个delay-times 来获取延迟时间
-            message.getMessageProperties().setHeader("delay-times",delay);
+            message.getMessageProperties().setHeader("delay-times", delay);
             return message;
         });
     }
@@ -97,6 +97,17 @@ public class DelayMessageServiceImpl implements DelayMessageService {
         }
         HttpNotify msg = new HttpNotify(url, type, data);
         delay(RabbitConfiguration.HTTP_NOTIFY_QUEUE_RK, JSONObject.toJSONString(msg), 0);
+    }
+
+    /**
+     * 发送Http通知
+     *
+     * @param notify
+     * @throws Exception
+     */
+    @Override
+    public void httpNotify(HttpNotify notify) throws Exception {
+        httpNotify(notify.getUrl(), notify.getType(), notify.getData());
     }
 
     /**

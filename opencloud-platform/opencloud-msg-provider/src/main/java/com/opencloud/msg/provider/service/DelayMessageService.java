@@ -1,5 +1,7 @@
 package com.opencloud.msg.provider.service;
 
+import com.opencloud.msg.client.model.HttpNotify;
+
 import java.util.Map;
 
 /**
@@ -37,6 +39,13 @@ public interface DelayMessageService {
      * @param data 请求数据
      */
     void httpNotify(String url, String type, Map<String, String> data) throws Exception;
+
+    /**
+     * 发送Http通知
+     * @param notify
+     * @throws Exception
+     */
+    void httpNotify(HttpNotify notify) throws Exception;
 
 
     /**

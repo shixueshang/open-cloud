@@ -1,19 +1,25 @@
 package com.opencloud.msg.provider.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.opencloud.common.model.PageParams;
 import com.opencloud.common.model.ResultBody;
+import com.opencloud.common.utils.StringUtils;
 import com.opencloud.msg.client.api.HttpNotifyRemoteApi;
 import com.opencloud.msg.client.model.HttpNotify;
 import com.opencloud.msg.client.model.entity.NotifyHttpLogs;
 import com.opencloud.msg.provider.service.DelayMessageService;
 import com.opencloud.msg.provider.service.NotifyHttpLogsService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.util.Map;
 
 /**
@@ -28,18 +34,31 @@ public class HttpNotifyController implements HttpNotifyRemoteApi {
     @Autowired
     private NotifyHttpLogsService notifyHttpLogsService;
 
-    @ApiOperation(value = "发送HTTP异步通知",notes = "发送HTTP异步通知")
+    @ApiOperation(value = "发送HTTP异步通知", notes = "发送HTTP异步通知")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "url", value = "通知地址", required = true, paramType = "form"),
+            @ApiImplicitParam(name = "type", value = "通知业务类型", required = true, paramType = "form"),
+            @ApiImplicitParam(name = "params", value = "通知参数:json字符串", required = false, paramType = "form"),
+    })
     @PostMapping("/http/notify")
     @Override
     public ResultBody<String> sendHttpNotify(
-           @Valid @RequestBody HttpNotify httpNotify
-    ) {
+            @RequestParam(value = "url", required = true) String url,
+            @RequestParam(value = "type", required = true) String type,
+            @RequestParam(value = "params", required = false) String params
+    ) throws Exception {
+        HttpNotify httpNotify = new HttpNotify();
+        httpNotify.setUrl(url);
+        httpNotify.setType(type);
         try {
-            delayMessageService.httpNotify(httpNotify.getUrl(), httpNotify.getType(), httpNotify.getData());
-            return ResultBody.ok();
+            if (StringUtils.isNotBlank(params)) {
+                httpNotify.setData(JSONObject.parseObject(params, Map.class));
+            }
         } catch (Exception e) {
-            return ResultBody.failed().msg(e.getMessage());
         }
+        delayMessageService.httpNotify(httpNotify);
+        return ResultBody.ok();
+
     }
 
 
