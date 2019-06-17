@@ -8,6 +8,7 @@ import com.opencloud.base.client.constants.BaseConstants;
 import com.opencloud.base.client.constants.ResourceType;
 import com.opencloud.base.client.model.entity.BaseMenu;
 import com.opencloud.base.provider.mapper.BaseMenuMapper;
+import com.opencloud.base.provider.service.BaseActionService;
 import com.opencloud.base.provider.service.BaseAuthorityService;
 import com.opencloud.base.provider.service.BaseMenuService;
 import com.opencloud.common.exception.OpenAlertException;
@@ -34,8 +35,12 @@ public class BaseMenuServiceImpl extends BaseServiceImpl<BaseMenuMapper, BaseMen
     @Autowired
     private BaseAuthorityService baseAuthorityService;
 
+    @Autowired
+    private BaseActionService baseActionService;
+
     @Value("${spring.application.name}")
     private String DEFAULT_SERVICE_ID;
+
     /**
      * 分页查询
      *
@@ -44,12 +49,12 @@ public class BaseMenuServiceImpl extends BaseServiceImpl<BaseMenuMapper, BaseMen
      */
     @Override
     public IPage<BaseMenu> findListPage(PageParams pageParams) {
-        BaseMenu query =  pageParams.mapToObject(BaseMenu.class);
+        BaseMenu query = pageParams.mapToObject(BaseMenu.class);
         QueryWrapper<BaseMenu> queryWrapper = new QueryWrapper();
         queryWrapper.lambda()
                 .likeRight(ObjectUtils.isNotEmpty(query.getMenuCode()), BaseMenu::getMenuCode, query.getMenuCode())
                 .likeRight(ObjectUtils.isNotEmpty(query.getMenuName()), BaseMenu::getMenuName, query.getMenuName());
-        return baseMenuMapper.selectPage(new Page(pageParams.getPage(),pageParams.getLimit()),queryWrapper);
+        return baseMenuMapper.selectPage(new Page(pageParams.getPage(), pageParams.getLimit()), queryWrapper);
     }
 
     /**
@@ -165,7 +170,11 @@ public class BaseMenuServiceImpl extends BaseServiceImpl<BaseMenuMapper, BaseMen
         if (menu != null && menu.getIsPersist().equals(BaseConstants.ENABLED)) {
             throw new OpenAlertException(String.format("保留数据,不允许删除!"));
         }
-        baseAuthorityService.removeAuthority(menuId,ResourceType.menu);
+        // 移除菜单权限
+        baseAuthorityService.removeAuthority(menuId, ResourceType.menu);
+        // 移除功能按钮和相关权限
+        baseActionService.removeByMenuId(menuId);
+        // 移除菜单信息
         baseMenuMapper.deleteById(menuId);
     }
 

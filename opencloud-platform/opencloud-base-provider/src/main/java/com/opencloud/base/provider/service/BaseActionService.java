@@ -9,6 +9,7 @@ import java.util.List;
 
 /**
  * 操作资源管理
+ *
  * @author liuyadu
  */
 public interface BaseActionService extends IBaseService<BaseAction> {
@@ -30,6 +31,7 @@ public interface BaseActionService extends IBaseService<BaseAction> {
 
     /**
      * 查询菜单下所有操作
+     *
      * @param menuId
      * @return
      */
@@ -68,4 +70,10 @@ public interface BaseActionService extends IBaseService<BaseAction> {
      */
     void removeAction(Long actionId);
 
+    /**
+     * 移除菜单相关资源
+     *
+     * @param menuId
+     */
+    void removeByMenuId(Long menuId);
 }

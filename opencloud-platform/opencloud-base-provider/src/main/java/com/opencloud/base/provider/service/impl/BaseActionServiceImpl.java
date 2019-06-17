@@ -175,4 +175,19 @@ public class BaseActionServiceImpl extends BaseServiceImpl<BaseActionMapper, Bas
         baseAuthorityService.removeAuthority(actionId, ResourceType.action);
         baseActionMapper.deleteById(actionId);
     }
+
+    /**
+     * 移除菜单相关资源
+     *
+     * @param menuId
+     */
+    @Override
+    public void removeByMenuId(Long menuId) {
+        List<BaseAction> actionList = findListByMenuId(menuId);
+        if (actionList != null && actionList.size() > 0) {
+            for (BaseAction action : actionList) {
+                removeAction(action.getActionId());
+            }
+        }
+    }
 }
