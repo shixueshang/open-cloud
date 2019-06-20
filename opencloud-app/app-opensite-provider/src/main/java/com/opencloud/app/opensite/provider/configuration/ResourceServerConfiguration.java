@@ -6,7 +6,9 @@ import com.opencloud.common.exception.OpenAuthenticationEntryPoint;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
@@ -14,6 +16,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.provider.authentication.BearerTokenExtractor;
 import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 import org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler;
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 
@@ -35,7 +38,11 @@ import java.io.IOException;
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
     @Autowired
-    private TokenStore tokenStore;
+    private RedisConnectionFactory redisConnectionFactory;
+    @Bean
+    public RedisTokenStore redisTokenStore() {
+        return new RedisTokenStore(redisConnectionFactory);
+    }
 
     private BearerTokenExtractor tokenExtractor = new BearerTokenExtractor();
 
@@ -82,7 +89,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                     String tokenValue = authentication.getPrincipal().toString();
                     log.debug("revokeToken tokenValue:{}",tokenValue);
                     // 移除token
-                    tokenStore.removeAccessToken(tokenStore.readAccessToken(tokenValue));
+                    redisTokenStore().removeAccessToken(redisTokenStore().readAccessToken(tokenValue));
                 }
             }catch (Exception e){
                 log.error("revokeToken error:{}",e);

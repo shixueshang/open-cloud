@@ -54,6 +54,14 @@ public class OpenHelper {
     }
 
     /**
+     * 获取认证用户Id
+     *
+     * @return
+     */
+    public static Long getUserId() {
+        return getUser().getUserId();
+    }
+    /**
      * 是否拥有权限
      *
      * @param authority

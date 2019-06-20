@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.opencloud.common.mybatis.EntityMap;
 import com.opencloud.common.mybatis.query.CriteriaQuery;
+import com.opencloud.common.security.OpenUser;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -26,4 +28,26 @@ public interface IBaseService<T> extends IService<T> {
      * 自定义查询单个实体(返回自定义Map类型,便于枚举转换)
      */
     List<EntityMap> listEntityMaps(CriteriaQuery<?> wrapper);
+
+    /**
+     * 自定义查询List<EntityMap>
+     */
+    List<EntityMap> selectListEntityMap(String statement, EntityMap map);
+
+    /**
+     * 自定义查询map,statement默认selectListEntityMapByMap
+     */
+    List<EntityMap> selectListEntityMap(EntityMap map);
+
+    /**
+     * 自定义查询List<EntityMap>
+     */
+    List<EntityMap> selectListEntityMap(String statement, @Param("ew") CriteriaQuery<?> wrapper);
+
+    /**
+     * 自定义查询List<EntityMap>,statement默认selectListEntityMapByCq
+     */
+    List<EntityMap> selectListEntityMap(@Param("ew") CriteriaQuery<?> wrapper);
+
+    void updateOpenUser(OpenUser openUser);
 }

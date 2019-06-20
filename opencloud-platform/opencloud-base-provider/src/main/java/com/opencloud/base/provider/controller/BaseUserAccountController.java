@@ -2,6 +2,7 @@ package com.opencloud.base.provider.controller;
 
 import com.opencloud.base.client.api.BaseUserAccountRemoteApi;
 import com.opencloud.base.client.model.AppUser;
+
 import com.opencloud.base.client.model.UserAccount;
 import com.opencloud.base.client.model.UserInfo;
 import com.opencloud.base.client.model.entity.BaseUserAccount;
@@ -26,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @Api(tags = "系统用户账号管理")
 @RestController
-public class BaseUserUserAccountController implements BaseUserAccountRemoteApi {
+public class BaseUserAccountController implements BaseUserAccountRemoteApi {
     @Autowired
     private BaseUserAccountService baseUserAccountService;
     @Autowired
