@@ -2,16 +2,10 @@ package com.opencloud.common.mybatis.base.controller;
 
 
 import cn.hutool.core.util.ObjectUtil;
-
 import com.opencloud.common.mybatis.base.service.IBaseService;
-import com.opencloud.common.mybatis.binder.CustomTimestampEditor;
 import com.opencloud.common.mybatis.query.CriteriaQuery;
-import com.sun.beans.editors.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -51,24 +45,4 @@ public class BaseController<Biz extends IBaseService<T>, T> {
         });
         return maps;
     }
-
-
-    /**
-     * 后台接收Date转换
-     */
-    @InitBinder
-    private void initBinder(WebDataBinder binder) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        dateFormat.setLenient(true);
-        SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        datetimeFormat.setLenient(true);
-
-        binder.registerCustomEditor(java.sql.Timestamp.class, new CustomTimestampEditor(datetimeFormat, true));
-        binder.registerCustomEditor(Integer.class, new IntegerEditor());
-        binder.registerCustomEditor(String.class, new StringEditor());
-        binder.registerCustomEditor(long.class, new LongEditor());
-        binder.registerCustomEditor(double.class, new DoubleEditor());
-        binder.registerCustomEditor(float.class, new FloatEditor());
-    }
-
 }

@@ -2,20 +2,24 @@ package com.opencloud.common.security;
 
 import com.opencloud.common.configuration.OpenCommonProperties;
 import com.opencloud.common.utils.BeanConvertUtils;
+import com.opencloud.common.utils.ReflectionUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Request;
 import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
 import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -51,6 +55,25 @@ public class OpenHelper {
             }
         }
         return null;
+    }
+
+
+    /**
+     * 更新OpenUser
+     *
+     * @param openUser
+     */
+    public void updateOpenUser(TokenStore tokenStore,OpenUser openUser) {
+        // 动态更新客户端生成的token
+        Collection<OAuth2AccessToken> accessTokens = tokenStore.findTokensByClientIdAndUserName(openUser.getClientId(), openUser.getUsername());
+        for (OAuth2AccessToken accessToken : accessTokens) {
+            // 由于没有set方法,使用反射机制强制赋值
+            OAuth2Authentication oAuth2Authentication = tokenStore.readAuthentication(accessToken);
+            Authentication authentication = oAuth2Authentication.getUserAuthentication();
+            ReflectionUtils.setFieldValue(authentication, "principal", openUser);
+            // 重新保存
+            tokenStore.storeAccessToken(accessToken, oAuth2Authentication);
+        }
     }
 
     /**
