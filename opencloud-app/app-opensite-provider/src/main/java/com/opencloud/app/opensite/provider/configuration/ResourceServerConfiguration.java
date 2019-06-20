@@ -1,6 +1,5 @@
 package com.opencloud.app.opensite.provider.configuration;
 
-import com.opencloud.common.constants.CommonConstants;
 import com.opencloud.common.exception.OpenAccessDeniedHandler;
 import com.opencloud.common.exception.OpenAuthenticationEntryPoint;
 import lombok.extern.slf4j.Slf4j;
@@ -52,8 +51,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .and()
                 .authorizeRequests()
                 .antMatchers("/login/**","/oauth/**").permitAll()
-                // 指定监控访问权限
-                .requestMatchers(EndpointRequest.toAnyEndpoint()).hasAnyAuthority(CommonConstants.AUTHORITY_ACTUATOR)
+                // 监控端点内部放行
+                .requestMatchers(EndpointRequest.toAnyEndpoint()).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage("/login").permitAll()

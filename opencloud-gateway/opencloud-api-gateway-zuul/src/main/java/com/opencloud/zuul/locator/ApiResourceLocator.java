@@ -220,7 +220,6 @@ public class ApiResourceLocator implements ApplicationListener<RemoteRefreshRout
         //从db中加载限流信息
         policysMap.putAll(loadRateLimitPolicy());
         rateLimitProperties.setPolicyList(policysMap);
-        log.info("=============加载动态限流:{}==============", rateLimitProperties.getPolicyList().size());
     }
 
 
@@ -255,6 +254,7 @@ public class ApiResourceLocator implements ApplicationListener<RemoteRefreshRout
                 this.rateLimitApis.clear();
                 this.rateLimitApis.addAll(rateLimitApis);
             }
+            log.info("=============加载动态限流:{}==============", rateLimitProperties.getPolicyList().size());
         } catch (Exception e) {
             log.error("加载动态限流错误:{}", e.getMessage());
         }

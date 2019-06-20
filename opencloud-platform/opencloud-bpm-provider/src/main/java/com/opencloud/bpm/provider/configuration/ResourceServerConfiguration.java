@@ -1,9 +1,8 @@
 package com.opencloud.bpm.provider.configuration;
 
-import com.opencloud.common.security.OpenHelper;
-import com.opencloud.common.constants.CommonConstants;
 import com.opencloud.common.exception.OpenAccessDeniedHandler;
 import com.opencloud.common.exception.OpenAuthenticationEntryPoint;
+import com.opencloud.common.security.OpenHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.context.annotation.Configuration;
@@ -38,7 +37,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .and()
                 .authorizeRequests()
                 // 指定监控可访问权限
-                .requestMatchers(EndpointRequest.toAnyEndpoint()).hasAnyAuthority(CommonConstants.AUTHORITY_ACTUATOR)
+                .requestMatchers(EndpointRequest.toAnyEndpoint()).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 //认证鉴权错误处理,为了统一异常处理。每个资源服务器都应该加上。

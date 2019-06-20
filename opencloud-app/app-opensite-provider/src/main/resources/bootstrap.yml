@@ -40,7 +40,7 @@ management:
     endpoints:
         web:
             exposure:
-                include: refresh,health
+                include: '*'
 opencloud:
     swagger2:
         description: 平台门户网站服务

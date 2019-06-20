@@ -49,7 +49,7 @@ management:
     endpoints:
         web:
             exposure:
-                include: refresh,health
+                include: '*'
 opencloud:
     swagger2:
         description: 任务调度服务

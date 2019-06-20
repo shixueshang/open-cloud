@@ -1,6 +1,5 @@
 package com.opencloud.base.provider.configuration;
 
-import com.opencloud.common.constants.CommonConstants;
 import com.opencloud.common.exception.OpenAccessDeniedHandler;
 import com.opencloud.common.exception.OpenAuthenticationEntryPoint;
 import com.opencloud.common.security.OpenHelper;
@@ -62,8 +61,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .and()
                 .authorizeRequests()
-                // 指定监控可访问权限
-                .requestMatchers(EndpointRequest.toAnyEndpoint()).hasAnyAuthority(CommonConstants.AUTHORITY_ACTUATOR)
+                // 监控端点内部放行
+                .requestMatchers(EndpointRequest.toAnyEndpoint()).permitAll()
                 // fegin访问或无需身份认证
                 .antMatchers(
                         "/account/localLogin",

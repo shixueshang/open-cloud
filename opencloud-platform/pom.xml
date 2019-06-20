@@ -23,5 +23,6 @@
         <module>opencloud-bpm-provider</module>
         <module>opencloud-scheduler-client</module>
         <module>opencloud-scheduler-provider</module>
+        <module>opencloud-sba-server</module>
     </modules>
 </project>

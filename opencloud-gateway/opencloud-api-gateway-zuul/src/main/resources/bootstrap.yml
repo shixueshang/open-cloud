@@ -76,7 +76,8 @@ management:
   endpoints:
     web:
       exposure:
-        include: refresh,health,open
+        # 开放部分端点和自定义端点
+        include: health,info,open
 
 opencloud:
   swagger2:
@@ -97,6 +98,8 @@ opencloud:
       - /auth/login/**
       - /auth/logout/**
       - /auth/oauth/**
+      - /actuator/health
+      - /actuator/info
     # 忽略权限鉴定
     authority-ignores:
       - /auth/current/user

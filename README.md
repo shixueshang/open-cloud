@@ -26,7 +26,7 @@
 <a target="_blank" href="http://39.106.187.125/admin">运营管理后台预览</a>
 + 后台默认账号:admin 123456  
 + 后台测试账号:test 123456
-
++ SpringBootAdmin账号:sba 123456
 #### 更新日志
     v-2.1.0 2019-06-10 
         1. base_api表新增字段is_open是否公开访问: 0-内部的 1-公开的
@@ -115,6 +115,7 @@ open-cloud
     ├── opencloud-scheduler-provider  -- 平台任务调度服务(port = 8501)
     ├── opencloud-bpm-client   -- 平台工作流接口
     ├── opencloud-bpm-provider -- 平台工作流服务(port = 8255)
+    ├── opencloud-sba-server --  SpringBootAdmin监控服务(port = 8849)
 ```
 
 #### 快速开始
@@ -168,8 +169,12 @@ open-cloud
      2. AuthApplication
      3. ZuulGatewayApplication(推荐) 或 SpringGatewayApplication 
      ```
-     访问 http://localhost:8888
+        访问 http://localhost:8888
      ```
+     4.SpringBootAdmin(非必需)
+      ```
+          访问 http://localhost:8849
+      ```
 6. 前端启动
     ```bush
         npm install 

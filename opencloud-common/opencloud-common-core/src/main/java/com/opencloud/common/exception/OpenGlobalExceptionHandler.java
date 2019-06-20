@@ -146,7 +146,7 @@ public class OpenGlobalExceptionHandler {
             httpStatus = HttpStatus.UNAUTHORIZED.value();
             code = ResultEnum.UNAUTHORIZED;
         } else if (className.contains("InvalidGrantException")) {
-            code = ResultEnum.INVALID_GRANT;
+            code = ResultEnum.ALERT;
             if ("Bad credentials".contains(message)) {
                 code = ResultEnum.BAD_CREDENTIALS;
             } else if ("User is disabled".contains(message)) {

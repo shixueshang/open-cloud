@@ -27,12 +27,6 @@ public class CommonConstants {
      */
     public final static String PRE_SMS = "OPENCLOUD_PRE_SMS:";
 
-
-    /**
-     * 端点监控权限标识
-     */
-    public final static String AUTHORITY_ACTUATOR = "API_actuator";
-
     /**
      * 默认最小页码
      */
