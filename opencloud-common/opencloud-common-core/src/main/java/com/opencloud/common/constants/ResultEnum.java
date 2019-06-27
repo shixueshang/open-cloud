@@ -45,7 +45,7 @@ public enum ResultEnum {
     ACCOUNT_EXPIRED(3002, "account_expired"),
     CREDENTIALS_EXPIRED(3003, "credentials_expired"),
     ACCOUNT_LOCKED(3004, "account_locked"),
-    USERNAME_NOT_FOUND(3004, "username_not_found"),
+    USERNAME_NOT_FOUND(3005, "username_not_found"),
 
     /**
      * 请求错误
