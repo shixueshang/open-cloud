@@ -60,7 +60,6 @@ public class RedisCacheAutoConfiguration {
         template.setHashValueSerializer(jackson2JsonRedisSerializer);
         template.setDefaultSerializer(jackson2JsonRedisSerializer);
         return template;
-
     }
 
     /**
