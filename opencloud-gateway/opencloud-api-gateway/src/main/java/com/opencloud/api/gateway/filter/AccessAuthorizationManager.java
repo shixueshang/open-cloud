@@ -2,6 +2,7 @@ package com.opencloud.api.gateway.filter;
 
 import com.opencloud.api.gateway.configuration.ApiProperties;
 import com.opencloud.api.gateway.locator.ApiResourceLocator;
+import com.opencloud.api.gateway.util.matcher.ReactiveIpAddressMatcher;
 import com.opencloud.base.client.model.AuthorityResource;
 import com.opencloud.base.client.model.IpLimitApi;
 import com.opencloud.common.constants.CommonConstants;
@@ -18,7 +19,6 @@ import org.springframework.security.authorization.ReactiveAuthorizationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.server.authorization.AuthorizationContext;
-import org.springframework.security.web.util.matcher.IpAddressMatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.server.ServerWebExchange;
@@ -289,10 +289,10 @@ public class AccessAuthorizationManager implements ReactiveAuthorizationManager<
      * @return
      */
     public boolean matchIpOrOrigin(Set<String> values, String ipAddress, String origin) {
-        org.springframework.security.web.util.matcher.IpAddressMatcher ipAddressMatcher = null;
+        ReactiveIpAddressMatcher ipAddressMatcher = null;
         for (String value : values) {
             if (StringUtils.matchIp(value)) {
-                ipAddressMatcher = new IpAddressMatcher(value);
+                ipAddressMatcher = new ReactiveIpAddressMatcher(value);
                 if (ipAddressMatcher.matches(ipAddress)) {
                     return true;
                 }
