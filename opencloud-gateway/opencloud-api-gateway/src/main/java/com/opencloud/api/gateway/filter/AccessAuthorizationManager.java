@@ -2,7 +2,6 @@ package com.opencloud.api.gateway.filter;
 
 import com.opencloud.api.gateway.configuration.ApiProperties;
 import com.opencloud.api.gateway.locator.ApiResourceLocator;
-import com.opencloud.api.gateway.util.matcher.IpAddressMatcher;
 import com.opencloud.base.client.model.AuthorityResource;
 import com.opencloud.base.client.model.IpLimitApi;
 import com.opencloud.common.constants.CommonConstants;
@@ -19,6 +18,7 @@ import org.springframework.security.authorization.ReactiveAuthorizationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.server.authorization.AuthorizationContext;
+import org.springframework.security.web.util.matcher.IpAddressMatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.server.ServerWebExchange;
@@ -233,13 +233,20 @@ public class AccessAuthorizationManager implements ReactiveAuthorizationManager<
         return SecurityConfig.createList("AUTHORITIES_REQUIRED");
     }
 
-
-    public boolean matchIpBlacklist(String requestPath, String remoteIpAddress) {
+    /**
+     * IP黑名单验证
+     *
+     * @param requestPath
+     * @param ipAddress
+     * @param origin
+     * @return
+     */
+    public boolean matchIpOrOriginBlacklist(String requestPath, String ipAddress, String origin) {
         List<IpLimitApi> blackList = accessLocator.getIpBlacks();
         if (blackList != null) {
             for (IpLimitApi api : blackList) {
                 if (pathMatch.match(api.getPath(), requestPath) && api.getIpAddressSet() != null && !api.getIpAddressSet().isEmpty()) {
-                    if (matchIp(api.getIpAddressSet(), remoteIpAddress)) {
+                    if (matchIpOrOrigin(api.getIpAddressSet(), ipAddress, origin)) {
                         return true;
                     }
                 }
@@ -249,7 +256,15 @@ public class AccessAuthorizationManager implements ReactiveAuthorizationManager<
 
     }
 
-    public boolean[] matchIpWhiteList(String requestPath, String remoteIpAddress) {
+    /**
+     * 白名单验证
+     *
+     * @param requestPath
+     * @param ipAddress
+     * @param origin
+     * @return [hasWhiteList, allow]
+     */
+    public boolean[] matchIpOrOriginWhiteList(String requestPath, String ipAddress, String origin) {
         boolean hasWhiteList = false;
         boolean allow = false;
         List<IpLimitApi> whiteList = accessLocator.getIpWhites();
@@ -257,7 +272,7 @@ public class AccessAuthorizationManager implements ReactiveAuthorizationManager<
             for (IpLimitApi api : whiteList) {
                 if (pathMatch.match(api.getPath(), requestPath) && api.getIpAddressSet() != null && !api.getIpAddressSet().isEmpty()) {
                     hasWhiteList = true;
-                    allow = matchIp(api.getIpAddressSet(), remoteIpAddress);
+                    allow = matchIpOrOrigin(api.getIpAddressSet(), ipAddress,origin);
                     break;
                 }
             }
@@ -265,15 +280,26 @@ public class AccessAuthorizationManager implements ReactiveAuthorizationManager<
         return new boolean[]{hasWhiteList, allow};
     }
 
-    public boolean matchIp(Set<String> ips, String remoteIpAddress) {
-        IpAddressMatcher ipAddressMatcher = null;
-        for (String ip : ips) {
-            try {
-                ipAddressMatcher = new IpAddressMatcher(ip);
-                if (ipAddressMatcher.matches(remoteIpAddress)) {
+    /**
+     * 匹配IP
+     *
+     * @param values
+     * @param ipAddress
+     * @param origin
+     * @return
+     */
+    public boolean matchIpOrOrigin(Set<String> values, String ipAddress, String origin) {
+        org.springframework.security.web.util.matcher.IpAddressMatcher ipAddressMatcher = null;
+        for (String value : values) {
+            if (StringUtils.matchIp(value)) {
+                ipAddressMatcher = new IpAddressMatcher(value);
+                if (ipAddressMatcher.matches(ipAddress)) {
                     return true;
                 }
-            } catch (Exception e) {
+            } else if (StringUtils.matchDomain(value)) {
+                if (StringUtils.isNotEmpty(origin) && origin.contains(value)) {
+                    return true;
+                }
             }
         }
         return false;
