@@ -282,7 +282,7 @@ public class AccessAuthorizationManager implements ReactiveAuthorizationManager<
     }
 
     /**
-     * 匹配IP
+     * 匹配IP或域名
      *
      * @param values
      * @param ipAddress
