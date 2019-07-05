@@ -280,7 +280,7 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
      * @param date
      * @return
      */
-    public static long getAgoDays(Date date) {
+    public static long getBeforeDays(Date date) {
         long t = System.currentTimeMillis() - date.getTime();
         return t / (ONE_DAY * ONE_MILLIS);
     }
@@ -291,7 +291,7 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
      * @param date
      * @return
      */
-    public static long getAgoHour(Date date) {
+    public static long getBeforeHours(Date date) {
         long t = System.currentTimeMillis() - date.getTime();
         return t / (ONE_HOUR * ONE_MILLIS);
     }
@@ -302,7 +302,7 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
      * @param date
      * @return
      */
-    public static long getAgoMinutes(Date date) {
+    public static long getBeforeMinutes(Date date) {
         long t = System.currentTimeMillis() - date.getTime();
         return t / (ONE_MINUTE * ONE_MILLIS);
     }
@@ -313,7 +313,7 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
      * @param date
      * @return
      */
-    public static long getAgoSecond(Date date) {
+    public static long getBeforeSeconds(Date date) {
         long t = System.currentTimeMillis() - date.getTime();
         return t / ONE_MILLIS;
     }
