@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +15,6 @@ import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
@@ -27,12 +26,27 @@ import java.time.Duration;
  */
 @Slf4j
 @Configuration
-@AutoConfigureAfter({RedisAutoConfiguration.class})
+@ConditionalOnBean({RedisAutoConfiguration.class})
 public class RedisCacheAutoConfiguration {
 
     public RedisCacheAutoConfiguration() {
         log.info("init redis cache");
     }
+
+
+  /*  *//**
+     * 解决KEY出现乱码的情况
+     *
+     * @param redisTemplate
+     *//*
+
+    @Autowired(required = false)
+    public void setRedisTemplate(RedisTemplate redisTemplate) {
+        RedisSerializer stringSerializer = new StringRedisSerializer();
+        //设置key序列化方式
+        redisTemplate.setKeySerializer(stringSerializer);
+        redisTemplate.setHashKeySerializer(stringSerializer);
+    }*/
 
     /**
      * 重新配置一个RedisTemplate
@@ -41,7 +55,8 @@ public class RedisCacheAutoConfiguration {
      * @return
      */
     @Bean
-    public RedisTemplate redisTemplate(RedisConnectionFactory factory) {
+    @SuppressWarnings("all")
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
         RedisTemplate<String, Object> template = new RedisTemplate<String, Object>();
         template.setConnectionFactory(factory);
         Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
@@ -49,17 +64,18 @@ public class RedisCacheAutoConfiguration {
         om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
         jackson2JsonRedisSerializer.setObjectMapper(om);
-        RedisSerializer<String> stringSerializer = new StringRedisSerializer();
+        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
         // key采用String的序列化方式
-        template.setKeySerializer(stringSerializer);
+        template.setKeySerializer(stringRedisSerializer);
         // hash的key也采用String的序列化方式
-        template.setHashKeySerializer(stringSerializer);
+        template.setHashKeySerializer(stringRedisSerializer);
         // value序列化方式采用jackson
         template.setValueSerializer(jackson2JsonRedisSerializer);
         // hash的value序列化方式采用jackson
         template.setHashValueSerializer(jackson2JsonRedisSerializer);
         template.setDefaultSerializer(jackson2JsonRedisSerializer);
         return template;
+
     }
 
     /**
