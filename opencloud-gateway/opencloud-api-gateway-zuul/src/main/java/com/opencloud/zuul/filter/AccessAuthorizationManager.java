@@ -288,7 +288,7 @@ public class AccessAuthorizationManager {
     }
 
     /**
-     * 匹配IP
+     * 匹配IP或域名
      *
      * @param values
      * @param ipAddress
