@@ -215,8 +215,6 @@ public class ApiResourceLocator implements ApplicationListener<RemoteRefreshRout
      */
     public void loadRateLimit() {
         LinkedHashMap<String, List<RateLimitProperties.Policy>> policysMap = Maps.newLinkedHashMap();
-        //从application.properties中加载限流信息
-        policysMap.putAll(rateLimitProperties.getPolicyList());
         //从db中加载限流信息
         policysMap.putAll(loadRateLimitPolicy());
         rateLimitProperties.setPolicyList(policysMap);
