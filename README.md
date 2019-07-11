@@ -33,7 +33,10 @@
         2. 调整项目结构
         3. 优化ui交互方式
         4. 调整部分代码
-        5. 升级方式 重新执行 base.sql oauth2.sql gateway.sql msg.sql 并手动删除无效表名
+        5. 升级方式 
+            + 升级前注意对老数据进行备份
+            + 重新导入common.propertis到配置中心
+            + 重新执行 base.sql oauth2.sql gateway.sql msg.sql 并手动删除无效表名
         
     v-2.1.0 2019-06-10 
         1. base_api表新增字段is_open是否公开访问: 0-内部的 1-公开的
