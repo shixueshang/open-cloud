@@ -29,8 +29,8 @@ public class SchedulerConfiguration implements SchedulerFactoryBeanCustomizer {
     }
 
     @Bean
-    public JobLogsListener jobLogsListener(EmailServiceClient emailRemoteService, SchedulerJobLogsService schedulerJobLogsService) {
-        return new JobLogsListener(emailRemoteService,schedulerJobLogsService);
+    public JobLogsListener jobLogsListener(EmailServiceClient emailServiceClient, SchedulerJobLogsService schedulerJobLogsService) {
+        return new JobLogsListener(emailServiceClient,schedulerJobLogsService);
     }
 
 }

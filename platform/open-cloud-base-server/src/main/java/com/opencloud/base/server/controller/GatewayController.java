@@ -1,5 +1,7 @@
 package com.opencloud.base.server.controller;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.opencloud.base.client.model.IpLimitApi;
 import com.opencloud.base.client.model.RateLimitApi;
 import com.opencloud.base.client.model.entity.GatewayRoute;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 网关接口
@@ -33,6 +36,23 @@ public class GatewayController implements IGatewayServiceClient {
     private GatewayRateLimitService gatewayRateLimitService;
     @Autowired
     private GatewayRouteService gatewayRouteService;
+
+    @ApiOperation(value = "获取服务列表", notes = "获取服务列表")
+    @GetMapping("/gateway/service/list")
+    public ResultBody getServiceList() {
+        List<Map> services = Lists.newArrayList();
+        List<GatewayRoute> routes = gatewayRouteService.findRouteList();
+        if (routes != null && routes.size() > 0) {
+            routes.forEach(route -> {
+                Map service = Maps.newHashMap();
+                service.put("serviceId", route.getRouteName());
+                service.put("serviceName", route.getRouteDesc());
+                services.add(service);
+            });
+        }
+        return ResultBody.ok().data(services);
+    }
+
     /**
      * 获取接口黑名单列表
      *

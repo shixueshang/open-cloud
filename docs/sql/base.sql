@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50528
 File Encoding         : 65001
 
-Date: 2019-07-11 18:32:36
+Date: 2019-07-11 22:54:22
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -20,18 +20,18 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 DROP TABLE IF EXISTS `base_account`;
 CREATE TABLE `base_account` (
-  `account_id` bigint(20) NOT NULL,
-  `user_id` bigint(20) NOT NULL COMMENT '用户Id',
-  `account` varchar(255) NOT NULL COMMENT '标识：手机号、邮箱、 用户名、或第三方应用的唯一标识',
-  `password` varchar(255) NOT NULL COMMENT '密码凭证：站内的保存密码、站外的不保存或保存token）',
-  `account_type` varchar(255) NOT NULL COMMENT '登录类型:password-密码、mobile-手机号、email-邮箱、weixin-微信、weibo-微博、qq-等等',
-  `domain` varchar(255) DEFAULT NULL COMMENT '账户域:@admin.com,@developer.com',
-  `register_ip` varchar(255) DEFAULT NULL COMMENT '注册IP',
-  `create_time` datetime DEFAULT NULL COMMENT '注册时间',
-  `status` int(11) DEFAULT NULL COMMENT '状态:0-禁用 1-启用 2-锁定',
-  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
-  PRIMARY KEY (`account_id`),
-  KEY `user_id` (`user_id`) USING BTREE
+                              `account_id` bigint(20) NOT NULL,
+                              `user_id` bigint(20) NOT NULL COMMENT '用户Id',
+                              `account` varchar(255) NOT NULL COMMENT '标识：手机号、邮箱、 用户名、或第三方应用的唯一标识',
+                              `password` varchar(255) NOT NULL COMMENT '密码凭证：站内的保存密码、站外的不保存或保存token）',
+                              `account_type` varchar(255) NOT NULL COMMENT '登录类型:password-密码、mobile-手机号、email-邮箱、weixin-微信、weibo-微博、qq-等等',
+                              `domain` varchar(255) DEFAULT NULL COMMENT '账户域:@admin.com,@developer.com',
+                              `register_ip` varchar(255) DEFAULT NULL COMMENT '注册IP',
+                              `create_time` datetime DEFAULT NULL COMMENT '注册时间',
+                              `status` int(11) DEFAULT NULL COMMENT '状态:0-禁用 1-启用 2-锁定',
+                              `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+                              PRIMARY KEY (`account_id`),
+                              KEY `user_id` (`user_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='登录账号';
 
 -- ----------------------------
@@ -45,18 +45,18 @@ INSERT INTO `base_account` VALUES ('557063237787451392', '557063237640650752', '
 -- ----------------------------
 DROP TABLE IF EXISTS `base_account_logs`;
 CREATE TABLE `base_account_logs` (
-  `id` bigint(20) NOT NULL,
-  `login_time` datetime NOT NULL,
-  `login_ip` varchar(255) NOT NULL COMMENT '登录Ip',
-  `login_agent` varchar(500) NOT NULL COMMENT '登录设备',
-  `login_nums` int(11) NOT NULL COMMENT '登录次数',
-  `user_id` bigint(20) NOT NULL,
-  `account` varchar(100) NOT NULL,
-  `account_type` varchar(50) NOT NULL,
-  `account_id` bigint(20) NOT NULL COMMENT '账号ID',
-  `domain` varchar(255) DEFAULT NULL COMMENT '账号域',
-  PRIMARY KEY (`id`),
-  KEY `account_id` (`account_id`) USING BTREE
+                                   `id` bigint(20) NOT NULL,
+                                   `login_time` datetime NOT NULL,
+                                   `login_ip` varchar(255) NOT NULL COMMENT '登录Ip',
+                                   `login_agent` varchar(500) NOT NULL COMMENT '登录设备',
+                                   `login_nums` int(11) NOT NULL COMMENT '登录次数',
+                                   `user_id` bigint(20) NOT NULL,
+                                   `account` varchar(100) NOT NULL,
+                                   `account_type` varchar(50) NOT NULL,
+                                   `account_id` bigint(20) NOT NULL COMMENT '账号ID',
+                                   `domain` varchar(255) DEFAULT NULL COMMENT '账号域',
+                                   PRIMARY KEY (`id`),
+                                   KEY `account_id` (`account_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='登录日志';
 
 -- ----------------------------
@@ -68,26 +68,26 @@ CREATE TABLE `base_account_logs` (
 -- ----------------------------
 DROP TABLE IF EXISTS `base_action`;
 CREATE TABLE `base_action` (
-  `action_id` bigint(20) NOT NULL COMMENT '资源ID',
-  `action_code` varchar(100) COLLATE utf8_bin NOT NULL COMMENT '资源编码',
-  `action_name` varchar(100) COLLATE utf8_bin NOT NULL COMMENT '资源名称',
-  `action_desc` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '资源描述',
-  `menu_id` bigint(20) DEFAULT NULL COMMENT '资源父节点',
-  `priority` int(10) NOT NULL DEFAULT '0' COMMENT '优先级 越小越靠前',
-  `status` tinyint(3) NOT NULL DEFAULT '1' COMMENT '状态:0-无效 1-有效',
-  `create_time` datetime NOT NULL,
-  `update_time` datetime DEFAULT NULL,
-  `is_persist` tinyint(3) NOT NULL DEFAULT '0' COMMENT '保留数据0-否 1-是 不允许删除',
-  `service_id` varchar(100) COLLATE utf8_bin NOT NULL COMMENT '服务名称',
-  PRIMARY KEY (`action_id`),
-  UNIQUE KEY `action_code` (`action_code`) USING BTREE,
-  UNIQUE KEY `action_id` (`action_id`) USING BTREE
+                             `action_id` bigint(20) NOT NULL COMMENT '资源ID',
+                             `action_code` varchar(100) COLLATE utf8_bin NOT NULL COMMENT '资源编码',
+                             `action_name` varchar(100) COLLATE utf8_bin NOT NULL COMMENT '资源名称',
+                             `action_desc` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '资源描述',
+                             `menu_id` bigint(20) DEFAULT NULL COMMENT '资源父节点',
+                             `priority` int(10) NOT NULL DEFAULT '0' COMMENT '优先级 越小越靠前',
+                             `status` tinyint(3) NOT NULL DEFAULT '1' COMMENT '状态:0-无效 1-有效',
+                             `create_time` datetime NOT NULL,
+                             `update_time` datetime DEFAULT NULL,
+                             `is_persist` tinyint(3) NOT NULL DEFAULT '0' COMMENT '保留数据0-否 1-是 不允许删除',
+                             `service_id` varchar(100) COLLATE utf8_bin NOT NULL COMMENT '服务名称',
+                             PRIMARY KEY (`action_id`),
+                             UNIQUE KEY `action_code` (`action_code`) USING BTREE,
+                             UNIQUE KEY `action_id` (`action_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=COMPACT COMMENT='系统资源-功能操作';
 
 -- ----------------------------
 -- Records of base_action
 -- ----------------------------
-INSERT INTO `base_action` VALUES ('1131849293404176385', 'systemMenuView', '查看', '', '3', '0', '1', '2019-05-24 17:07:54', '2019-05-25 01:56:20', '1', 'opencloud-base-provider');
+INSERT INTO `base_action` VALUES ('1131849293404176385', 'systemMenuView', '查看', '', '3', '0', '1', '2019-05-24 17:07:54', '2019-07-11 22:23:54', '1', 'opencloud-base-provider');
 INSERT INTO `base_action` VALUES ('1131849510572654593', 'systemMenuEdit', '编辑', '', '3', '0', '1', '2019-05-24 17:08:46', '2019-05-24 17:08:46', '1', 'opencloud-base-provider');
 INSERT INTO `base_action` VALUES ('1131858946338992129', 'systemRoleView', '查看', '', '8', '0', '1', '2019-05-24 17:46:16', '2019-05-24 17:46:16', '1', 'opencloud-base-provider');
 INSERT INTO `base_action` VALUES ('1131863248310775809', 'systemRoleEdit', '编辑', '', '8', '0', '1', '2019-05-24 18:03:22', '2019-05-24 18:03:22', '1', 'opencloud-base-provider');
@@ -107,35 +107,37 @@ INSERT INTO `base_action` VALUES ('1131865974704844802', 'gatewayRateLimitEdit',
 INSERT INTO `base_action` VALUES ('1131866278187905026', 'jobView', '查看', '', '16', '0', '1', '2019-05-24 18:15:24', '2019-05-25 03:23:15', '1', 'opencloud-base-provider');
 INSERT INTO `base_action` VALUES ('1131866310622457857', 'jobEdit', '编辑', '', '16', '0', '1', '2019-05-24 18:15:32', '2019-05-25 03:23:21', '1', 'opencloud-base-provider');
 INSERT INTO `base_action` VALUES ('1131866943459045377', 'schedulerLogsView', '查看', '', '19', '0', '1', '2019-05-24 18:18:03', '2019-05-24 18:18:03', '1', 'opencloud-base-provider');
-INSERT INTO `base_action` VALUES ('1131867094479155202', 'notifyHttpLogsView', '查看', '', '18', '0', '1', '2019-05-24 18:18:39', '2019-05-24 18:18:39', '1', 'opencloud-base-provider');
+INSERT INTO `base_action` VALUES ('1131867094479155202', 'webhookView', '查看', '', '18', '0', '1', '2019-05-24 18:18:39', '2019-07-11 22:18:13', '1', 'opencloud-base-provider');
+INSERT INTO `base_action` VALUES ('1149320706039820290', 'developerView', '查看', '', '1149253733673287682', '0', '1', '2019-07-11 22:13:04', '2019-07-11 22:13:04', '0', 'open-cloud-base-server');
+INSERT INTO `base_action` VALUES ('1149320749446672385', 'developerEdit', '编辑', '', '1149253733673287682', '0', '1', '2019-07-11 22:13:14', '2019-07-11 22:13:14', '0', 'open-cloud-base-server');
 
 -- ----------------------------
 -- Table structure for base_api
 -- ----------------------------
 DROP TABLE IF EXISTS `base_api`;
 CREATE TABLE `base_api` (
-  `api_id` bigint(20) NOT NULL COMMENT '接口ID',
-  `api_code` varchar(255) COLLATE utf8_bin NOT NULL COMMENT '接口编码',
-  `api_name` varchar(100) COLLATE utf8_bin NOT NULL COMMENT '接口名称',
-  `api_category` varchar(20) COLLATE utf8_bin DEFAULT 'default' COMMENT '接口分类:default-默认分类',
-  `api_desc` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '资源描述',
-  `request_method` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '请求方式',
-  `content_type` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '响应类型',
-  `service_id` varchar(100) COLLATE utf8_bin NOT NULL COMMENT '服务ID',
-  `path` varchar(200) COLLATE utf8_bin DEFAULT NULL COMMENT '请求路径',
-  `priority` bigint(20) NOT NULL DEFAULT '0' COMMENT '优先级',
-  `status` tinyint(3) NOT NULL DEFAULT '1' COMMENT '状态:0-无效 1-有效',
-  `create_time` datetime NOT NULL,
-  `update_time` datetime DEFAULT NULL,
-  `is_persist` tinyint(3) NOT NULL DEFAULT '0' COMMENT '保留数据0-否 1-是 不允许删除',
-  `is_auth` tinyint(3) NOT NULL DEFAULT '1' COMMENT '是否需要认证: 0-无认证 1-身份认证 默认:1',
-  `is_open` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否公开: 0-内部的 1-公开的',
-  `class_name` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '类名',
-  `method_name` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '方法名',
-  PRIMARY KEY (`api_id`),
-  UNIQUE KEY `api_code` (`api_code`),
-  UNIQUE KEY `api_id` (`api_id`),
-  KEY `service_id` (`service_id`)
+                          `api_id` bigint(20) NOT NULL COMMENT '接口ID',
+                          `api_code` varchar(255) COLLATE utf8_bin NOT NULL COMMENT '接口编码',
+                          `api_name` varchar(100) COLLATE utf8_bin NOT NULL COMMENT '接口名称',
+                          `api_category` varchar(20) COLLATE utf8_bin DEFAULT 'default' COMMENT '接口分类:default-默认分类',
+                          `api_desc` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '资源描述',
+                          `request_method` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '请求方式',
+                          `content_type` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '响应类型',
+                          `service_id` varchar(100) COLLATE utf8_bin NOT NULL COMMENT '服务ID',
+                          `path` varchar(200) COLLATE utf8_bin DEFAULT NULL COMMENT '请求路径',
+                          `priority` bigint(20) NOT NULL DEFAULT '0' COMMENT '优先级',
+                          `status` tinyint(3) NOT NULL DEFAULT '1' COMMENT '状态:0-无效 1-有效',
+                          `create_time` datetime NOT NULL,
+                          `update_time` datetime DEFAULT NULL,
+                          `is_persist` tinyint(3) NOT NULL DEFAULT '0' COMMENT '保留数据0-否 1-是 不允许删除',
+                          `is_auth` tinyint(3) NOT NULL DEFAULT '1' COMMENT '是否需要认证: 0-无认证 1-身份认证 默认:1',
+                          `is_open` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否公开: 0-内部的 1-公开的',
+                          `class_name` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '类名',
+                          `method_name` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '方法名',
+                          PRIMARY KEY (`api_id`),
+                          UNIQUE KEY `api_code` (`api_code`),
+                          UNIQUE KEY `api_id` (`api_id`),
+                          KEY `service_id` (`service_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=COMPACT COMMENT='系统资源-API接口';
 
 -- ----------------------------
@@ -143,142 +145,154 @@ CREATE TABLE `base_api` (
 -- ----------------------------
 INSERT INTO `base_api` VALUES ('1', 'all', '全部', 'default', '所有请求', 'get,post', null, 'open-cloud-api-zuul-server', '/**', '0', '1', '2019-03-07 21:52:17', '2019-03-14 21:41:28', '1', '1', '1', null, null);
 INSERT INTO `base_api` VALUES ('2', 'actuator', '监控端点', 'default', '监控端点', 'post', null, 'open-cloud-api-zuul-server', '/actuator/**', '0', '1', '2019-03-07 21:52:17', '2019-03-14 21:41:28', '1', '1', '1', null, null);
-INSERT INTO `base_api` VALUES ('1149168010337116161', '9a1e16647d1e534f7b06ed9db83719fa', '获取功能按钮详情', 'default', '获取功能按钮详情', 'GET', '', 'open-cloud-base-server', '/action/{actionId}/info', '0', '1', '2019-07-11 12:06:18', '2019-07-11 17:24:31', '1', '1', '1', 'com.opencloud.base.server.controller.BaseActionController', 'getAction');
-INSERT INTO `base_api` VALUES ('1149168010500694017', '26128c7aafae30020bcac2c47631497a', '获取分页功能按钮列表', 'default', '获取分页功能按钮列表', 'GET', '', 'open-cloud-base-server', '/action', '0', '1', '2019-07-11 12:06:18', '2019-07-11 17:24:31', '1', '1', '1', 'com.opencloud.base.server.controller.BaseActionController', 'findActionListPage');
-INSERT INTO `base_api` VALUES ('1149168010571997185', '84d30b0aab28de096779d6f8bee960e7', '添加功能按钮', 'default', '添加功能按钮', 'POST', '', 'open-cloud-base-server', '/action/add', '0', '1', '2019-07-11 12:06:18', '2019-07-11 17:24:31', '1', '1', '1', 'com.opencloud.base.server.controller.BaseActionController', 'addAction');
-INSERT INTO `base_api` VALUES ('1149168010655883266', '756154d7c8c6a79f02da79d9148beb9f', '编辑功能按钮', 'default', '添加功能按钮', 'POST', '', 'open-cloud-base-server', '/action/update', '0', '1', '2019-07-11 12:06:18', '2019-07-11 17:24:31', '1', '1', '1', 'com.opencloud.base.server.controller.BaseActionController', 'updateAction');
-INSERT INTO `base_api` VALUES ('1149168010722992129', '92187c259636fdf5d4f108b688fc44ee', '移除功能按钮', 'default', '移除功能按钮', 'POST', '', 'open-cloud-base-server', '/action/remove', '0', '1', '2019-07-11 12:06:18', '2019-07-11 17:24:31', '1', '1', '1', 'com.opencloud.base.server.controller.BaseActionController', 'removeAction');
-INSERT INTO `base_api` VALUES ('1149168010794295298', '214e294809bb1f22abc70c38959e1343', '添加接口资源', 'default', '添加接口资源', 'POST', '', 'open-cloud-base-server', '/api/add', '0', '1', '2019-07-11 12:06:18', '2019-07-11 17:24:31', '1', '1', '1', 'com.opencloud.base.server.controller.BaseApiController', 'addApi');
-INSERT INTO `base_api` VALUES ('1149168010861404161', 'a0f00dd477c9232a51b94553ad7a7803', '移除接口资源', 'default', '移除接口资源', 'POST', '', 'open-cloud-base-server', '/api/remove', '0', '1', '2019-07-11 12:06:18', '2019-07-11 17:24:31', '1', '1', '1', 'com.opencloud.base.server.controller.BaseApiController', 'removeApi');
-INSERT INTO `base_api` VALUES ('1149168010920124418', '6311ab783c8818cd5918e5d903fb371e', '编辑接口资源', 'default', '编辑接口资源', 'POST', '', 'open-cloud-base-server', '/api/update', '0', '1', '2019-07-11 12:06:18', '2019-07-11 17:24:31', '1', '1', '1', 'com.opencloud.base.server.controller.BaseApiController', 'updateApi');
-INSERT INTO `base_api` VALUES ('1149168010991427586', 'aa37236289cedba711c8f648a94b1105', '获取分页接口列表', 'default', '获取分页接口列表', 'GET', '', 'open-cloud-base-server', '/api', '0', '1', '2019-07-11 12:06:18', '2019-07-11 17:24:31', '1', '1', '1', 'com.opencloud.base.server.controller.BaseApiController', 'getApiList');
-INSERT INTO `base_api` VALUES ('1149168011045953537', 'e18bae5b2fc727e77d36a3f4697abf0f', '获取所有接口列表', 'default', '获取所有接口列表', 'GET', '', 'open-cloud-base-server', '/api/all', '0', '1', '2019-07-11 12:06:18', '2019-07-11 17:24:31', '1', '1', '1', 'com.opencloud.base.server.controller.BaseApiController', 'getApiAllList');
-INSERT INTO `base_api` VALUES ('1149168011100479489', 'd4c4c1b5b3847cc63b52ed9007698325', '获取接口资源', 'default', '获取接口资源', 'GET', '', 'open-cloud-base-server', '/api/{apiId}/info', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:31', '1', '1', '1', 'com.opencloud.base.server.controller.BaseApiController', 'getApi');
-INSERT INTO `base_api` VALUES ('1149168011163394050', '9e054a7dc4194e7635c2686e1109aa49', '删除应用信息', 'default', '删除应用信息', 'POST', '', 'open-cloud-base-server', '/app/remove', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:31', '1', '1', '1', 'com.opencloud.base.server.controller.BaseAppController', 'removeApp');
-INSERT INTO `base_api` VALUES ('1149168011217920002', 'fa32726ed4076d44cae0023132f7014f', '获取应用详情', 'default', '获取应用详情', 'GET', '', 'open-cloud-base-server', '/app/{appId}/info', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:31', '1', '0', '1', 'com.opencloud.base.server.controller.BaseAppController', 'getApp');
-INSERT INTO `base_api` VALUES ('1149168011280834562', 'c5863e8ad8a5605354b9a122511ffa01', '添加应用信息', 'default', '添加应用信息', 'POST', '', 'open-cloud-base-server', '/app/add', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:31', '1', '1', '1', 'com.opencloud.base.server.controller.BaseAppController', 'addApp');
-INSERT INTO `base_api` VALUES ('1149168011331166209', 'a23793da67076d4be853daa422943c53', '编辑应用信息', 'default', '编辑应用信息', 'POST', '', 'open-cloud-base-server', '/app/update', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:31', '1', '1', '1', 'com.opencloud.base.server.controller.BaseAppController', 'updateApp');
-INSERT INTO `base_api` VALUES ('1149168011452801025', '93c006692e386f96555e7edece91c994', '重置应用秘钥', 'default', '重置应用秘钥', 'POST', '', 'open-cloud-base-server', '/app/reset', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:31', '1', '1', '1', 'com.opencloud.base.server.controller.BaseAppController', 'resetAppSecret');
-INSERT INTO `base_api` VALUES ('1149168011524104194', '385d34ec827de818225a981d737f307a', '获取应用开发配置信息', 'default', '获取应用开发配置信息', 'GET', '', 'open-cloud-base-server', '/app/client/{clientId}/info', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:31', '1', '0', '1', 'com.opencloud.base.server.controller.BaseAppController', 'getAppClientInfo');
-INSERT INTO `base_api` VALUES ('1149168011578630146', 'ccb6139e4beb2a84e29f399215bfedc0', '获取分页应用列表', 'default', '获取分页应用列表', 'GET', '', 'open-cloud-base-server', '/app', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:31', '1', '1', '1', 'com.opencloud.base.server.controller.BaseAppController', 'getAppListPage');
-INSERT INTO `base_api` VALUES ('1149168011628961794', 'f09f5543ff4c0ceab04b99ddc5a94bc2', '完善应用开发信息', 'default', '完善应用开发信息', 'POST', '', 'open-cloud-base-server', '/app/client/update', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:31', '1', '1', '1', 'com.opencloud.base.server.controller.BaseAppController', 'updateAppClientInfo');
-INSERT INTO `base_api` VALUES ('1149168011687682050', '331bddbcd34cacdd74f80b48e3484017', '获取接口权限列表', 'default', '获取接口权限列表', 'GET', '', 'open-cloud-base-server', '/authority/api', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.BaseAuthorityController', 'findAuthorityApi');
-INSERT INTO `base_api` VALUES ('1149168011742208002', '785b2368bf67d1a942ea64d946c70144', '获取应用已分配接口权限', 'default', '获取应用已分配接口权限', 'GET', '', 'open-cloud-base-server', '/authority/app', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '0', '1', 'com.opencloud.base.server.controller.BaseAuthorityController', 'findAuthorityApp');
-INSERT INTO `base_api` VALUES ('1149168011805122561', '282c563cbfb922ac6328c058051d31a4', '分配角色权限', 'default', '分配角色权限', 'POST', '', 'open-cloud-base-server', '/authority/role/grant', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:31', '1', '1', '1', 'com.opencloud.base.server.controller.BaseAuthorityController', 'grantAuthorityRole');
-INSERT INTO `base_api` VALUES ('1149168011851259906', 'f2be18d77a78f728df355f32e90cd780', '分配应用权限', 'default', '分配应用权限', 'POST', '', 'open-cloud-base-server', '/authority/app/grant', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:31', '1', '1', '1', 'com.opencloud.base.server.controller.BaseAuthorityController', 'grantAuthorityApp');
-INSERT INTO `base_api` VALUES ('1149168011909980161', '4611bd638b538605286600dbc899cbb0', '功能按钮授权', 'default', '功能按钮授权', 'POST', '', 'open-cloud-base-server', '/authority/action/grant', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:31', '1', '1', '1', 'com.opencloud.base.server.controller.BaseAuthorityController', 'grantAuthorityAction');
-INSERT INTO `base_api` VALUES ('1149168011960311809', '5262f2214a4ff43179c947dc458213d7', '获取功能权限列表', 'default', '获取功能权限列表', 'GET', '', 'open-cloud-base-server', '/authority/action', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:31', '1', '1', '1', 'com.opencloud.base.server.controller.BaseAuthorityController', 'findAuthorityAction');
-INSERT INTO `base_api` VALUES ('1149168012010643458', '8a6561a9a0efa7f5f9faadb6e39dc927', '获取用户已分配权限', 'default', '获取用户已分配权限', 'GET', '', 'open-cloud-base-server', '/authority/user', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:31', '1', '1', '1', 'com.opencloud.base.server.controller.BaseAuthorityController', 'findAuthorityUser');
-INSERT INTO `base_api` VALUES ('1149168012060975106', '1df7911bb85d15f51bcd78c43f18b24d', '获取菜单权限列表', 'default', '获取菜单权限列表', 'GET', '', 'open-cloud-base-server', '/authority/menu', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.BaseAuthorityController', 'findAuthorityMenu');
-INSERT INTO `base_api` VALUES ('1149168012111306753', '80256cc196e1e6d2437289e038b13b8a', '获取所有访问权限列表', 'default', '获取所有访问权限列表', 'GET', '', 'open-cloud-base-server', '/authority/access', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:31', '1', '0', '1', 'com.opencloud.base.server.controller.BaseAuthorityController', 'findAuthorityResource');
-INSERT INTO `base_api` VALUES ('1149168012161638401', '5586d5f337d4ebf99e551fdbf55d1116', '获取角色已分配权限', 'default', '获取角色已分配权限', 'GET', '', 'open-cloud-base-server', '/authority/role', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:31', '1', '1', '1', 'com.opencloud.base.server.controller.BaseAuthorityController', 'findAuthorityRole');
-INSERT INTO `base_api` VALUES ('1149168012216164353', 'b96a9514487f7e7679fe39c9254ab972', '分配用户权限', 'default', '分配用户权限', 'POST', '', 'open-cloud-base-server', '/authority/user/grant', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:31', '1', '1', '1', 'com.opencloud.base.server.controller.BaseAuthorityController', 'grantAuthorityUser');
-INSERT INTO `base_api` VALUES ('1149168012270690305', '3a1c4ef17565d863f35a3bccd7cc035e', '添加系统用户', 'default', '添加系统用户', 'POST', '', 'open-cloud-base-server', '/developer/add', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.BaseDeveloperController', 'addUser');
-INSERT INTO `base_api` VALUES ('1149168012316827649', '734d1179e332309b9de3927894864396', '更新系统用户', 'default', '更新系统用户', 'POST', '', 'open-cloud-base-server', '/developer/update', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.BaseDeveloperController', 'updateUser');
-INSERT INTO `base_api` VALUES ('1149168012421685249', '39ad69234435595ee67836e8a03d6ea6', '获取所有用户列表', 'default', '获取所有用户列表', 'GET', '', 'open-cloud-base-server', '/developer/all', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.BaseDeveloperController', 'getUserAllList');
-INSERT INTO `base_api` VALUES ('1149168012467822593', '50520c56c7714aa9be9a808cd30fd9bb', '获取账号登录信息', 'default', '仅限系统内部调用', 'POST', '', 'open-cloud-base-server', '/developer/login', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '0', '1', 'com.opencloud.base.server.controller.BaseDeveloperController', 'developerLogin');
-INSERT INTO `base_api` VALUES ('1149168012522348546', '9aca4415969b60158f383b2b49b8fe79', '修改用户密码', 'default', '修改用户密码', 'POST', '', 'open-cloud-base-server', '/developer/update/password', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.BaseDeveloperController', 'updatePassword');
-INSERT INTO `base_api` VALUES ('1149168012576874498', 'c4c154b6ffa4b21835db1e09614c73e6', '系统分页用户列表', 'default', '系统分页用户列表', 'GET', '', 'open-cloud-base-server', '/developer', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.BaseDeveloperController', 'getUserList');
-INSERT INTO `base_api` VALUES ('1149168012623011841', '4a13f24fa2d5cf74a6e408e82182e1b1', '注册第三方系统登录账号', 'default', '仅限系统内部调用', 'POST', '', 'open-cloud-base-server', '/developer/add/thirdParty', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '0', '0', 'com.opencloud.base.server.controller.BaseDeveloperController', 'addDeveloperThirdParty');
-INSERT INTO `base_api` VALUES ('1149168012673343490', '2901b2b8040f1c44c0318650fbfd4460', '获取分页菜单资源列表', 'default', '获取分页菜单资源列表', 'GET', '', 'open-cloud-base-server', '/menu', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.BaseMenuController', 'getMenuListPage');
-INSERT INTO `base_api` VALUES ('1149168012719480834', '87049d9db5261f50d524c45a32044415', '获取菜单资源详情', 'default', '获取菜单资源详情', 'GET', '', 'open-cloud-base-server', '/menu/{menuId}/info', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.BaseMenuController', 'getMenu');
-INSERT INTO `base_api` VALUES ('1149168012769812481', '50bcf72df4a18a6a8c46a7076a7a014a', '移除菜单资源', 'default', '移除菜单资源', 'POST', '', 'open-cloud-base-server', '/menu/remove', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.BaseMenuController', 'removeMenu');
-INSERT INTO `base_api` VALUES ('1149168012820144129', '638be151d314740a2f2aaebaaba3f479', '菜单所有资源列表', 'default', '菜单所有资源列表', 'GET', '', 'open-cloud-base-server', '/menu/all', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.BaseMenuController', 'getMenuAllList');
-INSERT INTO `base_api` VALUES ('1149168012870475777', 'e3c1b0b860591e11b50d6dccc9e2fa6a', '获取菜单下所有操作', 'default', '获取菜单下所有操作', 'GET', '', 'open-cloud-base-server', '/menu/action', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.BaseMenuController', 'getMenuAction');
-INSERT INTO `base_api` VALUES ('1149168012920807425', 'bbc5546a6cfa1161859b69ef5754eace', '编辑菜单资源', 'default', '编辑菜单资源', 'POST', '', 'open-cloud-base-server', '/menu/update', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.BaseMenuController', 'updateMenu');
-INSERT INTO `base_api` VALUES ('1149168012979527682', '720f3b2571fe2850108f090408514cae', '添加菜单资源', 'default', '添加菜单资源', 'POST', '', 'open-cloud-base-server', '/menu/add', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.BaseMenuController', 'addMenu');
-INSERT INTO `base_api` VALUES ('1149168013029859330', '8f2b70d4b55f13eaf82c4cf687903ced', '获取角色详情', 'default', '获取角色详情', 'GET', '', 'open-cloud-base-server', '/role/{roleId}/info', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.BaseRoleController', 'getRole');
-INSERT INTO `base_api` VALUES ('1149168013071802369', 'd9fc987468fd4c73350653d5c4e53453', '角色添加成员', 'default', '角色添加成员', 'POST', '', 'open-cloud-base-server', '/role/users/add', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.BaseRoleController', 'addUserRoles');
-INSERT INTO `base_api` VALUES ('1149168013122134017', 'f4e83562a36e943883c5eb6b7376e365', '查询角色成员', 'default', '查询角色成员', 'GET', '', 'open-cloud-base-server', '/role/users', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.BaseRoleController', 'getRoleUsers');
-INSERT INTO `base_api` VALUES ('1149168013176659970', '9b57678bc96af393c0c60e135acc90a9', '获取所有角色列表', 'default', '获取所有角色列表', 'GET', '', 'open-cloud-base-server', '/role/all', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.BaseRoleController', 'getRoleAllList');
-INSERT INTO `base_api` VALUES ('1149168013226991617', '4693b9a455022754623dd25f9905c19b', '获取分页角色列表', 'default', '获取分页角色列表', 'GET', '', 'open-cloud-base-server', '/role', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.BaseRoleController', 'getRoleListPage');
-INSERT INTO `base_api` VALUES ('1149168013277323266', '51ea3146eaebdd33fd065b029ee147fb', '添加角色', 'default', '添加角色', 'POST', '', 'open-cloud-base-server', '/role/add', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.BaseRoleController', 'addRole');
-INSERT INTO `base_api` VALUES ('1149168013327654913', 'b4cdd238a7e34e1794988d00c4d45779', '编辑角色', 'default', '编辑角色', 'POST', '', 'open-cloud-base-server', '/role/update', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.BaseRoleController', 'updateRole');
-INSERT INTO `base_api` VALUES ('1149168013373792257', '610b499835de759e37429ece2de1ee33', '删除角色', 'default', '删除角色', 'POST', '', 'open-cloud-base-server', '/role/remove', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.BaseRoleController', 'removeRole');
-INSERT INTO `base_api` VALUES ('1149168013419929601', '334d10291e4061c07a180546dd9cedea', '添加系统用户', 'default', '添加系统用户', 'POST', '', 'open-cloud-base-server', '/user/add', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.BaseUserController', 'addUser');
-INSERT INTO `base_api` VALUES ('1149168013466066945', 'd722dc79f9c8d3ece3b9324a03caf902', '更新系统用户', 'default', '更新系统用户', 'POST', '', 'open-cloud-base-server', '/user/update', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.BaseUserController', 'updateUser');
-INSERT INTO `base_api` VALUES ('1149168013512204290', 'c8293b83e96ca425be2e24f0cfa8c7bf', '获取所有用户列表', 'default', '获取所有用户列表', 'GET', '', 'open-cloud-base-server', '/user/all', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.BaseUserController', 'getUserAllList');
-INSERT INTO `base_api` VALUES ('1149168013562535938', '3fdb78cf597834182b4c6b558a800774', '修改用户密码', 'default', '修改用户密码', 'POST', '', 'open-cloud-base-server', '/user/update/password', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.BaseUserController', 'updatePassword');
-INSERT INTO `base_api` VALUES ('1149168013608673282', 'dc01f78458d3fe0cff028da861bdb65b', '系统分页用户列表', 'default', '系统分页用户列表', 'GET', '', 'open-cloud-base-server', '/user', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.BaseUserController', 'getUserList');
-INSERT INTO `base_api` VALUES ('1149168013659004929', '25c851a0698d161f2b00bdcf74668648', '用户分配角色', 'default', '用户分配角色', 'POST', '', 'open-cloud-base-server', '/user/roles/add', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.BaseUserController', 'addUserRoles');
-INSERT INTO `base_api` VALUES ('1149168013700947969', '86197fb92e8fd3359842cf511c68be8c', '获取账号登录信息', 'default', '仅限系统内部调用', 'POST', '', 'open-cloud-base-server', '/user/login', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '0', '1', 'com.opencloud.base.server.controller.BaseUserController', 'userLogin');
-INSERT INTO `base_api` VALUES ('1149168013747085313', 'db9fbb85ee040fd2f8981e47a6873614', '获取用户已分配角色', 'default', '获取用户已分配角色', 'GET', '', 'open-cloud-base-server', '/user/roles', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.BaseUserController', 'getUserRoles');
-INSERT INTO `base_api` VALUES ('1149168013797416961', 'bbd37ea32bf91697909dd261befa8a5f', '注册第三方系统登录账号', 'default', '仅限系统内部调用', 'POST', '', 'open-cloud-base-server', '/user/add/thirdParty', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '0', '1', 'com.opencloud.base.server.controller.BaseUserController', 'addUserThirdParty');
-INSERT INTO `base_api` VALUES ('1149168013843554306', 'b0d37206d8ebf60a7359e1b15d79b361', '修改当前登录用户密码', 'default', '修改当前登录用户密码', 'GET', '', 'open-cloud-base-server', '/current/user/rest/password', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.CurrentUserController', 'restPassword');
-INSERT INTO `base_api` VALUES ('1149168013889691650', '88fa6cc7c4fa7f0fb2b8d3df951fdfa9', '修改当前登录用户基本信息', 'default', '修改当前登录用户基本信息', 'POST', '', 'open-cloud-base-server', '/current/user/update', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.CurrentUserController', 'updateUserInfo');
-INSERT INTO `base_api` VALUES ('1149168013940023298', '902ca6aa4d96c21a48cabe5363a4b3dd', '获取当前登录用户已分配菜单权限', 'default', '获取当前登录用户已分配菜单权限', 'GET', '', 'open-cloud-base-server', '/current/user/menu', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.CurrentUserController', 'findAuthorityMenu');
-INSERT INTO `base_api` VALUES ('1149168013994549249', '0f86b27eb3b0fcd3e714e22d43b1172b', '获取分页访问日志列表', 'default', '获取分页访问日志列表', 'GET', '', 'open-cloud-base-server', '/gateway/access/logs', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayAccessLogsController', 'getAccessLogListPage');
-INSERT INTO `base_api` VALUES ('1149168014036492290', '83ad6d5e0903bf19cfa28c7a83595de2', '获取接口白名单列表', 'default', '仅限内部调用', 'GET', '', 'open-cloud-base-server', '/gateway/api/whiteList', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '0', '0', 'com.opencloud.base.server.controller.GatewayController', 'getApiWhiteList');
-INSERT INTO `base_api` VALUES ('1149168014082629634', '6eb627d08d2f0aee74bfd7c9b53b1124', '获取接口黑名单列表', 'default', '仅限内部调用', 'GET', '', 'open-cloud-base-server', '/gateway/api/blackList', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '0', '0', 'com.opencloud.base.server.controller.GatewayController', 'getApiBlackList');
-INSERT INTO `base_api` VALUES ('1149168014128766978', '3fde01046c8643e9b536ae6f61d4431f', '获取路由列表', 'default', '仅限内部调用', 'GET', '', 'open-cloud-base-server', '/gateway/api/route', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '0', '0', 'com.opencloud.base.server.controller.GatewayController', 'getApiRouteList');
-INSERT INTO `base_api` VALUES ('1149168014170710018', '2cfc3bbc760608bda59d68b2c0b4e2fd', '获取限流列表', 'default', '仅限内部调用', 'GET', '', 'open-cloud-base-server', '/gateway/api/rateLimit', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '0', '0', 'com.opencloud.base.server.controller.GatewayController', 'getApiRateLimitList');
-INSERT INTO `base_api` VALUES ('1149168014212653057', 'f5abed6e35a7a1715fac80841e4e592f', '添加IP限制', 'default', '添加IP限制', 'POST', '', 'open-cloud-base-server', '/gateway/limit/ip/add', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:33', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayIpLimitController', 'addIpLimit');
-INSERT INTO `base_api` VALUES ('1149168014258790401', 'c584e31594bc5bedfc959c729a2e90e7', '移除IP限制', 'default', '移除IP限制', 'POST', '', 'open-cloud-base-server', '/gateway/limit/ip/remove', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayIpLimitController', 'removeIpLimit');
-INSERT INTO `base_api` VALUES ('1149168014405591042', '24b5559e0204223af9b73f3c68ee68f3', '获取IP限制', 'default', '获取IP限制', 'GET', '', 'open-cloud-base-server', '/gateway/limit/ip/{policyId}/info', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayIpLimitController', 'getIpLimit');
-INSERT INTO `base_api` VALUES ('1149168014451728385', '160a9fb0ce4243b989bbaaac031a345e', '编辑IP限制', 'default', '编辑IP限制', 'POST', '', 'open-cloud-base-server', '/gateway/limit/ip/update', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayIpLimitController', 'updateIpLimit');
-INSERT INTO `base_api` VALUES ('1149168014497865729', '99a30e8643b0820a04ecbdcf7c9628af', '绑定API', 'default', '一个API只能绑定一个策略', 'POST', '', 'open-cloud-base-server', '/gateway/limit/ip/api/add', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:32', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayIpLimitController', 'addIpLimitApis');
-INSERT INTO `base_api` VALUES ('1149168014544003073', '0dfca465c864c74d04a4d6135fee1880', '获取分页接口列表', 'default', '获取分页接口列表', 'GET', '', 'open-cloud-base-server', '/gateway/limit/ip', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:33', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayIpLimitController', 'getIpLimitListPage');
-INSERT INTO `base_api` VALUES ('1149168014585946113', '2aecc273984a1d3981dc0f62cafbe894', '查询策略已绑定API列表', 'default', '获取分页接口列表', 'GET', '', 'open-cloud-base-server', '/gateway/limit/ip/api/list', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:33', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayIpLimitController', 'getIpLimitApiList');
-INSERT INTO `base_api` VALUES ('1149168014636277762', 'b993f44f1ad4dd08bfd4f36730af9ea1', '获取流量控制', 'default', '获取流量控制', 'GET', '', 'open-cloud-base-server', '/gateway/limit/rate/{policyId}/info', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:33', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayRateLimitController', 'getRateLimit');
-INSERT INTO `base_api` VALUES ('1149168014686609409', 'ab71840616ff1f1a619170538b1f1de9', '添加流量控制', 'default', '添加流量控制', 'POST', '', 'open-cloud-base-server', '/gateway/limit/rate/add', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:33', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayRateLimitController', 'addRateLimit');
-INSERT INTO `base_api` VALUES ('1149168014732746753', '5f512e5065e80c8d0ffd6be4f27c386e', '编辑流量控制', 'default', '编辑流量控制', 'POST', '', 'open-cloud-base-server', '/gateway/limit/rate/update', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:33', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayRateLimitController', 'updateRateLimit');
-INSERT INTO `base_api` VALUES ('1149168014774689793', 'f83ecfdd9325be59c60627f0164ec8a8', '绑定API', 'default', '一个API只能绑定一个策略', 'POST', '', 'open-cloud-base-server', '/gateway/limit/rate/api/add', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:33', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayRateLimitController', 'addRateLimitApis');
-INSERT INTO `base_api` VALUES ('1149168014816632833', '9c565ce4ded10ccd227001f6d7eab11c', '移除流量控制', 'default', '移除流量控制', 'POST', '', 'open-cloud-base-server', '/gateway/limit/rate/remove', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:33', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayRateLimitController', 'removeRateLimit');
-INSERT INTO `base_api` VALUES ('1149168014862770178', '0830e3c6c3d42f11d86f5e2ed0d99985', '查询策略已绑定API列表', 'default', '获取分页接口列表', 'GET', '', 'open-cloud-base-server', '/gateway/limit/rate/api/list', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:33', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayRateLimitController', 'getRateLimitApiList');
-INSERT INTO `base_api` VALUES ('1149168014908907521', '8dff62591ccefba3537b84aa9d72d7b7', '获取分页接口列表', 'default', '获取分页接口列表', 'GET', '', 'open-cloud-base-server', '/gateway/limit/rate', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:33', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayRateLimitController', 'getRateLimitListPage');
-INSERT INTO `base_api` VALUES ('1149168014955044866', '382e5fe59fdc31f240b5e42b2ae1a522', '获取分页路由列表', 'default', '获取分页路由列表', 'GET', '', 'open-cloud-base-server', '/gateway/route', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:33', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayRouteController', 'getRouteListPage');
-INSERT INTO `base_api` VALUES ('1149168015001182210', '177b640de1b90d39536f462f24e3051f', '获取路由', 'default', '获取路由', 'GET', '', 'open-cloud-base-server', '/gateway/route/{routeId}/info', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:33', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayRouteController', 'getRoute');
-INSERT INTO `base_api` VALUES ('1149168015055708162', '1307447addfddf7e075eea74100c150d', '添加路由', 'default', '添加路由', 'POST', '', 'open-cloud-base-server', '/gateway/route/add', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:33', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayRouteController', 'addRoute');
-INSERT INTO `base_api` VALUES ('1149168015118622721', '40a481fc86814de744e91e42c15b6f3e', '移除路由', 'default', '移除路由', 'POST', '', 'open-cloud-base-server', '/gateway/route/remove', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:33', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayRouteController', 'removeRoute');
-INSERT INTO `base_api` VALUES ('1149168015164760065', '61e8c492eb9e56441d1c428ab3e09f66', '编辑路由', 'default', '编辑路由', 'POST', '', 'open-cloud-base-server', '/gateway/route/update', '0', '1', '2019-07-11 12:06:19', '2019-07-11 17:24:33', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayRouteController', 'updateRoute');
-INSERT INTO `base_api` VALUES ('1149168208614449153', '3c28ffa71681fb53f1f458548456256c', '登录获取用户访问令牌', 'default', '基于oauth2密码模式登录,无需签名,返回access_token', 'POST', '', 'open-cloud-uaa-admin-server', '/login/token', '0', '1', '2019-07-11 12:07:06', '2019-07-11 14:14:11', '1', '0', '1', 'com.opencloud.uaa.admin.server.controller.LoginController', 'getLoginToken');
-INSERT INTO `base_api` VALUES ('1149168208677363714', '29c8264c689bce3567708f977779c3b9', '退出并移除令牌', 'default', '退出并移除令牌,令牌将失效', 'POST', '', 'open-cloud-uaa-admin-server', '/logout/token', '0', '1', '2019-07-11 12:07:06', '2019-07-11 14:14:11', '1', '1', '1', 'com.opencloud.uaa.admin.server.controller.LoginController', 'removeToken');
-INSERT INTO `base_api` VALUES ('1149168208740278273', 'f98a1543766b726e4b5a6d7a7f32fd93', '获取当前登录用户信息', 'default', '获取当前登录用户信息', 'GET', '', 'open-cloud-uaa-admin-server', '/current/user', '0', '1', '2019-07-11 12:07:06', '2019-07-11 14:14:11', '1', '1', '1', 'com.opencloud.uaa.admin.server.controller.LoginController', 'getUserProfile');
-INSERT INTO `base_api` VALUES ('1149168249601187842', 'f1c66f545d2d950e9048b55bd3178487', '获取服务列表', 'default', '获取服务列表', 'GET', '', 'open-cloud-api-zuul-server', '/service/list', '0', '1', '2019-07-11 12:07:15', '2019-07-11 13:18:25', '1', '1', '1', 'com.opencloud.gateway.zuul.server.controller.ServiceController', 'getServiceList');
+INSERT INTO `base_api` VALUES ('1149168010337116161', '9a1e16647d1e534f7b06ed9db83719fa', '获取功能按钮详情', 'default', '获取功能按钮详情', 'GET', '', 'open-cloud-base-server', '/action/{actionId}/info', '0', '1', '2019-07-11 12:06:18', '2019-07-11 22:33:42', '1', '1', '1', 'com.opencloud.base.server.controller.BaseActionController', 'getAction');
+INSERT INTO `base_api` VALUES ('1149168010500694017', '26128c7aafae30020bcac2c47631497a', '获取分页功能按钮列表', 'default', '获取分页功能按钮列表', 'GET', '', 'open-cloud-base-server', '/action', '0', '1', '2019-07-11 12:06:18', '2019-07-11 22:33:42', '1', '1', '1', 'com.opencloud.base.server.controller.BaseActionController', 'findActionListPage');
+INSERT INTO `base_api` VALUES ('1149168010571997185', '84d30b0aab28de096779d6f8bee960e7', '添加功能按钮', 'default', '添加功能按钮', 'POST', '', 'open-cloud-base-server', '/action/add', '0', '1', '2019-07-11 12:06:18', '2019-07-11 22:33:42', '1', '1', '1', 'com.opencloud.base.server.controller.BaseActionController', 'addAction');
+INSERT INTO `base_api` VALUES ('1149168010655883266', '756154d7c8c6a79f02da79d9148beb9f', '编辑功能按钮', 'default', '添加功能按钮', 'POST', '', 'open-cloud-base-server', '/action/update', '0', '1', '2019-07-11 12:06:18', '2019-07-11 22:33:42', '1', '1', '1', 'com.opencloud.base.server.controller.BaseActionController', 'updateAction');
+INSERT INTO `base_api` VALUES ('1149168010722992129', '92187c259636fdf5d4f108b688fc44ee', '移除功能按钮', 'default', '移除功能按钮', 'POST', '', 'open-cloud-base-server', '/action/remove', '0', '1', '2019-07-11 12:06:18', '2019-07-11 22:33:42', '1', '1', '1', 'com.opencloud.base.server.controller.BaseActionController', 'removeAction');
+INSERT INTO `base_api` VALUES ('1149168010794295298', '214e294809bb1f22abc70c38959e1343', '添加接口资源', 'default', '添加接口资源', 'POST', '', 'open-cloud-base-server', '/api/add', '0', '1', '2019-07-11 12:06:18', '2019-07-11 22:33:43', '1', '1', '1', 'com.opencloud.base.server.controller.BaseApiController', 'addApi');
+INSERT INTO `base_api` VALUES ('1149168010861404161', 'a0f00dd477c9232a51b94553ad7a7803', '移除接口资源', 'default', '移除接口资源', 'POST', '', 'open-cloud-base-server', '/api/remove', '0', '1', '2019-07-11 12:06:18', '2019-07-11 22:33:43', '1', '1', '1', 'com.opencloud.base.server.controller.BaseApiController', 'removeApi');
+INSERT INTO `base_api` VALUES ('1149168010920124418', '6311ab783c8818cd5918e5d903fb371e', '编辑接口资源', 'default', '编辑接口资源', 'POST', '', 'open-cloud-base-server', '/api/update', '0', '1', '2019-07-11 12:06:18', '2019-07-11 22:33:43', '1', '1', '1', 'com.opencloud.base.server.controller.BaseApiController', 'updateApi');
+INSERT INTO `base_api` VALUES ('1149168010991427586', 'aa37236289cedba711c8f648a94b1105', '获取分页接口列表', 'default', '获取分页接口列表', 'GET', '', 'open-cloud-base-server', '/api', '0', '1', '2019-07-11 12:06:18', '2019-07-11 22:33:43', '1', '1', '1', 'com.opencloud.base.server.controller.BaseApiController', 'getApiList');
+INSERT INTO `base_api` VALUES ('1149168011045953537', 'e18bae5b2fc727e77d36a3f4697abf0f', '获取所有接口列表', 'default', '获取所有接口列表', 'GET', '', 'open-cloud-base-server', '/api/all', '0', '1', '2019-07-11 12:06:18', '2019-07-11 22:33:43', '1', '1', '1', 'com.opencloud.base.server.controller.BaseApiController', 'getApiAllList');
+INSERT INTO `base_api` VALUES ('1149168011100479489', 'd4c4c1b5b3847cc63b52ed9007698325', '获取接口资源', 'default', '获取接口资源', 'GET', '', 'open-cloud-base-server', '/api/{apiId}/info', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:43', '1', '1', '1', 'com.opencloud.base.server.controller.BaseApiController', 'getApi');
+INSERT INTO `base_api` VALUES ('1149168011163394050', '9e054a7dc4194e7635c2686e1109aa49', '删除应用信息', 'default', '删除应用信息', 'POST', '', 'open-cloud-base-server', '/app/remove', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:43', '1', '1', '1', 'com.opencloud.base.server.controller.BaseAppController', 'removeApp');
+INSERT INTO `base_api` VALUES ('1149168011217920002', 'fa32726ed4076d44cae0023132f7014f', '获取应用详情', 'default', '获取应用详情', 'GET', '', 'open-cloud-base-server', '/app/{appId}/info', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:43', '1', '0', '1', 'com.opencloud.base.server.controller.BaseAppController', 'getApp');
+INSERT INTO `base_api` VALUES ('1149168011280834562', 'c5863e8ad8a5605354b9a122511ffa01', '添加应用信息', 'default', '添加应用信息', 'POST', '', 'open-cloud-base-server', '/app/add', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:43', '1', '1', '1', 'com.opencloud.base.server.controller.BaseAppController', 'addApp');
+INSERT INTO `base_api` VALUES ('1149168011331166209', 'a23793da67076d4be853daa422943c53', '编辑应用信息', 'default', '编辑应用信息', 'POST', '', 'open-cloud-base-server', '/app/update', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:43', '1', '1', '1', 'com.opencloud.base.server.controller.BaseAppController', 'updateApp');
+INSERT INTO `base_api` VALUES ('1149168011452801025', '93c006692e386f96555e7edece91c994', '重置应用秘钥', 'default', '重置应用秘钥', 'POST', '', 'open-cloud-base-server', '/app/reset', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:43', '1', '1', '1', 'com.opencloud.base.server.controller.BaseAppController', 'resetAppSecret');
+INSERT INTO `base_api` VALUES ('1149168011524104194', '385d34ec827de818225a981d737f307a', '获取应用开发配置信息', 'default', '获取应用开发配置信息', 'GET', '', 'open-cloud-base-server', '/app/client/{clientId}/info', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:43', '1', '0', '1', 'com.opencloud.base.server.controller.BaseAppController', 'getAppClientInfo');
+INSERT INTO `base_api` VALUES ('1149168011578630146', 'ccb6139e4beb2a84e29f399215bfedc0', '获取分页应用列表', 'default', '获取分页应用列表', 'GET', '', 'open-cloud-base-server', '/app', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:43', '1', '1', '1', 'com.opencloud.base.server.controller.BaseAppController', 'getAppListPage');
+INSERT INTO `base_api` VALUES ('1149168011628961794', 'f09f5543ff4c0ceab04b99ddc5a94bc2', '完善应用开发信息', 'default', '完善应用开发信息', 'POST', '', 'open-cloud-base-server', '/app/client/update', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:43', '1', '1', '1', 'com.opencloud.base.server.controller.BaseAppController', 'updateAppClientInfo');
+INSERT INTO `base_api` VALUES ('1149168011687682050', '331bddbcd34cacdd74f80b48e3484017', '获取接口权限列表', 'default', '获取接口权限列表', 'GET', '', 'open-cloud-base-server', '/authority/api', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:44', '1', '1', '1', 'com.opencloud.base.server.controller.BaseAuthorityController', 'findAuthorityApi');
+INSERT INTO `base_api` VALUES ('1149168011742208002', '785b2368bf67d1a942ea64d946c70144', '获取应用已分配接口权限', 'default', '获取应用已分配接口权限', 'GET', '', 'open-cloud-base-server', '/authority/app', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:44', '1', '0', '1', 'com.opencloud.base.server.controller.BaseAuthorityController', 'findAuthorityApp');
+INSERT INTO `base_api` VALUES ('1149168011805122561', '282c563cbfb922ac6328c058051d31a4', '分配角色权限', 'default', '分配角色权限', 'POST', '', 'open-cloud-base-server', '/authority/role/grant', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:44', '1', '1', '1', 'com.opencloud.base.server.controller.BaseAuthorityController', 'grantAuthorityRole');
+INSERT INTO `base_api` VALUES ('1149168011851259906', 'f2be18d77a78f728df355f32e90cd780', '分配应用权限', 'default', '分配应用权限', 'POST', '', 'open-cloud-base-server', '/authority/app/grant', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:44', '1', '1', '1', 'com.opencloud.base.server.controller.BaseAuthorityController', 'grantAuthorityApp');
+INSERT INTO `base_api` VALUES ('1149168011909980161', '4611bd638b538605286600dbc899cbb0', '功能按钮授权', 'default', '功能按钮授权', 'POST', '', 'open-cloud-base-server', '/authority/action/grant', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:44', '1', '1', '1', 'com.opencloud.base.server.controller.BaseAuthorityController', 'grantAuthorityAction');
+INSERT INTO `base_api` VALUES ('1149168011960311809', '5262f2214a4ff43179c947dc458213d7', '获取功能权限列表', 'default', '获取功能权限列表', 'GET', '', 'open-cloud-base-server', '/authority/action', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:43', '1', '1', '1', 'com.opencloud.base.server.controller.BaseAuthorityController', 'findAuthorityAction');
+INSERT INTO `base_api` VALUES ('1149168012010643458', '8a6561a9a0efa7f5f9faadb6e39dc927', '获取用户已分配权限', 'default', '获取用户已分配权限', 'GET', '', 'open-cloud-base-server', '/authority/user', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:44', '1', '1', '1', 'com.opencloud.base.server.controller.BaseAuthorityController', 'findAuthorityUser');
+INSERT INTO `base_api` VALUES ('1149168012060975106', '1df7911bb85d15f51bcd78c43f18b24d', '获取菜单权限列表', 'default', '获取菜单权限列表', 'GET', '', 'open-cloud-base-server', '/authority/menu', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:43', '1', '1', '1', 'com.opencloud.base.server.controller.BaseAuthorityController', 'findAuthorityMenu');
+INSERT INTO `base_api` VALUES ('1149168012111306753', '80256cc196e1e6d2437289e038b13b8a', '获取所有访问权限列表', 'default', '获取所有访问权限列表', 'GET', '', 'open-cloud-base-server', '/authority/access', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:43', '1', '0', '1', 'com.opencloud.base.server.controller.BaseAuthorityController', 'findAuthorityResource');
+INSERT INTO `base_api` VALUES ('1149168012161638401', '5586d5f337d4ebf99e551fdbf55d1116', '获取角色已分配权限', 'default', '获取角色已分配权限', 'GET', '', 'open-cloud-base-server', '/authority/role', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:43', '1', '1', '1', 'com.opencloud.base.server.controller.BaseAuthorityController', 'findAuthorityRole');
+INSERT INTO `base_api` VALUES ('1149168012216164353', 'b96a9514487f7e7679fe39c9254ab972', '分配用户权限', 'default', '分配用户权限', 'POST', '', 'open-cloud-base-server', '/authority/user/grant', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:44', '1', '1', '1', 'com.opencloud.base.server.controller.BaseAuthorityController', 'grantAuthorityUser');
+INSERT INTO `base_api` VALUES ('1149168012270690305', '3a1c4ef17565d863f35a3bccd7cc035e', '添加系统用户', 'default', '添加系统用户', 'POST', '', 'open-cloud-base-server', '/developer/add', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:44', '1', '1', '1', 'com.opencloud.base.server.controller.BaseDeveloperController', 'addUser');
+INSERT INTO `base_api` VALUES ('1149168012316827649', '734d1179e332309b9de3927894864396', '更新系统用户', 'default', '更新系统用户', 'POST', '', 'open-cloud-base-server', '/developer/update', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:44', '1', '1', '1', 'com.opencloud.base.server.controller.BaseDeveloperController', 'updateUser');
+INSERT INTO `base_api` VALUES ('1149168012421685249', '39ad69234435595ee67836e8a03d6ea6', '获取所有用户列表', 'default', '获取所有用户列表', 'GET', '', 'open-cloud-base-server', '/developer/all', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:44', '1', '1', '1', 'com.opencloud.base.server.controller.BaseDeveloperController', 'getUserAllList');
+INSERT INTO `base_api` VALUES ('1149168012467822593', '50520c56c7714aa9be9a808cd30fd9bb', '获取账号登录信息', 'default', '仅限系统内部调用', 'POST', '', 'open-cloud-base-server', '/developer/login', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:44', '1', '0', '1', 'com.opencloud.base.server.controller.BaseDeveloperController', 'developerLogin');
+INSERT INTO `base_api` VALUES ('1149168012522348546', '9aca4415969b60158f383b2b49b8fe79', '修改用户密码', 'default', '修改用户密码', 'POST', '', 'open-cloud-base-server', '/developer/update/password', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:44', '1', '1', '1', 'com.opencloud.base.server.controller.BaseDeveloperController', 'updatePassword');
+INSERT INTO `base_api` VALUES ('1149168012576874498', 'c4c154b6ffa4b21835db1e09614c73e6', '系统分页用户列表', 'default', '系统分页用户列表', 'GET', '', 'open-cloud-base-server', '/developer', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:44', '1', '1', '1', 'com.opencloud.base.server.controller.BaseDeveloperController', 'getUserList');
+INSERT INTO `base_api` VALUES ('1149168012623011841', '4a13f24fa2d5cf74a6e408e82182e1b1', '注册第三方系统登录账号', 'default', '仅限系统内部调用', 'POST', '', 'open-cloud-base-server', '/developer/add/thirdParty', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:44', '1', '0', '0', 'com.opencloud.base.server.controller.BaseDeveloperController', 'addDeveloperThirdParty');
+INSERT INTO `base_api` VALUES ('1149168012673343490', '2901b2b8040f1c44c0318650fbfd4460', '获取分页菜单资源列表', 'default', '获取分页菜单资源列表', 'GET', '', 'open-cloud-base-server', '/menu', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:44', '1', '1', '1', 'com.opencloud.base.server.controller.BaseMenuController', 'getMenuListPage');
+INSERT INTO `base_api` VALUES ('1149168012719480834', '87049d9db5261f50d524c45a32044415', '获取菜单资源详情', 'default', '获取菜单资源详情', 'GET', '', 'open-cloud-base-server', '/menu/{menuId}/info', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:44', '1', '1', '1', 'com.opencloud.base.server.controller.BaseMenuController', 'getMenu');
+INSERT INTO `base_api` VALUES ('1149168012769812481', '50bcf72df4a18a6a8c46a7076a7a014a', '移除菜单资源', 'default', '移除菜单资源', 'POST', '', 'open-cloud-base-server', '/menu/remove', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:45', '1', '1', '1', 'com.opencloud.base.server.controller.BaseMenuController', 'removeMenu');
+INSERT INTO `base_api` VALUES ('1149168012820144129', '638be151d314740a2f2aaebaaba3f479', '菜单所有资源列表', 'default', '菜单所有资源列表', 'GET', '', 'open-cloud-base-server', '/menu/all', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:44', '1', '1', '1', 'com.opencloud.base.server.controller.BaseMenuController', 'getMenuAllList');
+INSERT INTO `base_api` VALUES ('1149168012870475777', 'e3c1b0b860591e11b50d6dccc9e2fa6a', '获取菜单下所有操作', 'default', '获取菜单下所有操作', 'GET', '', 'open-cloud-base-server', '/menu/action', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:44', '1', '1', '1', 'com.opencloud.base.server.controller.BaseMenuController', 'getMenuAction');
+INSERT INTO `base_api` VALUES ('1149168012920807425', 'bbc5546a6cfa1161859b69ef5754eace', '编辑菜单资源', 'default', '编辑菜单资源', 'POST', '', 'open-cloud-base-server', '/menu/update', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:44', '1', '1', '1', 'com.opencloud.base.server.controller.BaseMenuController', 'updateMenu');
+INSERT INTO `base_api` VALUES ('1149168012979527682', '720f3b2571fe2850108f090408514cae', '添加菜单资源', 'default', '添加菜单资源', 'POST', '', 'open-cloud-base-server', '/menu/add', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:44', '1', '1', '1', 'com.opencloud.base.server.controller.BaseMenuController', 'addMenu');
+INSERT INTO `base_api` VALUES ('1149168013029859330', '8f2b70d4b55f13eaf82c4cf687903ced', '获取角色详情', 'default', '获取角色详情', 'GET', '', 'open-cloud-base-server', '/role/{roleId}/info', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:45', '1', '1', '1', 'com.opencloud.base.server.controller.BaseRoleController', 'getRole');
+INSERT INTO `base_api` VALUES ('1149168013071802369', 'd9fc987468fd4c73350653d5c4e53453', '角色添加成员', 'default', '角色添加成员', 'POST', '', 'open-cloud-base-server', '/role/users/add', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:45', '1', '1', '1', 'com.opencloud.base.server.controller.BaseRoleController', 'addUserRoles');
+INSERT INTO `base_api` VALUES ('1149168013122134017', 'f4e83562a36e943883c5eb6b7376e365', '查询角色成员', 'default', '查询角色成员', 'GET', '', 'open-cloud-base-server', '/role/users', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:45', '1', '1', '1', 'com.opencloud.base.server.controller.BaseRoleController', 'getRoleUsers');
+INSERT INTO `base_api` VALUES ('1149168013176659970', '9b57678bc96af393c0c60e135acc90a9', '获取所有角色列表', 'default', '获取所有角色列表', 'GET', '', 'open-cloud-base-server', '/role/all', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:45', '1', '1', '1', 'com.opencloud.base.server.controller.BaseRoleController', 'getRoleAllList');
+INSERT INTO `base_api` VALUES ('1149168013226991617', '4693b9a455022754623dd25f9905c19b', '获取分页角色列表', 'default', '获取分页角色列表', 'GET', '', 'open-cloud-base-server', '/role', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:45', '1', '1', '1', 'com.opencloud.base.server.controller.BaseRoleController', 'getRoleListPage');
+INSERT INTO `base_api` VALUES ('1149168013277323266', '51ea3146eaebdd33fd065b029ee147fb', '添加角色', 'default', '添加角色', 'POST', '', 'open-cloud-base-server', '/role/add', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:45', '1', '1', '1', 'com.opencloud.base.server.controller.BaseRoleController', 'addRole');
+INSERT INTO `base_api` VALUES ('1149168013327654913', 'b4cdd238a7e34e1794988d00c4d45779', '编辑角色', 'default', '编辑角色', 'POST', '', 'open-cloud-base-server', '/role/update', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:45', '1', '1', '1', 'com.opencloud.base.server.controller.BaseRoleController', 'updateRole');
+INSERT INTO `base_api` VALUES ('1149168013373792257', '610b499835de759e37429ece2de1ee33', '删除角色', 'default', '删除角色', 'POST', '', 'open-cloud-base-server', '/role/remove', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:45', '1', '1', '1', 'com.opencloud.base.server.controller.BaseRoleController', 'removeRole');
+INSERT INTO `base_api` VALUES ('1149168013419929601', '334d10291e4061c07a180546dd9cedea', '添加系统用户', 'default', '添加系统用户', 'POST', '', 'open-cloud-base-server', '/user/add', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:45', '1', '1', '1', 'com.opencloud.base.server.controller.BaseUserController', 'addUser');
+INSERT INTO `base_api` VALUES ('1149168013466066945', 'd722dc79f9c8d3ece3b9324a03caf902', '更新系统用户', 'default', '更新系统用户', 'POST', '', 'open-cloud-base-server', '/user/update', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:45', '1', '1', '1', 'com.opencloud.base.server.controller.BaseUserController', 'updateUser');
+INSERT INTO `base_api` VALUES ('1149168013512204290', 'c8293b83e96ca425be2e24f0cfa8c7bf', '获取所有用户列表', 'default', '获取所有用户列表', 'GET', '', 'open-cloud-base-server', '/user/all', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:45', '1', '1', '1', 'com.opencloud.base.server.controller.BaseUserController', 'getUserAllList');
+INSERT INTO `base_api` VALUES ('1149168013562535938', '3fdb78cf597834182b4c6b558a800774', '修改用户密码', 'default', '修改用户密码', 'POST', '', 'open-cloud-base-server', '/user/update/password', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:45', '1', '1', '1', 'com.opencloud.base.server.controller.BaseUserController', 'updatePassword');
+INSERT INTO `base_api` VALUES ('1149168013608673282', 'dc01f78458d3fe0cff028da861bdb65b', '系统分页用户列表', 'default', '系统分页用户列表', 'GET', '', 'open-cloud-base-server', '/user', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:45', '1', '1', '1', 'com.opencloud.base.server.controller.BaseUserController', 'getUserList');
+INSERT INTO `base_api` VALUES ('1149168013659004929', '25c851a0698d161f2b00bdcf74668648', '用户分配角色', 'default', '用户分配角色', 'POST', '', 'open-cloud-base-server', '/user/roles/add', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:46', '1', '1', '1', 'com.opencloud.base.server.controller.BaseUserController', 'addUserRoles');
+INSERT INTO `base_api` VALUES ('1149168013700947969', '86197fb92e8fd3359842cf511c68be8c', '获取账号登录信息', 'default', '仅限系统内部调用', 'POST', '', 'open-cloud-base-server', '/user/login', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:46', '1', '0', '1', 'com.opencloud.base.server.controller.BaseUserController', 'userLogin');
+INSERT INTO `base_api` VALUES ('1149168013747085313', 'db9fbb85ee040fd2f8981e47a6873614', '获取用户已分配角色', 'default', '获取用户已分配角色', 'GET', '', 'open-cloud-base-server', '/user/roles', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:46', '1', '1', '1', 'com.opencloud.base.server.controller.BaseUserController', 'getUserRoles');
+INSERT INTO `base_api` VALUES ('1149168013797416961', 'bbd37ea32bf91697909dd261befa8a5f', '注册第三方系统登录账号', 'default', '仅限系统内部调用', 'POST', '', 'open-cloud-base-server', '/user/add/thirdParty', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:45', '1', '0', '1', 'com.opencloud.base.server.controller.BaseUserController', 'addUserThirdParty');
+INSERT INTO `base_api` VALUES ('1149168013843554306', 'b0d37206d8ebf60a7359e1b15d79b361', '修改当前登录用户密码', 'default', '修改当前登录用户密码', 'GET', '', 'open-cloud-base-server', '/current/user/rest/password', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:46', '1', '1', '1', 'com.opencloud.base.server.controller.CurrentUserController', 'restPassword');
+INSERT INTO `base_api` VALUES ('1149168013889691650', '88fa6cc7c4fa7f0fb2b8d3df951fdfa9', '修改当前登录用户基本信息', 'default', '修改当前登录用户基本信息', 'POST', '', 'open-cloud-base-server', '/current/user/update', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:46', '1', '1', '1', 'com.opencloud.base.server.controller.CurrentUserController', 'updateUserInfo');
+INSERT INTO `base_api` VALUES ('1149168013940023298', '902ca6aa4d96c21a48cabe5363a4b3dd', '获取当前登录用户已分配菜单权限', 'default', '获取当前登录用户已分配菜单权限', 'GET', '', 'open-cloud-base-server', '/current/user/menu', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:46', '1', '1', '1', 'com.opencloud.base.server.controller.CurrentUserController', 'findAuthorityMenu');
+INSERT INTO `base_api` VALUES ('1149168013994549249', '0f86b27eb3b0fcd3e714e22d43b1172b', '获取分页访问日志列表', 'default', '获取分页访问日志列表', 'GET', '', 'open-cloud-base-server', '/gateway/access/logs', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:46', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayAccessLogsController', 'getAccessLogListPage');
+INSERT INTO `base_api` VALUES ('1149168014036492290', '83ad6d5e0903bf19cfa28c7a83595de2', '获取接口白名单列表', 'default', '仅限内部调用', 'GET', '', 'open-cloud-base-server', '/gateway/api/whiteList', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:46', '1', '0', '0', 'com.opencloud.base.server.controller.GatewayController', 'getApiWhiteList');
+INSERT INTO `base_api` VALUES ('1149168014082629634', '6eb627d08d2f0aee74bfd7c9b53b1124', '获取接口黑名单列表', 'default', '仅限内部调用', 'GET', '', 'open-cloud-base-server', '/gateway/api/blackList', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:46', '1', '0', '0', 'com.opencloud.base.server.controller.GatewayController', 'getApiBlackList');
+INSERT INTO `base_api` VALUES ('1149168014128766978', '3fde01046c8643e9b536ae6f61d4431f', '获取路由列表', 'default', '仅限内部调用', 'GET', '', 'open-cloud-base-server', '/gateway/api/route', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:46', '1', '0', '0', 'com.opencloud.base.server.controller.GatewayController', 'getApiRouteList');
+INSERT INTO `base_api` VALUES ('1149168014170710018', '2cfc3bbc760608bda59d68b2c0b4e2fd', '获取限流列表', 'default', '仅限内部调用', 'GET', '', 'open-cloud-base-server', '/gateway/api/rateLimit', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:46', '1', '0', '0', 'com.opencloud.base.server.controller.GatewayController', 'getApiRateLimitList');
+INSERT INTO `base_api` VALUES ('1149168014212653057', 'f5abed6e35a7a1715fac80841e4e592f', '添加IP限制', 'default', '添加IP限制', 'POST', '', 'open-cloud-base-server', '/gateway/limit/ip/add', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:47', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayIpLimitController', 'addIpLimit');
+INSERT INTO `base_api` VALUES ('1149168014258790401', 'c584e31594bc5bedfc959c729a2e90e7', '移除IP限制', 'default', '移除IP限制', 'POST', '', 'open-cloud-base-server', '/gateway/limit/ip/remove', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:47', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayIpLimitController', 'removeIpLimit');
+INSERT INTO `base_api` VALUES ('1149168014405591042', '24b5559e0204223af9b73f3c68ee68f3', '获取IP限制', 'default', '获取IP限制', 'GET', '', 'open-cloud-base-server', '/gateway/limit/ip/{policyId}/info', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:47', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayIpLimitController', 'getIpLimit');
+INSERT INTO `base_api` VALUES ('1149168014451728385', '160a9fb0ce4243b989bbaaac031a345e', '编辑IP限制', 'default', '编辑IP限制', 'POST', '', 'open-cloud-base-server', '/gateway/limit/ip/update', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:47', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayIpLimitController', 'updateIpLimit');
+INSERT INTO `base_api` VALUES ('1149168014497865729', '99a30e8643b0820a04ecbdcf7c9628af', '绑定API', 'default', '一个API只能绑定一个策略', 'POST', '', 'open-cloud-base-server', '/gateway/limit/ip/api/add', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:47', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayIpLimitController', 'addIpLimitApis');
+INSERT INTO `base_api` VALUES ('1149168014544003073', '0dfca465c864c74d04a4d6135fee1880', '获取分页接口列表', 'default', '获取分页接口列表', 'GET', '', 'open-cloud-base-server', '/gateway/limit/ip', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:46', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayIpLimitController', 'getIpLimitListPage');
+INSERT INTO `base_api` VALUES ('1149168014585946113', '2aecc273984a1d3981dc0f62cafbe894', '查询策略已绑定API列表', 'default', '获取分页接口列表', 'GET', '', 'open-cloud-base-server', '/gateway/limit/ip/api/list', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:47', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayIpLimitController', 'getIpLimitApiList');
+INSERT INTO `base_api` VALUES ('1149168014636277762', 'b993f44f1ad4dd08bfd4f36730af9ea1', '获取流量控制', 'default', '获取流量控制', 'GET', '', 'open-cloud-base-server', '/gateway/limit/rate/{policyId}/info', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:47', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayRateLimitController', 'getRateLimit');
+INSERT INTO `base_api` VALUES ('1149168014686609409', 'ab71840616ff1f1a619170538b1f1de9', '添加流量控制', 'default', '添加流量控制', 'POST', '', 'open-cloud-base-server', '/gateway/limit/rate/add', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:47', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayRateLimitController', 'addRateLimit');
+INSERT INTO `base_api` VALUES ('1149168014732746753', '5f512e5065e80c8d0ffd6be4f27c386e', '编辑流量控制', 'default', '编辑流量控制', 'POST', '', 'open-cloud-base-server', '/gateway/limit/rate/update', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:47', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayRateLimitController', 'updateRateLimit');
+INSERT INTO `base_api` VALUES ('1149168014774689793', 'f83ecfdd9325be59c60627f0164ec8a8', '绑定API', 'default', '一个API只能绑定一个策略', 'POST', '', 'open-cloud-base-server', '/gateway/limit/rate/api/add', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:47', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayRateLimitController', 'addRateLimitApis');
+INSERT INTO `base_api` VALUES ('1149168014816632833', '9c565ce4ded10ccd227001f6d7eab11c', '移除流量控制', 'default', '移除流量控制', 'POST', '', 'open-cloud-base-server', '/gateway/limit/rate/remove', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:47', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayRateLimitController', 'removeRateLimit');
+INSERT INTO `base_api` VALUES ('1149168014862770178', '0830e3c6c3d42f11d86f5e2ed0d99985', '查询策略已绑定API列表', 'default', '获取分页接口列表', 'GET', '', 'open-cloud-base-server', '/gateway/limit/rate/api/list', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:47', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayRateLimitController', 'getRateLimitApiList');
+INSERT INTO `base_api` VALUES ('1149168014908907521', '8dff62591ccefba3537b84aa9d72d7b7', '获取分页接口列表', 'default', '获取分页接口列表', 'GET', '', 'open-cloud-base-server', '/gateway/limit/rate', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:47', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayRateLimitController', 'getRateLimitListPage');
+INSERT INTO `base_api` VALUES ('1149168014955044866', '382e5fe59fdc31f240b5e42b2ae1a522', '获取分页路由列表', 'default', '获取分页路由列表', 'GET', '', 'open-cloud-base-server', '/gateway/route', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:47', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayRouteController', 'getRouteListPage');
+INSERT INTO `base_api` VALUES ('1149168015001182210', '177b640de1b90d39536f462f24e3051f', '获取路由', 'default', '获取路由', 'GET', '', 'open-cloud-base-server', '/gateway/route/{routeId}/info', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:47', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayRouteController', 'getRoute');
+INSERT INTO `base_api` VALUES ('1149168015055708162', '1307447addfddf7e075eea74100c150d', '添加路由', 'default', '添加路由', 'POST', '', 'open-cloud-base-server', '/gateway/route/add', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:47', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayRouteController', 'addRoute');
+INSERT INTO `base_api` VALUES ('1149168015118622721', '40a481fc86814de744e91e42c15b6f3e', '移除路由', 'default', '移除路由', 'POST', '', 'open-cloud-base-server', '/gateway/route/remove', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:47', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayRouteController', 'removeRoute');
+INSERT INTO `base_api` VALUES ('1149168015164760065', '61e8c492eb9e56441d1c428ab3e09f66', '编辑路由', 'default', '编辑路由', 'POST', '', 'open-cloud-base-server', '/gateway/route/update', '0', '1', '2019-07-11 12:06:19', '2019-07-11 22:33:47', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayRouteController', 'updateRoute');
+INSERT INTO `base_api` VALUES ('1149168208614449153', '3c28ffa71681fb53f1f458548456256c', '登录获取用户访问令牌', 'default', '基于oauth2密码模式登录,无需签名,返回access_token', 'POST', '', 'open-cloud-uaa-admin-server', '/login/token', '0', '1', '2019-07-11 12:07:06', '2019-07-11 20:34:43', '1', '0', '1', 'com.opencloud.uaa.admin.server.controller.LoginController', 'getLoginToken');
+INSERT INTO `base_api` VALUES ('1149168208677363714', '29c8264c689bce3567708f977779c3b9', '退出并移除令牌', 'default', '退出并移除令牌,令牌将失效', 'POST', '', 'open-cloud-uaa-admin-server', '/logout/token', '0', '1', '2019-07-11 12:07:06', '2019-07-11 20:34:43', '1', '1', '1', 'com.opencloud.uaa.admin.server.controller.LoginController', 'removeToken');
+INSERT INTO `base_api` VALUES ('1149168208740278273', 'f98a1543766b726e4b5a6d7a7f32fd93', '获取当前登录用户信息', 'default', '获取当前登录用户信息', 'GET', '', 'open-cloud-uaa-admin-server', '/current/user', '0', '1', '2019-07-11 12:07:06', '2019-07-11 20:34:43', '1', '1', '1', 'com.opencloud.uaa.admin.server.controller.LoginController', 'getUserProfile');
+INSERT INTO `base_api` VALUES ('1149168249601187842', 'f1c66f545d2d950e9048b55bd3178487', '获取服务列表', 'default', '获取服务列表', 'GET', '', 'open-cloud-api-zuul-server', '/service/list', '0', '1', '2019-07-11 12:07:15', '2019-07-11 20:34:41', '1', '1', '1', 'com.opencloud.gateway.zuul.server.controller.ServiceController', 'getServiceList');
+INSERT INTO `base_api` VALUES ('1149313400845709314', 'be5eb57a4df27bf8dece0bda751a5a62', '发送邮件', 'default', '发送邮件', 'POST', 'application/json;charset=UTF-8', 'open-cloud-msg-server', '/email', '0', '1', '2019-07-11 21:44:02', '2019-07-11 22:44:35', '1', '0', '0', 'com.opencloud.msg.server.controller.EmailController', 'send');
+INSERT INTO `base_api` VALUES ('1149313402431156226', '0273e0d10bea64046178b7c5ff5055cc', '发送短信', 'default', '发送短信', 'POST', 'application/json;charset=UTF-8', 'open-cloud-msg-server', '/sms', '0', '1', '2019-07-11 21:44:03', '2019-07-11 22:44:35', '1', '0', '0', 'com.opencloud.msg.server.controller.SmsController', 'send');
+INSERT INTO `base_api` VALUES ('1149313402758311938', '3b5928629e5398dcc534c548d5c01085', 'Webhook异步通知', 'default', '即时推送，重试通知时间间隔为 5s、10s、2min、5min、10min、30min、1h、2h、6h、15h，直到你正确回复状态 200 并且返回 success 或者超过最大重发次数', 'POST', 'application/json;charset=UTF-8', 'open-cloud-msg-server', '/webhook', '0', '1', '2019-07-11 21:44:03', '2019-07-11 22:44:35', '1', '0', '0', 'com.opencloud.msg.server.controller.WebHookController', 'send');
+INSERT INTO `base_api` VALUES ('1149313402854780929', 'df78a9afa62bb2d1165aeea14aca9e41', '获取分页异步通知列表', 'default', '获取分页异步通知列表', 'GET', '', 'open-cloud-msg-server', '/webhook/logs', '0', '1', '2019-07-11 21:44:03', '2019-07-11 22:44:35', '1', '1', '1', 'com.opencloud.msg.server.controller.WebHookController', 'getLogsListPage');
+INSERT INTO `base_api` VALUES ('1149313425810206721', 'b9f2f4ed495f3f71da31c14e8ad2193d', '暂停任务', 'default', '暂停任务', 'POST', '', 'open-cloud-task-server', '/job/pause', '0', '1', '2019-07-11 21:44:08', '2019-07-11 22:38:33', '1', '1', '1', 'com.opencloud.task.server.controller.SchedulerController', 'pauseJob');
+INSERT INTO `base_api` VALUES ('1149313425994756098', '7f542a952be1a9d8b089330f5f0aba3b', '删除任务', 'default', '删除任务', 'POST', '', 'open-cloud-task-server', '/job/delete', '0', '1', '2019-07-11 21:44:08', '2019-07-11 22:38:33', '1', '1', '1', 'com.opencloud.task.server.controller.SchedulerController', 'deleteJob');
+INSERT INTO `base_api` VALUES ('1149313426040893441', '030aae5c245d4d780ca248fdd5e4bb67', '恢复任务', 'default', '恢复任务', 'POST', '', 'open-cloud-task-server', '/job/resume', '0', '1', '2019-07-11 21:44:08', '2019-07-11 22:38:33', '1', '1', '1', 'com.opencloud.task.server.controller.SchedulerController', 'resumeJob');
+INSERT INTO `base_api` VALUES ('1149313426275774465', '14467518667ccfa46541736433d0efa2', '获取任务执行日志列表', 'default', '获取任务执行日志列表', 'GET', '', 'open-cloud-task-server', '/job/logs', '0', '1', '2019-07-11 21:44:08', '2019-07-11 22:38:33', '1', '1', '1', 'com.opencloud.task.server.controller.SchedulerController', 'getJobLogList');
+INSERT INTO `base_api` VALUES ('1149313426372243457', 'cb8aded7fdffd0e8e86940f540b32472', '修改远程调度任务', 'default', '修改远程调度任务', 'POST', '', 'open-cloud-task-server', '/job/update/http', '0', '1', '2019-07-11 21:44:08', '2019-07-11 22:38:33', '1', '1', '1', 'com.opencloud.task.server.controller.SchedulerController', 'updateHttpJob');
+INSERT INTO `base_api` VALUES ('1149313426548404226', '93ff44fd4adab6c4097327eb5ffd405a', '获取任务列表', 'default', '获取任务列表', 'GET', '', 'open-cloud-task-server', '/job', '0', '1', '2019-07-11 21:44:08', '2019-07-11 22:38:33', '1', '1', '1', 'com.opencloud.task.server.controller.SchedulerController', 'getJobList');
+INSERT INTO `base_api` VALUES ('1149313427303378946', '903acc6b8c02184170bd3f316cd0f0c3', '添加远程调度任务', 'default', '添加远程调度任务', 'POST', '', 'open-cloud-task-server', '/job/add/http', '0', '1', '2019-07-11 21:44:08', '2019-07-11 22:38:33', '1', '1', '1', 'com.opencloud.task.server.controller.SchedulerController', 'addHttpJob');
+INSERT INTO `base_api` VALUES ('1149325917416325122', 'f17677d7f0f33851333de6bc48d5ac1a', '获取服务列表', 'default', '获取服务列表', 'GET', '', 'open-cloud-base-server', '/gateway/service/list', '0', '1', '2019-07-11 22:33:46', '2019-07-11 22:34:20', '1', '1', '1', 'com.opencloud.base.server.controller.GatewayController', 'getServiceList');
 
 -- ----------------------------
 -- Table structure for base_app
 -- ----------------------------
 DROP TABLE IF EXISTS `base_app`;
 CREATE TABLE `base_app` (
-  `app_id` varchar(50) NOT NULL COMMENT '客户端ID',
-  `api_key` varchar(255) DEFAULT NULL COMMENT 'API访问key',
-  `secret_key` varchar(255) NOT NULL COMMENT 'API访问密钥',
-  `app_name` varchar(255) NOT NULL COMMENT 'app名称',
-  `app_name_en` varchar(255) NOT NULL COMMENT 'app英文名称',
-  `app_icon` varchar(255) NOT NULL COMMENT '应用图标',
-  `app_type` varchar(50) NOT NULL COMMENT 'app类型:server-服务应用 app-手机应用 pc-PC网页应用 wap-手机网页应用',
-  `app_desc` varchar(255) DEFAULT NULL COMMENT 'app描述',
-  `app_os` varchar(25) DEFAULT NULL COMMENT '移动应用操作系统:ios-苹果 android-安卓',
-  `website` varchar(255) NOT NULL COMMENT '官网地址',
-  `developer_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '开发者ID:默认为0',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
-  `status` tinyint(3) NOT NULL DEFAULT '1' COMMENT '状态:0-无效 1-有效',
-  `is_persist` tinyint(3) NOT NULL DEFAULT '0' COMMENT '保留数据0-否 1-是 不允许删除',
-  PRIMARY KEY (`app_id`)
+                          `app_id` varchar(50) NOT NULL COMMENT '客户端ID',
+                          `api_key` varchar(255) DEFAULT NULL COMMENT 'API访问key',
+                          `secret_key` varchar(255) NOT NULL COMMENT 'API访问密钥',
+                          `app_name` varchar(255) NOT NULL COMMENT 'app名称',
+                          `app_name_en` varchar(255) NOT NULL COMMENT 'app英文名称',
+                          `app_icon` varchar(255) NOT NULL COMMENT '应用图标',
+                          `app_type` varchar(50) NOT NULL COMMENT 'app类型:server-服务应用 app-手机应用 pc-PC网页应用 wap-手机网页应用',
+                          `app_desc` varchar(255) DEFAULT NULL COMMENT 'app描述',
+                          `app_os` varchar(25) DEFAULT NULL COMMENT '移动应用操作系统:ios-苹果 android-安卓',
+                          `website` varchar(255) NOT NULL COMMENT '官网地址',
+                          `developer_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '开发者ID:默认为0',
+                          `create_time` datetime NOT NULL COMMENT '创建时间',
+                          `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+                          `status` tinyint(3) NOT NULL DEFAULT '1' COMMENT '状态:0-无效 1-有效',
+                          `is_persist` tinyint(3) NOT NULL DEFAULT '0' COMMENT '保留数据0-否 1-是 不允许删除',
+                          PRIMARY KEY (`app_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='系统应用-基础信息';
 
 -- ----------------------------
 -- Records of base_app
 -- ----------------------------
-INSERT INTO `base_app` VALUES ('1552274783265', '7gBZcbsC7kLIWCdELIl8nxcs', '0osTIhce7uPvDKHz6aa67bhCukaKoYl4', '平台用户认证服务器', 'open-cloud-uaa-admin-server', '', 'server', '资源服务器', '', 'http://www.baidu.com', '0', '2018-11-12 17:48:45', '2019-07-11 18:31:05', '1', '1');
+INSERT INTO `base_app` VALUES ('1552274783265', '7gBZcbsC7kLIWCdELIl8nxcs', '0osTIhce7uPvDKHz6aa67bhCukaKoYl4', '平台用户认证服务器', 'open-cloud-uaa-admin-server', '', 'server', '资源服务器', '', 'http://www.baidu.com', '0', '2018-11-12 17:48:45', '2019-07-11 22:24:32', '1', '1');
 
 -- ----------------------------
 -- Table structure for base_authority
 -- ----------------------------
 DROP TABLE IF EXISTS `base_authority`;
 CREATE TABLE `base_authority` (
-  `authority_id` bigint(20) NOT NULL,
-  `authority` varchar(255) NOT NULL COMMENT '权限标识',
-  `menu_id` bigint(20) DEFAULT NULL COMMENT '菜单资源ID',
-  `api_id` bigint(20) DEFAULT NULL COMMENT 'API资源ID',
-  `action_id` bigint(20) DEFAULT NULL,
-  `status` tinyint(3) NOT NULL DEFAULT '1' COMMENT '状态',
-  PRIMARY KEY (`authority_id`),
-  KEY `menu_id` (`menu_id`),
-  KEY `api_id` (`api_id`),
-  KEY `action_id` (`action_id`)
+                                `authority_id` bigint(20) NOT NULL,
+                                `authority` varchar(255) NOT NULL COMMENT '权限标识',
+                                `menu_id` bigint(20) DEFAULT NULL COMMENT '菜单资源ID',
+                                `api_id` bigint(20) DEFAULT NULL COMMENT 'API资源ID',
+                                `action_id` bigint(20) DEFAULT NULL,
+                                `status` tinyint(3) NOT NULL DEFAULT '1' COMMENT '状态',
+                                PRIMARY KEY (`authority_id`),
+                                KEY `menu_id` (`menu_id`),
+                                KEY `api_id` (`api_id`),
+                                KEY `action_id` (`action_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='系统权限-菜单权限、操作权限、API权限';
 
 -- ----------------------------
@@ -324,7 +338,7 @@ INSERT INTO `base_authority` VALUES ('1131865974771953666', 'ACTION_gatewayRateL
 INSERT INTO `base_authority` VALUES ('1131866278280179714', 'ACTION_jobView', null, null, '1131866278187905026', '1');
 INSERT INTO `base_authority` VALUES ('1131866310676983810', 'ACTION_jobEdit', null, null, '1131866310622457857', '1');
 INSERT INTO `base_authority` VALUES ('1131866943534542850', 'ACTION_schedulerLogsView', null, null, '1131866943459045377', '1');
-INSERT INTO `base_authority` VALUES ('1131867094550458369', 'ACTION_notifyHttpLogsView', null, null, '1131867094479155202', '1');
+INSERT INTO `base_authority` VALUES ('1131867094550458369', 'ACTION_webhookView', null, null, '1131867094479155202', '1');
 INSERT INTO `base_authority` VALUES ('1141579952355979266', 'MENU_monitor', '1141579952217567234', null, null, '1');
 INSERT INTO `base_authority` VALUES ('1141580147084931074', 'MENU_SpringBootAdmin', '1141580147030405121', null, null, '1');
 INSERT INTO `base_authority` VALUES ('1149168010446168066', 'API_9a1e16647d1e534f7b06ed9db83719fa', null, '1149168010337116161', null, '1');
@@ -420,67 +434,44 @@ INSERT INTO `base_authority` VALUES ('1149168208706723841', 'API_29c8264c689bce3
 INSERT INTO `base_authority` VALUES ('1149168208765444098', 'API_f98a1543766b726e4b5a6d7a7f32fd93', null, '1149168208740278273', null, '1');
 INSERT INTO `base_authority` VALUES ('1149168249622159361', 'API_f1c66f545d2d950e9048b55bd3178487', null, '1149168249601187842', null, '1');
 INSERT INTO `base_authority` VALUES ('1149253733748785154', 'MENU_developer', '1149253733673287682', null, null, '1');
+INSERT INTO `base_authority` VALUES ('1149313400946372610', 'API_be5eb57a4df27bf8dece0bda751a5a62', null, '1149313400845709314', null, '1');
+INSERT INTO `base_authority` VALUES ('1149313402477293569', 'API_0273e0d10bea64046178b7c5ff5055cc', null, '1149313402431156226', null, '1');
+INSERT INTO `base_authority` VALUES ('1149313402766700545', 'API_3b5928629e5398dcc534c548d5c01085', null, '1149313402758311938', null, '1');
+INSERT INTO `base_authority` VALUES ('1149313402947055618', 'API_df78a9afa62bb2d1165aeea14aca9e41', null, '1149313402854780929', null, '1');
+INSERT INTO `base_authority` VALUES ('1149313425810206722', 'API_b9f2f4ed495f3f71da31c14e8ad2193d', null, '1149313425810206721', null, '1');
+INSERT INTO `base_authority` VALUES ('1149313426011533314', 'API_7f542a952be1a9d8b089330f5f0aba3b', null, '1149313425994756098', null, '1');
+INSERT INTO `base_authority` VALUES ('1149313426040893442', 'API_030aae5c245d4d780ca248fdd5e4bb67', null, '1149313426040893441', null, '1');
+INSERT INTO `base_authority` VALUES ('1149313426275774466', 'API_14467518667ccfa46541736433d0efa2', null, '1149313426275774465', null, '1');
+INSERT INTO `base_authority` VALUES ('1149313426372243458', 'API_cb8aded7fdffd0e8e86940f540b32472', null, '1149313426372243457', null, '1');
+INSERT INTO `base_authority` VALUES ('1149313426548404227', 'API_93ff44fd4adab6c4097327eb5ffd405a', null, '1149313426548404226', null, '1');
+INSERT INTO `base_authority` VALUES ('1149313427341127681', 'API_903acc6b8c02184170bd3f316cd0f0c3', null, '1149313427303378946', null, '1');
+INSERT INTO `base_authority` VALUES ('1149320706077569025', 'ACTION_developerView', null, null, '1149320706039820290', '1');
+INSERT INTO `base_authority` VALUES ('1149320749446672386', 'ACTION_developerEdit', null, null, '1149320749446672385', '1');
+INSERT INTO `base_authority` VALUES ('1149325917445685250', 'API_f17677d7f0f33851333de6bc48d5ac1a', null, '1149325917416325122', null, '1');
 
 -- ----------------------------
 -- Table structure for base_authority_action
 -- ----------------------------
 DROP TABLE IF EXISTS `base_authority_action`;
 CREATE TABLE `base_authority_action` (
-  `action_id` bigint(20) NOT NULL COMMENT '操作ID',
-  `authority_id` bigint(20) NOT NULL COMMENT 'API',
-  KEY `action_id` (`action_id`) USING BTREE,
-  KEY `authority_id` (`authority_id`) USING BTREE
+                                       `action_id` bigint(20) NOT NULL COMMENT '操作ID',
+                                       `authority_id` bigint(20) NOT NULL COMMENT 'API',
+                                       KEY `action_id` (`action_id`) USING BTREE,
+                                       KEY `authority_id` (`authority_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统权限-功能操作关联表';
 
 -- ----------------------------
 -- Records of base_authority_action
 -- ----------------------------
-INSERT INTO `base_authority_action` VALUES ('1131863248310775809', '1131753770705907714');
-INSERT INTO `base_authority_action` VALUES ('1131863248310775809', '1131753770823348225');
-INSERT INTO `base_authority_action` VALUES ('1131863248310775809', '1131753771100172289');
-INSERT INTO `base_authority_action` VALUES ('1131863248310775809', '1131753771226001410');
-INSERT INTO `base_authority_action` VALUES ('1131863248310775809', '1131813664213635074');
-INSERT INTO `base_authority_action` VALUES ('1131863723722551297', '1131813663404134402');
-INSERT INTO `base_authority_action` VALUES ('1131863775899693057', '1131813663953588225');
-INSERT INTO `base_authority_action` VALUES ('1131864444878598146', '1131813663827759105');
-INSERT INTO `base_authority_action` VALUES ('1131864444878598146', '1131753772400406529');
-INSERT INTO `base_authority_action` VALUES ('1131864444878598146', '1131753772249411585');
-INSERT INTO `base_authority_action` VALUES ('1131864444878598146', '1131753771507019778');
-INSERT INTO `base_authority_action` VALUES ('1131864444878598146', '1131753771607683074');
-INSERT INTO `base_authority_action` VALUES ('1131864827252322305', '1131753775453859842');
-INSERT INTO `base_authority_action` VALUES ('1131864827252322305', '1131753774891823105');
-INSERT INTO `base_authority_action` VALUES ('1131864827252322305', '1131753775000875010');
-INSERT INTO `base_authority_action` VALUES ('1131864864267055106', '1131753775768432642');
-INSERT INTO `base_authority_action` VALUES ('1131864864267055106', '1131753775642603522');
-INSERT INTO `base_authority_action` VALUES ('1131864864267055106', '1131753775181230082');
-INSERT INTO `base_authority_action` VALUES ('1131864864267055106', '1131753775000875012');
-INSERT INTO `base_authority_action` VALUES ('1131865040289411074', '1131753777139970050');
-INSERT INTO `base_authority_action` VALUES ('1131865040289411074', '1131753777026723841');
-INSERT INTO `base_authority_action` VALUES ('1131865040289411074', '1131753774552084481');
-INSERT INTO `base_authority_action` VALUES ('1131865075609645057', '1131753777211273218');
-INSERT INTO `base_authority_action` VALUES ('1131865075609645057', '1131753777416794113');
-INSERT INTO `base_authority_action` VALUES ('1131865075609645057', '1131753777517457410');
-INSERT INTO `base_authority_action` VALUES ('1131865520738545666', '1131753764884213761');
-INSERT INTO `base_authority_action` VALUES ('1131865520738545666', '1131753765026820098');
-INSERT INTO `base_authority_action` VALUES ('1131865520738545666', '1131753765614022657');
-INSERT INTO `base_authority_action` VALUES ('1131865772929462274', '1131753774162014210');
-INSERT INTO `base_authority_action` VALUES ('1131865931146997761', '1131753774187180034');
-INSERT INTO `base_authority_action` VALUES ('1131865931146997761', '1131753776095588354');
-INSERT INTO `base_authority_action` VALUES ('1131865931146997761', '1131753776204640257');
-INSERT INTO `base_authority_action` VALUES ('1131865931146997761', '1131753776292720641');
-INSERT INTO `base_authority_action` VALUES ('1131865974704844802', '1131753776527601665');
-INSERT INTO `base_authority_action` VALUES ('1131865974704844802', '1131753776657625090');
-INSERT INTO `base_authority_action` VALUES ('1131865974704844802', '1131753776808620034');
-INSERT INTO `base_authority_action` VALUES ('1131865974704844802', '1131753776917671938');
-INSERT INTO `base_authority_action` VALUES ('1131866278187905026', '1131814634553282561');
-INSERT INTO `base_authority_action` VALUES ('1131866278187905026', '1131814634746220545');
-INSERT INTO `base_authority_action` VALUES ('1131866310622457857', '1131814634217738242');
-INSERT INTO `base_authority_action` VALUES ('1131866310622457857', '1131814634293235714');
-INSERT INTO `base_authority_action` VALUES ('1131866310622457857', '1131814634381316097');
-INSERT INTO `base_authority_action` VALUES ('1131866310622457857', '1131814634469396481');
-INSERT INTO `base_authority_action` VALUES ('1131866310622457857', '1131814634645557249');
-INSERT INTO `base_authority_action` VALUES ('1131866943459045377', '1131814634553282561');
-INSERT INTO `base_authority_action` VALUES ('1131867094479155202', '1131814508397006849');
+INSERT INTO `base_authority_action` VALUES ('1131849510572654593', '1149168011708653570');
+INSERT INTO `base_authority_action` VALUES ('1131849510572654593', '1149168011981283329');
+INSERT INTO `base_authority_action` VALUES ('1131849510572654593', '1149168011926757377');
+INSERT INTO `base_authority_action` VALUES ('1131849510572654593', '1149168012941778945');
+INSERT INTO `base_authority_action` VALUES ('1131849510572654593', '1149168012790784002');
+INSERT INTO `base_authority_action` VALUES ('1131849510572654593', '1149168012996304898');
+INSERT INTO `base_authority_action` VALUES ('1131849510572654593', '1149168010743963649');
+INSERT INTO `base_authority_action` VALUES ('1131849510572654593', '1149168010601357314');
+INSERT INTO `base_authority_action` VALUES ('1131849510572654593', '1149168010681049090');
 INSERT INTO `base_authority_action` VALUES ('1131849510572654593', '1131813661348925441');
 INSERT INTO `base_authority_action` VALUES ('1131849510572654593', '1131813661483143169');
 INSERT INTO `base_authority_action` VALUES ('1131849510572654593', '1131813661613166594');
@@ -490,41 +481,164 @@ INSERT INTO `base_authority_action` VALUES ('1131849510572654593', '113181366403
 INSERT INTO `base_authority_action` VALUES ('1131849510572654593', '1131753768357097474');
 INSERT INTO `base_authority_action` VALUES ('1131849510572654593', '1131753768474537986');
 INSERT INTO `base_authority_action` VALUES ('1131849510572654593', '1131753768705224706');
-INSERT INTO `base_authority_action` VALUES ('1131849293404176385', '1131813661852241922');
-INSERT INTO `base_authority_action` VALUES ('1131849293404176385', '1131813663894867969');
-INSERT INTO `base_authority_action` VALUES ('1131849293404176385', '1131813661235679233');
-INSERT INTO `base_authority_action` VALUES ('1131849293404176385', '1131753768596172802');
-INSERT INTO `base_authority_action` VALUES ('1131849293404176385', '1131753768814276610');
-INSERT INTO `base_authority_action` VALUES ('1131849293404176385', '1131844868619030529');
-INSERT INTO `base_authority_action` VALUES ('1131865482314526722', '1131995510689820674');
-INSERT INTO `base_authority_action` VALUES ('1131865482314526722', '1131753765458833410');
-INSERT INTO `base_authority_action` VALUES ('1131865482314526722', '1131753765324615681');
-INSERT INTO `base_authority_action` VALUES ('1131865482314526722', '1131753765182009346');
+INSERT INTO `base_authority_action` VALUES ('1131863248310775809', '1149168013390569474');
+INSERT INTO `base_authority_action` VALUES ('1131863248310775809', '1149168013092773889');
+INSERT INTO `base_authority_action` VALUES ('1131863248310775809', '1149168013302489090');
+INSERT INTO `base_authority_action` VALUES ('1131863248310775809', '1149168013348626434');
+INSERT INTO `base_authority_action` VALUES ('1131863248310775809', '1149168011826094081');
+INSERT INTO `base_authority_action` VALUES ('1131863248310775809', '1131753770705907714');
+INSERT INTO `base_authority_action` VALUES ('1131863248310775809', '1131753770823348225');
+INSERT INTO `base_authority_action` VALUES ('1131863248310775809', '1131753771100172289');
+INSERT INTO `base_authority_action` VALUES ('1131863248310775809', '1131753771226001410');
+INSERT INTO `base_authority_action` VALUES ('1131863248310775809', '1131813664213635074');
+INSERT INTO `base_authority_action` VALUES ('1131858946338992129', '1149168013197631489');
+INSERT INTO `base_authority_action` VALUES ('1131858946338992129', '1149168013243768834');
+INSERT INTO `base_authority_action` VALUES ('1131858946338992129', '1149168013143105537');
+INSERT INTO `base_authority_action` VALUES ('1131858946338992129', '1149168013046636546');
+INSERT INTO `base_authority_action` VALUES ('1131858946338992129', '1149168012182609922');
+INSERT INTO `base_authority_action` VALUES ('1131858946338992129', '1149168012086140929');
 INSERT INTO `base_authority_action` VALUES ('1131858946338992129', '1131813663743873026');
 INSERT INTO `base_authority_action` VALUES ('1131858946338992129', '1131813663672569857');
 INSERT INTO `base_authority_action` VALUES ('1131858946338992129', '1131753770320031746');
 INSERT INTO `base_authority_action` VALUES ('1131858946338992129', '1131753770445860866');
 INSERT INTO `base_authority_action` VALUES ('1131858946338992129', '1131753770185814018');
 INSERT INTO `base_authority_action` VALUES ('1131858946338992129', '1131753770596855809');
+INSERT INTO `base_authority_action` VALUES ('1131863723722551297', '1149168011243085826');
+INSERT INTO `base_authority_action` VALUES ('1131863723722551297', '1149168011767373826');
+INSERT INTO `base_authority_action` VALUES ('1131863723722551297', '1149168011599601666');
+INSERT INTO `base_authority_action` VALUES ('1131863723722551297', '1149168011545075713');
+INSERT INTO `base_authority_action` VALUES ('1131863723722551297', '1131813663404134402');
+INSERT INTO `base_authority_action` VALUES ('1131863723722551297', '1132203893955006465');
+INSERT INTO `base_authority_action` VALUES ('1131863723722551297', '1132203893384581121');
+INSERT INTO `base_authority_action` VALUES ('1131863723722551297', '1132203893577519106');
+INSERT INTO `base_authority_action` VALUES ('1131863775899693057', '1149168011876425729');
+INSERT INTO `base_authority_action` VALUES ('1131863775899693057', '1149168011301806082');
+INSERT INTO `base_authority_action` VALUES ('1131863775899693057', '1149168011356332033');
+INSERT INTO `base_authority_action` VALUES ('1131863775899693057', '1149168011188559874');
+INSERT INTO `base_authority_action` VALUES ('1131863775899693057', '1149168011649933313');
+INSERT INTO `base_authority_action` VALUES ('1131863775899693057', '1149168011490549761');
+INSERT INTO `base_authority_action` VALUES ('1131863775899693057', '1131813663953588225');
+INSERT INTO `base_authority_action` VALUES ('1131864400507056130', '1149168012031614977');
+INSERT INTO `base_authority_action` VALUES ('1131864400507056130', '1149168013533175810');
+INSERT INTO `base_authority_action` VALUES ('1131864400507056130', '1149168013768056834');
+INSERT INTO `base_authority_action` VALUES ('1131864400507056130', '1149168013625450498');
 INSERT INTO `base_authority_action` VALUES ('1131864400507056130', '1131813663584489473');
 INSERT INTO `base_authority_action` VALUES ('1131864400507056130', '1131753771397967873');
 INSERT INTO `base_authority_action` VALUES ('1131864400507056130', '1131753771712540674');
 INSERT INTO `base_authority_action` VALUES ('1131864400507056130', '1131753772526235650');
-INSERT INTO `base_authority_action` VALUES ('1131863723722551297', '1132203893955006465');
-INSERT INTO `base_authority_action` VALUES ('1131863723722551297', '1132203893384581121');
-INSERT INTO `base_authority_action` VALUES ('1131863723722551297', '1132203893577519106');
-INSERT INTO `base_authority_action` VALUES ('1131863723722551297', '1131813663404134402');
+INSERT INTO `base_authority_action` VALUES ('1131864444878598146', '1149168013436706818');
+INSERT INTO `base_authority_action` VALUES ('1131864444878598146', '1149168013583507458');
+INSERT INTO `base_authority_action` VALUES ('1131864444878598146', '1149168013482844161');
+INSERT INTO `base_authority_action` VALUES ('1131864444878598146', '1149168013675782145');
+INSERT INTO `base_authority_action` VALUES ('1131864444878598146', '1149168012237135873');
+INSERT INTO `base_authority_action` VALUES ('1131864444878598146', '1131813663827759105');
+INSERT INTO `base_authority_action` VALUES ('1131864444878598146', '1131753772400406529');
+INSERT INTO `base_authority_action` VALUES ('1131864444878598146', '1131753772249411585');
+INSERT INTO `base_authority_action` VALUES ('1131864444878598146', '1131753771507019778');
+INSERT INTO `base_authority_action` VALUES ('1131864444878598146', '1131753771607683074');
+INSERT INTO `base_authority_action` VALUES ('1149320706039820290', '1149168012593651713');
+INSERT INTO `base_authority_action` VALUES ('1149320706039820290', '1149168012442656770');
+INSERT INTO `base_authority_action` VALUES ('1149320749446672385', '1149168012539125762');
+INSERT INTO `base_authority_action` VALUES ('1149320749446672385', '1149168012341993473');
+INSERT INTO `base_authority_action` VALUES ('1149320749446672385', '1149168012287467521');
+INSERT INTO `base_authority_action` VALUES ('1131864827252322305', '1149168014606917634');
+INSERT INTO `base_authority_action` VALUES ('1131864827252322305', '1149168014560780290');
+INSERT INTO `base_authority_action` VALUES ('1131864827252322305', '1149168014426562561');
+INSERT INTO `base_authority_action` VALUES ('1131864827252322305', '1131753775453859842');
+INSERT INTO `base_authority_action` VALUES ('1131864827252322305', '1131753774891823105');
+INSERT INTO `base_authority_action` VALUES ('1131864827252322305', '1131753775000875010');
+INSERT INTO `base_authority_action` VALUES ('1131864864267055106', '1149168014233624578');
+INSERT INTO `base_authority_action` VALUES ('1131864864267055106', '1149168014472699906');
+INSERT INTO `base_authority_action` VALUES ('1131864864267055106', '1149168014518837249');
+INSERT INTO `base_authority_action` VALUES ('1131864864267055106', '1149168014376230913');
+INSERT INTO `base_authority_action` VALUES ('1131864864267055106', '1131753775768432642');
+INSERT INTO `base_authority_action` VALUES ('1131864864267055106', '1131753775642603522');
+INSERT INTO `base_authority_action` VALUES ('1131864864267055106', '1131753775181230082');
+INSERT INTO `base_authority_action` VALUES ('1131864864267055106', '1131753775000875012');
+INSERT INTO `base_authority_action` VALUES ('1131865040289411074', '1149168014976016385');
+INSERT INTO `base_authority_action` VALUES ('1131865040289411074', '1149168014141349889');
+INSERT INTO `base_authority_action` VALUES ('1131865040289411074', '1149168015017959426');
+INSERT INTO `base_authority_action` VALUES ('1131865040289411074', '1131753777139970050');
+INSERT INTO `base_authority_action` VALUES ('1131865040289411074', '1131753777026723841');
+INSERT INTO `base_authority_action` VALUES ('1131865040289411074', '1131753774552084481');
+INSERT INTO `base_authority_action` VALUES ('1131865075609645057', '1149168015135399937');
+INSERT INTO `base_authority_action` VALUES ('1131865075609645057', '1149168015185731586');
+INSERT INTO `base_authority_action` VALUES ('1131865075609645057', '1149168015076679682');
+INSERT INTO `base_authority_action` VALUES ('1131865075609645057', '1131753777211273218');
+INSERT INTO `base_authority_action` VALUES ('1131865075609645057', '1131753777416794113');
+INSERT INTO `base_authority_action` VALUES ('1131865075609645057', '1131753777517457410');
+INSERT INTO `base_authority_action` VALUES ('1131865520738545666', '1149168010953678850');
+INSERT INTO `base_authority_action` VALUES ('1131865520738545666', '1149168010823655425');
+INSERT INTO `base_authority_action` VALUES ('1131865520738545666', '1149168010886569985');
+INSERT INTO `base_authority_action` VALUES ('1131865520738545666', '1131753764884213761');
+INSERT INTO `base_authority_action` VALUES ('1131865520738545666', '1131753765026820098');
+INSERT INTO `base_authority_action` VALUES ('1131865520738545666', '1131753765614022657');
+INSERT INTO `base_authority_action` VALUES ('1131865772929462274', '1149168014011326465');
+INSERT INTO `base_authority_action` VALUES ('1131865772929462274', '1131753774162014210');
+INSERT INTO `base_authority_action` VALUES ('1131865931146997761', '1149168014657249282');
+INSERT INTO `base_authority_action` VALUES ('1131865931146997761', '1149168014879547393');
+INSERT INTO `base_authority_action` VALUES ('1131865931146997761', '1149168014925684737');
+INSERT INTO `base_authority_action` VALUES ('1131865931146997761', '1131753774187180034');
+INSERT INTO `base_authority_action` VALUES ('1131865931146997761', '1131753776095588354');
+INSERT INTO `base_authority_action` VALUES ('1131865931146997761', '1131753776204640257');
+INSERT INTO `base_authority_action` VALUES ('1131865931146997761', '1131753776292720641');
+INSERT INTO `base_authority_action` VALUES ('1131865974704844802', '1149168014795661313');
+INSERT INTO `base_authority_action` VALUES ('1131865974704844802', '1149168014833410049');
+INSERT INTO `base_authority_action` VALUES ('1131865974704844802', '1149168014703386625');
+INSERT INTO `base_authority_action` VALUES ('1131865974704844802', '1149168014749523970');
+INSERT INTO `base_authority_action` VALUES ('1131865974704844802', '1131753776527601665');
+INSERT INTO `base_authority_action` VALUES ('1131865974704844802', '1131753776657625090');
+INSERT INTO `base_authority_action` VALUES ('1131865974704844802', '1131753776808620034');
+INSERT INTO `base_authority_action` VALUES ('1131865974704844802', '1131753776917671938');
+INSERT INTO `base_authority_action` VALUES ('1131866278187905026', '1149313426275774466');
+INSERT INTO `base_authority_action` VALUES ('1131866278187905026', '1149313426548404227');
+INSERT INTO `base_authority_action` VALUES ('1131866278187905026', '1131814634553282561');
+INSERT INTO `base_authority_action` VALUES ('1131866278187905026', '1131814634746220545');
+INSERT INTO `base_authority_action` VALUES ('1131866310622457857', '1149313426011533314');
+INSERT INTO `base_authority_action` VALUES ('1131866310622457857', '1149313426040893442');
+INSERT INTO `base_authority_action` VALUES ('1131866310622457857', '1149313427341127681');
+INSERT INTO `base_authority_action` VALUES ('1131866310622457857', '1149313425810206722');
+INSERT INTO `base_authority_action` VALUES ('1131866310622457857', '1149313426372243458');
+INSERT INTO `base_authority_action` VALUES ('1131866310622457857', '1131814634217738242');
+INSERT INTO `base_authority_action` VALUES ('1131866310622457857', '1131814634293235714');
+INSERT INTO `base_authority_action` VALUES ('1131866310622457857', '1131814634381316097');
+INSERT INTO `base_authority_action` VALUES ('1131866310622457857', '1131814634469396481');
+INSERT INTO `base_authority_action` VALUES ('1131866310622457857', '1131814634645557249');
+INSERT INTO `base_authority_action` VALUES ('1131866943459045377', '1149313426275774466');
+INSERT INTO `base_authority_action` VALUES ('1131866943459045377', '1131814634553282561');
+INSERT INTO `base_authority_action` VALUES ('1131867094479155202', '1149313402947055618');
+INSERT INTO `base_authority_action` VALUES ('1131867094479155202', '1131814508397006849');
+INSERT INTO `base_authority_action` VALUES ('1131849293404176385', '1149168012891447297');
+INSERT INTO `base_authority_action` VALUES ('1131849293404176385', '1149168012690120705');
+INSERT INTO `base_authority_action` VALUES ('1131849293404176385', '1149168012736258049');
+INSERT INTO `base_authority_action` VALUES ('1131849293404176385', '1149168012836921346');
+INSERT INTO `base_authority_action` VALUES ('1131849293404176385', '1149168010446168066');
+INSERT INTO `base_authority_action` VALUES ('1131849293404176385', '1149168010530054146');
+INSERT INTO `base_authority_action` VALUES ('1131849293404176385', '1131813661852241922');
+INSERT INTO `base_authority_action` VALUES ('1131849293404176385', '1131813663894867969');
+INSERT INTO `base_authority_action` VALUES ('1131849293404176385', '1131813661235679233');
+INSERT INTO `base_authority_action` VALUES ('1131849293404176385', '1131753768596172802');
+INSERT INTO `base_authority_action` VALUES ('1131849293404176385', '1131753768814276610');
+INSERT INTO `base_authority_action` VALUES ('1131849293404176385', '1131844868619030529');
+INSERT INTO `base_authority_action` VALUES ('1131865482314526722', '1149325917445685250');
+INSERT INTO `base_authority_action` VALUES ('1131865482314526722', '1149168011125645314');
+INSERT INTO `base_authority_action` VALUES ('1131865482314526722', '1149168011012399105');
+INSERT INTO `base_authority_action` VALUES ('1131865482314526722', '1149168011071119362');
+INSERT INTO `base_authority_action` VALUES ('1131865482314526722', '1131995510689820674');
+INSERT INTO `base_authority_action` VALUES ('1131865482314526722', '1131753765458833410');
+INSERT INTO `base_authority_action` VALUES ('1131865482314526722', '1131753765324615681');
+INSERT INTO `base_authority_action` VALUES ('1131865482314526722', '1131753765182009346');
 
 -- ----------------------------
 -- Table structure for base_authority_app
 -- ----------------------------
 DROP TABLE IF EXISTS `base_authority_app`;
 CREATE TABLE `base_authority_app` (
-  `authority_id` bigint(50) NOT NULL COMMENT '权限ID',
-  `app_id` varchar(100) NOT NULL COMMENT '应用ID',
-  `expire_time` datetime DEFAULT NULL COMMENT '过期时间:null表示长期',
-  KEY `authority_id` (`authority_id`) USING BTREE,
-  KEY `app_id` (`app_id`) USING BTREE
+                                    `authority_id` bigint(50) NOT NULL COMMENT '权限ID',
+                                    `app_id` varchar(100) NOT NULL COMMENT '应用ID',
+                                    `expire_time` datetime DEFAULT NULL COMMENT '过期时间:null表示长期',
+                                    KEY `authority_id` (`authority_id`) USING BTREE,
+                                    KEY `app_id` (`app_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='系统权限-应用关联';
 
 -- ----------------------------
@@ -536,11 +650,11 @@ CREATE TABLE `base_authority_app` (
 -- ----------------------------
 DROP TABLE IF EXISTS `base_authority_role`;
 CREATE TABLE `base_authority_role` (
-  `authority_id` bigint(20) NOT NULL COMMENT '权限ID',
-  `role_id` bigint(20) NOT NULL COMMENT '角色ID',
-  `expire_time` datetime DEFAULT NULL COMMENT '过期时间:null表示长期',
-  KEY `authority_id` (`authority_id`) USING BTREE,
-  KEY `role_id` (`role_id`) USING BTREE
+                                     `authority_id` bigint(20) NOT NULL COMMENT '权限ID',
+                                     `role_id` bigint(20) NOT NULL COMMENT '角色ID',
+                                     `expire_time` datetime DEFAULT NULL COMMENT '过期时间:null表示长期',
+                                     KEY `authority_id` (`authority_id`) USING BTREE,
+                                     KEY `role_id` (`role_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='系统权限-角色关联';
 
 -- ----------------------------
@@ -564,495 +678,48 @@ INSERT INTO `base_authority_role` VALUES ('19', '1', null);
 INSERT INTO `base_authority_role` VALUES ('17', '1', null);
 INSERT INTO `base_authority_role` VALUES ('18', '1', null);
 INSERT INTO `base_authority_role` VALUES ('1131849293509033986', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849293509033986', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849293509033986', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849293509033986', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849293509033986', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849293509033986', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849293509033986', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849293509033986', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849293509033986', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849293509033986', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849293509033986', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849293509033986', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849293509033986', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849293509033986', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849293509033986', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849293509033986', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849293509033986', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849293509033986', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849293509033986', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849293509033986', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849293509033986', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849293509033986', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849510677512193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849510677512193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849510677512193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849510677512193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849510677512193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849510677512193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849510677512193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849510677512193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849510677512193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849510677512193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849510677512193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849510677512193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849510677512193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849510677512193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849510677512193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849510677512193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849510677512193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849510677512193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849510677512193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849510677512193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131849510677512193', '1', null);
 INSERT INTO `base_authority_role` VALUES ('1131849510677512193', '1', null);
 INSERT INTO `base_authority_role` VALUES ('1131858946414489602', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131858946414489602', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131858946414489602', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131858946414489602', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131858946414489602', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131858946414489602', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131858946414489602', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131858946414489602', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131858946414489602', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131858946414489602', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131858946414489602', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131858946414489602', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131858946414489602', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131858946414489602', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131858946414489602', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131858946414489602', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131858946414489602', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131858946414489602', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131858946414489602', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131858946414489602', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131858946414489602', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131858946414489602', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863248373690369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863248373690369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863248373690369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863248373690369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863248373690369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863248373690369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863248373690369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863248373690369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863248373690369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863248373690369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863248373690369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863248373690369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863248373690369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863248373690369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863248373690369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863248373690369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863248373690369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863248373690369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863248373690369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863248373690369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863248373690369', '1', null);
 INSERT INTO `base_authority_role` VALUES ('1131863248373690369', '1', null);
 INSERT INTO `base_authority_role` VALUES ('1131863723806437377', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863723806437377', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863723806437377', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863723806437377', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863723806437377', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863723806437377', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863723806437377', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863723806437377', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863723806437377', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863723806437377', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863723806437377', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863723806437377', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863723806437377', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863723806437377', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863723806437377', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863723806437377', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863723806437377', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863723806437377', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863723806437377', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863723806437377', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863723806437377', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863723806437377', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863775966801921', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863775966801921', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863775966801921', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863775966801921', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863775966801921', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863775966801921', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863775966801921', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863775966801921', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863775966801921', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863775966801921', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863775966801921', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863775966801921', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863775966801921', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863775966801921', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863775966801921', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863775966801921', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863775966801921', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863775966801921', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863775966801921', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863775966801921', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131863775966801921', '1', null);
 INSERT INTO `base_authority_role` VALUES ('1131863775966801921', '1', null);
 INSERT INTO `base_authority_role` VALUES ('1131864400590942210', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864400590942210', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864400590942210', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864400590942210', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864400590942210', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864400590942210', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864400590942210', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864400590942210', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864400590942210', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864400590942210', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864400590942210', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864400590942210', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864400590942210', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864400590942210', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864400590942210', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864400590942210', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864400590942210', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864400590942210', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864400590942210', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864400590942210', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864400590942210', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864400590942210', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864444954095617', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864444954095617', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864444954095617', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864444954095617', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864444954095617', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864444954095617', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864444954095617', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864444954095617', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864444954095617', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864444954095617', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864444954095617', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864444954095617', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864444954095617', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864444954095617', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864444954095617', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864444954095617', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864444954095617', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864444954095617', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864444954095617', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864444954095617', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864444954095617', '1', null);
 INSERT INTO `base_authority_role` VALUES ('1131864444954095617', '1', null);
 INSERT INTO `base_authority_role` VALUES ('1131864827327819778', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864827327819778', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864827327819778', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864827327819778', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864827327819778', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864827327819778', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864827327819778', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864827327819778', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864827327819778', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864827327819778', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864827327819778', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864827327819778', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864827327819778', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864827327819778', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864827327819778', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864827327819778', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864827327819778', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864827327819778', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864827327819778', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864827327819778', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864827327819778', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864827327819778', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864864325775361', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864864325775361', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864864325775361', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864864325775361', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864864325775361', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864864325775361', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864864325775361', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864864325775361', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864864325775361', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864864325775361', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864864325775361', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864864325775361', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864864325775361', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864864325775361', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864864325775361', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864864325775361', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864864325775361', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864864325775361', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864864325775361', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864864325775361', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131864864325775361', '1', null);
 INSERT INTO `base_authority_role` VALUES ('1131864864325775361', '1', null);
 INSERT INTO `base_authority_role` VALUES ('1131865040381685761', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865040381685761', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865040381685761', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865040381685761', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865040381685761', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865040381685761', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865040381685761', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865040381685761', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865040381685761', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865040381685761', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865040381685761', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865040381685761', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865040381685761', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865040381685761', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865040381685761', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865040381685761', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865040381685761', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865040381685761', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865040381685761', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865040381685761', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865040381685761', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865040381685761', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865075697725442', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865075697725442', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865075697725442', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865075697725442', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865075697725442', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865075697725442', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865075697725442', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865075697725442', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865075697725442', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865075697725442', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865075697725442', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865075697725442', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865075697725442', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865075697725442', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865075697725442', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865075697725442', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865075697725442', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865075697725442', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865075697725442', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865075697725442', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865075697725442', '1', null);
 INSERT INTO `base_authority_role` VALUES ('1131865075697725442', '1', null);
 INSERT INTO `base_authority_role` VALUES ('1131865482390024193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865482390024193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865482390024193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865482390024193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865482390024193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865482390024193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865482390024193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865482390024193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865482390024193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865482390024193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865482390024193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865482390024193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865482390024193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865482390024193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865482390024193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865482390024193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865482390024193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865482390024193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865482390024193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865482390024193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865482390024193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865482390024193', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865520809848834', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865520809848834', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865520809848834', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865520809848834', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865520809848834', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865520809848834', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865520809848834', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865520809848834', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865520809848834', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865520809848834', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865520809848834', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865520809848834', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865520809848834', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865520809848834', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865520809848834', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865520809848834', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865520809848834', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865520809848834', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865520809848834', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865520809848834', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865520809848834', '1', null);
 INSERT INTO `base_authority_role` VALUES ('1131865520809848834', '1', null);
 INSERT INTO `base_authority_role` VALUES ('1131865773000765441', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865773000765441', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865773000765441', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865773000765441', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865773000765441', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865773000765441', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865773000765441', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865773000765441', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865773000765441', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865773000765441', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865773000765441', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865773000765441', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865773000765441', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865773000765441', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865773000765441', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865773000765441', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865773000765441', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865773000765441', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865773000765441', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865773000765441', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865773000765441', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865773000765441', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865931214106626', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865931214106626', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865931214106626', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865931214106626', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865931214106626', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865931214106626', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865931214106626', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865931214106626', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865931214106626', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865931214106626', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865931214106626', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865931214106626', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865931214106626', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865931214106626', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865931214106626', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865931214106626', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865931214106626', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865931214106626', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865931214106626', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865931214106626', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865931214106626', '1', null);
 INSERT INTO `base_authority_role` VALUES ('1131865931214106626', '1', null);
 INSERT INTO `base_authority_role` VALUES ('1131865974771953666', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865974771953666', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865974771953666', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865974771953666', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865974771953666', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865974771953666', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865974771953666', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865974771953666', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865974771953666', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865974771953666', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865974771953666', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865974771953666', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865974771953666', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865974771953666', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865974771953666', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865974771953666', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865974771953666', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865974771953666', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865974771953666', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865974771953666', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865974771953666', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131865974771953666', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866278280179714', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866278280179714', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866278280179714', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866278280179714', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866278280179714', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866278280179714', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866278280179714', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866278280179714', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866278280179714', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866278280179714', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866278280179714', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866278280179714', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866278280179714', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866278280179714', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866278280179714', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866278280179714', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866278280179714', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866278280179714', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866278280179714', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866278280179714', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866278280179714', '1', null);
 INSERT INTO `base_authority_role` VALUES ('1131866278280179714', '1', null);
 INSERT INTO `base_authority_role` VALUES ('1131866310676983810', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866310676983810', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866310676983810', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866310676983810', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866310676983810', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866310676983810', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866310676983810', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866310676983810', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866310676983810', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866310676983810', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866310676983810', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866310676983810', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866310676983810', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866310676983810', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866310676983810', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866310676983810', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866310676983810', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866310676983810', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866310676983810', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866310676983810', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866310676983810', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866310676983810', '1', null);
 INSERT INTO `base_authority_role` VALUES ('1131866943534542850', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866943534542850', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866943534542850', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866943534542850', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866943534542850', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866943534542850', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866943534542850', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866943534542850', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866943534542850', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866943534542850', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866943534542850', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866943534542850', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866943534542850', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866943534542850', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866943534542850', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866943534542850', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866943534542850', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866943534542850', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866943534542850', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866943534542850', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866943534542850', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131866943534542850', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131867094550458369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131867094550458369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131867094550458369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131867094550458369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131867094550458369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131867094550458369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131867094550458369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131867094550458369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131867094550458369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131867094550458369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131867094550458369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131867094550458369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131867094550458369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131867094550458369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131867094550458369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131867094550458369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131867094550458369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131867094550458369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131867094550458369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131867094550458369', '1', null);
-INSERT INTO `base_authority_role` VALUES ('1131867094550458369', '1', null);
 INSERT INTO `base_authority_role` VALUES ('1131867094550458369', '1', null);
 INSERT INTO `base_authority_role` VALUES ('1', '2', null);
 INSERT INTO `base_authority_role` VALUES ('3', '2', null);
 INSERT INTO `base_authority_role` VALUES ('8', '2', null);
 INSERT INTO `base_authority_role` VALUES ('9', '2', null);
 INSERT INTO `base_authority_role` VALUES ('10', '2', null);
+INSERT INTO `base_authority_role` VALUES ('1149253733748785154', '2', null);
 INSERT INTO `base_authority_role` VALUES ('1131858946414489602', '2', null);
 INSERT INTO `base_authority_role` VALUES ('1131863723806437377', '2', null);
 INSERT INTO `base_authority_role` VALUES ('1131864400590942210', '2', null);
 INSERT INTO `base_authority_role` VALUES ('1131849293509033986', '2', null);
-INSERT INTO `base_authority_role` VALUES ('1131858946414489602', '2', null);
-INSERT INTO `base_authority_role` VALUES ('1131863723806437377', '2', null);
-INSERT INTO `base_authority_role` VALUES ('1131864400590942210', '2', null);
-INSERT INTO `base_authority_role` VALUES ('1131849293509033986', '2', null);
-INSERT INTO `base_authority_role` VALUES ('1131858946414489602', '2', null);
-INSERT INTO `base_authority_role` VALUES ('1131863723806437377', '2', null);
-INSERT INTO `base_authority_role` VALUES ('1131864400590942210', '2', null);
-INSERT INTO `base_authority_role` VALUES ('1131849293509033986', '2', null);
+INSERT INTO `base_authority_role` VALUES ('1149320706077569025', '2', null);
 
 -- ----------------------------
 -- Table structure for base_authority_user
 -- ----------------------------
 DROP TABLE IF EXISTS `base_authority_user`;
 CREATE TABLE `base_authority_user` (
-  `authority_id` bigint(20) NOT NULL COMMENT '权限ID',
-  `user_id` bigint(20) NOT NULL COMMENT '用户ID',
-  `expire_time` datetime DEFAULT NULL COMMENT '过期时间',
-  KEY `authority_id` (`authority_id`) USING BTREE,
-  KEY `user_id` (`user_id`) USING BTREE
+                                     `authority_id` bigint(20) NOT NULL COMMENT '权限ID',
+                                     `user_id` bigint(20) NOT NULL COMMENT '用户ID',
+                                     `expire_time` datetime DEFAULT NULL COMMENT '过期时间',
+                                     KEY `authority_id` (`authority_id`) USING BTREE,
+                                     KEY `user_id` (`user_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='系统权限-用户关联';
 
 -- ----------------------------
@@ -1064,21 +731,21 @@ CREATE TABLE `base_authority_user` (
 -- ----------------------------
 DROP TABLE IF EXISTS `base_developer`;
 CREATE TABLE `base_developer` (
-  `user_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '用户ID',
-  `user_name` varchar(255) DEFAULT NULL COMMENT '登陆账号',
-  `nick_name` varchar(50) DEFAULT NULL COMMENT '昵称',
-  `avatar` varchar(255) DEFAULT '' COMMENT '头像',
-  `email` varchar(100) DEFAULT NULL COMMENT '邮箱',
-  `mobile` varchar(50) DEFAULT NULL COMMENT '手机号',
-  `user_type` varchar(20) DEFAULT 'isp' COMMENT '开发者类型: isp-服务提供商 normal-自研开发者',
-  `company_id` bigint(20) DEFAULT NULL COMMENT '企业ID',
-  `user_desc` varchar(255) DEFAULT '' COMMENT '描述',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
-  `status` tinyint(3) DEFAULT '1' COMMENT '状态:0-禁用 1-正常 2-锁定',
-  PRIMARY KEY (`user_id`),
-  UNIQUE KEY `user_name` (`user_name`) USING BTREE,
-  KEY `user_id` (`user_id`) USING BTREE
+                                `user_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '用户ID',
+                                `user_name` varchar(255) DEFAULT NULL COMMENT '登陆账号',
+                                `nick_name` varchar(50) DEFAULT NULL COMMENT '昵称',
+                                `avatar` varchar(255) DEFAULT '' COMMENT '头像',
+                                `email` varchar(100) DEFAULT NULL COMMENT '邮箱',
+                                `mobile` varchar(50) DEFAULT NULL COMMENT '手机号',
+                                `user_type` varchar(20) DEFAULT 'isp' COMMENT '开发者类型: isp-服务提供商 normal-自研开发者',
+                                `company_id` bigint(20) DEFAULT NULL COMMENT '企业ID',
+                                `user_desc` varchar(255) DEFAULT '' COMMENT '描述',
+                                `create_time` datetime NOT NULL COMMENT '创建时间',
+                                `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+                                `status` tinyint(3) DEFAULT '1' COMMENT '状态:0-禁用 1-正常 2-锁定',
+                                PRIMARY KEY (`user_id`),
+                                UNIQUE KEY `user_name` (`user_name`) USING BTREE,
+                                KEY `user_id` (`user_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='系统用户-开发者信息';
 
 -- ----------------------------
@@ -1090,24 +757,24 @@ CREATE TABLE `base_developer` (
 -- ----------------------------
 DROP TABLE IF EXISTS `base_menu`;
 CREATE TABLE `base_menu` (
-  `menu_id` bigint(20) NOT NULL COMMENT '菜单Id',
-  `parent_id` bigint(20) DEFAULT NULL COMMENT '父级菜单',
-  `menu_code` varchar(100) COLLATE utf8_bin NOT NULL COMMENT '菜单编码',
-  `menu_name` varchar(100) COLLATE utf8_bin NOT NULL COMMENT '菜单名称',
-  `menu_desc` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '描述',
-  `scheme` varchar(20) COLLATE utf8_bin NOT NULL COMMENT '路径前缀',
-  `path` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '请求路径',
-  `icon` varchar(255) COLLATE utf8_bin DEFAULT '' COMMENT '菜单标题',
-  `target` varchar(20) COLLATE utf8_bin NOT NULL DEFAULT '_self' COMMENT '打开方式:_self窗口内,_blank新窗口',
-  `priority` bigint(20) NOT NULL DEFAULT '0' COMMENT '优先级 越小越靠前',
-  `status` tinyint(3) NOT NULL DEFAULT '1' COMMENT '状态:0-无效 1-有效',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
-  `is_persist` tinyint(3) NOT NULL DEFAULT '0' COMMENT '保留数据0-否 1-是 不允许删除',
-  `service_id` varchar(100) COLLATE utf8_bin NOT NULL COMMENT '服务名',
-  PRIMARY KEY (`menu_id`),
-  UNIQUE KEY `menu_code` (`menu_code`),
-  KEY `service_id` (`service_id`)
+                           `menu_id` bigint(20) NOT NULL COMMENT '菜单Id',
+                           `parent_id` bigint(20) DEFAULT NULL COMMENT '父级菜单',
+                           `menu_code` varchar(100) COLLATE utf8_bin NOT NULL COMMENT '菜单编码',
+                           `menu_name` varchar(100) COLLATE utf8_bin NOT NULL COMMENT '菜单名称',
+                           `menu_desc` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '描述',
+                           `scheme` varchar(20) COLLATE utf8_bin NOT NULL COMMENT '路径前缀',
+                           `path` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '请求路径',
+                           `icon` varchar(255) COLLATE utf8_bin DEFAULT '' COMMENT '菜单标题',
+                           `target` varchar(20) COLLATE utf8_bin NOT NULL DEFAULT '_self' COMMENT '打开方式:_self窗口内,_blank新窗口',
+                           `priority` bigint(20) NOT NULL DEFAULT '0' COMMENT '优先级 越小越靠前',
+                           `status` tinyint(3) NOT NULL DEFAULT '1' COMMENT '状态:0-无效 1-有效',
+                           `create_time` datetime NOT NULL COMMENT '创建时间',
+                           `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+                           `is_persist` tinyint(3) NOT NULL DEFAULT '0' COMMENT '保留数据0-否 1-是 不允许删除',
+                           `service_id` varchar(100) COLLATE utf8_bin NOT NULL COMMENT '服务名',
+                           PRIMARY KEY (`menu_id`),
+                           UNIQUE KEY `menu_code` (`menu_code`),
+                           KEY `service_id` (`service_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=COMPACT COMMENT='系统资源-菜单信息';
 
 -- ----------------------------
@@ -1115,7 +782,7 @@ CREATE TABLE `base_menu` (
 -- ----------------------------
 INSERT INTO `base_menu` VALUES ('1', '0', 'system', '系统管理', '系统管理', '/', '', 'md-folder', '_self', '1', '1', '2018-07-29 21:20:10', '2019-05-25 01:49:23', '1', 'opencloud-base-provider');
 INSERT INTO `base_menu` VALUES ('2', '13', 'gatewayIpLimit', '访问控制', '来源IP/域名访问控制,白名单、黑名单', '/', 'gateway/ip-limit/index', 'md-document', '_self', '1', '1', '2018-07-29 21:20:13', '2019-07-11 18:05:32', '1', 'opencloud-base-provider');
-INSERT INTO `base_menu` VALUES ('3', '1', 'systemMenu', '功能菜单', '功能菜单资源', '/', 'system/menus/index', 'md-list', '_self', '3', '1', '2018-07-29 21:20:13', '2019-07-11 18:03:23', '1', 'opencloud-base-provider');
+INSERT INTO `base_menu` VALUES ('3', '1', 'systemMenu', '功能菜单', '功能菜单资源', '/', 'system/menus/index', 'md-list', '_self', '3', '1', '2018-07-29 21:20:13', '2019-07-11 22:23:49', '1', 'opencloud-base-provider');
 INSERT INTO `base_menu` VALUES ('5', '13', 'gatewayRoute', '网关路由', '网关路由', '/', 'gateway/route/index', 'md-document', '_self', '5', '1', '2018-07-29 21:20:13', '2019-07-11 18:04:59', '1', 'opencloud-base-provider');
 INSERT INTO `base_menu` VALUES ('6', '13', 'systemApi', 'API列表', 'API接口资源', '/', 'system/api/index', 'md-document', '_self', '0', '1', '2018-07-29 21:20:13', '2019-03-13 21:48:12', '1', 'opencloud-base-provider');
 INSERT INTO `base_menu` VALUES ('8', '1', 'systemRole', '角色管理', '角色信息管理', '/', 'system/role/index', 'md-people', '_self', '8', '1', '2018-12-27 15:26:54', '2019-07-11 18:03:10', '1', 'opencloud-base-provider');
@@ -1139,22 +806,22 @@ INSERT INTO `base_menu` VALUES ('1149253733673287682', '1', 'developer', '开发
 -- ----------------------------
 DROP TABLE IF EXISTS `base_role`;
 CREATE TABLE `base_role` (
-  `role_id` bigint(20) NOT NULL COMMENT '角色ID',
-  `role_code` varchar(100) COLLATE utf8_bin NOT NULL COMMENT '角色编码',
-  `role_name` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '角色名称',
-  `status` tinyint(3) NOT NULL DEFAULT '1' COMMENT '状态:0-无效 1-有效',
-  `role_desc` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '角色描述',
-  `create_time` datetime NOT NULL,
-  `update_time` datetime DEFAULT NULL,
-  `is_persist` tinyint(3) NOT NULL DEFAULT '0' COMMENT '保留数据0-否 1-是 不允许删除',
-  PRIMARY KEY (`role_id`),
-  UNIQUE KEY `role_code` (`role_code`) USING BTREE
+                           `role_id` bigint(20) NOT NULL COMMENT '角色ID',
+                           `role_code` varchar(100) COLLATE utf8_bin NOT NULL COMMENT '角色编码',
+                           `role_name` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '角色名称',
+                           `status` tinyint(3) NOT NULL DEFAULT '1' COMMENT '状态:0-无效 1-有效',
+                           `role_desc` varchar(100) COLLATE utf8_bin DEFAULT NULL COMMENT '角色描述',
+                           `create_time` datetime NOT NULL,
+                           `update_time` datetime DEFAULT NULL,
+                           `is_persist` tinyint(3) NOT NULL DEFAULT '0' COMMENT '保留数据0-否 1-是 不允许删除',
+                           PRIMARY KEY (`role_id`),
+                           UNIQUE KEY `role_code` (`role_code`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=COMPACT COMMENT='系统角色-基础信息';
 
 -- ----------------------------
 -- Records of base_role
 -- ----------------------------
-INSERT INTO `base_role` VALUES ('1', 'admin', '系统管理员', '1', '系统管理员', '2018-07-29 21:14:54', '2019-05-25 03:06:57', '1');
+INSERT INTO `base_role` VALUES ('1', 'admin', '系统管理员', '1', '系统管理员', '2018-07-29 21:14:54', '2019-07-11 22:24:19', '1');
 INSERT INTO `base_role` VALUES ('2', 'operator', '运营人员', '1', '运营人员', '2018-07-29 21:14:54', '2019-05-25 15:14:56', '1');
 INSERT INTO `base_role` VALUES ('3', 'support', '客服', '1', '客服', '2018-07-29 21:14:54', '2019-05-25 15:17:07', '1');
 
@@ -1163,10 +830,10 @@ INSERT INTO `base_role` VALUES ('3', 'support', '客服', '1', '客服', '2018-0
 -- ----------------------------
 DROP TABLE IF EXISTS `base_role_user`;
 CREATE TABLE `base_role_user` (
-  `user_id` bigint(20) NOT NULL COMMENT '用户ID',
-  `role_id` bigint(20) NOT NULL COMMENT '角色ID',
-  KEY `fk_user` (`user_id`) USING BTREE,
-  KEY `fk_role` (`role_id`) USING BTREE
+                                `user_id` bigint(20) NOT NULL COMMENT '用户ID',
+                                `role_id` bigint(20) NOT NULL COMMENT '角色ID',
+                                KEY `fk_user` (`user_id`) USING BTREE,
+                                KEY `fk_role` (`role_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin ROW_FORMAT=COMPACT COMMENT='系统角色-用户关联';
 
 -- ----------------------------
@@ -1180,12 +847,12 @@ INSERT INTO `base_role_user` VALUES ('557063237640650752', '2');
 -- ----------------------------
 DROP TABLE IF EXISTS `base_tentant`;
 CREATE TABLE `base_tentant` (
-  `tentant_id` bigint(20) NOT NULL COMMENT '租户ID',
-  `tentant_name` varchar(100) NOT NULL COMMENT '租户名称',
-  `tentant_desc` varchar(255) NOT NULL COMMENT '租户描述',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `update_time` datetime NOT NULL COMMENT '更新时间',
-  PRIMARY KEY (`tentant_id`)
+                              `tentant_id` bigint(20) NOT NULL COMMENT '租户ID',
+                              `tentant_name` varchar(100) NOT NULL COMMENT '租户名称',
+                              `tentant_desc` varchar(255) NOT NULL COMMENT '租户描述',
+                              `create_time` datetime NOT NULL COMMENT '创建时间',
+                              `update_time` datetime NOT NULL COMMENT '更新时间',
+                              PRIMARY KEY (`tentant_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='租户信息表';
 
 -- ----------------------------
@@ -1197,12 +864,12 @@ CREATE TABLE `base_tentant` (
 -- ----------------------------
 DROP TABLE IF EXISTS `base_tentant_modules`;
 CREATE TABLE `base_tentant_modules` (
-  `module_id` bigint(20) NOT NULL COMMENT '模块ID',
-  `tentant_id` bigint(20) NOT NULL COMMENT '租户ID',
-  `service_id` varchar(100) NOT NULL COMMENT '服务名称',
-  `module_desc` varchar(255) NOT NULL COMMENT '模块描述',
-  `is_persist` tinyint(3) NOT NULL DEFAULT '0' COMMENT '保留数据0-否 1-是 不允许删除',
-  PRIMARY KEY (`module_id`)
+                                      `module_id` bigint(20) NOT NULL COMMENT '模块ID',
+                                      `tentant_id` bigint(20) NOT NULL COMMENT '租户ID',
+                                      `service_id` varchar(100) NOT NULL COMMENT '服务名称',
+                                      `module_desc` varchar(255) NOT NULL COMMENT '模块描述',
+                                      `is_persist` tinyint(3) NOT NULL DEFAULT '0' COMMENT '保留数据0-否 1-是 不允许删除',
+                                      PRIMARY KEY (`module_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='租户模块';
 
 -- ----------------------------
@@ -1214,21 +881,21 @@ CREATE TABLE `base_tentant_modules` (
 -- ----------------------------
 DROP TABLE IF EXISTS `base_user`;
 CREATE TABLE `base_user` (
-  `user_id` bigint(20) NOT NULL COMMENT '用户ID',
-  `user_name` varchar(255) DEFAULT NULL COMMENT '登陆账号',
-  `nick_name` varchar(50) DEFAULT NULL COMMENT '昵称',
-  `avatar` varchar(255) DEFAULT '' COMMENT '头像',
-  `email` varchar(100) DEFAULT NULL COMMENT '邮箱',
-  `mobile` varchar(50) DEFAULT NULL COMMENT '手机号',
-  `user_type` varchar(20) DEFAULT 'normal' COMMENT '用户类型:super-超级管理员 normal-普通管理员',
-  `company_id` bigint(20) DEFAULT NULL COMMENT '企业ID',
-  `user_desc` varchar(255) DEFAULT '' COMMENT '描述',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
-  `status` tinyint(3) DEFAULT '1' COMMENT '状态:0-禁用 1-正常 2-锁定',
-  PRIMARY KEY (`user_id`),
-  UNIQUE KEY `user_name` (`user_name`) USING BTREE,
-  KEY `user_id` (`user_id`) USING BTREE
+                           `user_id` bigint(20) NOT NULL COMMENT '用户ID',
+                           `user_name` varchar(255) DEFAULT NULL COMMENT '登陆账号',
+                           `nick_name` varchar(50) DEFAULT NULL COMMENT '昵称',
+                           `avatar` varchar(255) DEFAULT '' COMMENT '头像',
+                           `email` varchar(100) DEFAULT NULL COMMENT '邮箱',
+                           `mobile` varchar(50) DEFAULT NULL COMMENT '手机号',
+                           `user_type` varchar(20) DEFAULT 'normal' COMMENT '用户类型:super-超级管理员 normal-普通管理员',
+                           `company_id` bigint(20) DEFAULT NULL COMMENT '企业ID',
+                           `user_desc` varchar(255) DEFAULT '' COMMENT '描述',
+                           `create_time` datetime NOT NULL COMMENT '创建时间',
+                           `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+                           `status` tinyint(3) DEFAULT '1' COMMENT '状态:0-禁用 1-正常 2-锁定',
+                           PRIMARY KEY (`user_id`),
+                           UNIQUE KEY `user_name` (`user_name`) USING BTREE,
+                           KEY `user_id` (`user_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='系统用户-管理员信息';
 
 -- ----------------------------

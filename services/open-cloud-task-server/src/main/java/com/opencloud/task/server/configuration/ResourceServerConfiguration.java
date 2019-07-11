@@ -37,8 +37,6 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .and()
                 .authorizeRequests()
-                // fegin访问或无需身份认证
-                .antMatchers("/**").permitAll()
                 // 指定监控访问权限
                 .requestMatchers(EndpointRequest.toAnyEndpoint()).permitAll()
                 .anyRequest().authenticated()
