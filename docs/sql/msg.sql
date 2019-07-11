@@ -1,25 +1,25 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : 39.106.187.125
-Source Server Version : 50643
-Source Host           : 39.106.187.125:3306
+Source Server         : localhost
+Source Server Version : 50528
+Source Host           : localhost:3306
 Source Database       : open-platform
 
 Target Server Type    : MYSQL
-Target Server Version : 50643
+Target Server Version : 50528
 File Encoding         : 65001
 
-Date: 2019-03-21 01:14:10
+Date: 2019-07-11 18:33:15
 */
 
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
--- Table structure for notify_http_logs
+-- Table structure for webhook_logs
 -- ----------------------------
-DROP TABLE IF EXISTS `notify_http_logs`;
-CREATE TABLE `notify_http_logs` (
+DROP TABLE IF EXISTS `webhook_logs`;
+CREATE TABLE `webhook_logs` (
   `msg_id` varchar(50) NOT NULL,
   `retry_nums` decimal(8,0) NOT NULL COMMENT '重试次数',
   `total_nums` decimal(8,0) DEFAULT NULL COMMENT '通知总次数',
@@ -31,5 +31,6 @@ CREATE TABLE `notify_http_logs` (
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`msg_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Http异步通知日志';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='消息通知-异步通知日志';
+
 SET FOREIGN_KEY_CHECKS=1;

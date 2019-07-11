@@ -4,15 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.opencloud</groupId>
-    <artifactId>open-cloud</artifactId>
+    <artifactId>parent</artifactId>
     <packaging>pom</packaging>
-    <version>2.1.0</version>
+    <version>3.0.0</version>
     <description>微服务开放平台</description>
     <modules>
-        <module>opencloud-common</module>
-        <module>opencloud-gateway</module>
-        <module>opencloud-platform</module>
-        <module>opencloud-app</module>
+        <module>components</module>
+        <module>platform</module>
+        <module>services</module>
     </modules>
     <properties>
         <java.version>1.8</java.version>
@@ -24,7 +23,7 @@
         <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
         <maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
         <maven-assembly-plugin.version>3.1.0</maven-assembly-plugin.version>
-
+        <dockerfile-maven-plugin.version>1.4.10</dockerfile-maven-plugin.version>
         <spring-boot.version>2.1.4.RELEASE</spring-boot.version>
         <spring-boot-admin.version>2.1.4</spring-boot-admin.version>
         <spring-cloud.version>Greenwich.SR1</spring-cloud.version>
@@ -43,15 +42,13 @@
         <oracle.version>10.2.0.4.0</oracle.version>
 
         <!--自定义版本-->
-        <opencloud.common.version>2.1.0-SNAPSHOT</opencloud.common.version>
-        <opencloud.base-client.version>2.1.0-SNAPSHOT</opencloud.base-client.version>
-        <opencloud.auth-client.version>2.1.0-SNAPSHOT</opencloud.auth-client.version>
-        <opencloud.msg-client.version>2.1.0-SNAPSHOT</opencloud.msg-client.version>
-        <opencloud.bpm-client.version>2.1.0-SNAPSHOT</opencloud.bpm-client.version>
-        <opencloud.scheduler-client.version>2.1.0-SNAPSHOT</opencloud.scheduler-client.version>
-
+        <opencloud.common.version>3.0.0-SNAPSHOT</opencloud.common.version>
+        <opencloud.base-client.version>3.0.0-SNAPSHOT</opencloud.base-client.version>
+        <opencloud.msg-client.version>3.0.0-SNAPSHOT</opencloud.msg-client.version>
+        <opencloud.bpm-client.version>3.0.0-SNAPSHOT</opencloud.bpm-client.version>
+        <opencloud.task-client.version>3.0.0-SNAPSHOT</opencloud.task-client.version>
         <!--镜像前缀-->
-        <docker.image.prefix>open-cloud</docker.image.prefix>
+        <docker.image.prefix>open</docker.image.prefix>
     </properties>
 
     <!-- 环境 -->

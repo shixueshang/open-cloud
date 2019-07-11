@@ -9,7 +9,7 @@
   <a><img src="https://img.shields.io/npm/l/express.svg" alt="License"></a>
 </p>  
 
-## 微服务开放平台 2.0.0 更快、更新、更全面
+## 微服务开放平台 3.0.0(重构版) 更快、更新、更全面
 #### 开源不易，请随手给个Star! 感谢支持！
 
 #### 简介
@@ -28,6 +28,13 @@
 + 后台测试账号:test 123456
 + SpringBootAdmin账号:sba 123456
 #### 更新日志
+    v-3.0.0 2019-07-11 （重大更新） 
+        1. 新增开发者管理
+        2. 调整项目结构
+        3. 优化ui交互方式
+        4. 调整部分代码
+        5. 升级方式 重新执行 base.sql oauth2.sql gateway.sql msg.sql 并手动删除无效表名
+        
     v-2.1.0 2019-06-10 
         1. base_api表新增字段is_open是否公开访问: 0-内部的 1-公开的
         2. 更新base_api数据
@@ -86,36 +93,34 @@
 #### 代码结构
 ``` lua
 open-cloud
-├── docs
-    ├── bin           -- 执行脚本  
-    ├── config        -- 公共配置,用于导入到nacos配置中心   
-    ├── generator     -- mapper生成器  
-    ├── sql           -- sql文件
+├── docs                               -- 文档及脚本
+    ├── bin                            -- 执行脚本  
+    ├── config                         -- 公共配置,用于导入到nacos配置中心   
+    ├── generator                      -- mapper生成器  
+    ├── sql                            -- sql文件
     
-├── opencloud-app    -- 应用服务模块
-    ├── app-opensite-provider  -- 门户网站开发者认证中心和资源服务器(port = 7211)  
-     
-├── opencloud-common  -- 公共类和jar包依赖
-    ├── opencloud-common-core    -- 提供微服务相关依赖包、工具类、全局异常解析等...
-    ├── opencloud-common-starter -- SpringBoot自动扫描
+├── components                         -- 公共组件
+    ├── open-cloud-common-core         -- 提供微服务相关依赖包、工具类、全局异常解析等
+    ├── open-cloud-common-starter      -- SpringBoot自动配置扫描
+    ├── open-cloud-tenant-starter      -- 多租户模块,多数据源自动切换(完善中...)
+    ├── open-cloud-java-sdk            -- 开放平台api集成SDK(完善中...)
        
-├── opencloud-gateway  -- 开放API服务模块
-    ├── opencloud-api-gateway       -- API开放网关-基于SpringCloudGateway-(port = 8888)  
-    ├── opencloud-api-gateway-zuul  --（较为稳定推荐使用）API开放网关-基于Zuul-(port = 8888)  
-    ├── opencloud-api-sdk           -- 对API服务第三方调用集成Jar包的封装(待完善)  
-     
-├── opencloud-platform    --  平台服务模块
-    ├── opencloud-base-client    -- 平台基础服务接口
-    ├── opencloud-base-provider  -- 平台基础服务(port = 8233)  
-    ├── opencloud-auth-client    -- 平台认证服务接口
-    ├── opencloud-auth-provider  -- 平台认证服务(port = 8211)  
-    ├── opencloud-msg-client    --  平台消息服务接口
-    ├── opencloud-msg-provider  --  平台消息服务(port = 8266) 
-    ├── opencloud-scheduler-client    -- 平台任务调度接口
-    ├── opencloud-scheduler-provider  -- 平台任务调度服务(port = 8501)
-    ├── opencloud-bpm-client   -- 平台工作流接口
-    ├── opencloud-bpm-provider -- 平台工作流服务(port = 8255)
-    ├── opencloud-sba-server --  SpringBootAdmin监控服务(port = 8849)
+├── platform                           -- 平台服务
+    ├── open-cloud-api-spring-server   -- API开放网关-基于SpringCloudGateway[port = 8888](暂不推荐.功能暂不完善）  
+    ├── open-cloud-api-zuul-server     -- API开放网关-基于Zuul[port = 8888](推荐.功能完善）
+    ├── open-cloud-base-client         -- 平台基础服务接口
+    ├── open-cloud-base-server         -- 平台基础服务器[port=8233]
+    ├── open-cloud-uaa-admin-server    -- 平台用户认证服务器[port = 8211]
+    ├── open-cloud-uaa-portal-server   -- 门户开发者认证服务器[port = 7211]
+        
+├── services                           -- 通用微服务
+    ├── open-cloud-msg-client          -- 消息服务接口
+    ├── open-cloud-msg-server          -- 消息服务器[port = 8266]
+    ├── open-cloud-task-client         -- 任务调度接口
+    ├── open-cloud-task-server         -- 调度服务器[port = 8501]
+    ├── open-cloud-bpm-client          -- 工作流接口
+    ├── open-cloud-bpm-server          -- 工作流服务器[port = 8255]
+    ├── open-cloud-sba-server          -- SpringBootAdmin监控服务[port = 8849]
 ```
 
 #### 快速开始
@@ -134,7 +139,7 @@ open-cloud
    
 2. 执行创建数据库open-platform并执行sql脚本
     + docs/sql/oauth2.sql
-    + docs/sql/base.sql
+    + docs/sql/upm.sql
     + docs/sql/gateway.sql
     + docs/sql/quartz.sql && scheduler.sql
     
@@ -165,9 +170,9 @@ open-cloud
     ```
     
 5. 本地启动(顺序启动)
-     1. BaseApplication
-     2. AuthApplication
-     3. ZuulGatewayApplication(推荐) 或 SpringGatewayApplication 
+     1. BaseApplication(通用权限服务)
+     2. UaaAdminApplication(平台用户认证服务器)
+     3. ApiGatewayZuulApplication(推荐)或ApiGatewaySpringApplication(暂不推荐)
      ```
         访问 http://localhost:8888
      ```
@@ -175,6 +180,7 @@ open-cloud
       ```
           访问 http://localhost:8849
       ```
+      
 6. 前端启动
     ```bush
         npm install 
@@ -183,16 +189,15 @@ open-cloud
     访问 http://localhost:8080
     
 7. 项目打包部署  
-
      maven多环境打包,并替换相关变量
    ```bush
      mvn clean install package -P {dev|test|online}
    ```
     项目启动
     ```bush
-    ./docs/bin/startup.sh {start|stop|restart|status} opencloud-base-provider.jar
-    ./docs/bin/startup.sh {start|stop|restart|status} opencloud-auth-provider.jar
-    ./docs/bin/startup.sh {start|stop|restart|status} opencloud-api-gateway-zuul.jar
+    ./docs/bin/startup.sh {start|stop|restart|status} upm-server.jar
+    ./docs/bin/startup.sh {start|stop|restart|status} uaa-platform-server.jar
+    ./docs/bin/startup.sh {start|stop|restart|status} api-zuul-server.jar
     ```
     
 #### 集成开发 
