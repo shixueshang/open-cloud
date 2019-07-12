@@ -44,13 +44,6 @@ management:
 opencloud:
     client:
         oauth2:
-           platfom:
-                access-token-uri: ${opencloud.common.access-token-uri}
-                client-id: 1552294656514
-                client-secret: 74a02bade18a42388c3127751b96e1f7
-                scope: ${opencloud.common.scope}
-                user-authorization-uri:  ${opencloud.common.user-authorization-uri}
-                user-info-uri: ${opencloud.common.user-info-uri}
             gitee:
                 access-token-uri: https://gitee.com/oauth/token
                 client-id: 474cd13d5f1c56eda1478201013c81eac3da9d744342c4ae8fcac270225899cd
