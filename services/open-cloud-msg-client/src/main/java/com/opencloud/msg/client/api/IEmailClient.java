@@ -24,7 +24,7 @@ public interface IEmailClient {
      * @param attachments 附件
      * @return
      */
-    @PostMapping(value = "/email/attachments", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/email", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResultBody<String> send(
             @RequestParam(value = "to") String to,
             @RequestParam(value = "cc", required = false) String cc,
