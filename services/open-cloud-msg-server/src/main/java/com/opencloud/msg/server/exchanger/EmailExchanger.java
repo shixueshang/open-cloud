@@ -38,7 +38,6 @@ public class EmailExchanger implements MessageExchanger {
     private EmailTemplateService emailTemplateService;
     private EmailLogsService emailLogsService;
 
-    Map<String, EmailConfig> senderMap = Maps.newHashMap();
 
     public EmailExchanger(EmailSender mailSender, EmailConfigService emailConfigService, EmailTemplateService emailTemplateService, EmailLogsService emailLogsService) {
         this.mailSender = mailSender;
@@ -61,6 +60,7 @@ public class EmailExchanger implements MessageExchanger {
         EmailTemplate emailTemplate = null;
         EmailConfig emailConfig = null;
         Map<String, Object> configMap = Maps.newHashMap();
+        Map<String, EmailConfig> senderMap = Maps.newHashMap();
         try {
             List<EmailConfig> configList = emailConfigService.getCacheConfig();
             for (EmailConfig config : configList) {
