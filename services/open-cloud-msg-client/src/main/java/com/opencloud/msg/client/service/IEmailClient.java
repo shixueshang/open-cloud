@@ -1,4 +1,4 @@
-package com.opencloud.msg.client.api;
+package com.opencloud.msg.client.service;
 
 import com.opencloud.common.model.ResultBody;
 import org.springframework.http.MediaType;
@@ -24,7 +24,7 @@ public interface IEmailClient {
      * @param attachments 附件
      * @return
      */
-    @PostMapping(value = "/email", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/email/send", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResultBody<String> send(
             @RequestParam(value = "to") String to,
             @RequestParam(value = "cc", required = false) String cc,
@@ -45,7 +45,7 @@ public interface IEmailClient {
      * @param attachments 附件
      * @return
      */
-    @PostMapping(value = "/email/tpl", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/email/send/tpl", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResultBody<String> sendByTpl(
             @RequestParam(value = "to") String to,
             @RequestParam(value = "cc", required = false) String cc,

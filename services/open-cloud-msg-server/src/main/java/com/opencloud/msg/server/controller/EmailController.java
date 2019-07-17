@@ -2,7 +2,7 @@ package com.opencloud.msg.server.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.opencloud.common.model.ResultBody;
-import com.opencloud.msg.client.api.IEmailClient;
+import com.opencloud.msg.client.service.IEmailClient;
 import com.opencloud.msg.client.model.EmailMessage;
 import com.opencloud.msg.client.model.EmailTplMessage;
 import com.opencloud.msg.server.dispatcher.MessageDispatcher;
@@ -48,7 +48,7 @@ public class EmailController implements IEmailClient {
             @ApiImplicitParam(name = "content", required = true, value = "内容", paramType = "form"),
             @ApiImplicitParam(name = "attachments", required = false, value = "附件:最大不超过10M", dataType = "file", paramType = "form", allowMultiple = true),
     })
-    @PostMapping(value = "/email", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/email/send", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Override
     public ResultBody<String> send(@RequestParam(value = "to") String to,
                                    @RequestParam(value = "cc", required = false) String cc,
@@ -87,7 +87,7 @@ public class EmailController implements IEmailClient {
             @ApiImplicitParam(name = "tplParams", required = true, value = "模板参数 json字符串", paramType = "form"),
             @ApiImplicitParam(name = "attachments", required = false, value = "附件:最大不超过10M", dataType = "file", paramType = "form", allowMultiple = true),
     })
-    @PostMapping(value = "/email/tpl", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/email/send/tpl", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResultBody<String> sendByTpl(
             @RequestParam(value = "to") String to,
             @RequestParam(value = "cc", required = false) String cc,
