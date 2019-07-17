@@ -46,6 +46,13 @@ public class EmailMessage extends BaseMessage {
     public EmailMessage() {
     }
 
+    public EmailMessage(String to, String subject, String content) {
+        this.to = new String[]{to};
+        this.subject = subject;
+        this.content = content;
+    }
+
+
     public EmailMessage(String[] to, String[] cc, String subject, String content) {
         this.to = to;
         this.cc = cc;

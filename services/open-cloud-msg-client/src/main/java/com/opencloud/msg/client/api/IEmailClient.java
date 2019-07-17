@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-
 /**
  * 发送邮件接口
  *
@@ -26,14 +24,14 @@ public interface IEmailClient {
      * @param attachments 附件
      * @return
      */
-    @PostMapping(value = "/email", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/email/attachments", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResultBody<String> send(
             @RequestParam(value = "to") String to,
             @RequestParam(value = "cc", required = false) String cc,
             @RequestParam(value = "subject") String subject,
             @RequestParam(value = "content") String content,
             @RequestPart(value = "attachments", required = false) MultipartFile[] attachments
-    ) throws IOException;
+    );
 
     /**
      * 发送模板邮件
