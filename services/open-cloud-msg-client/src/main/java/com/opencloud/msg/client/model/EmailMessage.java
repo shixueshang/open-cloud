@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author woodev
@@ -40,22 +41,9 @@ public class EmailMessage extends BaseMessage {
      * 附件
      */
     @ApiModelProperty(value = "附件路径")
-    private List<String> attachments = new ArrayList<>();
+    private List<Map<String, String>> attachments = new ArrayList<>();
 
     public EmailMessage() {
-    }
-
-    public EmailMessage(String to, String subject, String content) {
-        this.to = new String[]{to};
-        this.subject = subject;
-        this.content = content;
-    }
-
-    public EmailMessage(String to, String cc, String subject, String content) {
-        this.to = new String[]{to};
-        this.cc =  new String[]{cc};
-        this.subject = subject;
-        this.content = content;
     }
 
     public EmailMessage(String[] to, String[] cc, String subject, String content) {
@@ -65,13 +53,6 @@ public class EmailMessage extends BaseMessage {
         this.content = content;
     }
 
-    public EmailMessage(String[] to, String[] cc, String subject, String content, List<String> attachments) {
-        this.to = to;
-        this.cc = cc;
-        this.subject = subject;
-        this.content = content;
-        this.attachments = attachments;
-    }
 
     public String[] getTo() {
         return to;
@@ -98,11 +79,11 @@ public class EmailMessage extends BaseMessage {
     }
 
 
-    public List<String> getAttachments() {
+    public List<Map<String, String>> getAttachments() {
         return attachments;
     }
 
-    public void setAttachments(List<String> attachments) {
+    public void setAttachments(List<Map<String, String>> attachments) {
         this.attachments = attachments;
     }
 

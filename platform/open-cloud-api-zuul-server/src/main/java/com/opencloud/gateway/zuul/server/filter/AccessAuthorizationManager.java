@@ -304,7 +304,7 @@ public class AccessAuthorizationManager {
                     return true;
                 }
             } else {
-                if (StringUtils.matchDomain(value) && origin.contains(value)) {
+                if (StringUtils.matchDomain(value) && StringUtils.isNotBlank(origin) && origin.contains(value)) {
                     return true;
                 }
             }

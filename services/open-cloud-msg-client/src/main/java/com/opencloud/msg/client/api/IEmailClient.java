@@ -1,24 +1,60 @@
 package com.opencloud.msg.client.api;
 
 import com.opencloud.common.model.ResultBody;
-import com.opencloud.msg.client.model.EmailMessage;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 /**
  * 发送邮件接口
+ *
  * @author woodev
  */
 public interface IEmailClient {
 
     /**
-     * 邮件通知
+     * 发送邮件
+     *
+     * @param to          接收人 多个用;号隔开
+     * @param cc          抄送人 多个用;号隔开
+     * @param subject     主题
+     * @param content     内容
+     * @param attachments 附件
      * @return
      */
-    @PostMapping("/email")
+    @PostMapping(value = "/email", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResultBody<String> send(
-         @RequestBody EmailMessage message
-    );
+            @RequestParam(value = "to") String to,
+            @RequestParam(value = "cc", required = false) String cc,
+            @RequestParam(value = "subject") String subject,
+            @RequestParam(value = "content") String content,
+            @RequestPart(value = "attachments", required = false) MultipartFile[] attachments
+    ) throws IOException;
 
+    /**
+     * 发送模板邮件
+     *
+     * @param to          接收人 多个用;号隔开
+     * @param cc          抄送人 多个用;号隔开
+     * @param subject     主题
+     * @param tplCode     内容
+     * @param tplCode     模板编号
+     * @param tplParams   模板参数 json字符串
+     * @param attachments 附件
+     * @return
+     */
+    @PostMapping(value = "/email/tpl", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    ResultBody<String> sendByTpl(
+            @RequestParam(value = "to") String to,
+            @RequestParam(value = "cc", required = false) String cc,
+            @RequestParam(value = "subject") String subject,
+            @RequestParam(value = "tplCode") String tplCode,
+            @RequestParam(value = "tplParams") String tplParams,
+            @RequestPart(value = "attachments", required = false) MultipartFile[] attachments
+    );
 
 }

@@ -52,13 +52,14 @@ opencloud:
                   scope: ${opencloud.common.scope}
                   user-authorization-uri:  ${opencloud.common.user-authorization-uri}
                   user-info-uri: ${opencloud.common.user-info-uri}
-    swagger2:
+opencloud:
+  swagger2:
         enabled: true
-        description: ${description}
-        title: ${description}
+        description: 平台用户认证服务器
+        title: 平台用户认证服务器
 
 #mybatis plus 设置
 mybatis-plus:
  #实体扫描，多个package用逗号或者分号分隔
-  typeAliasesPackage: com.opencloud.**.entity
+  typeAliasesPackage: com.opencloud.uaa.admin.server.**.entity
   mapper-locations: classpath:mapper/*.xml

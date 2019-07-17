@@ -71,6 +71,7 @@ opencloud:
                 scope: snsapi_login
                 user-authorization-uri: https://open.weixin.qq.com/connect/qrconnect
                 user-info-uri: https://api.weixin.qq.com/sns/userinfo
+opencloud:
     swagger2:
         enabled: true
         description: ${description}
@@ -80,5 +81,5 @@ opencloud:
 #mybatis plus 设置
 mybatis-plus:
  #实体扫描，多个package用逗号或者分号分隔
-  typeAliasesPackage: com.opencloud.**.entity
+  typeAliasesPackage: com.opencloud.portal.uaa.server.**.entity
   mapper-locations: classpath:mapper/*.xml
