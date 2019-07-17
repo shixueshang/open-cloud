@@ -321,4 +321,12 @@ public class AccessAuthorizationManager {
         }
         return url;
     }
+
+    public ApiProperties getApiProperties() {
+        return apiProperties;
+    }
+
+    public void setApiProperties(ApiProperties apiProperties) {
+        this.apiProperties = apiProperties;
+    }
 }
