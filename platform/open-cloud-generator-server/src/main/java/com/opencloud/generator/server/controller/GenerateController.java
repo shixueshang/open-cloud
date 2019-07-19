@@ -91,13 +91,11 @@ public class GenerateController {
         String fileName = moduleName + ".zip";
         String filePath = outputDir + File.separator + fileName;
         // 压缩目录
-        String[] srcDir = {outputDir+File.separator+(parentPackage.split(".")[0])};
+        String[] srcDir = {outputDir+File.separator+(parentPackage.substring(0,parentPackage.indexOf(".")))};
         ZipUtil.toZip(srcDir, filePath, true);
         Map data = Maps.newHashMap();
         data.put("filePath",filePath);
         data.put("fileName",fileName);
         return ResultBody.ok().data(data);
     }
-
-
 }

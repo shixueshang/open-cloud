@@ -156,7 +156,7 @@ public class AnnotationScan implements ApplicationListener<ApplicationReadyEvent
                 name = apiOperation.value();
                 desc = apiOperation.notes();
             }
-            name = StringUtils.isBlank(name) ? fullName : name;
+            name = StringUtils.isBlank(name) ? methodName : name;
             api.put("apiName", name);
             api.put("apiCode", md5);
             api.put("apiDesc", desc);
