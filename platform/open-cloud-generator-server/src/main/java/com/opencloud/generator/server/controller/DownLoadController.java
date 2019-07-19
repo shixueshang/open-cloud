@@ -5,6 +5,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +18,7 @@ import java.io.*;
  */
 @Api(tags = "在线代码生成器")
 @Controller
+@RequestMapping("/generate")
 public class DownLoadController {
 
     @ApiOperation(value = "文件下载", notes = "文件下载")
