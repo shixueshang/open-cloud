@@ -96,7 +96,7 @@ public class GenerateController {
         Map data = Maps.newHashMap();
         data.put("filePath",filePath);
         data.put("fileName",fileName);
-        return ResultBody.ok();
+        return ResultBody.ok().data(data);
     }
 
 
