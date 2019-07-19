@@ -4,7 +4,7 @@ import request from '@/libs/request'
 /**
  * 获取分页数据
  */
-export const list = ({page, limit}) => {
+const list = ({page, limit}) => {
     const params = {page: page, limit: limit}
     return request({
         url: '$basePath/list',
@@ -16,7 +16,7 @@ export const list = ({page, limit}) => {
 /**
  * 根据ID查找数据
  */
-export const get = (id) => {
+const get = (id) => {
     const params = {
         id: id
     }
@@ -30,7 +30,7 @@ export const get = (id) => {
 /**
  * 添加数据
  */
-export const add = (data) => {
+const add = (data) => {
     return request({
         url: '$basePath/add',
         data,
@@ -41,7 +41,7 @@ export const add = (data) => {
 /**
  * 更新数据
  */
-export const update = (data) => {
+const update = (data) => {
     return request({
         url: '$basePath/update',
         data,
@@ -53,7 +53,7 @@ export const update = (data) => {
  * 删除数据
  * @param apiId
  */
-export const remove = (id) => {
+const remove = (id) => {
     const data = {
         id: id
     }
@@ -62,4 +62,12 @@ export const remove = (id) => {
         data,
         method: 'post'
     })
+}
+
+export default {
+    list,
+    get,
+    add,
+    update,
+    remove
 }
