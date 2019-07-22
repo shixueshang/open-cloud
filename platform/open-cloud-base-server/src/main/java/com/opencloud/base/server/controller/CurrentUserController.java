@@ -7,9 +7,11 @@ import com.opencloud.base.server.service.BaseUserService;
 import com.opencloud.common.constants.CommonConstants;
 import com.opencloud.common.model.ResultBody;
 import com.opencloud.common.security.OpenHelper;
+import com.opencloud.common.security.OpenUserDetails;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,7 +32,8 @@ public class CurrentUserController {
     private BaseUserService baseUserService;
     @Autowired
     private BaseAuthorityService baseAuthorityService;
-
+    @Autowired
+    private RedisTokenStore redisTokenStore;
     /**
      * 修改当前登录用户密码
      *
@@ -58,12 +61,16 @@ public class CurrentUserController {
             @RequestParam(value = "userDesc", required = false) String userDesc,
             @RequestParam(value = "avatar", required = false) String avatar
     ) {
+        OpenUserDetails openUserDetails = OpenHelper.getUser();
         BaseUser user = new BaseUser();
-        user.setUserId(OpenHelper.getUser().getUserId());
+        user.setUserId(openUserDetails.getUserId());
         user.setNickName(nickName);
         user.setUserDesc(userDesc);
         user.setAvatar(avatar);
         baseUserService.updateUser(user);
+        openUserDetails.setNickName(nickName);
+        openUserDetails.setAvatar(avatar);
+        OpenHelper.updateOpenUser(redisTokenStore,openUserDetails);
         return ResultBody.ok();
     }
 
