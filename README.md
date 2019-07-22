@@ -144,9 +144,11 @@ open-cloud
    
 2. 执行创建数据库open-platform并执行sql脚本
     + docs/sql/oauth2.sql
-    + docs/sql/upm.sql
+    + docs/sql/base.sql
     + docs/sql/gateway.sql
+    + docs/sql/msg.sql
     + docs/sql/quartz.sql && scheduler.sql
+      ...
     
 3.  启动nacos服务发现&配置中心,新建公共配置文件 
     + 访问 http://localhost:8848/nacos/index.html 
