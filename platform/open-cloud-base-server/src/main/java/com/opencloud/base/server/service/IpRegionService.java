@@ -25,14 +25,12 @@ public class IpRegionService {
 
     /**
      * 初始化IP库
-     * 网上早springboot中使用的工具类,能用但是不可取,性能会有问题,每次都会重新加载db文件,增加IO读取和执行效率。
-     * 这里使用bean的方法一次初始化db
      */
     @PostConstruct
     public void init() {
         try {
             // 因为jar无法读取文件,复制创建临时文件
-            String tmpDir = System.getProperties().getProperty("java.io.tmpdir");
+            String tmpDir = System.getProperty("user.dir");
             String dbPath = tmpDir + "ip2region.db";
             log.info("init ip region db path [{}]", dbPath);
             File file = new File(dbPath);
