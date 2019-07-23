@@ -15,6 +15,7 @@ import java.lang.reflect.Method;
 
 /**
  * IpRegion服务类
+ *
  * @author liuyadu
  */
 @Slf4j
@@ -30,15 +31,15 @@ public class IpRegionService {
     public void init() {
         try {
             // 因为jar无法读取文件,复制创建临时文件
-            String tmpDir = System.getProperty("user.dir");
-            String dbPath = tmpDir + "ip2region.db";
+            String tmpDir = System.getProperty("user.dir") + File.separator + "temp";
+            String dbPath = tmpDir + File.separator + "ip2region.db";
             log.info("init ip region db path [{}]", dbPath);
             File file = new File(dbPath);
             FileUtils.copyInputStreamToFile(IpRegionService.class.getClassLoader().getResourceAsStream("data/ip2region.db"), file);
             config = new DbConfig();
             searcher = new DbSearcher(config, dbPath);
-            log.info("bean [{}]",config);
-            log.info("bean [{}]",searcher);
+            log.info("bean [{}]", config);
+            log.info("bean [{}]", searcher);
         } catch (Exception e) {
             log.error("init ip region error:{}", e);
         }
@@ -85,7 +86,7 @@ public class IpRegionService {
             dataBlock = (DataBlock) method.invoke(searcher, ip);
             String result = dataBlock.getRegion();
             long endTime = System.currentTimeMillis();
-            log.debug("region use time[{}] result[{}]",endTime-startTime,result);
+            log.debug("region use time[{}] result[{}]", endTime - startTime, result);
             return result;
 
         } catch (Exception e) {
