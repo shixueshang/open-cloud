@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
  * @date: 2018/11/9 15:43
  * @description:
  */
-@Api(tags = "移动应用用户中心")
+@Api(tags = "用户认证中心")
 @RestController
 public class LoginController {
 
