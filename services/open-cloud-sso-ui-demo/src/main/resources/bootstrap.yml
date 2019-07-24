@@ -39,4 +39,3 @@ security:
       user-authorization-uri: http://39.106.187.125:8211/oauth/authorize
     resource:
       token-info-uri: http://api.openc.top/admin/oauth/check_token
-      user-info-uri:  http://api.openc.top/admin/current/user/sso
