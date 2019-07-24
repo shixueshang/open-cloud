@@ -126,6 +126,7 @@ open-cloud
     ├── open-cloud-bpm-client          -- 工作流接口
     ├── open-cloud-bpm-server          -- 工作流服务器[port = 8255]
     ├── open-cloud-sba-server          -- SpringBootAdmin监控服务[port = 8849]
+    ├── open-cloud-sso-ui-demo         -- SSO单点登录演示demo[port = 8849]
 ```
 
 #### 快速开始
