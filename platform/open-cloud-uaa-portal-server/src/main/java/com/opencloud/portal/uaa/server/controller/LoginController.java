@@ -10,7 +10,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import netscape.security.Principal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +18,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import java.security.Principal;
 
 /**
  * @author: liuyadu
@@ -54,7 +54,7 @@ public class LoginController {
      */
     @ApiOperation(value = "获取当前登录用户信息-SSO单点登录",notes = "获取当前登录用户信息-SSO单点登录")
     @GetMapping("/current/user/sso")
-    public Object principal(Principal principal) {
+    public Principal principal(Principal principal) {
         return principal;
     }
 
