@@ -10,6 +10,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import netscape.security.Principal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -44,6 +45,17 @@ public class LoginController {
     @GetMapping("/current/user")
     public ResultBody getUserProfile() {
         return ResultBody.ok().data(OpenHelper.getUser());
+    }
+
+    /**
+     * 获取当前登录用户信息-SSO单点登录
+     * @param principal
+     * @return
+     */
+    @ApiOperation(value = "获取当前登录用户信息-SSO单点登录",notes = "获取当前登录用户信息-SSO单点登录")
+    @GetMapping("/current/user/sso")
+    public Object principal(Principal principal) {
+        return principal;
     }
 
     /**
