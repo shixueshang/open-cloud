@@ -73,6 +73,7 @@ public class SchedulerService {
                         TaskInfo info = new TaskInfo();
                         info.setData(jobDetail.getJobDataMap());
                         info.setJobName(jobKey.getName());
+                        info.setJobTrigger(trigger.getClass().getName());
                         info.setJobGroupName(jobKey.getGroup());
                         info.setJobClassName(jobDetail.getJobClass().getName());
                         info.setJobDescription(jobDetail.getDescription());
