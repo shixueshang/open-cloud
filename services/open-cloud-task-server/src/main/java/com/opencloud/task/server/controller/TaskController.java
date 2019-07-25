@@ -6,10 +6,10 @@ import com.google.common.collect.Maps;
 import com.opencloud.common.model.PageParams;
 import com.opencloud.common.model.ResultBody;
 import com.opencloud.task.client.model.TaskInfo;
-import com.opencloud.task.client.model.entity.SchedulerJobLogs;
+import com.opencloud.task.client.model.entity.TaskJobLogs;
 import com.opencloud.task.server.job.HttpExecuteJob;
-import com.opencloud.task.server.service.SchedulerJobLogsService;
-import com.opencloud.task.server.service.SchedulerService;
+import com.opencloud.task.server.service.TaskJobLogsService;
+import com.opencloud.task.server.service.TaskService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -32,11 +32,11 @@ import java.util.Map;
  * @description:
  */
 @RestController
-public class SchedulerController {
+public class TaskController {
     @Autowired
-    private SchedulerService schedulerService;
+    private TaskService schedulerService;
     @Autowired
-    private SchedulerJobLogsService schedulerJobLogsService;
+    private TaskJobLogsService schedulerJobLogsService;
 
     /**
      * 获取任务执行日志列表
@@ -46,8 +46,8 @@ public class SchedulerController {
      */
     @ApiOperation(value = "获取任务执行日志列表", notes = "获取任务执行日志列表")
     @GetMapping(value = "/job/logs")
-    public ResultBody<IPage<SchedulerJobLogs>> getJobLogList(@RequestParam(required = false) Map map) {
-        IPage<SchedulerJobLogs> result = schedulerJobLogsService.findListPage(new PageParams(map));
+    public ResultBody<IPage<TaskJobLogs>> getJobLogList(@RequestParam(required = false) Map map) {
+        IPage<TaskJobLogs> result = schedulerJobLogsService.findListPage(new PageParams(map));
         return ResultBody.ok().data(result);
     }
 

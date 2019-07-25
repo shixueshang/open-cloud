@@ -21,7 +21,7 @@ import java.util.List;
  */
 @Slf4j
 @Service
-public class SchedulerService {
+public class TaskService {
 
     @Autowired
     private Scheduler scheduler;
@@ -80,9 +80,9 @@ public class SchedulerService {
                         info.setJobStatus(triggerState.name());
                         info.setCronExpression(cronExpression);
                         info.setCreateTime(createTime);
+                        info.setRepeatInterval(repeatInterval);
                         info.setRepeatCount(repeatCount);
                         info.setStartDate(startDate);
-                        info.setRepeatInterval(repeatInterval);
                         info.setEndDate(endDate);
                         list.add(info);
                     }
