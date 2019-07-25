@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class TaskJobLogsService implements TaskJobLogsService {
+public class TaskJobLogsServiceImpl implements TaskJobLogsService {
     @Autowired
     private SchedulerJobLogsMapper schedulerJobLogsMapper;
     /**
