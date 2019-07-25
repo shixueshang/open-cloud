@@ -74,6 +74,8 @@ public class SchedulerController {
      * @param jobType        任务类型
      * @param startTime      开始时间
      * @param endTime        结束时间
+     * @param repeatInterval 间隔时间
+     * @param repeatCount    重试次数
      * @param cron           cron表达式
      * @param serviceId      服务名
      * @param path           请求路径
@@ -90,6 +92,8 @@ public class SchedulerController {
             @ApiImplicitParam(name = "cron", value = "cron表达式", required = false, paramType = "form"),
             @ApiImplicitParam(name = "startTime", value = "开始时间", required = false, paramType = "form"),
             @ApiImplicitParam(name = "endTime", value = "结束时间", required = false, paramType = "form"),
+            @ApiImplicitParam(name = "repeatInterval", value = "间隔时间", required = false, paramType = "form"),
+            @ApiImplicitParam(name = "repeatCount", value = "重试次数", required = false, paramType = "form"),
             @ApiImplicitParam(name = "serviceId", value = "服务名", required = true, paramType = "form"),
             @ApiImplicitParam(name = "path", value = "请求路径", required = true, paramType = "form"),
             @ApiImplicitParam(name = "method", value = "请求类型", required = false, paramType = "form"),
@@ -101,8 +105,10 @@ public class SchedulerController {
                                  @RequestParam(name = "jobDescription") String jobDescription,
                                  @RequestParam(name = "jobType") String jobType,
                                  @RequestParam(name = "cron", required = false) String cron,
-                                 @RequestParam(name = "startTime", required = false)@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date startTime,
-                                 @RequestParam(name = "endTime", required = false)@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date endTime,
+                                 @RequestParam(name = "startTime", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date startTime,
+                                 @RequestParam(name = "endTime", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date endTime,
+                                 @RequestParam(name = "repeatInterval", required = false) Long repeatInterval,
+                                 @RequestParam(name = "repeatCount", required = false) Integer repeatCount,
                                  @RequestParam(name = "serviceId") String serviceId,
                                  @RequestParam(name = "path") String path,
                                  @RequestParam(name = "method", required = false) String method,
@@ -120,15 +126,17 @@ public class SchedulerController {
         taskInfo.setJobDescription(jobDescription);
         taskInfo.setJobClassName(HttpExecuteJob.class.getName());
         taskInfo.setJobGroupName(Scheduler.DEFAULT_GROUP);
+        taskInfo.setStartDate(startTime);
+        taskInfo.setEndDate(endTime);
+        taskInfo.setRepeatInterval(repeatInterval);
+        taskInfo.setRepeatCount(repeatCount);
+        taskInfo.setCronExpression(cron);
         if ("simple".equals(jobType)) {
-            Assert.notNull(startTime, "startTime不能为空");
-            Assert.notNull(endTime, "endTime不能为空");
-            taskInfo.setStartDate(startTime);
-            taskInfo.setEndDate(endTime);
+            Assert.notNull(taskInfo.getStartDate(), "startTime不能为空");
+            Assert.notNull(taskInfo.getEndDate(), "endTime不能为空");
             schedulerService.addSimpleJob(taskInfo);
         } else {
-            Assert.notNull(cron, "startTime不能为空");
-            taskInfo.setCronExpression(cron);
+            Assert.notNull(taskInfo.getCronExpression(), "cron表达式不能为空");
             schedulerService.addCronJob(taskInfo);
         }
         return ResultBody.ok();
@@ -142,6 +150,8 @@ public class SchedulerController {
      * @param jobType        任务类型
      * @param startTime      开始时间
      * @param endTime        结束时间
+     * @param repeatInterval 间隔时间
+     * @param repeatCount    重试次数
      * @param cron           cron表达式
      * @param serviceId      服务名
      * @param path           请求路径
@@ -158,6 +168,8 @@ public class SchedulerController {
             @ApiImplicitParam(name = "cron", value = "cron表达式", required = false, paramType = "form"),
             @ApiImplicitParam(name = "startTime", value = "开始时间", required = false, paramType = "form"),
             @ApiImplicitParam(name = "endTime", value = "结束时间", required = false, paramType = "form"),
+            @ApiImplicitParam(name = "repeatInterval", value = "间隔时间", required = false, paramType = "form"),
+            @ApiImplicitParam(name = "repeatCount", value = "重试次数", required = false, paramType = "form"),
             @ApiImplicitParam(name = "serviceId", value = "服务名", required = true, paramType = "form"),
             @ApiImplicitParam(name = "path", value = "请求路径", required = true, paramType = "form"),
             @ApiImplicitParam(name = "method", value = "请求类型", required = false, paramType = "form"),
@@ -169,8 +181,10 @@ public class SchedulerController {
                                     @RequestParam(name = "jobDescription") String jobDescription,
                                     @RequestParam(name = "jobType") String jobType,
                                     @RequestParam(name = "cron", required = false) String cron,
-                                    @RequestParam(name = "startTime", required = false)@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date startTime,
-                                    @RequestParam(name = "endTime", required = false)@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date endTime,
+                                    @RequestParam(name = "startTime", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date startTime,
+                                    @RequestParam(name = "endTime", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date endTime,
+                                    @RequestParam(name = "repeatInterval", required = false) Long repeatInterval,
+                                    @RequestParam(name = "repeatCount", required = false) Integer repeatCount,
                                     @RequestParam(name = "serviceId") String serviceId,
                                     @RequestParam(name = "path") String path,
                                     @RequestParam(name = "method", required = false) String method,
@@ -188,15 +202,17 @@ public class SchedulerController {
         taskInfo.setJobDescription(jobDescription);
         taskInfo.setJobClassName(HttpExecuteJob.class.getName());
         taskInfo.setJobGroupName(Scheduler.DEFAULT_GROUP);
+        taskInfo.setStartDate(startTime);
+        taskInfo.setEndDate(endTime);
+        taskInfo.setRepeatInterval(repeatInterval);
+        taskInfo.setRepeatCount(repeatCount);
+        taskInfo.setCronExpression(cron);
         if ("simple".equals(jobType)) {
-            Assert.notNull(startTime, "startTime不能为空");
-            Assert.notNull(endTime, "endTime不能为空");
-            taskInfo.setStartDate(startTime);
-            taskInfo.setEndDate(endTime);
+            Assert.notNull(taskInfo.getStartDate(), "startTime不能为空");
+            Assert.notNull(taskInfo.getEndDate(), "endTime不能为空");
             schedulerService.editSimpleJob(taskInfo);
         } else {
-            Assert.notNull(cron, "startTime不能为空");
-            taskInfo.setCronExpression(cron);
+            Assert.notNull(taskInfo.getCronExpression(), "cron表达式不能为空");
             schedulerService.editCronJob(taskInfo);
         }
         return ResultBody.ok();

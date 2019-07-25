@@ -56,7 +56,7 @@ public class SchedulerService {
                         JobDetail jobDetail = scheduler.getJobDetail(jobKey);
                         String cronExpression = "";
                         Date createTime = null;
-                        Long milliSeconds = 0L;
+                        Long repeatInterval = 0L;
                         Integer repeatCount = 0;
                         Date startDate = null;
                         Date endDate = null;
@@ -65,7 +65,7 @@ public class SchedulerService {
                             cronExpression = cronTrigger.getCronExpression();
                         } else if (trigger instanceof SimpleTrigger) {
                             SimpleTrigger simpleTrigger = (SimpleTrigger) trigger;
-                            milliSeconds = simpleTrigger.getRepeatInterval();
+                            repeatInterval = simpleTrigger.getRepeatInterval();
                             repeatCount = simpleTrigger.getRepeatCount();
                             startDate = simpleTrigger.getStartTime();
                             endDate = simpleTrigger.getEndTime();
@@ -82,7 +82,7 @@ public class SchedulerService {
                         info.setCreateTime(createTime);
                         info.setRepeatCount(repeatCount);
                         info.setStartDate(startDate);
-                        info.setMilliSeconds(milliSeconds);
+                        info.setRepeatInterval(repeatInterval);
                         info.setEndDate(endDate);
                         list.add(info);
                     }
@@ -125,7 +125,7 @@ public class SchedulerService {
                     .startAt(info.getStartDate())
                     .withSchedule(
                             SimpleScheduleBuilder.simpleSchedule()
-                                    .withIntervalInMilliseconds(info.getMilliSeconds())
+                                    .withIntervalInMilliseconds(info.getRepeatInterval())
                                     .withRepeatCount(info.getRepeatCount()))
                     .endAt(info.getEndDate()).build();
             Class<? extends Job> clazz = (Class<? extends Job>) Class
@@ -201,7 +201,7 @@ public class SchedulerService {
                     .startAt(info.getStartDate())
                     .withSchedule(
                             SimpleScheduleBuilder.simpleSchedule()
-                                    .withIntervalInMilliseconds(info.getMilliSeconds())
+                                    .withIntervalInMilliseconds(info.getRepeatInterval())
                                     .withRepeatCount(info.getRepeatCount()))
                     .endAt(info.getEndDate()).build();
             JobDetail jobDetail = scheduler.getJobDetail(jobKey);
