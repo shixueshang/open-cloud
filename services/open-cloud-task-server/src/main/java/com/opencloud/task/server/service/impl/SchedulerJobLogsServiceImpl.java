@@ -36,6 +36,7 @@ public class SchedulerJobLogsServiceImpl implements SchedulerJobLogsService {
         QueryWrapper<SchedulerJobLogs> queryWrapper = new QueryWrapper();
         queryWrapper.lambda()
                 .likeRight(ObjectUtils.isNotEmpty(query.getJobName()),SchedulerJobLogs::getJobName, query.getJobName());
+        queryWrapper.orderByDesc("create_time");
         return schedulerJobLogsMapper.selectPage(new Page(pageParams.getPage(),pageParams.getLimit()),queryWrapper);
     }
 
