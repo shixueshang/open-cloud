@@ -15,11 +15,13 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.quartz.Scheduler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -68,6 +70,9 @@ public class SchedulerController {
      *
      * @param jobName        任务名称
      * @param jobDescription 任务描述
+     * @param jobType        任务类型
+     * @param startTime      开始时间
+     * @param endTime        结束时间
      * @param cron           cron表达式
      * @param serviceId      服务名
      * @param path           请求路径
@@ -80,7 +85,10 @@ public class SchedulerController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "jobName", value = "任务名称", required = true, paramType = "form"),
             @ApiImplicitParam(name = "jobDescription", value = "任务描述", required = true, paramType = "form"),
-            @ApiImplicitParam(name = "cron", value = "cron表达式", required = true, paramType = "form"),
+            @ApiImplicitParam(name = "jobType", value = "任务类型", required = true, allowableValues = "simple,cron", paramType = "form"),
+            @ApiImplicitParam(name = "cron", value = "cron表达式", required = false, paramType = "form"),
+            @ApiImplicitParam(name = "startTime", value = "开始时间", required = false, paramType = "form"),
+            @ApiImplicitParam(name = "endTime", value = "结束时间", required = false, paramType = "form"),
             @ApiImplicitParam(name = "serviceId", value = "服务名", required = true, paramType = "form"),
             @ApiImplicitParam(name = "path", value = "请求路径", required = true, paramType = "form"),
             @ApiImplicitParam(name = "method", value = "请求类型", required = false, paramType = "form"),
@@ -90,7 +98,10 @@ public class SchedulerController {
     @PostMapping("/job/add/http")
     public ResultBody addHttpJob(@RequestParam(name = "jobName") String jobName,
                                  @RequestParam(name = "jobDescription") String jobDescription,
-                                 @RequestParam(name = "cron") String cron,
+                                 @RequestParam(name = "jobType") String jobType,
+                                 @RequestParam(name = "cron", required = false) String cron,
+                                 @RequestParam(name = "startTime", required = false) Date startTime,
+                                 @RequestParam(name = "endTime", required = false) Date endTime,
                                  @RequestParam(name = "serviceId") String serviceId,
                                  @RequestParam(name = "path") String path,
                                  @RequestParam(name = "method", required = false) String method,
@@ -108,8 +119,17 @@ public class SchedulerController {
         taskInfo.setJobDescription(jobDescription);
         taskInfo.setJobClassName(HttpExecuteJob.class.getName());
         taskInfo.setJobGroupName(Scheduler.DEFAULT_GROUP);
-        taskInfo.setCronExpression(cron);
-        schedulerService.addCronJob(taskInfo);
+        if ("simple".equals(jobType)) {
+            Assert.notNull(startTime, "startTime不能为空");
+            Assert.notNull(endTime, "endTime不能为空");
+            taskInfo.setStartDate(startTime);
+            taskInfo.setEndDate(endTime);
+            schedulerService.addSimpleJob(taskInfo);
+        } else {
+            Assert.notNull(cron, "startTime不能为空");
+            taskInfo.setCronExpression(cron);
+            schedulerService.addCronJob(taskInfo);
+        }
         return ResultBody.ok();
     }
 
@@ -118,6 +138,9 @@ public class SchedulerController {
      *
      * @param jobName        任务名称
      * @param jobDescription 任务描述
+     * @param jobType        任务类型
+     * @param startTime      开始时间
+     * @param endTime        结束时间
      * @param cron           cron表达式
      * @param serviceId      服务名
      * @param path           请求路径
@@ -130,7 +153,10 @@ public class SchedulerController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "jobName", value = "任务名称", required = true, paramType = "form"),
             @ApiImplicitParam(name = "jobDescription", value = "任务描述", required = true, paramType = "form"),
-            @ApiImplicitParam(name = "cron", value = "cron表达式", required = true, paramType = "form"),
+            @ApiImplicitParam(name = "jobType", value = "任务类型", required = true, allowableValues = "simple,cron", paramType = "form"),
+            @ApiImplicitParam(name = "cron", value = "cron表达式", required = false, paramType = "form"),
+            @ApiImplicitParam(name = "startTime", value = "开始时间", required = false, paramType = "form"),
+            @ApiImplicitParam(name = "endTime", value = "结束时间", required = false, paramType = "form"),
             @ApiImplicitParam(name = "serviceId", value = "服务名", required = true, paramType = "form"),
             @ApiImplicitParam(name = "path", value = "请求路径", required = true, paramType = "form"),
             @ApiImplicitParam(name = "method", value = "请求类型", required = false, paramType = "form"),
@@ -140,7 +166,10 @@ public class SchedulerController {
     @PostMapping("/job/update/http")
     public ResultBody updateHttpJob(@RequestParam(name = "jobName") String jobName,
                                     @RequestParam(name = "jobDescription") String jobDescription,
-                                    @RequestParam(name = "cron") String cron,
+                                    @RequestParam(name = "jobType") String jobType,
+                                    @RequestParam(name = "cron", required = false) String cron,
+                                    @RequestParam(name = "startTime", required = false) Date startTime,
+                                    @RequestParam(name = "endTime", required = false) Date endTime,
                                     @RequestParam(name = "serviceId") String serviceId,
                                     @RequestParam(name = "path") String path,
                                     @RequestParam(name = "method", required = false) String method,
@@ -158,8 +187,17 @@ public class SchedulerController {
         taskInfo.setJobDescription(jobDescription);
         taskInfo.setJobClassName(HttpExecuteJob.class.getName());
         taskInfo.setJobGroupName(Scheduler.DEFAULT_GROUP);
-        taskInfo.setCronExpression(cron);
-        schedulerService.editCronJob(taskInfo);
+        if ("simple".equals(jobType)) {
+            Assert.notNull(startTime, "startTime不能为空");
+            Assert.notNull(endTime, "endTime不能为空");
+            taskInfo.setStartDate(startTime);
+            taskInfo.setEndDate(endTime);
+            schedulerService.editSimpleJob(taskInfo);
+        } else {
+            Assert.notNull(cron, "startTime不能为空");
+            taskInfo.setCronExpression(cron);
+            schedulerService.editCronJob(taskInfo);
+        }
         return ResultBody.ok();
     }
 
