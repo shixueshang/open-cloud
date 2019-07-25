@@ -15,6 +15,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.quartz.Scheduler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -100,8 +101,8 @@ public class SchedulerController {
                                  @RequestParam(name = "jobDescription") String jobDescription,
                                  @RequestParam(name = "jobType") String jobType,
                                  @RequestParam(name = "cron", required = false) String cron,
-                                 @RequestParam(name = "startTime", required = false) Date startTime,
-                                 @RequestParam(name = "endTime", required = false) Date endTime,
+                                 @RequestParam(name = "startTime", required = false)@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date startTime,
+                                 @RequestParam(name = "endTime", required = false)@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date endTime,
                                  @RequestParam(name = "serviceId") String serviceId,
                                  @RequestParam(name = "path") String path,
                                  @RequestParam(name = "method", required = false) String method,
@@ -168,8 +169,8 @@ public class SchedulerController {
                                     @RequestParam(name = "jobDescription") String jobDescription,
                                     @RequestParam(name = "jobType") String jobType,
                                     @RequestParam(name = "cron", required = false) String cron,
-                                    @RequestParam(name = "startTime", required = false) Date startTime,
-                                    @RequestParam(name = "endTime", required = false) Date endTime,
+                                    @RequestParam(name = "startTime", required = false)@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date startTime,
+                                    @RequestParam(name = "endTime", required = false)@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date endTime,
                                     @RequestParam(name = "serviceId") String serviceId,
                                     @RequestParam(name = "path") String path,
                                     @RequestParam(name = "method", required = false) String method,
