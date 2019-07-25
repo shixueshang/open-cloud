@@ -107,8 +107,8 @@ public class SchedulerController {
                                  @RequestParam(name = "cron", required = false) String cron,
                                  @RequestParam(name = "startTime", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date startTime,
                                  @RequestParam(name = "endTime", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date endTime,
-                                 @RequestParam(name = "repeatInterval", required = false) Long repeatInterval,
-                                 @RequestParam(name = "repeatCount", required = false) Integer repeatCount,
+                                 @RequestParam(name = "repeatInterval", required = false,defaultValue = "0") Long repeatInterval,
+                                 @RequestParam(name = "repeatCount", required = false,defaultValue = "0") Integer repeatCount,
                                  @RequestParam(name = "serviceId") String serviceId,
                                  @RequestParam(name = "path") String path,
                                  @RequestParam(name = "method", required = false) String method,
@@ -133,7 +133,6 @@ public class SchedulerController {
         taskInfo.setCronExpression(cron);
         if ("simple".equals(jobType)) {
             Assert.notNull(taskInfo.getStartDate(), "startTime不能为空");
-            Assert.notNull(taskInfo.getEndDate(), "endTime不能为空");
             schedulerService.addSimpleJob(taskInfo);
         } else {
             Assert.notNull(taskInfo.getCronExpression(), "cron表达式不能为空");
@@ -183,8 +182,8 @@ public class SchedulerController {
                                     @RequestParam(name = "cron", required = false) String cron,
                                     @RequestParam(name = "startTime", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date startTime,
                                     @RequestParam(name = "endTime", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date endTime,
-                                    @RequestParam(name = "repeatInterval", required = false) Long repeatInterval,
-                                    @RequestParam(name = "repeatCount", required = false) Integer repeatCount,
+                                    @RequestParam(name = "repeatInterval", required = false,defaultValue = "0") Long repeatInterval,
+                                    @RequestParam(name = "repeatCount", required = false,defaultValue = "0") Integer repeatCount,
                                     @RequestParam(name = "serviceId") String serviceId,
                                     @RequestParam(name = "path") String path,
                                     @RequestParam(name = "method", required = false) String method,
@@ -209,7 +208,6 @@ public class SchedulerController {
         taskInfo.setCronExpression(cron);
         if ("simple".equals(jobType)) {
             Assert.notNull(taskInfo.getStartDate(), "startTime不能为空");
-            Assert.notNull(taskInfo.getEndDate(), "endTime不能为空");
             schedulerService.editSimpleJob(taskInfo);
         } else {
             Assert.notNull(taskInfo.getCronExpression(), "cron表达式不能为空");
