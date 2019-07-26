@@ -219,6 +219,8 @@ public class BaseApiController {
         QueryWrapper<BaseApi> wrapper = new QueryWrapper();
         wrapper.lambda().in(BaseApi::getApiId, ids.split(",")).eq(BaseApi::getIsPersist, 0);
         apiService.remove(wrapper);
+        // 刷新网关
+        openRestTemplate.refreshGateway();
         return ResultBody.ok();
     }
 
@@ -244,6 +246,8 @@ public class BaseApiController {
         BaseApi entity = new BaseApi();
         entity.setIsOpen(open);
         apiService.update(entity, wrapper);
+        // 刷新网关
+        openRestTemplate.refreshGateway();
         return ResultBody.ok();
     }
 
@@ -268,6 +272,8 @@ public class BaseApiController {
         BaseApi entity = new BaseApi();
         entity.setStatus(status);
         apiService.update(entity, wrapper);
+        // 刷新网关
+        openRestTemplate.refreshGateway();
         return ResultBody.ok();
     }
 
@@ -292,6 +298,8 @@ public class BaseApiController {
         BaseApi entity = new BaseApi();
         entity.setStatus(auth);
         apiService.update(entity, wrapper);
+        // 刷新网关
+        openRestTemplate.refreshGateway();
         return ResultBody.ok();
     }
 }
