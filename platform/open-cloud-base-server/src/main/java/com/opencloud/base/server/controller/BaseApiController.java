@@ -288,7 +288,7 @@ public class BaseApiController {
     ) {
         Assert.isTrue((auth.intValue() != 0 || auth.intValue() != 1), "auth只支持0,1");
         QueryWrapper<BaseApi> wrapper = new QueryWrapper();
-        wrapper.lambda().in(BaseApi::getApiId, ids.split(","));
+        wrapper.lambda().in(BaseApi::getApiId, ids.split(",")).eq(BaseApi::getIsPersist, 0);
         BaseApi entity = new BaseApi();
         entity.setStatus(auth);
         apiService.update(entity, wrapper);
