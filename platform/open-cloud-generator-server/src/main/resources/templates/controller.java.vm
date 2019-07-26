@@ -165,8 +165,8 @@ class ${table.controllerName}#if(${superControllerClass}) : ${superControllerCla
     @ApiImplicitParams({
             @ApiImplicitParam(name = "ids", required = true, value = "多个用,号隔开", paramType = "form")
     })
-    @PostMapping("/remove/batch")
-    public ResultBody removeBatch(
+    @PostMapping("/batch/remove")
+    public ResultBody batchRemove(
                 @RequestParam(value = "ids") String ids
             ){
             targetService.removeByIds(Arrays.asList(ids.split(",")));
