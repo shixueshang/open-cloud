@@ -18,6 +18,7 @@ import org.springframework.stereotype.Controller;
 #if(${superControllerClassPackage})
 import ${superControllerClassPackage};
 #end
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -166,9 +167,9 @@ class ${table.controllerName}#if(${superControllerClass}) : ${superControllerCla
     })
     @PostMapping("/remove/batch")
     public ResultBody removeBatch(
-             @RequestParam(value = "ids")  List<Long> ids
+                @RequestParam(value = "ids") String ids
             ){
-            targetService.removeByIds(ids);
+            targetService.removeByIds(Arrays.asList(ids.split(",")));
             return ResultBody.ok();
      }
 
