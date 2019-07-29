@@ -289,6 +289,8 @@ CREATE TABLE `base_authority` (
                                 `api_id` bigint(20) DEFAULT NULL COMMENT 'API资源ID',
                                 `action_id` bigint(20) DEFAULT NULL,
                                 `status` tinyint(3) NOT NULL DEFAULT '1' COMMENT '状态',
+                                `create_time` datetime DEFAULT NULL COMMENT '注册时间',
+                                `update_time` datetime DEFAULT NULL COMMENT '更新时间',
                                 PRIMARY KEY (`authority_id`),
                                 KEY `menu_id` (`menu_id`),
                                 KEY `api_id` (`api_id`),
@@ -456,6 +458,8 @@ DROP TABLE IF EXISTS `base_authority_action`;
 CREATE TABLE `base_authority_action` (
                                        `action_id` bigint(20) NOT NULL COMMENT '操作ID',
                                        `authority_id` bigint(20) NOT NULL COMMENT 'API',
+                                        `create_time` datetime DEFAULT NULL COMMENT '注册时间',
+                                        `update_time` datetime DEFAULT NULL COMMENT '更新时间',
                                        KEY `action_id` (`action_id`) USING BTREE,
                                        KEY `authority_id` (`authority_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统权限-功能操作关联表';
@@ -637,6 +641,8 @@ CREATE TABLE `base_authority_app` (
                                     `authority_id` bigint(50) NOT NULL COMMENT '权限ID',
                                     `app_id` varchar(100) NOT NULL COMMENT '应用ID',
                                     `expire_time` datetime DEFAULT NULL COMMENT '过期时间:null表示长期',
+                                     `create_time` datetime DEFAULT NULL COMMENT '注册时间',
+                                     `update_time` datetime DEFAULT NULL COMMENT '更新时间',
                                     KEY `authority_id` (`authority_id`) USING BTREE,
                                     KEY `app_id` (`app_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='系统权限-应用关联';
@@ -653,6 +659,8 @@ CREATE TABLE `base_authority_role` (
                                      `authority_id` bigint(20) NOT NULL COMMENT '权限ID',
                                      `role_id` bigint(20) NOT NULL COMMENT '角色ID',
                                      `expire_time` datetime DEFAULT NULL COMMENT '过期时间:null表示长期',
+                                     `create_time` datetime DEFAULT NULL COMMENT '注册时间',
+                                     `update_time` datetime DEFAULT NULL COMMENT '更新时间',
                                      KEY `authority_id` (`authority_id`) USING BTREE,
                                      KEY `role_id` (`role_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='系统权限-角色关联';
@@ -718,6 +726,8 @@ CREATE TABLE `base_authority_user` (
                                      `authority_id` bigint(20) NOT NULL COMMENT '权限ID',
                                      `user_id` bigint(20) NOT NULL COMMENT '用户ID',
                                      `expire_time` datetime DEFAULT NULL COMMENT '过期时间',
+                                     `create_time` datetime DEFAULT NULL COMMENT '注册时间',
+                                     `update_time` datetime DEFAULT NULL COMMENT '更新时间',
                                      KEY `authority_id` (`authority_id`) USING BTREE,
                                      KEY `user_id` (`user_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='系统权限-用户关联';

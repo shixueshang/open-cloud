@@ -35,11 +35,7 @@ public class RedisAuthenticationManager implements ReactiveAuthenticationManager
                 .map(BearerTokenAuthenticationToken::getToken)
                 .flatMap((token -> {
                     OAuth2Authentication oAuth2Authentication = this.tokenStore.readAuthentication(token);
-                    if(oAuth2Authentication==null){
-                        throw new InvalidTokenException("InvalidToken");
-                    }else{
-                        return Mono.just(oAuth2Authentication);
-                    }
+                    return Mono.just(oAuth2Authentication);
                 }))
                 .cast(Authentication.class)
                 .onErrorMap(InvalidTokenException.class, this::onError);

@@ -1,12 +1,11 @@
 package com.opencloud.gateway.spring.server.locator;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.opencloud.gateway.spring.server.service.feign.BaseAuthorityServiceClient;
-import com.opencloud.gateway.spring.server.service.feign.GatewayServiceClient;
 import com.opencloud.base.client.model.AuthorityResource;
 import com.opencloud.base.client.model.IpLimitApi;
 import com.opencloud.common.event.RemoteRefreshRouteEvent;
+import com.opencloud.gateway.spring.server.service.feign.BaseAuthorityServiceClient;
+import com.opencloud.gateway.spring.server.service.feign.GatewayServiceClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.route.RouteDefinitionLocator;
 import org.springframework.cloud.gateway.support.NameUtils;
@@ -14,7 +13,10 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -58,11 +60,11 @@ public class ApiResourceLocator implements ApplicationListener<RemoteRefreshRout
     /**
      * 缓存
      */
-    private Map<String, List> cache = new HashMap<>();
+    private ConcurrentHashMap<String, List> cache;
     /**
      * 权限列表
      */
-    private HashMap<String, Collection<ConfigAttribute>> allConfigAttributes;
+    private ConcurrentHashMap<String, Collection<ConfigAttribute>> allConfigAttributes;
 
 
     private BaseAuthorityServiceClient baseAuthorityServiceClient;
@@ -71,7 +73,8 @@ public class ApiResourceLocator implements ApplicationListener<RemoteRefreshRout
     private RouteDefinitionLocator routeDefinitionLocator;
 
     public ApiResourceLocator() {
-        allConfigAttributes = Maps.newHashMap();
+        cache = new ConcurrentHashMap<>();
+        allConfigAttributes = new ConcurrentHashMap();
         authorityResources = cache.put("authorityResources", new ArrayList<>());
         ipBlacks = cache.put("ipBlacks", new ArrayList<>());
         ipWhites = cache.put("ipWhites", new ArrayList<>());
@@ -123,7 +126,6 @@ public class ApiResourceLocator implements ApplicationListener<RemoteRefreshRout
      * 加载授权列表
      */
     public void loadAuthority() {
-        allConfigAttributes = Maps.newHashMap();
         authorityResources = Lists.newArrayList();
         Collection<ConfigAttribute> array;
         ConfigAttribute cfg;
@@ -237,19 +239,19 @@ public class ApiResourceLocator implements ApplicationListener<RemoteRefreshRout
         this.ipWhites = ipWhites;
     }
 
-    public Map<String, List> getCache() {
+    public ConcurrentHashMap<String, List> getCache() {
         return cache;
     }
 
-    public void setCache(Map<String, List> cache) {
+    public void setCache(ConcurrentHashMap<String, List> cache) {
         this.cache = cache;
     }
 
-    public HashMap<String, Collection<ConfigAttribute>> getAllConfigAttributes() {
+    public ConcurrentHashMap<String, Collection<ConfigAttribute>> getAllConfigAttributes() {
         return allConfigAttributes;
     }
 
-    public void setAllConfigAttributes(HashMap<String, Collection<ConfigAttribute>> allConfigAttributes) {
+    public void setAllConfigAttributes(ConcurrentHashMap<String, Collection<ConfigAttribute>> allConfigAttributes) {
         this.allConfigAttributes = allConfigAttributes;
     }
 }

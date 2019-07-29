@@ -28,6 +28,9 @@
 + 后台测试账号:test 123456
 + SpringBootAdmin账号:sba 123456
 #### 更新日志
+     v-3.0.0 2019-07-29
+        1. 修复springgateway已知bug
+        2. docs/sql/data/20190729.sql 增加字段修改语句
     v-3.0.0 2019-07-19
         1. 增加open-cloud-generator-server 在线代码生成器
         2. docs/sql/data/日期.sql 增量数据

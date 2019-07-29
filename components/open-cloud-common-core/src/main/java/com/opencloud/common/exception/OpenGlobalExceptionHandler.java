@@ -142,7 +142,7 @@ public class OpenGlobalExceptionHandler {
         } else if (className.contains("UnauthorizedClientException")) {
             httpStatus = HttpStatus.UNAUTHORIZED.value();
             code = ErrorCode.UNAUTHORIZED_CLIENT;
-        }else if (className.contains("InsufficientAuthenticationException")) {
+        }else if (className.contains("InsufficientAuthenticationException") || className.contains("AuthenticationCredentialsNotFoundException")) {
             httpStatus = HttpStatus.UNAUTHORIZED.value();
             code = ErrorCode.UNAUTHORIZED;
         } else if (className.contains("InvalidGrantException")) {

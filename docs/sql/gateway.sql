@@ -68,6 +68,8 @@ DROP TABLE IF EXISTS `gateway_ip_limit_api`;
 CREATE TABLE `gateway_ip_limit_api` (
   `policy_id` bigint(20) NOT NULL COMMENT '策略ID',
   `api_id` bigint(20) NOT NULL COMMENT '接口资源ID',
+  `create_time` datetime DEFAULT NULL COMMENT '注册时间',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   KEY `policy_id` (`policy_id`) USING BTREE,
   KEY `api_id` (`api_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='开放网关-IP访问控制-API接口';
@@ -105,6 +107,8 @@ DROP TABLE IF EXISTS `gateway_rate_limit_api`;
 CREATE TABLE `gateway_rate_limit_api` (
   `policy_id` bigint(11) NOT NULL DEFAULT '0' COMMENT '限制数量',
   `api_id` bigint(11) NOT NULL DEFAULT '1' COMMENT '时间间隔(秒)',
+  `create_time` datetime DEFAULT NULL COMMENT '注册时间',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   KEY `policy_id` (`policy_id`) USING BTREE,
   KEY `api_id` (`api_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='开放网关-流量控制-API接口';
@@ -130,6 +134,8 @@ CREATE TABLE `gateway_route` (
   `status` tinyint(3) NOT NULL DEFAULT '1' COMMENT '状态:0-无效 1-有效',
   `is_persist` tinyint(3) NOT NULL DEFAULT '0' COMMENT '是否为保留数据:0-否 1-是',
   `route_desc` varchar(255) DEFAULT NULL COMMENT '路由说明',
+  `create_time` datetime DEFAULT NULL COMMENT '注册时间',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`route_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='开放网关-路由';
 

@@ -2,8 +2,8 @@ package com.opencloud.gateway.spring.server.configuration;
 
 import com.opencloud.gateway.spring.server.exception.JsonAccessDeniedHandler;
 import com.opencloud.gateway.spring.server.exception.JsonAuthenticationEntryPoint;
-import com.opencloud.gateway.spring.server.filter.AccessLogFilter;
 import com.opencloud.gateway.spring.server.filter.AccessAuthorizationManager;
+import com.opencloud.gateway.spring.server.filter.AccessLogFilter;
 import com.opencloud.gateway.spring.server.filter.PreCheckFilter;
 import com.opencloud.gateway.spring.server.filter.PreRequestFilter;
 import com.opencloud.gateway.spring.server.locator.ApiResourceLocator;
@@ -25,6 +25,7 @@ import org.springframework.security.oauth2.server.resource.web.server.ServerBear
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
 import org.springframework.security.web.server.authentication.ServerAuthenticationEntryPointFailureHandler;
+import org.springframework.security.web.server.context.WebSessionServerSecurityContextRepository;
 import org.springframework.web.cors.reactive.CorsUtils;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
@@ -92,6 +93,8 @@ public class ResourceServerConfiguration {
         AuthenticationWebFilter oauth2 = new AuthenticationWebFilter(new RedisAuthenticationManager(new RedisTokenStore(redisConnectionFactory)));
         oauth2.setServerAuthenticationConverter(new ServerBearerTokenAuthenticationConverter());
         oauth2.setAuthenticationFailureHandler(new ServerAuthenticationEntryPointFailureHandler(entryPoint));
+        // 解决ReactiveSecurityContextHolder.getContext() 无法获取认证信息问题
+        oauth2.setSecurityContextRepository(new WebSessionServerSecurityContextRepository());
         http
                 .httpBasic().disable()
                 .csrf().disable()
