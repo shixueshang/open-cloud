@@ -113,8 +113,8 @@ open-cloud
     ├── open-cloud-java-sdk            -- 开放平台api集成SDK(完善中...)
        
 ├── platform                           -- 平台服务
-    ├── open-cloud-api-spring-server   -- API开放网关-基于SpringCloudGateway[port = 8888](暂不推荐.功能暂不完善）  
-    ├── open-cloud-api-zuul-server     -- API开放网关-基于Zuul[port = 8888](推荐.功能完善）
+    ├── open-cloud-api-spring-server   -- API开放网关-基于SpringCloudGateway[port = 8888](推荐）  
+    ├── open-cloud-api-zuul-server     -- API开放网关-基于Zuul[port = 8888](功能完善）
     ├── open-cloud-base-client         -- 平台基础服务接口
     ├── open-cloud-base-server         -- 平台基础服务器[port=8233]
     ├── open-cloud-uaa-admin-server    -- 平台用户认证服务器[port = 8211]
@@ -183,7 +183,7 @@ open-cloud
 5. 本地启动(按顺序启动)
      1. [必需]BaseApplication(平台基础服务)
      2. [必需]UaaAdminApplication(平台用户认证服务器)
-     3. [必需]ApiGatewayZuulApplication(推荐)或ApiGatewaySpringApplication(暂不推荐)
+     3. [必需]ApiGatewaySpringApplication(推荐)或ApiGatewayZuulApplication
      ```
         访问 http://localhost:8888
      ```
