@@ -106,14 +106,14 @@ public class AccessAuthorizationManager implements ReactiveAuthorizationManager<
         }
         // 动态权限列表
         Flux<AuthorityResource> resources = accessLocator.getAuthorityResources();
-        resources.flatMap(res -> {
+        resources.map(res -> {
             Boolean isAuth = res.getIsAuth() != null && res.getIsAuth().intValue() == 1 ? true : false;
             String fullPath = res.getPath();
             // 无需认证,返回true
             if (StringUtils.isNotBlank(fullPath) && pathMatch.match(fullPath, requestPath) && !isAuth) {
-                return Flux.just(true);
+                return true;
             }
-            return Flux.just(false);
+            return false;
         }).subscribe(flag -> {
             result[0] = flag;
         });
