@@ -124,12 +124,15 @@ public class ApiResourceLocator implements ApplicationListener<RemoteRefreshRout
         final String[] fullPath = {""};
         routeDefinitionLocator.getRouteDefinitions()
                 .filter(routeDefinition -> routeDefinition.getUri().toString().equals("lb://" + serviceId))
-                .map(routeDefinition -> {
-                    String full = routeDefinition.getPredicates().stream().filter(predicateDefinition ->
-                            ("Path").equalsIgnoreCase(predicateDefinition.getName())
-                    ).findFirst().get().getArgs().get("pattern").replace("/**", path.startsWith("/") ? path : "/" + path);
-                    return full;
-                }).subscribe(r -> fullPath[0] = r);
+                .subscribe(routeDefinition -> {
+                            routeDefinition.getPredicates().stream()
+                                    .filter(predicateDefinition -> ("Path").equalsIgnoreCase(predicateDefinition.getName()))
+                                    .filter(predicateDefinition -> !predicateDefinition.getArgs().containsKey("_rateLimit"))
+                                    .forEach(predicateDefinition -> {
+                                        fullPath[0] = predicateDefinition.getArgs().get("pattern").replace("/**", path.startsWith("/") ? path : "/" + path);
+                                    });
+                        }
+                );
         return fullPath[0];
     }
 
