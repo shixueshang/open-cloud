@@ -2,13 +2,12 @@ package com.opencloud.gateway.spring.server.configuration;
 
 import com.opencloud.gateway.spring.server.exception.JsonAccessDeniedHandler;
 import com.opencloud.gateway.spring.server.exception.JsonAuthenticationEntryPoint;
-import com.opencloud.gateway.spring.server.filter.AccessAuthorizationManager;
-import com.opencloud.gateway.spring.server.filter.AccessLogFilter;
-import com.opencloud.gateway.spring.server.filter.PreCheckFilter;
-import com.opencloud.gateway.spring.server.filter.PreRequestFilter;
+import com.opencloud.gateway.spring.server.exception.JsonSignatureDeniedHandler;
+import com.opencloud.gateway.spring.server.filter.*;
 import com.opencloud.gateway.spring.server.locator.ApiResourceLocator;
 import com.opencloud.gateway.spring.server.oauth2.RedisAuthenticationManager;
 import com.opencloud.gateway.spring.server.service.AccessLogService;
+import com.opencloud.gateway.spring.server.service.feign.BaseAppServiceClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -52,6 +51,8 @@ public class ResourceServerConfiguration {
     private ApiProperties apiGatewayProperties;
     @Autowired
     private AccessLogService accessLogService;
+    @Autowired
+    private BaseAppServiceClient baseAppServiceClient;
 
     /**
      * 跨域配置
@@ -78,7 +79,6 @@ public class ResourceServerConfiguration {
                     response.setStatusCode(HttpStatus.OK);
                     return Mono.empty();
                 }
-
             }
             return chain.filter(ctx);
         };
@@ -109,6 +109,8 @@ public class ResourceServerConfiguration {
                 .addFilterAt(new PreRequestFilter(), SecurityWebFiltersOrder.FIRST)
                 // 跨域过滤器
                 .addFilterAt(corsFilter(), SecurityWebFiltersOrder.CORS)
+                // 签名验证过滤器
+                .addFilterAt(new PreSignatureFilter(baseAppServiceClient,apiGatewayProperties, new JsonSignatureDeniedHandler(accessLogService)), SecurityWebFiltersOrder.CSRF)
                 // 访问验证前置过滤器
                 .addFilterAt(new PreCheckFilter(accessAuthorizationManager, accessDeniedHandler), SecurityWebFiltersOrder.CSRF)
                 // oauth2认证过滤器

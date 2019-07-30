@@ -212,6 +212,7 @@ public class OpenGlobalExceptionHandler {
         } else if (className.contains("OpenAlertException")) {
             code = ErrorCode.ALERT;
         } else if (className.contains("OpenSignatureException")) {
+            httpStatus = HttpStatus.BAD_REQUEST.value();
             code = ErrorCode.SIGNATURE_DENIED;
         }else if(message.equalsIgnoreCase(ErrorCode.TOO_MANY_REQUESTS.name())){
             code = ErrorCode.TOO_MANY_REQUESTS;
