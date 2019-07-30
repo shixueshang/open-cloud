@@ -169,6 +169,7 @@ public class JdbcRouteDefinitionLocator implements RouteDefinitionLocator, Appli
                     predicatePath.setName("Path");
                     predicatePathParams.put( "pattern",  fullPath);
                     predicatePathParams.put( "pathPattern", fullPath);
+                    predicatePathParams.put( "_rateLimit",  "1");
                     predicatePath.setArgs(predicatePathParams);
                     predicates.add(predicatePath);
 
