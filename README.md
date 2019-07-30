@@ -208,7 +208,7 @@ open-cloud
     ```bush
     ./docs/bin/startup.sh {start|stop|restart|status} open-cloud-base-server.jar
     ./docs/bin/startup.sh {start|stop|restart|status} open-cloud-uaa-admin-server.jar
-    ./docs/bin/startup.sh {start|stop|restart|status} open-cloud-api-zuul-server.jar
+    ./docs/bin/startup.sh {start|stop|restart|status} open-cloud-api-spring-server.jar
     ```
     
 #### 集成开发 
