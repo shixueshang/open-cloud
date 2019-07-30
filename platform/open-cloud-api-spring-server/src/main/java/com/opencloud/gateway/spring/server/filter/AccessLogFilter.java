@@ -52,13 +52,12 @@ public class AccessLogFilter implements WebFilter {
                                     byte[] content = new byte[dataBuffer.readableByteCount()];
                                     dataBuffer.read(content);
                                     DataBufferUtils.release(dataBuffer);
-                                    try {
-                                        list.add(new String(content, "utf-8"));
-                                    } catch (Exception e) {
-                                    }
+                                    String responseData = new String(content, Charset.forName("UTF-8"));
+                                    list.add(responseData);
                                 });
                                 String responseData = joiner.join(list);
                                 byte[] uppedContent = new String(responseData.getBytes(), Charset.forName("UTF-8")).getBytes();
+                                // 发送日志
                                 accessLogService.sendLog(exchange, null);
                                 return bufferFactory.wrap(uppedContent);
                             }));
@@ -66,11 +65,7 @@ public class AccessLogFilter implements WebFilter {
                 return super.writeWith(body);
             }
         };
-        return chain.filter(exchange.mutate().
-
-                response(decoratedResponse).
-
-                build());
+        return chain.filter(exchange.mutate().response(decoratedResponse).build());
     }
 
 
