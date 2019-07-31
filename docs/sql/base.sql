@@ -1203,7 +1203,7 @@ CREATE TABLE `base_menu` (
 -- ----------------------------
 -- Records of base_menu
 -- ----------------------------
-INSERT INTO `base_menu` VALUES ('1', '0', 'system', '系统管理', '系统管理', '/', '', 'md-folder', '_self', '1', '1', '2018-07-29 21:20:10', '2019-05-25 01:49:23', '1', 'opencloud-base-provider');
+INSERT INTO `base_menu` VALUES ('1', '0', 'system', '系统管理', '系统管理', '/', '', 'md-folder', '_self', '0', '1', '2018-07-29 21:20:10', '2019-05-25 01:49:23', '1', 'opencloud-base-provider');
 INSERT INTO `base_menu` VALUES ('2', '13', 'gatewayIpLimit', '访问控制', '来源IP/域名访问控制,白名单、黑名单', '/', 'gateway/ip-limit/index', 'md-document', '_self', '1', '1', '2018-07-29 21:20:13', '2019-07-11 18:05:32', '1', 'opencloud-base-provider');
 INSERT INTO `base_menu` VALUES ('3', '1', 'systemMenu', '功能菜单', '功能菜单资源', '/', 'system/menus/index', 'md-list', '_self', '3', '1', '2018-07-29 21:20:13', '2019-07-11 18:03:23', '1', 'opencloud-base-provider');
 INSERT INTO `base_menu` VALUES ('5', '13', 'gatewayRoute', '网关路由', '网关路由', '/', 'gateway/route/index', 'md-document', '_self', '5', '1', '2018-07-29 21:20:13', '2019-07-11 18:04:59', '1', 'opencloud-base-provider');
