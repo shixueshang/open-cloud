@@ -106,17 +106,15 @@ public class AccessAuthorizationManager implements ReactiveAuthorizationManager<
         }
         // 动态权限列表
         Flux<AuthorityResource> resources = accessLocator.getAuthorityResources();
-        resources.map(res -> {
-            Boolean isAuth = res.getIsAuth() != null && res.getIsAuth().intValue() == 1 ? true : false;
-            String fullPath = res.getPath();
-            // 无需认证,返回true
-            if (StringUtils.isNotBlank(fullPath) && pathMatch.match(fullPath, requestPath) && !isAuth) {
-                return true;
-            }
-            return false;
-        }).subscribe(flag -> {
-            result[0] = flag;
-        });
+        resources.filter(res -> StringUtils.isNotBlank(res.getPath()))
+                .subscribe(res -> {
+                    Boolean isAuth = res.getIsAuth() != null && res.getIsAuth().intValue() == 1 ? true : false;
+                    // 无需认证,返回true
+                    if (pathMatch.match(res.getPath(), requestPath) && !isAuth) {
+                        result[0] = true;
+                        return;
+                    }
+                });
         return result[0];
     }
 
@@ -256,7 +254,7 @@ public class AccessAuthorizationManager implements ReactiveAuthorizationManager<
      * @return [hasWhiteList, allow]
      */
     public Boolean[] matchIpOrOriginWhiteList(String requestPath, String ipAddress, String origin) {
-        final Boolean[] result = {false,false};
+        final Boolean[] result = {false, false};
         boolean hasWhiteList = false;
         boolean allow = false;
         Flux<IpLimitApi> whiteList = accessLocator.getIpWhites();
