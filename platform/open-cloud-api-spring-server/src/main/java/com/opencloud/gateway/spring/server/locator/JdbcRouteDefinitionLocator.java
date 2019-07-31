@@ -41,22 +41,24 @@ public class JdbcRouteDefinitionLocator implements RouteDefinitionLocator, Appli
     private final static String SELECT_ROUTES = "SELECT * FROM gateway_route WHERE status = 1";
 
     private final static String SELECT_LIMIT_PATH = "SELECT\n" +
-            "            i.policy_id,\n" +
-            "            p.limit_quota,\n" +
-            "            p.interval_unit,\n" +
-            "            p.policy_name,\n" +
-            "            a.api_id,\n" +
-            "            a.api_code,\n" +
-            "            a.api_name,\n" +
-            "            a.api_category,\n" +
-            "            a.service_id,\n" +
-            "            a.path\n" +
-            "        FROM\n" +
-            "            gateway_rate_limit_api AS i\n" +
-            "               INNER JOIN gateway_rate_limit AS p ON i.policy_id = p.policy_id\n" +
-            "               INNER JOIN base_api AS a ON i.api_id = a.api_id\n" +
-            "        WHERE\n" +
-            "            p.policy_type = 'url'";
+            "        i.policy_id,\n" +
+            "        p.limit_quota,\n" +
+            "        p.interval_unit,\n" +
+            "        p.policy_name,\n" +
+            "        a.api_id,\n" +
+            "        a.api_code,\n" +
+            "        a.api_name,\n" +
+            "        a.api_category,\n" +
+            "        a.service_id,\n" +
+            "        a.path,\n" +
+            "        r.url\n" +
+            "    FROM\n" +
+            "        gateway_rate_limit_api AS i\n" +
+            "    INNER JOIN gateway_rate_limit AS p ON i.policy_id = p.policy_id\n" +
+            "    INNER JOIN base_api AS a ON i.api_id = a.api_id\n" +
+            "    INNER JOIN gateway_route AS r ON a.service_id = r.route_name\n" +
+            "    WHERE\n" +
+            "        p.policy_type = 'url'";
 
 
     public JdbcRouteDefinitionLocator(JdbcTemplate jdbcTemplate) {
@@ -145,6 +147,7 @@ public class JdbcRouteDefinitionLocator implements RouteDefinitionLocator, Appli
                     result.setApiCategory(rs.getString("api_category"));
                     result.setLimitQuota(rs.getLong("limit_quota"));
                     result.setIntervalUnit(rs.getString("interval_unit"));
+                    result.setUrl(rs.getString("url"));
                     return result;
                 }
             });
@@ -164,17 +167,17 @@ public class JdbcRouteDefinitionLocator implements RouteDefinitionLocator, Appli
                     List<FilterDefinition> filters = Lists.newArrayList();
                     definition.setId(item.getApiId().toString());
                     PredicateDefinition predicatePath = new PredicateDefinition();
-                    String fullPath = getFullPath(routeList,item.getServiceId(),item.getPath());
+                    String fullPath = getFullPath(routeList, item.getServiceId(), item.getPath());
                     Map<String, String> predicatePathParams = new HashMap<>(8);
                     predicatePath.setName("Path");
-                    predicatePathParams.put( "pattern",  fullPath);
-                    predicatePathParams.put( "pathPattern", fullPath);
-                    predicatePathParams.put( "_rateLimit",  "1");
+                    predicatePathParams.put("pattern", fullPath);
+                    predicatePathParams.put("pathPattern", fullPath);
+                    predicatePathParams.put("_rateLimit", "1");
                     predicatePath.setArgs(predicatePathParams);
                     predicates.add(predicatePath);
 
                     // 服务地址
-                    URI uri = UriComponentsBuilder.fromUriString("lb://" + item.getServiceId()).build().toUri();
+                    URI uri = UriComponentsBuilder.fromUriString(StringUtils.isNotBlank(item.getUrl()) ? item.getUrl() : "lb://" + item.getServiceId()).build().toUri();
 
                     // 路径去前缀
                     FilterDefinition stripPrefixDefinition = new FilterDefinition();
@@ -214,8 +217,8 @@ public class JdbcRouteDefinitionLocator implements RouteDefinitionLocator, Appli
                     Map<String, String> predicatePathParams = new HashMap<>(8);
                     predicatePath.setName("Path");
                     predicatePathParams.put("name", StringUtils.isBlank(gatewayRoute.getRouteName()) ? gatewayRoute.getRouteId().toString() : gatewayRoute.getRouteName());
-                    predicatePathParams.put( "pattern",  gatewayRoute.getPath());
-                    predicatePathParams.put( "pathPattern",  gatewayRoute.getPath());
+                    predicatePathParams.put("pattern", gatewayRoute.getPath());
+                    predicatePathParams.put("pathPattern", gatewayRoute.getPath());
                     predicatePath.setArgs(predicatePathParams);
                     predicates.add(predicatePath);
                     // 服务地址
