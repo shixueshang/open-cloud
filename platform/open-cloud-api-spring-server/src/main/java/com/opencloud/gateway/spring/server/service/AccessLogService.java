@@ -3,9 +3,9 @@ package com.opencloud.gateway.spring.server.service;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Maps;
+import com.opencloud.common.constants.QueueConstants;
 import com.opencloud.common.security.OpenUserDetails;
 import com.opencloud.gateway.spring.server.util.ReactiveWebUtils;
-import com.opencloud.common.constants.QueueConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +15,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.ReactiveSecurityContextHolder;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.bind.support.WebExchangeDataBinder;
@@ -109,23 +107,17 @@ public class AccessLogService {
             map.put("userAgent", userAgent);
             map.put("responseTime", new Date());
             map.put("error", error);
-            Mono<OpenUserDetails> authentication = getCurrentUser();
+            Mono<Authentication>  authenticationMono = exchange.getPrincipal();
+            Mono<OpenUserDetails> authentication = authenticationMono
+                    .map(Authentication::getPrincipal)
+                    .cast(OpenUserDetails.class);
             authentication.subscribe(user ->
-                        map.put("authentication", JSONObject.toJSONString(user))
-                );
+                    map.put("authentication", JSONObject.toJSONString(user))
+            );
             amqpTemplate.convertAndSend(QueueConstants.QUEUE_ACCESS_LOGS, map);
         } catch (Exception e) {
             log.error("access logs save error:{}", e);
         }
 
-    }
-
-
-    public Mono<OpenUserDetails> getCurrentUser() {
-        return ReactiveSecurityContextHolder.getContext()
-                .filter(c -> c.getAuthentication() != null)
-                .map(SecurityContext::getAuthentication)
-                .map(Authentication::getPrincipal)
-                .cast(OpenUserDetails.class);
     }
 }
