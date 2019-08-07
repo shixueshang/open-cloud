@@ -55,14 +55,15 @@ public class AccessLogFilter implements WebFilter {
                                     }
                                 });
                                 // 发送日志
-                                accessLogService.sendLog(exchange, null);
                                 return bufferFactory.wrap(bos.toByteArray());
                             }));
                 }
                 return super.writeWith(body);
             }
         };
-        return chain.filter(exchange.mutate().response(decoratedResponse).build());
+        return chain.filter(exchange.mutate().response(decoratedResponse).build()).then(Mono.fromRunnable(()->{
+            accessLogService.sendLog(exchange, null);
+        }));
     }
 
 

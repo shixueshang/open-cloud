@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.route.Route;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.core.Authentication;
@@ -77,10 +78,14 @@ public class AccessLogService {
             String method = request.getMethodValue();
             Map<String, String> headers = request.getHeaders().toSingleValueMap();
             Map<String, Object> data = Maps.newHashMap();
-            WebExchangeDataBinder.extractValuesToBind(exchange).subscribe(objectMap -> {
-                        data.putAll(objectMap);
-                    }
-            );
+            MediaType mediaType = exchange.getRequest().getHeaders().getContentType();
+            // 排除文件上传
+            if(!MediaType.MULTIPART_FORM_DATA.isCompatibleWith(mediaType)){
+                WebExchangeDataBinder.extractValuesToBind(exchange).subscribe(objectMap -> {
+                            data.putAll(objectMap);
+                        }
+                );
+            }
             String serviceId = null;
             if (route != null) {
                 serviceId = route.getUri().toString().replace("lb://", "");
