@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Maps;
 import com.opencloud.common.constants.QueueConstants;
 import com.opencloud.common.security.OpenUserDetails;
+import com.opencloud.gateway.spring.server.filter.context.GatewayContext;
 import com.opencloud.gateway.spring.server.util.ReactiveWebUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.AmqpTemplate;
@@ -12,13 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.route.Route;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
-import org.springframework.web.bind.support.WebExchangeDataBinder;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -77,14 +76,10 @@ public class AccessLogService {
             String requestPath = request.getURI().getPath();
             String method = request.getMethodValue();
             Map<String, String> headers = request.getHeaders().toSingleValueMap();
-            Map<String, Object> data = Maps.newHashMap();
-            MediaType mediaType = exchange.getRequest().getHeaders().getContentType();
-            // 排除文件上传
-            if(!MediaType.MULTIPART_FORM_DATA.isCompatibleWith(mediaType)){
-                WebExchangeDataBinder.extractValuesToBind(exchange).subscribe(objectMap -> {
-                            data.putAll(objectMap);
-                        }
-                );
+            Map data = Maps.newHashMap();
+            GatewayContext gatewayContext = exchange.getAttribute(GatewayContext.CACHE_GATEWAY_CONTEXT);
+            if(gatewayContext!=null){
+                data = gatewayContext.getAllRequestData().toSingleValueMap();
             }
             String serviceId = null;
             if (route != null) {
