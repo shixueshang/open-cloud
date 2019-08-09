@@ -158,7 +158,7 @@ public class GatewayRouteController {
         route.setStatus(status);
         route.setRouteName(routeName);
         route.setRouteDesc(routeDesc);
-        if(route.getUrl()!=null){
+        if(route.getUrl()!=null  && StringUtils.isNotEmpty(route.getUrl())){
             route.setServiceId(null);
         }
         gatewayRouteService.updateRoute(route);
