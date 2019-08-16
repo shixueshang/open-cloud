@@ -94,7 +94,7 @@ public class SchedulerServiceTest extends BaseTest {
     @Test
     public void sendEmail() throws IOException {
         MockMultipartFile file1 = new MockMultipartFile("attachments","diagram.png",null,new FileInputStream("D:\\diagram.png"));
-        emailServiceClient.send("515608851@qq.com",null,"测试","测试内容",new MultipartFile[]{file1});
+        emailServiceClient.send("515608851@qq.com",null,"测试","测试内容",new MultipartFile[]{file1,file1});
     }
 
 }

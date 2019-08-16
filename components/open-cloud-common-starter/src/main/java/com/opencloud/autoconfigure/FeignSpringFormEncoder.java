@@ -31,6 +31,9 @@ public class FeignSpringFormEncoder extends SpringFormEncoder {
     public void encode(Object object, Type bodyType, RequestTemplate template) throws EncodeException {
         if (bodyType != null && bodyType.equals(MultipartFile[].class) && object != null) {
             MultipartFile[] file = (MultipartFile[]) object;
+            if (file.length == 0) {
+                return;
+            }
             Map data = Collections.singletonMap(file.length == 0 ? "" : file[0].getName(), object);
             super.encode(data, MAP_STRING_WILDCARD, template);
             return;

@@ -8,6 +8,7 @@ import com.opencloud.task.server.service.TaskJobLogsService;
 import com.opencloud.task.server.service.feign.EmailServiceClient;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 
@@ -86,7 +87,7 @@ public class JobLogsListener implements JobListener {
             if (StringUtils.isNotBlank(alarmMail)) {
                 String title = String.format("[%s]任务执行异常-%s", jobName, DateUtils.formatDateTime(new Date()));
                 try {
-                    emailServiceClient.send(alarmMail,null,title,e.getMessage(),null);
+                    emailServiceClient.send(alarmMail,null,title,e.getMessage(),new MultipartFile[]{});
                 } catch (Exception em) {
                     log.error("==> send alarmMail error:{}", em);
                 }
