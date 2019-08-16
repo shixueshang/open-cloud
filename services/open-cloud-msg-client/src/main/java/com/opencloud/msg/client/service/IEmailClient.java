@@ -24,7 +24,9 @@ public interface IEmailClient {
      * @param attachments 附件
      * @return
      */
-    @PostMapping(value = "/email/send", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/email/send",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResultBody<String> send(
             @RequestParam(value = "to") String to,
             @RequestParam(value = "cc", required = false) String cc,
@@ -45,7 +47,9 @@ public interface IEmailClient {
      * @param attachments 附件
      * @return
      */
-    @PostMapping(value = "/email/send/tpl", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/email/send/tpl",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     ResultBody<String> sendByTpl(
             @RequestParam(value = "to") String to,
             @RequestParam(value = "cc", required = false) String cc,

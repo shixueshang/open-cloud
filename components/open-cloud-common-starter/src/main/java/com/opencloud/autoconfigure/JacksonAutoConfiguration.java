@@ -67,7 +67,7 @@ public class JacksonAutoConfiguration {
                 final Class<?> rawClass = javaType.getRawClass();
                 if (javaType.isArrayType() || javaType.isCollectionLikeType()) {
                     writer.assignNullSerializer(nullListJsonSerializer);
-                } else if (Number.class.isAssignableFrom(rawClass) && rawClass.getName().startsWith("java.lang")) {
+                } else if (Number.class.isAssignableFrom(rawClass) && (rawClass.getName().startsWith("java.lang") || rawClass.getName().startsWith("java.match"))) {
                     writer.assignNullSerializer(nullNumberJsonSerializer);
                 } else if (Boolean.class.equals(rawClass)) {
                     writer.assignNullSerializer(nullBooleanJsonSerializer);

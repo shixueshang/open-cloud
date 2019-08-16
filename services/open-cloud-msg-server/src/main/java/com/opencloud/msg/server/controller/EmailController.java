@@ -50,7 +50,7 @@ public class EmailController implements IEmailClient {
     })
     @PostMapping(value = "/email/send", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Override
-    public ResultBody<String> send(@RequestParam(value = "to") String to,
+    public ResultBody send(@RequestParam(value = "to") String to,
                                    @RequestParam(value = "cc", required = false) String cc,
                                    @RequestParam(value = "subject") String subject,
                                    @RequestParam(value = "content") String content,
@@ -88,7 +88,7 @@ public class EmailController implements IEmailClient {
             @ApiImplicitParam(name = "attachments", required = false, value = "附件:最大不超过10M", dataType = "file", paramType = "form", allowMultiple = true),
     })
     @PostMapping(value = "/email/send/tpl", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResultBody<String> sendByTpl(
+    public ResultBody sendByTpl(
             @RequestParam(value = "to") String to,
             @RequestParam(value = "cc", required = false) String cc,
             @RequestParam(value = "subject") String subject,
