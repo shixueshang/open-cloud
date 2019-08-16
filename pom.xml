@@ -45,8 +45,10 @@
         <opencloud.msg-client.version>3.0.0-SNAPSHOT</opencloud.msg-client.version>
         <opencloud.bpm-client.version>3.0.0-SNAPSHOT</opencloud.bpm-client.version>
         <opencloud.task-client.version>3.0.0-SNAPSHOT</opencloud.task-client.version>
+        <!--私有镜像仓库-->
+        <docker.registry>172.17.207.82:5000</docker.registry>
         <!--镜像前缀-->
-        <docker.image.prefix>open</docker.image.prefix>
+        <docker.image.prefix>platform</docker.image.prefix>
     </properties>
 
     <!-- 环境 -->
