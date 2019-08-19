@@ -226,7 +226,7 @@ open-cloud
  + 启动docker镜像   
   
       ```bush
-        docker run -d -p 8888:8888 --name open-cloud-api-spring-server 172.17.207.82:5000/platform/open-cloud-api-spring-server:3.0.0
+        docker run -d -e JAVA_OPTS="-server -Xms64m -Xmx128m" -p 8888:8888 --name open-cloud-api-spring-server 172.17.207.82:5000/platform/open-cloud-api-spring-server:3.0.0
       ```  
     
 #### 集成开发 
