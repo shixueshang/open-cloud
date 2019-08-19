@@ -201,7 +201,7 @@ open-cloud
     
     
 7. 项目打包部署  
-    +  maven多环境打包,替换相关变量
+    +  maven多环境打包,替换变量
    ```bush
      mvn clean install package -P {dev|test|online}
    ```
@@ -212,19 +212,22 @@ open-cloud
     ./docs/bin/startup.sh {start|stop|restart|status} open-cloud-api-spring-server.jar
     ```
     
-8.docker部署
-    + 配置DOCKER_HOST环境变量, 私服仓库地址
-       ```
-         DOCKER_HOST = tcp://{registry}:2375
-       ```
-    + maven多环境打包,替换相关变量.并构建docker镜像
-       ```
-         clean install package -P {dev|test|online} dockerfile:build
-       ```
-    + 启动docker镜像
-      ```
+8.docker部署   
+ +  配置DOCKER_HOST环境变量, 私服仓库地址
+     
+       ```bush
+         DOCKER_HOST = tcp://{registry_host}:2375
+       ```   
+ +  maven多环境打包,替换变量.并构建docker镜像
+   
+       ```bush
+         clean install package -P {dev|test|online} dockerfile:build 
+       ```  
+ + 启动docker镜像   
+  
+      ```bush
         docker run -d -p 8888:8888 --name open-cloud-api-spring-server 172.17.207.82:5000/platform/open-cloud-api-spring-server:3.0.0
-      ```
+      ```  
     
 #### 集成开发 
 <a target="_blank" href="https://gitee.com/liuyadu/open-cloud/wikis/pages?sort_id=1396933&doc_id=256893">集成开发</a>
