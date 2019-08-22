@@ -37,6 +37,7 @@ public class PreSignatureFilter implements WebFilter {
      * 忽略签名
      */
     private final static List<String> NOT_SIGN = getIgnoreMatchers(
+            "/favicon.ico",
             "/**/login/**",
             "/**/logout/**"
     );

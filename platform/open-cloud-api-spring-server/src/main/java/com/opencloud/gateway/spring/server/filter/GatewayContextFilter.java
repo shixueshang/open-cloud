@@ -3,8 +3,6 @@ package com.opencloud.gateway.spring.server.filter;
 import com.opencloud.gateway.spring.server.filter.context.GatewayContext;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cloud.gateway.filter.GatewayFilterChain;
-import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.cloud.gateway.support.BodyInserterContext;
 import org.springframework.cloud.gateway.support.CachedBodyOutputMessage;
 import org.springframework.core.Ordered;
@@ -22,6 +20,8 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.HandlerStrategies;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebFilter;
+import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -40,14 +40,14 @@ import java.util.Map;
  */
 @Slf4j
 @AllArgsConstructor
-public class GatewayContextFilter implements GlobalFilter, Ordered {
+public class GatewayContextFilter implements WebFilter, Ordered {
     /**
      * default HttpMessageReader
      */
     private static final List<HttpMessageReader<?>> MESSAGE_READERS = HandlerStrategies.withDefaults().messageReaders();
 
     @Override
-    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain){
         ServerHttpRequest request = exchange.getRequest();
         GatewayContext gatewayContext = new GatewayContext();
         HttpHeaders headers = request.getHeaders();
@@ -83,7 +83,7 @@ public class GatewayContextFilter implements GlobalFilter, Ordered {
      * @param chain
      * @return
      */
-    private Mono<Void> readFormData(ServerWebExchange exchange,GatewayFilterChain chain,GatewayContext gatewayContext){
+    private Mono<Void> readFormData(ServerWebExchange exchange,WebFilterChain chain,GatewayContext gatewayContext){
         HttpHeaders headers = exchange.getRequest().getHeaders();
         return exchange.getFormData()
                 .doOnNext(multiValueMap -> {
@@ -170,7 +170,7 @@ public class GatewayContextFilter implements GlobalFilter, Ordered {
      * @param chain
      * @return
      */
-    private Mono<Void> readBody(ServerWebExchange exchange,GatewayFilterChain chain,GatewayContext gatewayContext){
+    private Mono<Void> readBody(ServerWebExchange exchange,WebFilterChain chain,GatewayContext gatewayContext){
         return DataBufferUtils.join(exchange.getRequest().getBody())
                 .flatMap(dataBuffer -> {
                     /*
