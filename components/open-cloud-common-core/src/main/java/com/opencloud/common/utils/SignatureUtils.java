@@ -57,26 +57,26 @@ public class SignatureUtils {
         } catch (ParseException e) {
             throw new IllegalArgumentException("签名验证失败:timestamp格式必须为:yyyyMMddHHmmss");
         }
+        String timestamp = paramsMap.get(CommonConstants.SIGN_TIMESTAMP_KEY);
+        Long clientTimestamp = Long.parseLong(timestamp);
+        //判断时间戳 timestamp=201808091113
+        if ((DateUtils.getCurrentTimestamp() - clientTimestamp) > MAX_EXPIRE) {
+            log.debug("validateSign fail timestamp expire");
+            throw new IllegalArgumentException("签名验证失败:timestamp已过期");
+        }
     }
 
     /**
-     * @param paramMap     必须包含
+     * @param paramsMap     必须包含
      * @param clientSecret
      * @return
      */
-    public static boolean validateSign(Map<String, String> paramMap, String clientSecret) {
+    public static boolean validateSign(Map<String, String> paramsMap, String clientSecret) {
         try {
-            validateParams(paramMap);
-            String sign = paramMap.get(CommonConstants.SIGN_SIGN_KEY);
-            String timestamp = paramMap.get(CommonConstants.SIGN_TIMESTAMP_KEY);
-            Long clientTimestamp = Long.parseLong(timestamp);
-            //判断时间戳 timestamp=201808091113
-            if ((DateUtils.getCurrentTimestamp() - clientTimestamp) > MAX_EXPIRE) {
-                log.debug("validateSign fail timestamp expire");
-                return false;
-            }
+            validateParams(paramsMap);
+            String sign = paramsMap.get(CommonConstants.SIGN_SIGN_KEY);
             //重新生成签名
-            String signNew = getSign(paramMap, clientSecret);
+            String signNew = getSign(paramsMap, clientSecret);
             //判断当前签名是否正确
             if (signNew.equals(sign)) {
                 return true;
