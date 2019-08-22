@@ -9,8 +9,7 @@ import com.opencloud.common.utils.WebUtils;
 import com.opencloud.gateway.zuul.server.configuration.ApiProperties;
 import com.opencloud.gateway.zuul.server.exception.JsonSignatureDeniedHandler;
 import com.opencloud.gateway.zuul.server.service.feign.BaseAppServiceClient;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -18,9 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * 数字验签前置过滤器
@@ -33,14 +30,7 @@ public class PreSignatureFilter extends OncePerRequestFilter {
     private JsonSignatureDeniedHandler signatureDeniedHandler;
     private BaseAppServiceClient baseAppServiceClient;
     private ApiProperties apiGatewayProperties;
-    /**
-     * 忽略签名
-     */
-    private final static List<RequestMatcher> NOT_SIGN = getIgnoreMatchers(
-            "/favicon.ico",
-            "/**/login/**",
-            "/**/logout/**"
-    );
+    private static final AntPathMatcher pathMatch = new AntPathMatcher();
 
     public PreSignatureFilter(BaseAppServiceClient baseAppServiceClient, ApiProperties apiGatewayProperties,JsonSignatureDeniedHandler jsonSignatureDeniedHandler) {
         this.baseAppServiceClient = baseAppServiceClient;
@@ -50,7 +40,8 @@ public class PreSignatureFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (apiGatewayProperties.getCheckSign() && !notSign(request)) {
+        String requestPath = request.getRequestURI();
+        if (apiGatewayProperties.getCheckSign() && !notSign(requestPath)) {
             try {
                 Map params = WebUtils.getParameterMap(request);
                 // 验证请求参数
@@ -79,17 +70,12 @@ public class PreSignatureFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    protected static List<RequestMatcher> getIgnoreMatchers(String... antPatterns) {
-        List<RequestMatcher> matchers = new CopyOnWriteArrayList<>();
-        for (String path : antPatterns) {
-            matchers.add(new AntPathRequestMatcher(path));
+    protected boolean notSign(String requestPath) {
+        if(apiGatewayProperties.getSignIgnores()==null){
+            return false;
         }
-        return matchers;
-    }
-
-    protected boolean notSign(HttpServletRequest request) {
-        for (RequestMatcher match : NOT_SIGN) {
-            if (match.matches(request)) {
+        for (String path : apiGatewayProperties.getSignIgnores()) {
+            if (pathMatch.match(path, requestPath)) {
                 return true;
             }
         }

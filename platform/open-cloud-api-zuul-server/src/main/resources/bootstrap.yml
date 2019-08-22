@@ -104,7 +104,11 @@ opencloud:
       - /*/authority/granted/me
       - /*/authority/granted/me/menu
       - /*/current/user/**
-
+    # 签名忽略
+    sign-ignores:
+      - /favicon.ico
+      - /**/login/**
+      - /**/logout/**
 #mybatis plus 设置
 mybatis-plus:
  #实体扫描，多个package用逗号或者分号分隔

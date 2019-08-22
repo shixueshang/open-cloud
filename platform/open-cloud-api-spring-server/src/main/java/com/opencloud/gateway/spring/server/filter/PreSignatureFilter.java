@@ -33,14 +33,7 @@ public class PreSignatureFilter implements WebFilter {
     private BaseAppServiceClient baseAppServiceClient;
     private ApiProperties apiGatewayProperties;
     private static final AntPathMatcher pathMatch = new AntPathMatcher();
-    /**
-     * 忽略签名
-     */
-    private final static List<String> NOT_SIGN = getIgnoreMatchers(
-            "/favicon.ico",
-            "/**/login/**",
-            "/**/logout/**"
-    );
+
 
     public PreSignatureFilter(BaseAppServiceClient baseAppServiceClient, ApiProperties apiGatewayProperties,JsonSignatureDeniedHandler signatureDeniedHandler) {
         this.baseAppServiceClient = baseAppServiceClient;
@@ -95,7 +88,10 @@ public class PreSignatureFilter implements WebFilter {
     }
 
     protected boolean notSign(String requestPath) {
-        for (String path : NOT_SIGN) {
+        if(apiGatewayProperties.getSignIgnores()==null){
+            return false;
+        }
+        for (String path : apiGatewayProperties.getSignIgnores()) {
             if (pathMatch.match(path, requestPath)) {
                 return true;
             }

@@ -73,16 +73,21 @@ opencloud:
       api-debug: true
       # 始终放行
       permit-all:
-      - /*/login/**
-      - /*/logout/**
-      - /*/oauth/**
-      - /actuator/health
-      - /actuator/info
+        - /*/login/**
+        - /*/logout/**
+        - /*/oauth/**
+        - /actuator/health
+        - /actuator/info
       # 忽略权限鉴定
       authority-ignores:
-      - /*/authority/granted/me
-      - /*/authority/granted/me/menu
-      - /*/current/user/**
+        - /*/authority/granted/me
+        - /*/authority/granted/me/menu
+        - /*/current/user/**
+      # 签名忽略
+      sign-ignores:
+        - /favicon.ico
+        - /**/login/**
+        - /**/logout/**
 
 #mybatis plus 设置
 mybatis-plus:
