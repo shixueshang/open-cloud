@@ -37,6 +37,7 @@ public class PreSignatureFilter extends OncePerRequestFilter {
      * 忽略签名
      */
     private final static List<RequestMatcher> NOT_SIGN = getIgnoreMatchers(
+            "/favicon.ico",
             "/**/login/**",
             "/**/logout/**"
     );
