@@ -1,5 +1,6 @@
 package com.opencloud.common.utils;
 
+import com.alibaba.fastjson.JSONObject;
 import com.opencloud.common.constants.CommonConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
@@ -22,17 +23,18 @@ public class SignatureUtils {
     private final static long MAX_EXPIRE = 5 * 60;
 
     public static void main(String[] args) throws Exception {
+        String clientSecret = "0osTIhce7uPvDKHz6aa67bhCukaKoYl4";
         //参数签名算法测试例子
         HashMap<String, String> signMap = new HashMap<String, String>();
-        signMap.put("appId", "gateway");
+        signMap.put("appId", "1552274783265");
         signMap.put("signType", SignType.SHA256.name());
         signMap.put("timestamp", DateUtils.getCurrentTimestampStr());
         signMap.put("nonce",RandomValueUtils.randomAlphanumeric(16));
-        String sign = SignatureUtils.getSign(signMap, "123456");
+        String sign = SignatureUtils.getSign(signMap, clientSecret);
         System.out.println("签名结果:" + sign);
         signMap.put("sign", sign);
-        System.out.println(signMap);
-        System.out.println(SignatureUtils.validateSign(signMap, "123456"));
+        System.out.println("签名参数:" + JSONObject.toJSONString(signMap));
+        System.out.println(SignatureUtils.validateSign(signMap, clientSecret));
     }
 
     /**
