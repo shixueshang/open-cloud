@@ -168,7 +168,7 @@ open-cloud
  +  maven多环境打包,替换变量.并构建docker镜像
    
        ```bush
-          package -P {dev|test|online} dockerfile:build 
+          clean install package -P {dev|test|online} dockerfile:build 
        ```  
  + 启动docker镜像   
   
