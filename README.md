@@ -102,7 +102,7 @@ open-cloud
     
 3.  启动nacos服务发现&配置中心,新建公共配置文件 
     + 访问 http://localhost:8848/nacos/index.html 
-    + 导入配置 DEFAULT_GROUP.zip（nacos1.0.3以上版本支持一键导入）
+    + 导入配置 /docs/config/DEFAULT_GROUP.zip（nacos1.0.3以上版本支持一键导入）
     + 新建配置文件  （nacos1.0.3以下版本）
         + 项目目录/docs/config/db.properties >  db.properties
         + 项目目录/docs/config/rabbitmq.properties > rabbitmq.properties
