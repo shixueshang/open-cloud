@@ -173,6 +173,8 @@ open-cloud
  + 启动docker镜像   
   
       ```bush
+        docker run -d -e JAVA_OPTS="-Xms128m -Xmx256m" -p 8233:8233 --name open-cloud-base-server 172.17.207.82:5000/platform/open-cloud-base-server:3.0.0
+        docker run -d -e JAVA_OPTS="-Xms128m -Xmx256m" -p 8211:8211 --name open-cloud-uaa-admin-server 172.17.207.82:5000/platform/open-cloud-uaa-admin-server:3.0.0
         docker run -d -e JAVA_OPTS="-Xms128m -Xmx256m" -p 8888:8888 --name open-cloud-api-spring-server 172.17.207.82:5000/platform/open-cloud-api-spring-server:3.0.0
       ```  
     
