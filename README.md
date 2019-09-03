@@ -26,7 +26,7 @@
 + 后台测试账号:test 123456
 + SpringBootAdmin账号:sba 123456
 
-#### 扫码进群 
+#### 交流群 
 交流群1（已满）:760809808 <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=3c1017efeda485820c9eddee13a125d99261f7504746aa4824bc5c7c2b9a4234"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="open-cloud交流群" title="open-cloud交流群"></a>  
 交流群2：633305529 <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=b08d76c08e87b74a5194236d4f39f482cf42ebb8039265746682c048c01bc487"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="open-cloud学习交流群2" title="open-cloud学习交流群2"></a>
 
