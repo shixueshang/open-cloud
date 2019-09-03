@@ -47,19 +47,19 @@ public class BaseAppController implements IBaseAppServiceClient {
     /**
      * 获取应用详情
      *
-     * @param aid
+     * @param appId
      * @return
      */
     @ApiOperation(value = "获取应用详情", notes = "获取应用详情")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "aid", value = "应用ID", defaultValue = "1", required = true, paramType = "path"),
+            @ApiImplicitParam(name = "appId", value = "应用ID", defaultValue = "1", required = true, paramType = "path"),
     })
-    @GetMapping("/app/{aid}/info")
+    @GetMapping("/app/{appId}/info")
     @Override
     public ResultBody<BaseApp> getApp(
-            @PathVariable("aid") String aid
+            @PathVariable("appId") String appId
     ) {
-        BaseApp appInfo = baseAppService.getAppInfo(aid);
+        BaseApp appInfo = baseAppService.getAppInfo(appId);
         return ResultBody.ok().data(appInfo);
     }
 
@@ -131,17 +131,17 @@ public class BaseAppController implements IBaseAppServiceClient {
         app.setWebsite(website);
         app.setDeveloperId(developerId);
         BaseApp result = baseAppService.addAppInfo(app);
-        String aid = null;
+        String appId = null;
         if (result != null) {
-            aid = result.getAppId();
+            appId = result.getAppId();
         }
-        return ResultBody.ok().data(aid);
+        return ResultBody.ok().data(appId);
     }
 
     /**
      * 编辑应用信息
      *
-     * @param aid
+     * @param appId
      * @param appName   应用名称
      * @param appNameEn 应用英文名称
      * @param appOs     手机应用操作系统:ios-苹果 android-安卓
@@ -156,7 +156,7 @@ public class BaseAppController implements IBaseAppServiceClient {
      */
     @ApiOperation(value = "编辑应用信息", notes = "编辑应用信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "aid", value = "应用Id", required = true, paramType = "form"),
+            @ApiImplicitParam(name = "appId", value = "应用Id", required = true, paramType = "form"),
             @ApiImplicitParam(name = "appName", value = "应用名称", required = true, paramType = "form"),
             @ApiImplicitParam(name = "appNameEn", value = "应用英文名称", required = true, paramType = "form"),
             @ApiImplicitParam(name = "appType", value = "应用类型(server-应用服务 app-手机应用 pc-PC网页应用 wap-手机网页应用)", allowableValues = "server,app,pc,wap", required = true, paramType = "form"),
@@ -169,7 +169,7 @@ public class BaseAppController implements IBaseAppServiceClient {
     })
     @PostMapping("/app/update")
     public ResultBody updateApp(
-            @RequestParam("aid") String aid,
+            @RequestParam("appId") String appId,
             @RequestParam(value = "appName") String appName,
             @RequestParam(value = "appNameEn") String appNameEn,
             @RequestParam(value = "appType") String appType,
@@ -181,7 +181,7 @@ public class BaseAppController implements IBaseAppServiceClient {
             @RequestParam(value = "developerId", required = false) Long developerId
     ) {
         BaseApp app = new BaseApp();
-        app.setAppId(aid);
+        app.setAppId(appId);
         app.setAppName(appName);
         app.setAppNameEn(appNameEn);
         app.setAppType(appType);
@@ -200,7 +200,7 @@ public class BaseAppController implements IBaseAppServiceClient {
     /**
      * 完善应用开发信息
      *
-     * @param aid                应用名称
+     * @param appId                应用名称
      * @param grantTypes           授权类型(多个使用,号隔开)
      * @param redirectUrls         第三方应用授权回调地址(多个使用,号隔开)
      * @param scopes               用户授权范围(多个使用,号隔开)
@@ -211,7 +211,7 @@ public class BaseAppController implements IBaseAppServiceClient {
      */
     @ApiOperation(value = "完善应用开发信息", notes = "完善应用开发信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "aid", value = "应用Id", required = true, paramType = "form"),
+            @ApiImplicitParam(name = "appId", value = "应用Id", required = true, paramType = "form"),
             @ApiImplicitParam(name = "grantTypes", value = "授权类型(多个使用,号隔开)", required = true, paramType = "form"),
             @ApiImplicitParam(name = "redirectUrls", value = "第三方应用授权回调地址", required = true, paramType = "form"),
             @ApiImplicitParam(name = "scopes", value = "用户授权范围(多个使用,号隔开)", required = true, paramType = "form"),
@@ -221,7 +221,7 @@ public class BaseAppController implements IBaseAppServiceClient {
     })
     @PostMapping("/app/client/update")
     public ResultBody<String> updateAppClientInfo(
-            @RequestParam("aid") String aid,
+            @RequestParam("appId") String appId,
             @RequestParam(value = "grantTypes") String grantTypes,
             @RequestParam(value = "redirectUrls") String redirectUrls,
             @RequestParam(value = "scopes") String scopes,
@@ -229,7 +229,7 @@ public class BaseAppController implements IBaseAppServiceClient {
             @RequestParam(value = "refreshTokenValidity", required = true) Integer refreshTokenValidity,
             @RequestParam(value = "autoApproveScopes", required = false) String autoApproveScopes
     ) {
-        BaseApp app = baseAppService.getAppInfo(aid);
+        BaseApp app = baseAppService.getAppInfo(appId);
         OpenClientDetails client = new OpenClientDetails(app.getApiKey(), "", scopes, grantTypes, "", redirectUrls);
         client.setAccessTokenValiditySeconds(accessTokenValidity);
         client.setRefreshTokenValiditySeconds(refreshTokenValidity);
@@ -244,36 +244,36 @@ public class BaseAppController implements IBaseAppServiceClient {
     /**
      * 重置应用秘钥
      *
-     * @param aid 应用Id
+     * @param appId 应用Id
      * @return
      */
     @ApiOperation(value = "重置应用秘钥", notes = "重置应用秘钥")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "aid", value = "应用Id", required = true, paramType = "form"),
+            @ApiImplicitParam(name = "appId", value = "应用Id", required = true, paramType = "form"),
     })
     @PostMapping("/app/reset")
     public ResultBody<String> resetAppSecret(
-            @RequestParam("aid") String aid
+            @RequestParam("appId") String appId
     ) {
-        String result = baseAppService.restSecret(aid);
+        String result = baseAppService.restSecret(appId);
         return ResultBody.ok().data(result);
     }
 
     /**
      * 删除应用信息
      *
-     * @param aid
+     * @param appId
      * @return
      */
     @ApiOperation(value = "删除应用信息", notes = "删除应用信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "aid", value = "应用Id", required = true, paramType = "form"),
+            @ApiImplicitParam(name = "appId", value = "应用Id", required = true, paramType = "form"),
     })
     @PostMapping("/app/remove")
     public ResultBody removeApp(
-            @RequestParam("aid") String aid
+            @RequestParam("appId") String appId
     ) {
-        baseAppService.removeApp(aid);
+        baseAppService.removeApp(appId);
         openRestTemplate.refreshGateway();
         return ResultBody.ok();
     }

@@ -14,11 +14,11 @@ public interface IBaseAppServiceClient {
     /**
      * 获取应用基础信息
      *
-     * @param aid 应用Id
+     * @param appId 应用Id
      * @return
      */
-    @GetMapping("/app/{aid}/info")
-    ResultBody<BaseApp> getApp(@PathVariable("aid") String aid);
+    @GetMapping("/app/{appId}/info")
+    ResultBody<BaseApp> getApp(@PathVariable("appId") String appId);
 
     /**
      * 获取应用开发配置信息
