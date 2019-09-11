@@ -110,7 +110,8 @@ public class OpenHelper {
             while (iterator.hasNext()) {
                 OAuth2AccessToken token = iterator.next();
                 OAuth2Authentication oAuth2Authentication = tokenStore.readAuthentication(token);
-                if (oAuth2Authentication != null) {
+                if (oAuth2Authentication != null && oAuth2Authentication.isClientOnly()) {
+                    // 只更新客户端权限
                     // 由于没有set方法,使用反射机制强制赋值
                     ReflectionUtils.setFieldValue(oAuth2Authentication, "authorities", authorities);
                     // 重新保存
