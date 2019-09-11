@@ -70,7 +70,10 @@ public class OpenHelper {
      *
      * @param openUser
      */
-    public static void updateOpenUser(TokenStore tokenStore,OpenUserDetails openUser) {
+    public static void updateOpenUser(TokenStore tokenStore, OpenUserDetails openUser) {
+        if (openUser == null) {
+            return;
+        }
         Assert.notNull(openUser.getClientId(), "客户端ID不能为空");
         Assert.notNull(openUser.getUsername(), "用户名不能为空");
         // 动态更新客户端生成的token
@@ -79,10 +82,12 @@ public class OpenHelper {
             for (OAuth2AccessToken accessToken : accessTokens) {
                 // 由于没有set方法,使用反射机制强制赋值
                 OAuth2Authentication oAuth2Authentication = tokenStore.readAuthentication(accessToken);
-                Authentication authentication = oAuth2Authentication.getUserAuthentication();
-                ReflectionUtils.setFieldValue(authentication, "principal", openUser);
-                // 重新保存
-                tokenStore.storeAccessToken(accessToken, oAuth2Authentication);
+                if (oAuth2Authentication != null) {
+                    Authentication authentication = oAuth2Authentication.getUserAuthentication();
+                    ReflectionUtils.setFieldValue(authentication, "principal", openUser);
+                    // 重新保存
+                    tokenStore.storeAccessToken(accessToken, oAuth2Authentication);
+                }
             }
         }
     }
@@ -94,7 +99,10 @@ public class OpenHelper {
      * @param clientId
      * @param authorities
      */
-    public static void updateOpenClientAuthorities(TokenStore tokenStore,String clientId,Collection<? extends GrantedAuthority> authorities) {
+    public static void updateOpenClientAuthorities(TokenStore tokenStore, String clientId, Collection<? extends GrantedAuthority> authorities) {
+        if (authorities == null) {
+            return;
+        }
         // 动态更新客户端生成的token
         Collection<OAuth2AccessToken> accessTokens = tokenStore.findTokensByClientId(clientId);
         if (accessTokens != null && !accessTokens.isEmpty()) {
@@ -102,10 +110,12 @@ public class OpenHelper {
             while (iterator.hasNext()) {
                 OAuth2AccessToken token = iterator.next();
                 OAuth2Authentication oAuth2Authentication = tokenStore.readAuthentication(token);
-                // 由于没有set方法,使用反射机制强制赋值
-                ReflectionUtils.setFieldValue(oAuth2Authentication, "authorities", authorities);
-                // 重新保存
-                tokenStore.storeAccessToken(token, oAuth2Authentication);
+                if (oAuth2Authentication != null) {
+                    // 由于没有set方法,使用反射机制强制赋值
+                    ReflectionUtils.setFieldValue(oAuth2Authentication, "authorities", authorities);
+                    // 重新保存
+                    tokenStore.storeAccessToken(token, oAuth2Authentication);
+                }
             }
         }
     }
@@ -119,6 +129,7 @@ public class OpenHelper {
     public static Long getUserId() {
         return getUser().getUserId();
     }
+
     /**
      * 是否拥有权限
      *
@@ -216,16 +227,17 @@ public class OpenHelper {
 
     /**
      * 认证服务器原始方式创建AccessToken
+     *
      * @param endpoints
      * @param postParameters
      * @return
      * @throws Exception
      */
     public static OAuth2AccessToken createAccessToken(AuthorizationServerEndpointsConfiguration endpoints, Map<String, String> postParameters) throws Exception {
-        Assert.notNull(postParameters.get("client_id"),"client_id not null");
-        Assert.notNull(postParameters.get("client_secret"),"client_secret not null");
-        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(postParameters.get("client_id"),postParameters.get("client_secret"), Collections.emptyList());
-        ResponseEntity<OAuth2AccessToken> responseEntity = endpoints.tokenEndpoint().postAccessToken(auth,postParameters);
-        return  responseEntity.getBody();
+        Assert.notNull(postParameters.get("client_id"), "client_id not null");
+        Assert.notNull(postParameters.get("client_secret"), "client_secret not null");
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(postParameters.get("client_id"), postParameters.get("client_secret"), Collections.emptyList());
+        ResponseEntity<OAuth2AccessToken> responseEntity = endpoints.tokenEndpoint().postAccessToken(auth, postParameters);
+        return responseEntity.getBody();
     }
 }
