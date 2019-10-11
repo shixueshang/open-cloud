@@ -126,6 +126,18 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+    <!--nexus 私有仓库发布地址 -->
+    <distributionManagement>
+        <!--maven的settings.xml文件中设置<server>标签-->
+        <repository>
+            <id>open-cloud-releases</id>
+            <url>http://39.106.187.125:8081/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>open-cloud-snapshots</id>
+            <url>http://39.106.187.125:8081/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
     <build>
         <resources>
             <!-- 先指定 src/main/resources下所有文件及文件夹为资源文件 -->
