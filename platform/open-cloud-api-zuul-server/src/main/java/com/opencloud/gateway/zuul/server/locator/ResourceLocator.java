@@ -158,7 +158,7 @@ public class ResourceLocator implements ApplicationListener<RemoteRefreshRouteEv
             }
             log.info("=============加载动态权限:{}==============", this.authorityResources.size());
         } catch (Exception e) {
-            log.error("加载动态权限错误:{}", e);
+            log.error("加载动态权限错误", e);
         }
     }
 
@@ -177,7 +177,7 @@ public class ResourceLocator implements ApplicationListener<RemoteRefreshRouteEv
             }
             log.info("=============加载IP黑名单:{}==============", this.ipBlacks.size());
         } catch (Exception e) {
-            log.error("加载IP黑名单错误:{}", e);
+            log.error("加载IP黑名单错误", e);
         }
     }
 
@@ -196,7 +196,7 @@ public class ResourceLocator implements ApplicationListener<RemoteRefreshRouteEv
             }
             log.info("=============加载IP白名单:{}==============", ipWhites.size());
         } catch (Exception e) {
-            log.error("加载IP白名单错误:{}", e);
+            log.error("加载IP白名单错误", e);
         }
     }
 
@@ -255,7 +255,7 @@ public class ResourceLocator implements ApplicationListener<RemoteRefreshRouteEv
             }
             log.info("=============加载动态限流:{}==============", rateLimitProperties.getPolicyList().size());
         } catch (Exception e) {
-            log.error("加载动态限流错误:{}", e);
+            log.error("加载动态限流错误", e);
         }
         return policyMap;
     }
