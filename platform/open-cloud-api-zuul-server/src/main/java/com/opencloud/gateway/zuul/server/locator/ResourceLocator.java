@@ -252,7 +252,7 @@ public class ResourceLocator implements ApplicationListener<RemoteRefreshRouteEv
                     policyMap.put(item.getServiceId(), policyList);
                 }
                 this.rateLimitApis.clear();
-                this.rateLimitApis.addAll(rateLimitApis);
+                this.rateLimitApis.addAll(list);
             }
             log.info("=============加载动态限流:{}==============", rateLimitProperties.getPolicyList().size());
         } catch (Exception e) {
