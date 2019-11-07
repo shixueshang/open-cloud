@@ -9,46 +9,48 @@
   <a><img src="https://img.shields.io/npm/l/express.svg" alt="License"></a>
 </p>  
 
-## 微服务开放平台 3.0.0 
+## 开放式-微服务平台 3.0.0 
 #### 开源不易，请随手给个Star! 感谢支持！
 #### 上手难度：★★★★
 
 #### 简介
 搭建基于OAuth2的开放平台、为APP端、应用服务提供统一接口管控平台、为第三方合作伙伴的业务对接提供授信可控的技术对接平台
-+ Nacos(服务注册+配置中心)、Fegin(RPC服务调用)
-+ 统一API网关（参数验签、身份认证、接口鉴权、接口调试）
-+ 微服务间身份传递.使用Oauth2协议,统一认证管理!
++ 分布式架构，Nacos(服务注册+配置中心)统一管理
++ 统一API网关（参数验签、身份认证、接口鉴权、接口调试、接口限流）
++ 统一oauth2认证协议（redis存储）
 
-<a target="_blank" href="http://www.openc.top">开发平台门户预览</a> 
+<a target="_blank" href="http://www.openc.top">官网预览</a> 
 
-<a target="_blank" href="http://admin.openc.top">运营管理后台预览</a>
+<a target="_blank" href="http://admin.openc.top">管理后台</a>
 
-<a target="_blank" href="http://pro.openc.top">运营管理后台-专业版预览</a>
+<a target="_blank" href="http://pro.openc.top">管理后台-专业版</a>
 
 + 后台默认账号:admin 123456  
 + 后台测试账号:test 123456
 + SpringBootAdmin账号:sba 123456
+
+#### 服务端源码
+<a target="_blank" href="https://gitee.com/liuyadu">gitee</a>  
+
+<a target="_blank" href="https://github.com/liuyadu/">github</a>  
+
+#### 后台UI源码
+<a target="_blank" href="https://gitee.com/liuyadu/open-admin-ui">open-admin-ui源码</a>
+
+#### 后台UI专业版源码
+<a target="_blank" href="https://gitee.com/liuyadu_open/open-admin-pro">open-admin-pro-ui源码</a>
+
+#### 官网UI源码
+<a target="_blank" href="https://gitee.com/liuyadu_open/open-portal-ui.git">门户UI源码</a>
+
+#### 使用手册
+<a target="_blank" href="https://gitee.com/liuyadu/open-cloud/wikis/pages">使用手册</a>  
 
 #### 交流群 
 学习交流(千人群):760809808 <a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=3c1017efeda485820c9eddee13a125d99261f7504746aa4824bc5c7c2b9a4234"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="open-cloud交流群" title="open-cloud交流群"></a>  
 
 #### 功能介绍
 ![功能介绍](/docs/功能介绍.png)  
-
-#### 使用手册
-<a target="_blank" href="https://gitee.com/liuyadu/open-cloud/wikis/pages">使用手册</a>  
-
-#### 服务端源码
-<a target="_blank" href="https://gitee.com/liuyadu">码云</a>  <a target="_blank" href="https://github.com/liuyadu/">github</a>  
-
-#### vue后台UI源码
-<a target="_blank" href="https://gitee.com/liuyadu/open-admin-ui">后台UI源码</a>
-
-#### vue后台UI专业版源码
-<a target="_blank" href="https://gitee.com/liuyadu_open/open-admin-pro">专业版后台UI源码</a>
-
-#### vue门户UI源码
-<a target="_blank" href="https://gitee.com/liuyadu_open/open-portal-ui.git">门户UI源码</a>
 
 #### 代码结构
 ``` lua
