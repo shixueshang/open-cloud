@@ -17,7 +17,7 @@
 搭建基于OAuth2的开放平台、为APP端、应用服务提供统一接口管控平台、为第三方合作伙伴的业务对接提供授信可控的技术对接平台
 + 分布式架构，Nacos(服务注册+配置中心)统一管理
 + 统一API网关（参数验签、身份认证、接口鉴权、接口调试、接口限流、接口状态、接口外网访问）
-+ 统一oauth2认证协议（redis存储）
++ 统一oauth2认证协议
 
 <a target="_blank" href="http://www.openc.top">官网预览</a> 
 
@@ -29,19 +29,12 @@
 + 后台测试账号:test 123456
 + SpringBootAdmin账号:sba 123456
 
-#### 服务端源码
-<a target="_blank" href="https://gitee.com/liuyadu">gitee</a>  
-
-<a target="_blank" href="https://github.com/liuyadu/">github</a>  
-
-#### 后台UI源码
-<a target="_blank" href="https://gitee.com/liuyadu/open-admin-ui">open-admin-ui源码</a>
-
-#### 后台UI专业版源码
-<a target="_blank" href="https://gitee.com/liuyadu_open/open-admin-pro">open-admin-pro-ui源码</a>
-
-#### 官网UI源码
-<a target="_blank" href="https://gitee.com/liuyadu_open/open-portal-ui.git">门户UI源码</a>
+#### 源码
++ <a target="_blank" href="https://gitee.com/liuyadu">gitee服务端源码</a>  
++ <a target="_blank" href="https://github.com/liuyadu/">github服务端源码</a>  
++ <a target="_blank" href="https://gitee.com/liuyadu/open-admin-ui">open-admin-ui源码</a>
++ <a target="_blank" href="https://gitee.com/liuyadu_open/open-admin-pro">open-admin-pro-ui源码</a>
++ <a target="_blank" href="https://gitee.com/liuyadu_open/open-portal-ui.git">官网UI源码</a>
 
 #### 使用手册
 <a target="_blank" href="https://gitee.com/liuyadu/open-cloud/wikis/pages">使用手册</a>  
