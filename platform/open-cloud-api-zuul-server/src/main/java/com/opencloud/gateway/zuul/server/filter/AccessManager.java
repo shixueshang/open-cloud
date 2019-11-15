@@ -124,10 +124,10 @@ public class AccessManager {
         if (authorityList != null) {
             Iterator<AuthorityResource> it2 = authorityList.iterator();
             while (it2.hasNext()) {
-                AuthorityResource auth = it2.next();
-                String fullPath = auth.getPath();
+                AuthorityResource resource = it2.next();
+                String fullPath = resource.getPath();
                 if (!"/**".equals(fullPath) && !permitAll(requestPath) && StringUtils.isNotBlank(fullPath) && pathMatch.match(fullPath, requestPath)) {
-                    return auth;
+                    return resource;
                 }
             }
         }
