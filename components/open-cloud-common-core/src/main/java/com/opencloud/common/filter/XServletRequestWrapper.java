@@ -66,7 +66,6 @@ public class XServletRequestWrapper extends HttpServletRequestWrapper {
 
     @Override
     public String getParameter(String name) {
-        name = StringUtils.trim(name);
         String value = request.getParameter(name);
         if (!StringUtils.isEmpty(value)) {
             value = StringUtils.trim(value).trim();
@@ -74,20 +73,28 @@ public class XServletRequestWrapper extends HttpServletRequestWrapper {
         return value;
     }
 
+
+    @Override
+    public String[] getParameterValues(String name) {
+        String[] parameterValues = super.getParameterValues(name);
+        if (parameterValues == null) {
+            return null;
+        }
+        for (int i = 0; i < parameterValues.length; i++) {
+            String value = parameterValues[i];
+            parameterValues[i] = StringUtils.trim(value).trim();
+        }
+        return parameterValues;
+    }
+
     @Override
     public String getHeader(String name) {
-        name = StringUtils.trim(name);
         String value = this.customHeaders.get(name);
-        if (StringUtils.isNotBlank(value)) {
-            value = StringUtils.trim(value);
+        if (value != null) {
+            return value;
         }
-        return value;
+        return ((HttpServletRequest) getRequest()).getHeader(name);
     }
-
-    public void putHeader(String name, String value) {
-        this.customHeaders.put(name, value);
-    }
-
 
     @Override
     public Enumeration<String> getHeaderNames() {
@@ -100,17 +107,7 @@ public class XServletRequestWrapper extends HttpServletRequestWrapper {
         return Collections.enumeration(set);
     }
 
-    @Override
-    public String[] getParameterValues(String name) {
-        name = StringUtils.trim(name);
-        String[] parameterValues = super.getParameterValues(name);
-        if (parameterValues == null) {
-            return null;
-        }
-        for (int i = 0; i < parameterValues.length; i++) {
-            String value = parameterValues[i];
-            parameterValues[i] = StringUtils.trim(value).trim();
-        }
-        return parameterValues;
+    public void putHeader(String name, String value) {
+        this.customHeaders.put(name, value);
     }
 }
