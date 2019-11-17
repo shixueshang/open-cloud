@@ -37,7 +37,7 @@ import static java.util.Collections.synchronizedMap;
  * @author liuyadu
  */
 @Slf4j
-public class JdbcRouteDefinitionLocator implements RouteDefinitionLocator, ApplicationListener<RemoteRefreshRouteEvent>, ApplicationEventPublisherAware {
+public class JdbcRouteDefinitionLocator implements ApplicationListener<RemoteRefreshRouteEvent>, ApplicationEventPublisherAware {
     private JdbcTemplate jdbcTemplate;
     private ApplicationEventPublisher publisher;
     private InMemoryRouteDefinitionRepository repository;
@@ -80,11 +80,6 @@ public class JdbcRouteDefinitionLocator implements RouteDefinitionLocator, Appli
         // 触发默认路由刷新事件,刷新缓存路由
         this.publisher.publishEvent(new RefreshRoutesEvent(this));
         return Mono.empty();
-    }
-
-    @Override
-    public Flux<RouteDefinition> getRouteDefinitions() {
-        return repository.getRouteDefinitions();
     }
 
     /**
