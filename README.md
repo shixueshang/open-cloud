@@ -160,11 +160,7 @@ open-cloud
     ```
     
 8.docker部署   
- +  配置DOCKER_HOST环境变量, 私服仓库地址
-     
-       ```bush
-         DOCKER_HOST = tcp://{registry_host}:2375
-       ```   
+ +  配置DOCKER私服仓库
  +  maven多环境打包,替换变量.并构建docker镜像
    
        ```bush
@@ -173,9 +169,9 @@ open-cloud
  + 启动docker镜像   
   
       ```bush
-        docker run -d -e JAVA_OPTS="-Xms128m -Xmx256m" -p 8233:8233 --name open-cloud-base-server 172.17.207.82:5000/platform/open-cloud-base-server:3.0.0
-        docker run -d -e JAVA_OPTS="-Xms128m -Xmx256m" -p 8211:8211 --name open-cloud-uaa-admin-server 172.17.207.82:5000/platform/open-cloud-uaa-admin-server:3.0.0
-        docker run -d -e JAVA_OPTS="-Xms128m -Xmx256m" -p 8888:8888 --name open-cloud-api-spring-server 172.17.207.82:5000/platform/open-cloud-api-spring-server:3.0.0
+        docker run -d -e JAVA_OPTS="-Xms128m -Xmx256m" -p 8233:8233 --name base-server open.cloud/open-cloud-base-server:3.0.0
+        docker run -d -e JAVA_OPTS="-Xms128m -Xmx256m" -p 8211:8211 --name uaa-admin-server open.cloud/open-cloud-uaa-admin-server:3.0.0
+        docker run -d -e JAVA_OPTS="-Xms128m -Xmx256m" -p 8888:8888 --name api-spring-server open.cloud/open-cloud-api-spring-server:3.0.0
       ```  
     
 #### 集成开发 
@@ -183,55 +179,3 @@ open-cloud
 
 #### OAuth2使用说明
 <a target="_blank" href="https://gitee.com/liuyadu/open-cloud/wikis/pages?sort_id=1396294&doc_id=256893">OAuth2</a>
-
-#### 更新日志
-     v-3.0.0 2019-08-24
-        1. 升级springboot版本 2.1.4 > 2.1.6
-        2. 升级springcloud版本 Greenwich.SR1 > Greenwich.SR2
-        3. 升级swagger-bootstrap-ui 1.9.3 > 1.9.5
-        4. 修复网关签名参数获取bug
-        
-     v-3.0.0 2019-07-29
-        1. 修复springgateway已知bug
-        2. docs/sql/data/20190729.sql 增加字段修改语句
-    v-3.0.0 2019-07-19
-        1. 增加open-cloud-generator-server 在线代码生成器
-        2. docs/sql/data/日期.sql 增量数据
-        
-    v-3.0.0 2019-07-11 （重大更新） 
-        1. 新增开发者管理
-        2. 调整项目结构
-        3. 优化ui交互方式
-        4. 调整部分代码
-        5. 升级方式 
-            + 升级前注意对老数据进行备份
-            + 重新导入common.propertis到配置中心
-            + 重新执行 2019-07-19.sql oauth2.sql gateway.sql msg.sql 并手动删除无效表名
-        
-    v-2.1.0 2019-06-10 
-        1. base_api表新增字段is_open是否公开访问: 0-内部的 1-公开的
-        2. 更新base_api数据
-        
-    v-2.1.0 2019-05-26 （重大变更）
-        1. 重新梳理base表结构和权限相关接口,解决用户和客户端动态分配权。 机制问题暂不支持用户动态分配角色,需重新登录获取最新角色
-        2. 优化页面功能
-        3. 升级nacos客户端版本.支持1.0.0以上版本
-        5. 完善权限数据,去除外键约束.
-        6. 升级方式更新ui和服务代码, 重新执行base.sql。手动删除无效表
-        7. 移除app-admin模块 相关功能迁移到opencloud-auth-provider中
-        
-    v-2.0.0 2019-05-01
-        1. 升级SpringCloud Greenwich.SR1,SpringBoot 2.1.4.RELEASE
-        2. 重构项目结构
-        3. 优化Zuul网关性能
-        4. 增加官方SpringCloudGateway
-        5. 迁移Gateway功能到base服务中
-        6. 增加MybatisPlus
-        7. 使用.yml代替.properties
-        
-    v-1.0.0 2019-03-18
-        1. 重构项目结构
-        2. 重构表结构
-        3. 重构授权逻辑
-        4. 提取公共配置,并迁移到Nacos配置中心
-        5. 优化功能
