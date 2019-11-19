@@ -1,5 +1,6 @@
 package com.opencloud.uaa.admin.server.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.opencloud.common.model.ResultBody;
 import com.opencloud.common.security.OpenHelper;
 import com.opencloud.common.security.oauth2.client.OpenOAuth2ClientDetails;
@@ -100,7 +101,7 @@ public class LoginController {
     }
 
 
-    public Map<String, Object> getToken(String userName, String password, String type, HttpHeaders headers) {
+    public JSONObject getToken(String userName, String password, String type, HttpHeaders headers) {
         OpenOAuth2ClientDetails clientDetails =  clientProperties.getOauth2().get("admin");
         String url = WebUtils.getServerUrl(WebUtils.getHttpServletRequest()) + "/oauth/token";
         // 使用oauth2密码模式登录.
@@ -117,7 +118,7 @@ public class LoginController {
         // 强制移除 原来的请求头,防止token失效
         headers.remove(HttpHeaders.AUTHORIZATION);
         HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity(postParameters, headers);
-        Map result = restTemplate.postForObject(url, request, Map.class);
+        JSONObject result = restTemplate.postForObject(url, request, JSONObject.class);
         return result;
     }
 }
