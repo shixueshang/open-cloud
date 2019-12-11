@@ -9,9 +9,9 @@
   <a><img src="https://img.shields.io/npm/l/express.svg" alt="License"></a>
 </p>  
 
-## 开放式-微服务平台 3.0.0 
-#### 开源不易，请随手给个Star! 感谢支持！
-#### 上手难度：★★★★
+## SpringCloud微服务平台 3.0.0 
+
+#### 专业版开源了,抢先体验！<a target="_blank" href="https://gitee.com/liuyadu/open-cloud-pro">专业版</a>
 
 #### 简介
 搭建基于OAuth2的开放平台、为APP端、应用服务提供统一接口管控平台、为第三方合作伙伴的业务对接提供授信可控的技术对接平台
